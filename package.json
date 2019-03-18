@@ -1,0 +1,10 @@
+{
+  "name": "bbcat-orchestration-builder",
+  "version": "0.0.1",
+  "description": "Graphical user interface for generating orchestrated audio applications.",
+  "main": "index.js",
+  "repository": "https://github.com/bbc/bbcat-orchestration-builder",
+  "author": "Kristian Hentschel <Kristian.Hentschel@bbc.co.uk>",
+  "license": "UNLICENSED",
+  "private": true
+}
