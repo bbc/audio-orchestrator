@@ -1,3 +1,6 @@
+# distribution build artifacts
+dist/
+
 # Audio files
 *.wav
 *.m4a
