@@ -3,6 +3,9 @@ import { hot } from 'react-hot-loader/root';
 
 import { Container, Message } from 'semantic-ui-react';
 
+// Semantic-UI's theme CSS provides the styling of the page and has to be imported once.
+import 'semantic-ui-css/semantic.min.css';
+
 const App = () => (
   <Container>
     <Message
