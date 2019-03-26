@@ -8,9 +8,14 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "prop-types": "^15.7.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
     "react-hot-loader": "^4.8.0",
+    "react-redux": "^6.0.1",
+    "redux": "^4.0.1",
+    "redux-starter-kit": "^0.4.3",
+    "redux-thunk": "^2.3.0",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^0.86.0"
   },
