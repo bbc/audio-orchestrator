@@ -23,7 +23,7 @@ const Project = ({ onClose }) => (
   <Container>
     <Menu inverted color="orange" attached="bottom">
       <Menu.Item header>My first project</Menu.Item>
-      <Menu.Item position="right" icon="close" content="close" labelPosition="right" floated="right" onClick={onClose} />
+      <Menu.Item position="right" icon="close" content="close" onClick={onClose} />
     </Menu>
     <Tab panes={tabPanes} menu={{ secondary: false, pointing: true }} />
   </Container>

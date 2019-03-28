@@ -7,29 +7,26 @@ import {
   Button,
   Progress,
   Icon,
-  Divider,
 } from 'semantic-ui-react';
 
-import { openProject } from '../../reducers/UIReducer';
+import { requestOpenProject } from '../../../actions/project';
 
 const ProjectItem = ({
-  onEdit,
+  projectId,
+  name,
+  onOpen,
 }) => (
   <Card color="orange">
     <Card.Content>
-      <Card.Header>
-        My first project
-      </Card.Header>
+      <Card.Header content={name} />
       <Container
         textAlign="center"
         style={{
           padding: '3em 2em',
         }}
       >
-        <p>64 objects added</p>
-        <Divider />
         <Button.Group>
-          <Button icon="edit" content="Edit" onClick={onEdit} />
+          <Button icon="edit" content="Edit" onClick={onOpen} />
           <Button icon="share" content="Export&hellip;" disabled />
         </Button.Group>
       </Container>
@@ -43,7 +40,7 @@ const ProjectItem = ({
 );
 
 const mapDispatchToProps = (dispatch, { projectId }) => ({
-  onEdit: () => dispatch(openProject(projectId)),
+  onOpen: () => dispatch(requestOpenProject(projectId)),
 });
 
 export default connect(null, mapDispatchToProps)(ProjectItem);

@@ -1,5 +1,5 @@
 const initialState = {
-  currentPage: 'projects-list',
+  currentPage: 'home',
   currentProjectId: null,
 };
 
@@ -14,7 +14,7 @@ const UIReducer = (state = initialState, action) => {
     case 'UI_CLOSE_PROJECT':
       return {
         ...state,
-        currentPage: 'projects-list',
+        currentPage: 'home',
         currentProjectId: null,
       };
     default:

@@ -1,0 +1,27 @@
+{
+  "name": "bbcat-orchestration-builder-analyse-server",
+  "version": "0.0.1",
+  "description": "Service for analysing audio files on the local file system.",
+  "main": "dist/index.js",
+  "repository": "https://github.com/bbc/bbcat-orchestration-builder",
+  "author": "Kristian Hentschel <Kristian.Hentschel@bbc.co.uk>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "express": "^4.16.4"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.2.3",
+    "@babel/core": "^7.4.0",
+    "@babel/preset-env": "^7.4.2",
+    "@babel/register": "^7.4.0",
+    "eslint": "^5.15.3",
+    "nodemon": "^1.18.10"
+  },
+  "scripts": {
+    "dev": "nodemon src/server.js --exec \"node -r @babel/register\"",
+    "build": "npm run clean && mkdir ./dist/ && babel src -s -d dist",
+    "clean": "rm -rf ./dist/",
+    "start": "dist/server.js"
+  }
+}

@@ -5,7 +5,6 @@ import { hot } from 'react-hot-loader/root';
 
 import {
   Message,
-  Container,
 } from 'semantic-ui-react';
 
 // Semantic-UI's theme CSS provides the styling of the page and has to be imported once.
@@ -13,14 +12,14 @@ import 'semantic-ui-css/semantic.min.css';
 
 import Demo from './Components/DemoPage';
 import Project from './Components/Project';
-import ProjectsList from './Components/ProjectsList';
+import Home from './Components/Home';
 
 const getCurrentPageComponent = (currentPage) => {
   switch (currentPage) {
     case 'demo':
       return Demo;
-    case 'projects-list':
-      return ProjectsList;
+    case 'home':
+      return Home;
     case 'project':
       return Project;
     default:
