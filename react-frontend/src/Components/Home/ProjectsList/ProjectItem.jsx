@@ -14,31 +14,27 @@ import { requestOpenProject } from '../../../actions/project';
 const ProjectItem = ({
   projectId,
   name,
+  lastOpened,
   onOpen,
 }) => (
-  <Card color="orange">
+  <Card color="orange" onClick={onOpen}>
     <Card.Content>
       <Card.Header content={name} />
-      <Container
-        textAlign="center"
-        style={{
-          padding: '3em 2em',
-        }}
-      >
-        <Button.Group>
-          <Button icon="edit" content="Edit" onClick={onOpen} />
-          <Button icon="share" content="Export&hellip;" disabled />
-        </Button.Group>
-      </Container>
+      <Card.Meta content={`Last opened ${lastOpened}`} />
     </Card.Content>
-    <Card.Content extra>
-      <Icon loading name="spinner" />
-      Encoding audio segments&hellip;
+    <Card.Content extra textAlign="right">
+      <Button.Group>
+        <Button icon="edit" labelPosition="left" content="Open" onClick={onOpen} />
+      </Button.Group>
     </Card.Content>
-    <Progress percent={74} attached="bottom" color="green" />
   </Card>
 );
 
+//    <Card.Content extra>
+//      <Icon loading name="spinner" />
+//      Encoding audio segments&hellip;
+//    </Card.Content>
+//    <Progress percent={74} attached="bottom" color="green" />
 const mapDispatchToProps = (dispatch, { projectId }) => ({
   onOpen: () => dispatch(requestOpenProject(projectId)),
 });

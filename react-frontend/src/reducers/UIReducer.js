@@ -22,12 +22,4 @@ const UIReducer = (state = initialState, action) => {
   }
 };
 
-export const openProject = () => ({
-  type: 'UI_OPEN_PROJECT',
-});
-
-export const closeProject = () => ({
-  type: 'UI_CLOSE_PROJECT',
-});
-
 export default UIReducer;

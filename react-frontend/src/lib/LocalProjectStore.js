@@ -7,6 +7,7 @@ function createProjectStore(projectId, name) {
   const store = {
     set: (projectKey, value) => {
       const key = `projects.${projectId}.${projectKey}`;
+      console.log(value);
       Storage.setItem(key, JSON.stringify(value));
     },
     get: (projectKey, defaultValue) => {

@@ -10,6 +10,8 @@ import {
   Header,
   Icon,
   Button,
+  Dimmer,
+  Loader,
 } from 'semantic-ui-react';
 import ProjectsList from './ProjectsList';
 
@@ -38,14 +40,20 @@ class Home extends React.Component {
       allowFileOpen,
       projectsList,
       projectsListLoading,
+      projectLoading,
     } = this.props;
 
     return (
       <Container>
+        <Dimmer inverted active={projectLoading}>
+          <Loader />
+        </Dimmer>
+
         <Menu inverted color="blue" attached="bottom">
           <Menu.Item header>Home</Menu.Item>
           <Menu.Item position="right">Orchestration Builder v0.0.0</Menu.Item>
         </Menu>
+
         <Segment placeholder>
           { allowFileOpen
             ? <Divider vertical content="or" />
@@ -83,6 +91,7 @@ const mapStateToProps = state => ({
   allowFileOpen: state.Project.allowFileOpen,
   projectsListLoading: state.Project.projectsListLoading,
   projectsList: state.Project.projectsList,
+  projectLoading: state.Project.loading,
 });
 
 const mapDispatchToProps = dispatch => ({

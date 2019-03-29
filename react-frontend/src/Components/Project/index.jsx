@@ -6,11 +6,15 @@ import {
   Tab,
 } from 'semantic-ui-react';
 
-import { closeProject } from '../../reducers/UIReducer';
+import {
+  closeProject,
+  setProjectName,
+} from '../../actions/project';
 import Sequences from './Sequences';
 import Presentation from './Presentation';
 import Advanced from './Advanced';
 import Review from './Review';
+import EditableMenuHeader from './EditableMenuHeader';
 
 const tabPanes = [
   { menuItem: 'Sequences', render: () => <Tab.Pane><Sequences /></Tab.Pane> },
@@ -19,18 +23,27 @@ const tabPanes = [
   { menuItem: 'Preview and Export', render: () => <Tab.Pane><Review /></Tab.Pane> },
 ];
 
-const Project = ({ onClose }) => (
+const Project = ({
+  onClose,
+  onSetName,
+  name,
+}) => (
   <Container>
     <Menu inverted color="orange" attached="bottom">
-      <Menu.Item header>My first project</Menu.Item>
+      <EditableMenuHeader value={name} onChange={onSetName} />
       <Menu.Item position="right" icon="close" content="close" onClick={onClose} />
     </Menu>
     <Tab panes={tabPanes} menu={{ secondary: false, pointing: true }} />
   </Container>
 );
 
-const mapDispatchToProps = dispatch => ({
-  onClose: () => dispatch(closeProject()),
+const mapStateToProps = state => ({
+  name: state.Project.name,
 });
 
-export default connect(null, mapDispatchToProps)(Project);
+const mapDispatchToProps = dispatch => ({
+  onClose: () => dispatch(closeProject()),
+  onSetName: name => dispatch(setProjectName(name)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Project);
