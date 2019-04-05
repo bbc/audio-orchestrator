@@ -4,10 +4,12 @@ import {
   Icon,
   Container,
   Button,
+  Message,
 } from 'semantic-ui-react';
 
 const Review = () => (
   <Container>
+    <Message icon="lightbulb outline" header="Preview and export" content="The prototype experience can be previewed directly on this computer and devices on the same network. Once you're happy, you can export the encoded audio and source code template to publish or customise further." onDismiss={() => {}} />
     <Table basic collapsing>
       <Table.Body>
         <Table.Row positive>

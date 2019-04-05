@@ -7,7 +7,6 @@ function createProjectStore(projectId, name) {
   const store = {
     set: (projectKey, value) => {
       const key = `projects.${projectId}.${projectKey}`;
-      console.log(value);
       Storage.setItem(key, JSON.stringify(value));
     },
     get: (projectKey, defaultValue) => {
@@ -76,7 +75,7 @@ class LocalProjectStore {
       const store = createProjectStore(projectId, name);
 
       // resolve the promise to the new store object.
-      resolve(store);
+      resolve({ projectId, store });
     });
   }
 

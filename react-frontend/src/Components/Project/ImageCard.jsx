@@ -33,7 +33,6 @@ class RealImageSegment extends React.Component {
         onFocus={this.onOpen}
         onMouseOut={this.onClose}
         onBlur={this.onClose}
-        onClickOutside={this.onClose}
       >
         <Image fluid src={src} />
         <Dimmer active={open}>

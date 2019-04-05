@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Form,
@@ -36,7 +37,7 @@ class Advanced extends React.Component {
 
     return (
       <Form loading={loading}>
-        <Message content="These settings are only required for hosting the exported application on a public server. They are not used in the preview." />
+        <Message icon="lightbulb outline" header="Advanced technical details" content="These settings are only required for hosting the exported application on a public server. They are not used in the preview and can be easily changed by a developer later." onDismiss={() => {}} />
         <Form.Input
           label="Short joining link"
           placeholder="https://example.com/#!/join"
@@ -56,12 +57,23 @@ class Advanced extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const loading = state.Project.settingsLoading;
+Advanced.propTypes = {
+  onChangeSetting: PropTypes.func.isRequired,
+  onGetProjectSettings: PropTypes.func.isRequired,
+  joiningLink: PropTypes.string,
+  cloudSyncHostname: PropTypes.string,
+  loading: PropTypes.string,
+};
+
+const mapStateToProps = (state, { projectId }) => {
+  const project = state.Project.projects[projectId];
+
+  const loading = state.settingsLoading;
+
   const {
     joiningLink,
     cloudSyncHostname,
-  } = state.Project.settings;
+  } = project.settings;
 
   return {
     loading,
@@ -70,9 +82,9 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
-  onChangeSetting: (key, value) => dispatch(setProjectSetting(key, value)),
-  onGetProjectSettings: () => dispatch(getProjectSettings()),
+const mapDispatchToProps = (dispatch, { projectId }) => ({
+  onChangeSetting: (key, value) => dispatch(setProjectSetting(projectId, key, value)),
+  onGetProjectSettings: () => dispatch(getProjectSettings(projectId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Advanced);

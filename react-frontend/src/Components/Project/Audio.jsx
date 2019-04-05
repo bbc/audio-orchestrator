@@ -1,104 +1,127 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import {
   Button,
-  Divider,
   Header,
-  Dropdown,
+  Icon,
   Segment,
   Table,
-  Icon,
+  Dimmer,
+  Loader,
 } from 'semantic-ui-react';
+import AudioFileRow from './AudioFileRow';
+import {
+  getSequenceFiles,
+  requestReplaceAllAudioFiles,
+} from '../../actions/project';
 
-// Placeholder before files added
-// const Audio = () => (
-//   <Segment attached placeholder textAlign="center">
-//     <Header>No audio files added yet.</Header>
-//     Drag and drop your audio files here to add them to this project.
-//     <Divider />
-//     <Button primary icon="plus" content="Select audio files" />
-//   </Segment>
-// );
+class Audio extends React.Component {
+  componentDidMount() {
+    const { onGetAudioFiles } = this.props;
+    onGetAudioFiles();
+  }
 
-const channelConfigurationOptions = [
-  {
-    key: 'stereo',
-    text: 'Stereo',
-    value: 'stereo',
-    disabled: true,
-  },
-  {
-    key: 'left',
-    text: 'Left',
-    value: 'left',
-  },
-  {
-    key: 'right',
-    text: 'Right',
-    value: 'right',
-  },
-  {
-    key: 'mono',
-    text: 'Mono',
-    value: 'mono',
-  },
-];
+  componentDidUpdate(previousProps) {
+    const { sequenceId, onGetAudioFiles } = this.props;
+    if (sequenceId !== previousProps.sequenceId) {
+      onGetAudioFiles();
+    }
+  }
 
-const Audio = () => (
-  <Segment attached>
-    <Table>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>File</Table.HeaderCell>
-          <Table.HeaderCell>Channels</Table.HeaderCell>
-          <Table.HeaderCell>Channel Configuration</Table.HeaderCell>
-          <Table.HeaderCell>Sample Rate</Table.HeaderCell>
-          <Table.HeaderCell>Duration</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        <Table.Row>
-          <Table.Cell>000_Foo_L.wav</Table.Cell>
-          <Table.Cell>1</Table.Cell>
-          <Table.Cell>
-            <Dropdown options={channelConfigurationOptions} defaultValue="left" />
-          </Table.Cell>
-          <Table.Cell>48,000</Table.Cell>
-          <Table.Cell>04:30</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>001_Foo_R.wav</Table.Cell>
-          <Table.Cell>1</Table.Cell>
-          <Table.Cell>
-            <Dropdown options={channelConfigurationOptions} defaultValue="right" />
-          </Table.Cell>
-          <Table.Cell>48,000</Table.Cell>
-          <Table.Cell>04:30</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>002_Bar_M.wav</Table.Cell>
-          <Table.Cell>1</Table.Cell>
-          <Table.Cell>
-            <Dropdown options={channelConfigurationOptions} defaultValue="mono" />
-          </Table.Cell>
-          <Table.Cell>48,000</Table.Cell>
-          <Table.Cell>04:30</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.Cell>003_OtherBar_M.wav</Table.Cell>
-          <Table.Cell>1</Table.Cell>
-          <Table.Cell>
-            <Dropdown options={channelConfigurationOptions} defaultValue="mono" />
-          </Table.Cell>
-          <Table.Cell>48,000</Table.Cell>
-          <Table.Cell>04:30</Table.Cell>
-        </Table.Row>
-      </Table.Body>
-    </Table>
-    <Button.Group>
-      <Button primary icon="plus" content="Add audio files" />
-      <Button content="Proceed to Metadata" icon="right arrow" labelPosition="right" />
-    </Button.Group>
-  </Segment>
-);
+  render() {
+    const {
+      filesList,
+      projectId,
+      sequenceId,
+      loading,
+      loadingCompleted,
+      loadingTotal,
+      onReplaceAll,
+    } = this.props;
 
-export default Audio;
+    if (!loading && filesList.length === 0) {
+      return (
+        <Segment attached placeholder textAlign="center">
+          <Header icon>
+            <Icon name="file audio outline" />
+            No audio added yet.
+            <Header.Subheader>
+              There should be one continuous mono WAV file for each object.
+            </Header.Subheader>
+          </Header>
+          <Button primary icon="folder open" content="Import audio files" labelPosition="left" onClick={onReplaceAll} />
+        </Segment>
+      );
+    }
+
+    return (
+      <Segment attached>
+        <Dimmer active={loading} inverted verticalAlign="top">
+          { !loadingTotal
+            ? <Loader indeterminate inline="centered" content="Checking Audio Files" />
+            : <Loader inline="centered" content={`Checking Audio Files (${loadingCompleted}/${loadingTotal})`} />
+          }
+        </Dimmer>
+        <Table>
+          <Table.Header>
+            <Table.Row>
+              <Table.HeaderCell>File</Table.HeaderCell>
+              <Table.HeaderCell>Channels</Table.HeaderCell>
+              <Table.HeaderCell>Channel Configuration</Table.HeaderCell>
+              <Table.HeaderCell>Sample Rate</Table.HeaderCell>
+              <Table.HeaderCell>Duration</Table.HeaderCell>
+            </Table.Row>
+          </Table.Header>
+          <Table.Body>
+            {loading ? null : filesList.map(({ name, fileId, channelConfiguration }) => (
+              <AudioFileRow
+                key={fileId}
+                name={name}
+                channelConfiguration={channelConfiguration}
+                projectId={projectId}
+                sequenceId={sequenceId}
+                fileId={fileId}
+              />
+            ))}
+          </Table.Body>
+        </Table>
+        <Button negative icon="refresh" content="Replace audio files" onClick={onReplaceAll} />
+      </Segment>
+    );
+  }
+}
+
+Audio.propTypes = {
+  loading: PropTypes.bool.isRequired,
+  projectId: PropTypes.number.isRequired,
+  sequenceId: PropTypes.number.isRequired,
+  filesList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onReplaceAll: PropTypes.func.isRequired,
+  onGetAudioFiles: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state, { projectId, sequenceId }) => {
+  const { sequences } = state.Project.projects[projectId];
+  const {
+    filesLoading,
+    filesTaskId,
+    filesList,
+  } = sequences[sequenceId];
+
+  const { total, completed } = state.UI.tasks[filesTaskId] || {};
+
+  return {
+    loading: filesLoading,
+    loadingTotal: total,
+    loadingCompleted: completed,
+    filesList,
+  };
+};
+
+const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
+  onReplaceAll: () => dispatch(requestReplaceAllAudioFiles(projectId, sequenceId)),
+  onGetAudioFiles: () => dispatch(getSequenceFiles(projectId, sequenceId)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Audio);

@@ -29,19 +29,24 @@ const getCurrentPageComponent = (currentPage) => {
   }
 };
 
-const App = ({ currentPage }) => {
+const App = ({
+  currentPage,
+  currentProjectId,
+}) => {
   const Page = getCurrentPageComponent(currentPage);
   return (
-    <Page />
+    <Page projectId={currentProjectId} />
   );
 };
 
 App.propTypes = {
   currentPage: PropTypes.string.isRequired,
+  currentProjectId: PropTypes.number,
 };
 
 const mapStateToProps = ({ UI }) => ({
   currentPage: UI.currentPage,
+  currentProjectId: UI.currentProjectId,
 });
 
 export default hot(connect(mapStateToProps)(App));

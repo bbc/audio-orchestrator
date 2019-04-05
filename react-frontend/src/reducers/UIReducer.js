@@ -1,6 +1,7 @@
 const initialState = {
   currentPage: 'home',
   currentProjectId: null,
+  tasks: {},
 };
 
 const UIReducer = (state = initialState, action) => {
@@ -16,6 +17,14 @@ const UIReducer = (state = initialState, action) => {
         ...state,
         currentPage: 'home',
         currentProjectId: null,
+      };
+    case 'UI_SET_TASK_PROGRESS':
+      return {
+        ...state,
+        tasks: {
+          ...state.tasks,
+          [action.taskId]: { completed: action.completed, total: action.total },
+        },
       };
     default:
       return state;

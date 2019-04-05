@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Container,
@@ -16,34 +17,44 @@ import Advanced from './Advanced';
 import Review from './Review';
 import EditableMenuHeader from './EditableMenuHeader';
 
-const tabPanes = [
-  { menuItem: 'Sequences', render: () => <Tab.Pane><Sequences /></Tab.Pane> },
-  { menuItem: 'Presentation', render: () => <Tab.Pane><Presentation /></Tab.Pane> },
-  { menuItem: 'Advanced', render: () => <Tab.Pane><Advanced /></Tab.Pane> },
-  { menuItem: 'Preview and Export', render: () => <Tab.Pane><Review /></Tab.Pane> },
-];
-
 const Project = ({
+  projectId,
   onClose,
   onSetName,
   name,
-}) => (
-  <Container>
-    <Menu inverted color="orange" attached="bottom">
-      <EditableMenuHeader value={name} onChange={onSetName} />
-      <Menu.Item position="right" icon="close" content="close" onClick={onClose} />
-    </Menu>
-    <Tab panes={tabPanes} menu={{ secondary: false, pointing: true }} />
-  </Container>
-);
+}) => {
+  const tabPanes = [
+    { menuItem: 'Sequences', render: () => <Sequences projectId={projectId} /> },
+    { menuItem: 'Presentation', render: () => <Presentation projectId={projectId} /> },
+    { menuItem: 'Advanced', render: () => <Advanced projectId={projectId} /> },
+    { menuItem: 'Preview and Export', render: () => <Review projectId={projectId} /> },
+  ];
 
-const mapStateToProps = state => ({
-  name: state.Project.name,
+  return (
+    <Container>
+      <Menu inverted color="orange" attached="bottom">
+        <EditableMenuHeader value={name} onChange={onSetName} />
+        <Menu.Item position="right" icon="close" content="close" onClick={onClose} />
+      </Menu>
+      <Tab panes={tabPanes} menu={{ secondary: false, pointing: true, color: 'orange' }} />
+    </Container>
+  );
+};
+
+Project.propTypes = {
+  projectId: PropTypes.number.isRequired,
+  name: PropTypes.string.isRequired,
+  onSetName: PropTypes.func.isRequired,
+  onClose: PropTypes.func.isRequired,
+};
+
+const mapStateToProps = (state, { projectId }) => ({
+  name: state.Project.projects[projectId].name,
 });
 
-const mapDispatchToProps = dispatch => ({
-  onClose: () => dispatch(closeProject()),
-  onSetName: name => dispatch(setProjectName(name)),
+const mapDispatchToProps = (dispatch, { projectId }) => ({
+  onClose: () => dispatch(closeProject(projectId)),
+  onSetName: name => dispatch(setProjectName(projectId, name)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Project);

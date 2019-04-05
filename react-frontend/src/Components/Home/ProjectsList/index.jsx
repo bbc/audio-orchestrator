@@ -1,5 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 // import { connect } from 'react-redux';
 import {
   Card,
@@ -19,6 +19,11 @@ const ProjectsList = ({
     ))}
   </Card.Group>
 );
+
+ProjectsList.propTypes = {
+  projects: PropTypes.arrayOf(PropTypes.object).isRequired,
+  loading: PropTypes.bool.isRequired,
+};
 
 // export default connect(mapStateToProps)(ProjectsList);
 export default ProjectsList;
