@@ -146,7 +146,18 @@ const ProjectReducer = (state = initialState, action) => {
     case 'SET_PROJECT_SEQUENCE_FILES':
       return updateSequence(
         state, action.projectId, action.sequenceId,
-        { filesList: action.filesList },
+        {
+          filesList: action.filesList,
+          files: action.files,
+        },
+      );
+    case 'SET_PROJECT_SEQUENCE_OBJECTS':
+      return updateSequence(
+        state, action.projectId, action.sequenceId,
+        {
+          objectsList: action.objectsList,
+          objects: action.objects,
+        },
       );
     case 'SET_PROJECT_SEQUENCE_FILE_PROPERTIES':
       return updateFiles(state, action.projectId, action.sequenceId, action.files);

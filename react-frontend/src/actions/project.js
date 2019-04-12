@@ -90,6 +90,8 @@ const setFileProperties = (projectId, sequenceId, files) => (dispatch) => {
  * Action creator, updates the user interface with the list of files for the sequence.
  */
 export const getSequenceFiles = (projectId, sequenceId) => (dispatch) => {
+  // TODO apply the same filtering here as in setFileProperties (e.g. remove path, silence results)
+  // ^^ this currently happens in reducer.
   dispatch({
     type: 'SET_PROJECT_SEQUENCE_FILES',
     projectId,
@@ -106,6 +108,16 @@ const setFilesLoading = (projectId, sequenceId, loading, taskId) => ({
   loading,
   taskId,
 });
+
+export const getSequenceObjects = (projectId, sequenceId) => (dispatch) => {
+  dispatch({
+    type: 'SET_PROJECT_SEQUENCE_OBJECTS',
+    projectId,
+    sequenceId,
+    objectsList: projects[projectId].get(`sequences.${sequenceId}.objectsList`, []),
+    objects: projects[projectId].get(`sequences.${sequenceId}.objects`, {}),
+  });
+};
 
 const setTaskProgress = (taskId, completed, total) => ({
   type: 'UI_SET_TASK_PROGRESS',
@@ -234,9 +246,13 @@ export const requestOpenProject = (projectId = null) => (dispatch) => {
       projects[projectId] = store;
     })
     .then(() => {
-      // trigger background analysis for all files in any of the sequences in the opened project.
       projects[projectId].get('sequencesList').forEach(({ sequenceId }) => {
+        // TODO load pretty much everything here and get rid of the "onGetFoo" dispatches in components.
+        // trigger background analysis for all files in any of the sequences in the opened project.
         dispatch(analyseAllFiles(projectId, sequenceId));
+
+        // load the object metadata
+        dispatch(getSequenceObjects(projectId, sequenceId));
       });
     })
     .then(() => {
@@ -372,8 +388,6 @@ const matchObjectsToFiles = (projectId, sequenceId) => {
   const objectsList = project.get(`sequences.${sequenceId}.objectsList`, []);
   const objects = project.get(`sequences.${sequenceId}.objects`, {});
 
-  console.log(objects);
-
   // select or create objects for all files, updating only fileId if one already exists
   filesList
     .forEach(({ fileId, name }) => {
@@ -420,11 +434,11 @@ const initialiseSequenceFiles = (projectId, sequenceId, newFiles) => (dispatch) 
   const key = `sequences.${sequenceId}.files`;
   const listKey = `sequences.${sequenceId}.filesList`;
 
-  // create a file object, initially only containing the path, to store more detailed info about
-  // each file.
+  // create a file object, initially only containing the path and name, to store more detailed info
+  // about each file.
   const files = {};
-  filesWithIds.forEach(({ fileId, path }) => {
-    files[fileId] = { path };
+  filesWithIds.forEach(({ fileId, path, name }) => {
+    files[fileId] = { path, name };
   });
 
   // create a list of { fileId, name }, sorted by ascending name for use as an index.
@@ -447,6 +461,7 @@ const initialiseSequenceFiles = (projectId, sequenceId, newFiles) => (dispatch) 
 
   // update the interface state to match what was just stored
   dispatch(getSequenceFiles(projectId, sequenceId));
+  dispatch(getSequenceObjects(projectId, sequenceId));
 
   // trigger analysis of the new files and update the UI, also updating files in store and state.
   // TODO could re-use analysis results if some of the files have been used previously, here we
@@ -529,4 +544,172 @@ export const setSequenceName = (projectId, sequenceId, name) => (dispatch) => {
 
   // update the sequences list also in the UI
   dispatch(getSequencesList(projectId));
+};
+
+/**
+ * Utility; parse a file contents string or buffer as a JSON object and extract the metadata
+ * objects list.
+ *
+ * @returns {Promise<Array<Object>>>}
+ */
+const parseMetadataFile = file => new Promise((resolve, reject) => {
+  // create a file reader to get the contents of the selected file, and register events on it.
+  const reader = new FileReader();
+  reader.addEventListener('error', () => {
+    reject(new Error(''));
+  });
+  reader.addEventListener('loadend', () => {
+    const metadata = JSON.parse(reader.result) || {};
+    const objects = metadata.mdoObjects || null;
+
+    if (!Array.isArray(objects) || objects.length === 0) {
+      reject(new Error('Could not parse metadata file, format may be invalid or it may not contain any objects.'));
+      return;
+    }
+
+    if (!objects.every(object => ('objectNumber' in object && 'label' in object))) {
+      reject(new Error('Not every object has a number and label.'));
+      return;
+    }
+    resolve(objects);
+  });
+
+  // start reading the file, will trigger the error or loadend event when finished.
+  reader.readAsText(file);
+});
+
+/**
+ * Action; replaces the objects associated with the given sequence, updates the project store, and
+ * dispatches an update to the UI state.
+ *
+ * @param {Array<Object>} newObjects
+ */
+const initialiseSequenceObjects = (projectId, sequenceId, newObjectsList) => (dispatch) => {
+  const project = projects[projectId];
+  const oldObjects = project.get(`sequences.${sequenceId}.objects`, {});
+
+  const suffixToChannelMapping = {
+    L: 'left',
+    R: 'right',
+    M: 'mono',
+    S: 'stereo', // not supported in encoding or playback; included here for completeness.
+  };
+  const suffixToPanning = {
+    L: 30,
+    R: -30,
+    M: 0,
+  };
+
+  const objects = {};
+  const objectsList = newObjectsList.map(({ objectNumber, label }) => ({
+    objectNumber: parseInt(objectNumber, 10),
+    label,
+  }));
+  newObjectsList.forEach(({
+    objectNumber,
+    label,
+    // group,
+    mdoThreshold,
+    mdoOnly,
+    // mdoMethod,
+    // speakerNumber,
+    // diffuseness,
+    mdoSpread,
+    // mdoDynamic,
+    // mdoGainDB,
+    muteIfObject,
+    exclusivity,
+    nearFront,
+    nearSide,
+    nearRear,
+    farFront,
+    farSide,
+    farRear,
+    above,
+    onDropin,
+    onDropout,
+    minQuality,
+  }) => {
+    const objectNumberInt = parseInt(objectNumber, 10);
+    const oldObject = oldObjects[objectNumberInt] || {};
+    const suffix = label[label.length - 1] || 0;
+    objects[objectNumberInt] = ({
+      objectNumber: objectNumberInt,
+      label,
+      fileId: null,
+      panning: oldObject.panning || suffixToPanning[suffix] || 0,
+      channelMapping: oldObject.channelMapping || suffixToChannelMapping[suffix] || 'mono',
+      orchestration: {
+        // group,
+        mdoThreshold,
+        mdoOnly,
+        // mdoMethod,
+        // speakerNumber,
+        // diffuseness,
+        mdoSpread,
+        // mdoDynamic,
+        // mdoGainDB,
+        muteIfObject,
+        exclusivity,
+        nearFront,
+        nearSide,
+        nearRear,
+        farFront,
+        farSide,
+        farRear,
+        above,
+        onDropin,
+        onDropout,
+        minQuality,
+        image: oldObject.image || null,
+      },
+    });
+  });
+
+  // store results in project store
+  project.set(`sequences.${sequenceId}.objectsList`, objectsList);
+  project.set(`sequences.${sequenceId}.objects`, objects);
+
+  // Update store with new object-file mappings
+  matchObjectsToFiles(projectId, sequenceId);
+
+  // load objects into state.
+  dispatch(getSequenceObjects(projectId, sequenceId));
+};
+
+/**
+ * Replace metadata file, open a file-open dialogue and replace the object metadata if a valid file
+ * is selected.
+ */
+export const requestReplaceMetadata = (projectId, sequenceId) => (dispatch) => {
+  new Promise((resolve, reject) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.json, .txt';
+    input.multiple = false;
+    input.style.display = 'none';
+
+    const onChange = () => {
+      const { files } = input;
+      input.removeEventListener('change', onChange);
+      document.body.removeChild(input);
+      if (files.length > 0) {
+        resolve(files);
+      } else {
+        reject(new Error('No file selected'));
+      }
+    };
+
+    input.addEventListener('change', onChange);
+
+    document.body.appendChild(input);
+    input.click();
+  }).then((fileList) => {
+    const file = fileList[0];
+    return parseMetadataFile(file);
+  }).then((objects) => {
+    dispatch(initialiseSequenceObjects(projectId, sequenceId, objects));
+  }).catch((e) => {
+    console.error(e); // TODO dispatch error action to display a dismissable message in UI
+  });
 };

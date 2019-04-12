@@ -45,12 +45,12 @@ class Audio extends React.Component {
         <Segment attached placeholder textAlign="center">
           <Header icon>
             <Icon name="file audio outline" />
-            No audio added yet.
+            Add audio
             <Header.Subheader>
               There should be one continuous mono WAV file for each object.
             </Header.Subheader>
           </Header>
-          <Button primary icon="folder open" content="Import audio files" labelPosition="left" onClick={onReplaceAll} />
+          <Button primary icon="linkify" content="Link audio files" labelPosition="left" onClick={onReplaceAll} />
         </Segment>
       );
     }
