@@ -19,6 +19,8 @@ const sequenceDefaults = {
   filesLoading: false,
   filesList: [],
   files: {},
+  objectsList: [],
+  objects: {},
   isMain: false,
   isIntro: false,
 };
@@ -133,15 +135,22 @@ const ProjectReducer = (state = initialState, action) => {
         state, action.projectId, action.sequenceId,
         { loading: action.loading },
       );
-    case 'SET_PROJECT_SEQUENCE_NAME':
+    case 'SET_PROJECT_SEQUENCE_INFO':
       return updateSequence(
         state, action.projectId, action.sequenceId,
-        { name: action.name },
+        {
+          name: action.name,
+          isMain: action.isMain,
+          isIntro: action.isIntro,
+        },
       );
     case 'SET_PROJECT_SEQUENCE_FILES_LOADING':
       return updateSequence(
         state, action.projectId, action.sequenceId,
-        { audioFilesLoading: action.loading, audioFilesTaskId: action.taskId },
+        {
+          filesLoading: action.loading,
+          filesTaskId: action.taskId,
+        },
       );
     case 'SET_PROJECT_SEQUENCE_FILES':
       return updateSequence(

@@ -138,6 +138,7 @@ const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
   console.log('analyseAllFiles', filesList.length);
 
   const createTaskId = uuidv4();
+  dispatch(setTaskProgress(createTaskId, 0, 0));
   dispatch(setFilesLoading(projectId, sequenceId, true, createTaskId));
 
   // load current info from store into state
@@ -164,7 +165,7 @@ const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
     ));
 
     // Hide loader, display file list with pending probe/silence results
-    dispatch(setFilesLoading(projectId, sequenceId, false, null));
+    dispatch(setFilesLoading(projectId, sequenceId, false, createTaskId));
 
     // for all successfully accessed files, get probe and silence data
     return results.filter(({ success }) => success).map(({ fileId }) => {
@@ -279,7 +280,7 @@ export const getSequencesList = projectId => (dispatch) => {
     isIntro,
   }) => {
     dispatch({
-      type: 'SET_PROJECT_SEQUENCE_NAME',
+      type: 'SET_PROJECT_SEQUENCE_INFO',
       projectId,
       sequenceId,
       name,
@@ -290,15 +291,13 @@ export const getSequencesList = projectId => (dispatch) => {
 
   dispatch({ type: 'SET_PROJECT_SEQUENCES_LIST', projectId, sequencesList });
 
-  console.log(sequencesList);
-
   dispatch({ type: 'SET_PROJECT_SEQUENCES_LIST_LOADING', projectId, loading: false });
 };
 
 /**
  * Action creator, creates a new empty sequence in the project
  */
-export const addSequence = (projectId, { name, isMain, isIntro }) => (dispatch) => {
+export const addSequence = (projectId, { name, isMain, isIntro } = {}) => (dispatch) => {
   // Get current list and write back the list with one added element.
   const sequencesList = projects[projectId].get('sequencesList', []);
   const sequenceId = sequencesList.length;
