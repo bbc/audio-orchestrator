@@ -1,255 +1,207 @@
-import { promisify } from 'util';
-import { spawn } from 'child_process';
+import uuidv4 from 'uuid/v4';
+import priorityQueue from 'async/priorityQueue';
 import path from 'path';
-import fs from 'fs';
-import { path as ffprobePath } from 'ffprobe-static';
-import { path as ffmpegPath } from 'ffmpeg-static';
-import ffprobeCB from 'node-ffprobe';
+import { processExists, processProbe, processSilence } from './workers';
 
-// configure the ffprobe module with the path to the bundled ffprobe
-ffprobeCB.FFPROBE_PATH = ffprobePath;
+// how many tasks can be in progress at the same time
+const CONCURRENCY = 4;
 
-// wrap callback-based methods in a promise API:
-const stat = promisify(fs.stat);
-const ffprobe = promisify(ffprobeCB);
+// task workers
+const tasks = {
+  EXISTS: processExists,
+  PROBE: processProbe,
+  SILENCE: processSilence,
+};
+
+// task priorities, tasks are processed in ascending order
+const priorities = {
+  EXISTS: 10,
+  PROBE: 20,
+  SILENCE: 30,
+};
+
+/**
+ * Binds the worker method to the given files and batches objects.
+ *
+ * Returns a function that processes one { task, batchId, fileId } it is given, updates the files
+ * and batches objects with the results, and calls the callback when finished.
+ */
+const getAnalysisWorker = (files, batches) => ({ task, fileId, batchId }, callback) => {
+  // Don't do anything if the batch does not exist - it may have been cancelled.
+  if (!(batchId in batches)) {
+    callback();
+    return;
+  }
+
+  // Immediately save a non-successful result if the file has not been registered.
+  if (!(fileId in files)) {
+    console.error(`fileId not registered: ${fileId}`);
+    batches[batchId].results.push({ fileId, success: false });
+
+    callback();
+    return;
+  }
+
+  // process the actual task, then store the result and success flag, only then call the callback.
+  task(files[fileId].path)
+    .then((result) => {
+      const batch = batches[batchId];
+      if (batch) {
+        batch.results.push({ fileId, success: true, ...result });
+      }
+    })
+    .catch((err) => {
+      const batch = batches[batchId];
+      if (batch) {
+        console.error('worker task failed:', err);
+        batch.results.push({ fileId, success: false });
+      }
+    })
+    .then(() => callback());
+};
 
 class Analyser {
   constructor() {
     this.files = {}; // data about each file, including internal info and analysis results.
+    this.batches = {};
     this.filePathToId = {}; // a map of all paths to their fileId for lookup by path.
     this.fileIds = []; // list of all fileIds assigned for iteration.
+
+    this.queue = priorityQueue(getAnalysisWorker(this.files, this.batches), CONCURRENCY);
   }
 
   /**
-   * Create a simplified object suitable for returning to the user in a short format (not including
-   * full analysis results).
+   * Initialise a batch of given total length, creating a unique id for it and registering it.
    *
-   * @returns {Object}
+   * Batches do not hold any information about the files they will be processing. Results are added
+   * one at a time as they become available, each at least providing a fileId and a success flag.
+   * The actual results are available in the item's properties, e.g. results[0].probe etc.
+   *
    * @private
    */
-  shortFormat(fileId) {
-    if (!(fileId in this.files)) return null;
-
-    const {
-      name,
-      duration,
-      sampleRate,
-      numChannels,
-      silenceAnalysisStarted,
-      silenceAnalysisProgress,
-    } = this.files[fileId];
-
-    return {
-      fileId,
-      name,
+  initialiseBatch(total) {
+    const batch = {
+      batchId: uuidv4(),
+      results: [],
+      total,
     };
+    this.batches[batch.batchId] = batch;
+
+    return batch;
   }
 
   /**
-   * Create a simplified object suitable for returning to the user in a long format (including all
-   * analysis results).
+   * Create a bunch of files, storing their normalised path against the given file id, and
+   * triggering a check for their accessibility on the file system.
    *
-   * @returns {Object}
-   * @private
+   * @returns {Promise}
    */
-  longFormat(fileId) {
-    if (!(fileId in this.files)) return null;
+  batchCreate(files) {
+    const batch = this.initialiseBatch(files.length);
+    const { batchId } = batch;
 
-    const {
-      probe,
-      // SilenceAnalysisResults,
-    } = this.files[fileId];
+    files.forEach((file) => {
+      const { fileId } = file;
+      const filePath = file.path;
 
-    const {
-      duration,
-      sampleRate,
-      numChannels,
-    } = probe;
+      if (!path.isAbsolute(filePath)) {
+        throw new Error('Not an absolute path');
+      }
 
-    return {
-      ...this.shortFormat(fileId),
-      // SilenceAnalysisResults,
-      probe: {
-        duration,
-        sampleRate,
-        numChannels,
-      },
-    };
-  }
+      this.files[file.fileId] = {
+        fileId,
+        path: path.normalize(filePath),
+      };
 
-  /**
-   * Lists all files managed by this analyser.
-   *
-   * @returns {Promise<Array<Object>>}
-   */
-  listFiles() {
-    return Promise.resolve(
-      this.fileIds.map(fileId => this.longFormat(fileId)),
-    );
-  }
-
-  /**
-   * Gets detailed information about a single file by its id.
-   *
-   * @returns {Promise<Object>}
-   */
-  getFile(fileId) {
-    if (!(fileId in this.files)) {
-      throw new Error('No such file');
-    }
-
-    return Promise.resolve(this.longFormat(fileId));
-  }
-
-  /**
-   * Creates a file from its path on the local disk.
-   *
-   * @returns {Promise<String>} fileId
-   */
-  createFile(fileId, filePath) {
-    if (!path.isAbsolute(filePath)) {
-      throw new Error('Not an absolute path');
-    }
-
-    const normalizedPath = path.normalize(filePath);
-
-    return stat(normalizedPath)
-      .then(() => {
-        const file = {
-          fileId,
-          path: normalizedPath,
-          name: path.basename(normalizedPath),
-        };
-
-        this.files[fileId] = file;
-        this.filePathToId[normalizedPath] = fileId;
-        this.fileIds.push(fileId);
-
-        return fileId;
-      });
-  }
-
-  /**
-   * run ffprobe analysis and update the file with the results from it.
-   *
-   * @returns {Promise<Object>} probe results once available
-   */
-  probe(fileId) {
-    // ensure the fileId is valid
-    if (!(fileId in this.files)) {
-      throw new Error('No such file');
-    }
-    const file = this.files[fileId];
-
-    // To check if a call to ffprobe for this file is currently in progress, store the resulting
-    // promise with the file object. Return the pending promise if one is already set.
-    if (file.probePromise) {
-      return file.probePromise;
-    }
-
-    // call ffprobe and wait for the results and then check and use them
-    file.probePromise = ffprobe(file.path)
-      .then((data) => {
-        // reset the probe promise, as we are not waiting for the ffprobe call any more
-        file.probePromise = null;
-
-        // ensure there is at least one stream detected in the file and return the first one
-        if (!data.streams || data.streams.length === 0) {
-          throw new Error('No media streams in file');
-        }
-        return data.streams[0];
-      })
-      .then((stream) => {
-        // ensure the stream is an audio stream before accessing its properties
-        if (stream.codec_type !== 'audio') {
-          throw new Error('First stream in file does not contain an audio codec');
-        }
-        /* eslint-disable-next-line camelcase */
-        const { sample_rate, channels, duration } = stream;
-
-        const probe = {
-          sampleRate: sample_rate,
-          numChannels: channels,
-          duration,
-        };
-
-        // replace the file object, replacing some of its properties
-        this.files[fileId] = {
-          ...file,
-          probe,
-        };
-
-        // return the short-format file object which includes the probe results for convenience
-        return this.longFormat(fileId);
-      });
-
-    // return the new promise
-    return file.probePromise;
-  }
-
-  /**
-   * run silence analysis process.
-   */
-  silence(fileId) {
-    // ensure the fileId is valid
-    if (!(fileId in this.files)) {
-      throw new Error('No such file');
-    }
-    const file = this.files[fileId];
-
-    // Return the pending promise if one is already set.
-    if (file.silencePromise) {
-      return file.silencePromise;
-    }
-
-    // start silence detection
-    // ffmpeg arguments
-    const ffmpegArgs = [
-      '-i', file.path, // input file path
-      '-af', 'silencedetect=n=-80dB:d=0.1', // silence detect noise floor and minimum silence length
-      '-f', 'null', // no output
-      '-', // output to stdout
-    ];
-
-    const silenceExpression = /silence_end: (?<end>\d+\.\d+) \| silence_duration: (?<duration>\d+\.\d+)/;
-
-    file.silencePromise = new Promise((resolve, reject) => {
-      const results = [];
-
-      const ffmpegProcess = spawn(
-        ffmpegPath,
-        ffmpegArgs,
+      this.queue.push(
         {
-          stdio: ['ignore', 'pipe', 'pipe'],
+          task: tasks.EXISTS,
+          fileId,
+          batchId,
         },
+        priorities.EXISTS,
       );
-
-      ffmpegProcess.on('error', (err) => {
-        reject(err);
-      });
-
-      ffmpegProcess.stderr.on('data', (data) => {
-        const match = `${data}`.match(silenceExpression);
-
-        if (match) {
-          const { end, duration } = match.groups;
-
-          if (!!end && !!duration) {
-            results.push({ end, duration });
-          }
-        }
-      });
-
-      ffmpegProcess.on('close', (code) => {
-        if (code !== 0) {
-          reject(new Error(`ffmpeg exited with non-zero code: ${code}`));
-        }
-
-        resolve({ silence: results });
-      });
     });
 
-    return file.silencePromise;
+    return Promise.resolve({ batchId });
+  }
+
+  /**
+   * Probe for audio stream information in a batch of previously created files.
+   *
+   * @returns {Promise}
+   */
+  batchProbe(fileIds) {
+    const batch = this.initialiseBatch(fileIds.length);
+    const { batchId } = batch;
+
+    fileIds.forEach((fileId) => {
+      this.queue.push(
+        {
+          task: tasks.PROBE,
+          fileId,
+          batchId,
+        },
+        priorities.PROBE,
+      );
+    });
+
+    return Promise.resolve({ batchId });
+  }
+
+  /**
+   * Analyse silence in a batch of previously created files.
+   *
+   * @returns {Promise}
+   */
+  batchSilence(fileIds) {
+    const batch = this.initialiseBatch(fileIds.length);
+    const { batchId } = batch;
+
+    fileIds.forEach((fileId) => {
+      this.queue.push(
+        {
+          task: tasks.SILENCE,
+          fileId,
+          batchId,
+        },
+        priorities.SILENCE,
+      );
+    });
+
+    return Promise.resolve({ batchId });
+  }
+
+  /**
+   * Get basic information about the batch progress.
+   *
+   * @returns {Promise}
+   */
+  getBatch(batchId) {
+    return Promise.resolve().then(() => {
+      if (!(batchId in this.batches)) {
+        throw new Error('No such batch');
+      }
+
+      const { results, total } = this.batches[batchId];
+      return { completed: results.length, total };
+    });
+  }
+
+  /**
+   * Get full results for the batch.
+   *
+   * @returns {Promise}
+   */
+  getBatchResults(batchId) {
+    return Promise.resolve().then(() => {
+      if (!(batchId in this.batches)) {
+        throw new Error('No such batch');
+      }
+
+      const { results, total } = this.batches[batchId];
+      return { completed: results.length, total, results };
+    });
   }
 }
 

@@ -5,6 +5,7 @@ import {
   Table,
   Button,
   Header,
+  Icon,
 } from 'semantic-ui-react';
 
 const SequenceCheck = ({
@@ -17,6 +18,7 @@ const SequenceCheck = ({
   allFilesAreGood,
   onReviewSequence,
   sequenceId,
+  filesLoading,
 }) => {
   let error = null;
   let summary = 'Additional sequence, not used in preview.';
@@ -38,7 +40,10 @@ const SequenceCheck = ({
 
   return (
     <Table.Row negative={!!error} positive={!error}>
-      <Table.Cell icon={error ? 'exclamation circle' : 'checkmark'} />
+      { filesLoading
+        ? <Table.Cell><Icon name="spinner" loading /></Table.Cell>
+        : <Table.Cell icon={error ? 'exclamation circle' : 'checkmark'} />
+      }
       <Table.Cell>
         <Header as="h4" content={`Sequence: ${name}`} subheader={summary} />
         { error || 'Audio files and matching metadata are available.' }
@@ -70,6 +75,7 @@ const mapStateToProps = ({ Project }, { projectId, sequenceId }) => {
     filesList,
     objectsList,
     objects,
+    filesLoading,
   } = sequence;
 
   return {
@@ -80,6 +86,7 @@ const mapStateToProps = ({ Project }, { projectId, sequenceId }) => {
     numObjectsAdded: objectsList.length || 0,
     allObjectsHaveFiles: objectsList.every(({ objectNumber }) => !!objects[objectNumber].fileId),
     allFilesAreGood: filesList.every(({ error }) => !error),
+    filesLoading,
   };
 };
 

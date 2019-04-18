@@ -22,6 +22,8 @@ const TaskProgress = ({
     loading = true;
   }
 
+  const percent = total === 0 ? 100 : Math.round(completed / total * 100, 0);
+
   return (
     <Table.Row positive={done}>
       <Table.Cell>
@@ -30,7 +32,7 @@ const TaskProgress = ({
       <Table.Cell>
         <Header as="h4" content={name} />
         {started
-          ? `${Math.round(completed / total * 100, 0)}% (${completed} of ${total})`
+          ? `${percent}%`
           : 'Not started.'
         }
       </Table.Cell>
@@ -41,11 +43,13 @@ const TaskProgress = ({
 
 const mapStateToProps = ({ UI }, { taskIds }) => {
   const { tasks } = UI;
+  const startedTasks = taskIds.filter(taskId => taskId in tasks).map(taskId => tasks[taskId]);
+
   return {
-    started: (taskIds.length > 0),
-    ...taskIds.reduce((acc, taskId) => ({
-      completed: acc.completed + tasks[taskId].completed,
-      total: acc.total + tasks[taskId].total,
+    started: (startedTasks.length > 0),
+    ...startedTasks.reduce((acc, task) => ({
+      completed: acc.completed + task.completed,
+      total: acc.total + task.total,
     }), { completed: 0, total: 0 }),
   };
 };

@@ -109,6 +109,27 @@ const setFilesLoading = (projectId, sequenceId, loading, taskId) => ({
   taskId,
 });
 
+const setProbeTaskId = (projectId, sequenceId, taskId) => ({
+  type: 'SET_PROJECT_SEQUENCE_PROBE_TASK',
+  projectId,
+  sequenceId,
+  taskId,
+});
+
+const setSilenceTaskId = (projectId, sequenceId, taskId) => ({
+  type: 'SET_PROJECT_SEQUENCE_SILENCE_TASK',
+  projectId,
+  sequenceId,
+  taskId,
+});
+
+const setEncodeTaskId = (projectId, sequenceId, taskId) => ({
+  type: 'SET_PROJECT_SEQUENCE_ENCODE_TASK',
+  projectId,
+  sequenceId,
+  taskId,
+});
+
 export const getSequenceObjects = (projectId, sequenceId) => (dispatch) => {
   dispatch({
     type: 'SET_PROJECT_SEQUENCE_OBJECTS',
@@ -127,6 +148,37 @@ const setTaskProgress = (taskId, completed, total) => ({
 });
 
 /**
+ * Wraps a call to a batch task creator, and registers the required callbacks.
+ *
+ * * onProgress: dispatches a task progress action with the number of tasks completed.
+ * * onComplete: resolves the promise with the results when they are available.
+ * * onError: rejects the promise
+ *
+ * The results are an array of objects containing at least a fileId and a success flag.
+ *
+ * @returns {Promise<Array<Object>>}
+ */
+const createTaskWithProgress = (dispatch, task, taskId, argument) => {
+  // ensure the task is created in the state.
+  dispatch(setTaskProgress(taskId, 0, argument.length || 0));
+
+  // return a promise that resolves when the task has been completed and results are available.
+  return new Promise((resolve, reject) => {
+    task(argument, {
+      onProgress: ({ completed, total }) => {
+        dispatch(setTaskProgress(taskId, completed, total));
+      },
+      onComplete: ({ results }) => {
+        resolve(results);
+      },
+      onError: () => {
+        reject();
+      },
+    });
+  });
+};
+
+/**
  * Internal action creator, checks files still exist and triggers all missing analysis steps for
  * all files referenced by the sequence.
  */
@@ -135,105 +187,134 @@ const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
   const filesList = project.get(`sequences.${sequenceId}.filesList`, []);
   const files = project.get(`sequences.${sequenceId}.files`, {});
 
-  console.log('analyseAllFiles', filesList.length);
-
   const createTaskId = uuidv4();
+  const probeTaskId = uuidv4();
+  const silenceTaskId = uuidv4();
+  const encodeTaskId = uuidv4();
+
   dispatch(setTaskProgress(createTaskId, 0, 0));
   dispatch(setFilesLoading(projectId, sequenceId, true, createTaskId));
 
   // load current info from store into state
   dispatch(getSequenceFiles(projectId, sequenceId));
 
-  fileService.createAll( // check files still exist
+  // bind file service methods to pass into task creator
+  const createAll = fileService.createAll.bind(fileService);
+  const probeAll = fileService.probeAll.bind(fileService);
+  const silenceAll = fileService.silenceAll.bind(fileService);
+  // const encodeAll = fileService.encodeAll.bind(fileService);
+
+  // Register the fileIds and paths with the server
+  createTaskWithProgress(
+    dispatch,
+    createAll,
+    createTaskId,
     filesList.map(({ fileId }) => {
       const { path } = files[fileId] || {};
       return { fileId, path };
     }),
-    {
-      onProgress: ({ completed, total }) => {
-        dispatch(setTaskProgress(createTaskId, completed, total));
-      },
-    },
-  ).then((results) => { // update state and store with results
-    // update error messages based on results
-    dispatch(setFileProperties(
-      projectId, sequenceId,
-      results.map(({ success, fileId }) => ({
-        fileId,
-        error: success ? null : 'File could not be accessed.',
-      })),
-    ));
+  )
+    .then((results) => {
+      // update error messages based on results
+      dispatch(setFileProperties(
+        projectId, sequenceId,
+        results.map(({ success, fileId }) => ({
+          fileId,
+          error: success ? null : 'File could not be accessed.',
+        })),
+      ));
 
-    // Hide loader, display file list with pending probe/silence results
-    dispatch(setFilesLoading(projectId, sequenceId, false, createTaskId));
+      // Hide loader, display file list with pending probe/silence results.
+      dispatch(setFilesLoading(projectId, sequenceId, false, createTaskId));
 
-    // for all successfully accessed files, get probe and silence data
-    return results.filter(({ success }) => success).map(({ fileId }) => {
-      // TODO can get rid of most of this now it's all in one object and already 'loaded'???
-      // load the previous analysis results, if available
-      const { probe, silence } = files[fileId];
+      // Pass on a list of fileIds for the existing files (marked as successful in results).
+      return results
+        .filter(({ success }) => success)
+        .map(({ fileId }) => fileId);
+    })
+    .then((existingFileIds) => {
+      // Trigger the probe analysis for every existing file. As this is fast, it is done even if not
+      // all files were successful, so that the interface can be updated with the file stats.
+      dispatch(setProbeTaskId(projectId, sequenceId, probeTaskId));
+      return createTaskWithProgress(dispatch, probeAll, probeTaskId, existingFileIds);
+    })
+    .then((probeResults) => {
+      // update error messages and probe information
+      dispatch(setFileProperties(
+        projectId, sequenceId,
+        probeResults.map(({ success, fileId, probe }) => ({
+          fileId,
+          error: success ? null : 'Analysis failed, file may not contain an audio stream.',
+          probe: success ? probe : null,
+        })),
+      ));
 
-      return {
-        fileId,
-        probe,
-        silence,
-      };
-    });
-  }).then((successfulFiles) => {
-    // Propagate previous results, if any, to state for immediate display in UI
-    dispatch(setFileProperties(projectId, sequenceId, successfulFiles));
+      // Pass on a list of successfully probed fileIds
+      return probeResults
+        .filter(({ success }) => success)
+        .map(({ fileId }) => fileId);
+    })
+    .then((probedFileIds) => {
+      // If not all files were probed, cancel the rest of the chain (no need to analyse further).
+      // TODO: Check if previous analysis results can be re-used to avoid re-running the analysis.
+      if (probedFileIds.length !== filesList.length) {
+        throw new Error('Not all files were successfully probed.');
+      }
 
-    // run probe analysis on existing files, if probe or silence data doesn't already exist
-    Promise.all(
-      // run probe analysis on all files that are missing probe or silence results
-      successfulFiles.filter(({ probe, silence }) => !probe || !silence)
-        .map(({ fileId }) => fileService.probe(fileId)
-          .then(probeResults => ({
+      // Otherwise, start the silence analysis for all files that didn't already have results.
+      // Then merge the new results with the old results to return a complete list.
+      const previousSilenceResults = [];
+      const fileIdsWithoutSilence = [];
+
+      filesList.forEach(({ fileId }) => {
+        if ((fileId in files) && !!files[fileId].silence) {
+          previousSilenceResults.push({
             fileId,
-            probe: probeResults,
             success: true,
-          }))
-          .catch(() => ({ fileId, success: false }))),
-    )
-      // once all probes have resolved, update files with results or error message
-      .then((results) => {
-        // create file update objects with the new status and pass on to state/project store.
-        dispatch(setFileProperties(
-          projectId, sequenceId,
-          results.map(({ success, fileId, probe }) => ({
-            fileId,
-            error: success ? null : 'Analysis failed, file may not contain an audio stream.',
-            probe: success ? probe : null,
-          })),
-        ));
-
-        // forward the unchanged probe results to the next step
-        return results;
-      })
-      // Run silence analysis (on successfully probed files only)
-      .then(results => (Promise.all(
-        results.filter(({ success }) => success)
-          .map(({ fileId }) => fileService.silence(fileId)
-            .then(silence => ({
-              fileId,
-              success: true,
-              silence,
-            }))
-            .catch(() => ({ fileId, success: false }))),
-      )))
-      // Once all the silence promises have resolved, store the results as before for probes
-      .then((results) => {
-        dispatch(setFileProperties(
-          projectId, sequenceId,
-          results.map(({ success, fileId, silence }) => ({
-            fileId,
-            error: success ? null : 'Analysis failed, file may not be readable by silence analysis script.',
-            silence: success ? silence : null,
-          })),
-        ));
-        return results;
+            silence: files[fileId].silence,
+          });
+        } else {
+          fileIdsWithoutSilence.push(fileId);
+        }
       });
-  });
+
+      dispatch(setSilenceTaskId(projectId, sequenceId, silenceTaskId));
+      return createTaskWithProgress(dispatch, silenceAll, silenceTaskId, fileIdsWithoutSilence)
+        .then(silenceResults => [
+          ...silenceResults,
+          ...previousSilenceResults,
+        ]);
+    })
+    .then((silenceResults) => {
+      // Update error messages and silence information.
+      dispatch(setFileProperties(
+        projectId, sequenceId,
+        silenceResults.map(({ success, fileId, silence }) => ({
+          fileId,
+          error: success ? null : 'Analysis failed, file may not be readable by silence analysis script.',
+          silence: success ? silence : null,
+        })),
+      ));
+
+      // Pass on a list of successfully analysed fileIds.
+      return silenceResults
+        .filter(({ success }) => success)
+        .map(({ fileId }) => fileId);
+    })
+    .then((completeFileIds) => {
+      // If silence analysis failed for some files, there is no point in encoding any of them.
+      if (completeFileIds.length !== filesList.length) {
+        throw new Error('Not all files were successfully analysed for silence.');
+      }
+
+      // TODO: trigger encoding, too.
+      dispatch(setEncodeTaskId(projectId, sequenceId, encodeTaskId));
+      // return createTaskWithProgress(dispatch, encodeAll, probeTaskId, existingFileIds);
+    })
+  // .then((encodeResults) => {})
+    .catch((e) => {
+      console.log(e); // TODO dismissable error in interface? reset results?
+    });
 };
 
 /**

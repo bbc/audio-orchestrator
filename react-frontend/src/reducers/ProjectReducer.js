@@ -23,6 +23,9 @@ const sequenceDefaults = {
   objects: {},
   isMain: false,
   isIntro: false,
+  probeTaskId: null,
+  silenceTaskId: null,
+  encodeTaskId: null,
 };
 
 const fileDefaults = {
@@ -167,6 +170,21 @@ const ProjectReducer = (state = initialState, action) => {
           objectsList: action.objectsList,
           objects: action.objects,
         },
+      );
+    case 'SET_PROJECT_SEQUENCE_PROBE_TASK':
+      return updateSequence(
+        state, action.projectId, action.sequenceId,
+        { probeTaskId: action.taskId },
+      );
+    case 'SET_PROJECT_SEQUENCE_SILENCE_TASK':
+      return updateSequence(
+        state, action.projectId, action.sequenceId,
+        { silenceTaskId: action.taskId },
+      );
+    case 'SET_PROJECT_SEQUENCE_ENCODE_TASK':
+      return updateSequence(
+        state, action.projectId, action.sequenceId,
+        { encodeTaskId: action.taskId },
       );
     case 'SET_PROJECT_SEQUENCE_FILE_PROPERTIES':
       return updateFiles(state, action.projectId, action.sequenceId, action.files);

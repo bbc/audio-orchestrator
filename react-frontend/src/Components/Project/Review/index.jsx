@@ -13,7 +13,7 @@ import TaskProgress from './TaskProgress';
 const Review = ({
   projectId,
   sequenceIds,
-  analysisTaskIds,
+  silenceTaskIds,
   presentationValid,
   presentationError,
   advancedValid,
@@ -27,7 +27,7 @@ const Review = ({
         ))}
         <SettingsCheck name="Presentation settings" valid={presentationValid} error={presentationError} />
         <SettingsCheck name="Advanced settings" valid={advancedValid} />
-        <TaskProgress name="Audio file analysis" taskIds={analysisTaskIds} />
+        <TaskProgress name="Audio analysis" taskIds={silenceTaskIds} />
         <TaskProgress name="Audio transcoding (not implemented)" taskIds={[]} />
       </Table.Body>
     </Table>
@@ -49,7 +49,7 @@ const isUrl = (str) => {
 
 const isHostname = str => isUrl(`wss://${str}`) && !str.includes('/') && !str.includes(':');
 
-const mapStateToProps = ({ Project }, { projectId }) => {
+const mapStateToProps = ({ Project, UI }, { projectId }) => {
   const project = Project.projects[projectId] || {};
   const { sequencesList, sequences, settings } = project;
 
@@ -60,6 +60,7 @@ const mapStateToProps = ({ Project }, { projectId }) => {
     joiningLink,
     cloudSyncHostname,
   } = settings;
+
   const presentationValid = title && startLabel && introduction;
   const presentationError = presentationValid ? null : 'Not all fields have been completed.';
 
@@ -69,8 +70,8 @@ const mapStateToProps = ({ Project }, { projectId }) => {
   return {
     sequenceIds: sequencesList
       .map(({ sequenceId }) => sequenceId),
-    analysisTaskIds: sequencesList
-      .map(({ sequenceId }) => sequences[sequenceId].filesTaskId)
+    silenceTaskIds: sequencesList
+      .map(({ sequenceId }) => sequences[sequenceId].silenceTaskId)
       .filter(taskId => !!taskId),
     presentationValid,
     presentationError,

@@ -1,12 +1,10 @@
+const POLL_TIMEOUT = 1000;
+
 /**
  * FileService class, wraps all interaction with the analyse, encode, and project build APIs.
  */
-
 class FileService {
   constructor(apiBase) {
-    this.probePromises = {};
-    this.silencePromises = {};
-
     this.get = path => fetch(`${apiBase}/${path}`).then(response => response.json());
     this.post = (path, data) => fetch(
       `${apiBase}/${path}`,
@@ -48,83 +46,87 @@ class FileService {
   }
 
   /**
+   * Polls the status of a batch and calls the lifecycle callbacks as tasks are completed.
+   *
+   * @private
+   */
+  monitorBatch(batchId, { onProgress, onComplete, onError } = {}) {
+    const poll = () => {
+      this.get(`analyse/batch/${batchId}`)
+        .then(({ success, completed, total }) => {
+          // Did not successfully poll the batch status -> give up.
+          if (!success) {
+            if (onError) onError();
+            return;
+          }
+
+          // Update progress
+          if (onProgress) onProgress({ completed, total });
+
+          // Batch is complete -> fetch results and pass them to the callback
+          if (completed === total) {
+            this.get(`analyse/batch/${batchId}/results`)
+              .then((results) => {
+                if (!results.success) {
+                  if (onError) onError();
+                  return;
+                }
+                if (onComplete) onComplete({ results: results.results });
+              });
+            return;
+          }
+
+          // Otherwise, it is not yet complete, wait a bit and try polling again.
+          setTimeout(poll, POLL_TIMEOUT);
+        });
+    };
+
+    // schedule the first poll request
+    setTimeout(poll, POLL_TIMEOUT);
+  }
+
+  /**
+   * Create a bunch of files at once, and provide progress updates. Resolve the returned promise
+   * when the request has been sent and accepted by the server.
+   *
+   * @param {Array<Object>} files - files to create, each a { fileId, path } object.
+   */
+  createAll(files, callbacks = {}) {
+    return this.post('analyse/create', { files })
+      .then(({ success, batchId }) => {
+        if (!success) throw new Error('could not create batch for creating files');
+
+        this.monitorBatch(batchId, callbacks);
+      });
+  }
+
+  /**
+   * Probe previously created files and provide progress updates.
+   *
+   * @param {Array<String>} fileIds
+   */
+  probeAll(fileIds, callbacks = {}) {
+    return this.post('analyse/probe', { fileIds })
+      .then(({ success, batchId }) => {
+        if (!success) throw new Error('Could not create batch for probe analysis');
+
+        this.monitorBatch(batchId, callbacks);
+      });
+  }
+
+  /**
    * Create a bunch of files at once, and provide progress updates. Resolve the returned promise
    * when all files have been created successfully.
    *
    * @param {Array<Object>} files - files to create, each a { fileId, path } object.
-   * TODO: rewrite once API is updated for progress polling and request bundling.
-   * TODO: refactor as this will be the same for any function, except for the "this.create" call.
    */
-  createAll(files, {
-    onProgress = null,
-    onError = null,
-    onSuccess = null,
-  } = {}) {
-    const total = files.length;
-    let completed = 0;
-    console.log('createAll');
+  silenceAll(fileIds, callbacks = {}) {
+    return this.post('analyse/silence', { fileIds })
+      .then(({ success, batchId }) => {
+        if (!success) throw new Error('could not create batch for silence analysis');
 
-    // The results promises never reject, errors are logged and a success flag unset instead.
-    const promises = files.map(({ fileId, path }) => this.create(fileId, path)
-      .then((result) => {
-        // if it succeeds, call the success handler and return a positive result.
-        if (onSuccess) onSuccess({ success: true, fileId, result });
-        return { success: true, fileId, result };
-      })
-      .catch((err) => {
-        // if it fails, log the error and return a negative result (but do not reject the promise).
-        console.error(err);
-        if (onError) onError({ success: false, fileId });
-        return { success: false, fileId };
-      }));
-
-    // When any of the tasks completes, send a progress update only containing the number of
-    // complete and total tasks.
-    promises.forEach((p) => {
-      // regardless of pass or fail, update progress
-      p.finally(() => {
-        completed += 1;
-        onProgress({ completed, total });
+        this.monitorBatch(batchId, callbacks);
       });
-    });
-
-    // Return a promise that resolves once all tasks have completed (succeeded of failed). This
-    // resolves to a list of { success, result } objects as returned by the individual promises.
-    return Promise.all(promises);
-  }
-
-  /**
-   * Trigger a basic probe on the referenced file, resolving when the results are available.
-   */
-  probe(fileId) {
-    if (!(fileId in this.probePromises)) {
-      this.probePromises[fileId] = this.post(`analyse/${fileId}/probe`, {})
-        .then(({ success, probe }) => {
-          if (!success) {
-            throw new Error('File could not be probed.');
-          }
-          return probe;
-        });
-    }
-
-    return this.probePromises[fileId];
-  }
-
-  /**
-   * Trigger silence analysis on the referenced file, resolving when the results are available.
-   */
-  silence(fileId) {
-    if (!(fileId in this.silencePromises)) {
-      this.silencePromises[fileId] = this.post(`analyse/${fileId}/silence`, {})
-        .then((response) => {
-          if (!response.success) {
-            throw new Error('File could not be analysed for silent sections.');
-          }
-          return response.silence;
-        });
-    }
-
-    return this.silencePromises[fileId];
   }
 }
 
