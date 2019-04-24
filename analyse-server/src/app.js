@@ -52,8 +52,8 @@ app.post('/probe', (req, res, next) => {
  *
  * Respond with a batch id that can be used to poll progress and results.
  */
-app.post('/silence', (req, res, next) => {
-  analyser.batchSilence(req.body.fileIds)
+app.post('/items', (req, res, next) => {
+  analyser.batchItems(req.body.fileIds)
     .then(({ batchId }) => {
       res.json({
         success: true,

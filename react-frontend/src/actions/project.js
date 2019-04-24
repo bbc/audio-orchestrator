@@ -90,7 +90,7 @@ const setFileProperties = (projectId, sequenceId, files) => (dispatch) => {
  * Action creator, updates the user interface with the list of files for the sequence.
  */
 export const getSequenceFiles = (projectId, sequenceId) => (dispatch) => {
-  // TODO apply the same filtering here as in setFileProperties (e.g. remove path, silence results)
+  // TODO apply the same filtering here as in setFileProperties (e.g. remove path, items results)
   // ^^ this currently happens in reducer.
   dispatch({
     type: 'SET_PROJECT_SEQUENCE_FILES',
@@ -116,8 +116,8 @@ const setProbeTaskId = (projectId, sequenceId, taskId) => ({
   taskId,
 });
 
-const setSilenceTaskId = (projectId, sequenceId, taskId) => ({
-  type: 'SET_PROJECT_SEQUENCE_SILENCE_TASK',
+const setItemsTaskId = (projectId, sequenceId, taskId) => ({
+  type: 'SET_PROJECT_SEQUENCE_ITEMS_TASK',
   projectId,
   sequenceId,
   taskId,
@@ -189,7 +189,7 @@ const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
 
   const createTaskId = uuidv4();
   const probeTaskId = uuidv4();
-  const silenceTaskId = uuidv4();
+  const itemsTaskId = uuidv4();
   const encodeTaskId = uuidv4();
 
   dispatch(setTaskProgress(createTaskId, 0, 0));
@@ -201,7 +201,7 @@ const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
   // bind file service methods to pass into task creator
   const createAll = fileService.createAll.bind(fileService);
   const probeAll = fileService.probeAll.bind(fileService);
-  const silenceAll = fileService.silenceAll.bind(fileService);
+  const itemsAll = fileService.itemsAll.bind(fileService);
   // const encodeAll = fileService.encodeAll.bind(fileService);
 
   // Register the fileIds and paths with the server
@@ -224,7 +224,7 @@ const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
         })),
       ));
 
-      // Hide loader, display file list with pending probe/silence results.
+      // Hide loader, display file list with pending probe/items results.
       dispatch(setFilesLoading(projectId, sequenceId, false, createTaskId));
 
       // Pass on a list of fileIds for the existing files (marked as successful in results).
@@ -261,50 +261,50 @@ const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
         throw new Error('Not all files were successfully probed.');
       }
 
-      // Otherwise, start the silence analysis for all files that didn't already have results.
+      // Otherwise, start the items analysis for all files that didn't already have results.
       // Then merge the new results with the old results to return a complete list.
-      const previousSilenceResults = [];
-      const fileIdsWithoutSilence = [];
+      const previousItemsResults = [];
+      const fileIdsWithoutItems = [];
 
       filesList.forEach(({ fileId }) => {
-        if ((fileId in files) && !!files[fileId].silence) {
-          previousSilenceResults.push({
+        if ((fileId in files) && !!files[fileId].items) {
+          previousItemsResults.push({
             fileId,
             success: true,
-            silence: files[fileId].silence,
+            items: files[fileId].items,
           });
         } else {
-          fileIdsWithoutSilence.push(fileId);
+          fileIdsWithoutItems.push(fileId);
         }
       });
 
-      dispatch(setSilenceTaskId(projectId, sequenceId, silenceTaskId));
-      return createTaskWithProgress(dispatch, silenceAll, silenceTaskId, fileIdsWithoutSilence)
-        .then(silenceResults => [
-          ...silenceResults,
-          ...previousSilenceResults,
+      dispatch(setItemsTaskId(projectId, sequenceId, itemsTaskId));
+      return createTaskWithProgress(dispatch, itemsAll, itemsTaskId, fileIdsWithoutItems)
+        .then(itemsResults => [
+          ...itemsResults,
+          ...previousItemsResults,
         ]);
     })
-    .then((silenceResults) => {
-      // Update error messages and silence information.
+    .then((itemsResults) => {
+      // Update error messages and items information.
       dispatch(setFileProperties(
         projectId, sequenceId,
-        silenceResults.map(({ success, fileId, silence }) => ({
+        itemsResults.map(({ success, fileId, items }) => ({
           fileId,
-          error: success ? null : 'Analysis failed, file may not be readable by silence analysis script.',
-          silence: success ? silence : null,
+          error: success ? null : 'Analysis failed, file may not be readable by items analysis script.',
+          items: success ? items : null,
         })),
       ));
 
       // Pass on a list of successfully analysed fileIds.
-      return silenceResults
+      return itemsResults
         .filter(({ success }) => success)
         .map(({ fileId }) => fileId);
     })
     .then((completeFileIds) => {
-      // If silence analysis failed for some files, there is no point in encoding any of them.
+      // If items analysis failed for some files, there is no point in encoding any of them.
       if (completeFileIds.length !== filesList.length) {
-        throw new Error('Not all files were successfully analysed for silence.');
+        throw new Error('Not all files were successfully analysed for items.');
       }
 
       // TODO: trigger encoding, too.

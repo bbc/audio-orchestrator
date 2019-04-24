@@ -13,7 +13,7 @@ import TaskProgress from './TaskProgress';
 const Review = ({
   projectId,
   sequenceIds,
-  silenceTaskIds,
+  itemsTaskIds,
   presentationValid,
   presentationError,
   advancedValid,
@@ -27,7 +27,7 @@ const Review = ({
         ))}
         <SettingsCheck name="Presentation settings" valid={presentationValid} error={presentationError} />
         <SettingsCheck name="Advanced settings" valid={advancedValid} />
-        <TaskProgress name="Audio analysis" taskIds={silenceTaskIds} />
+        <TaskProgress name="Audio analysis" taskIds={itemsTaskIds} />
         <TaskProgress name="Audio transcoding (not implemented)" taskIds={[]} />
       </Table.Body>
     </Table>
@@ -70,8 +70,8 @@ const mapStateToProps = ({ Project, UI }, { projectId }) => {
   return {
     sequenceIds: sequencesList
       .map(({ sequenceId }) => sequenceId),
-    silenceTaskIds: sequencesList
-      .map(({ sequenceId }) => sequences[sequenceId].silenceTaskId)
+    itemsTaskIds: sequencesList
+      .map(({ sequenceId }) => sequences[sequenceId].itemsTaskId)
       .filter(taskId => !!taskId),
     presentationValid,
     presentationError,

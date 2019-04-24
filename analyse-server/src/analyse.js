@@ -1,7 +1,7 @@
 import uuidv4 from 'uuid/v4';
 import priorityQueue from 'async/priorityQueue';
 import path from 'path';
-import { processExists, processProbe, processSilence } from './workers';
+import { processExists, processProbe, processItems } from './workers';
 
 // how many tasks can be in progress at the same time
 const CONCURRENCY = 4;
@@ -10,14 +10,14 @@ const CONCURRENCY = 4;
 const tasks = {
   EXISTS: processExists,
   PROBE: processProbe,
-  SILENCE: processSilence,
+  ITEMS: processItems,
 };
 
 // task priorities, tasks are processed in ascending order
 const priorities = {
   EXISTS: 10,
   PROBE: 20,
-  SILENCE: 30,
+  ITEMS: 30,
 };
 
 /**
@@ -150,22 +150,22 @@ class Analyser {
   }
 
   /**
-   * Analyse silence in a batch of previously created files.
+   * Analyse gaps in a batch of previously created files.
    *
    * @returns {Promise}
    */
-  batchSilence(fileIds) {
+  batchItems(fileIds) {
     const batch = this.initialiseBatch(fileIds.length);
     const { batchId } = batch;
 
     fileIds.forEach((fileId) => {
       this.queue.push(
         {
-          task: tasks.SILENCE,
+          task: tasks.ITEMS,
           fileId,
           batchId,
         },
-        priorities.SILENCE,
+        priorities.ITEMS,
       );
     });
 

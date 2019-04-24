@@ -1,6 +1,18 @@
 const POLL_TIMEOUT = 1000;
 
 /**
+ * Immediately calls the progress and success callbacks, for when an empty list of tasks is used.
+ *
+ * @returns Promise
+ */
+const shortcutSuccess = ({ onProgress, onComplete } = {}) => {
+  if (onProgress) onProgress({ completed: 0, total: 0 });
+  if (onComplete) onComplete({ results: [] });
+
+  return Promise.resolve();
+};
+
+/**
  * FileService class, wraps all interaction with the analyse, encode, and project build APIs.
  */
 class FileService {
@@ -17,32 +29,6 @@ class FileService {
       },
     )
       .then(response => response.json());
-  }
-
-  list() {
-    return this.get('/analyse')
-      .then(({ success, files }) => {
-        if (!success) {
-          throw new Error('Could not list remote files.');
-        }
-        return files;
-      });
-  }
-
-  /**
-   * Create a file object on the server, checking if the given path can be accessed.
-   */
-  create(fileId, path) {
-    return this.post('analyse', {
-      fileId,
-      path,
-    })
-      .then(({ success, file }) => {
-        if (!success) {
-          throw new Error('File could not be accessed.');
-        }
-        return file;
-      });
   }
 
   /**
@@ -92,6 +78,10 @@ class FileService {
    * @param {Array<Object>} files - files to create, each a { fileId, path } object.
    */
   createAll(files, callbacks = {}) {
+    if (files.length === 0) {
+      return shortcutSuccess(callbacks);
+    }
+
     return this.post('analyse/create', { files })
       .then(({ success, batchId }) => {
         if (!success) throw new Error('could not create batch for creating files');
@@ -106,6 +96,10 @@ class FileService {
    * @param {Array<String>} fileIds
    */
   probeAll(fileIds, callbacks = {}) {
+    if (fileIds.length === 0) {
+      return shortcutSuccess(callbacks);
+    }
+
     return this.post('analyse/probe', { fileIds })
       .then(({ success, batchId }) => {
         if (!success) throw new Error('Could not create batch for probe analysis');
@@ -120,10 +114,14 @@ class FileService {
    *
    * @param {Array<Object>} files - files to create, each a { fileId, path } object.
    */
-  silenceAll(fileIds, callbacks = {}) {
-    return this.post('analyse/silence', { fileIds })
+  itemsAll(fileIds, callbacks = {}) {
+    if (fileIds.length === 0) {
+      return shortcutSuccess(callbacks);
+    }
+
+    return this.post('analyse/items', { fileIds })
       .then(({ success, batchId }) => {
-        if (!success) throw new Error('could not create batch for silence analysis');
+        if (!success) throw new Error('could not create batch for items analysis');
 
         this.monitorBatch(batchId, callbacks);
       });

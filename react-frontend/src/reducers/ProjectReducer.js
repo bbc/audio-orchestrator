@@ -24,14 +24,14 @@ const sequenceDefaults = {
   isMain: false,
   isIntro: false,
   probeTaskId: null,
-  silenceTaskId: null,
+  itemsTaskId: null,
   encodeTaskId: null,
 };
 
 const fileDefaults = {
   error: null,
   probe: null,
-  silence: null,
+  items: null,
 };
 
 
@@ -79,7 +79,7 @@ const updateFiles = (state, projectId, sequenceId, updates) => {
       ...update,
     };
     delete updatedFile.fileId; // don't store fileId as it's redundant
-    updatedFile.silence = !!updatedFile.silence; // don't store detailed results, just a boolean.
+    updatedFile.items = !!updatedFile.items; // don't store detailed results, just a boolean.
     updatedFiles[update.fileId] = updatedFile;
   });
 
@@ -176,10 +176,10 @@ const ProjectReducer = (state = initialState, action) => {
         state, action.projectId, action.sequenceId,
         { probeTaskId: action.taskId },
       );
-    case 'SET_PROJECT_SEQUENCE_SILENCE_TASK':
+    case 'SET_PROJECT_SEQUENCE_ITEMS_TASK':
       return updateSequence(
         state, action.projectId, action.sequenceId,
-        { silenceTaskId: action.taskId },
+        { itemsTaskId: action.taskId },
       );
     case 'SET_PROJECT_SEQUENCE_ENCODE_TASK':
       return updateSequence(
