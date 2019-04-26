@@ -202,7 +202,7 @@ const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
   const createAll = fileService.createAll.bind(fileService);
   const probeAll = fileService.probeAll.bind(fileService);
   const itemsAll = fileService.itemsAll.bind(fileService);
-  // const encodeAll = fileService.encodeAll.bind(fileService);
+  const encodeAll = fileService.encodeAll.bind(fileService);
 
   // Register the fileIds and paths with the server
   createTaskWithProgress(
@@ -296,22 +296,58 @@ const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
         })),
       ));
 
-      // Pass on a list of successfully analysed fileIds.
+      // Pass on a list of successfully analysed files, and the results for them.
       return itemsResults
         .filter(({ success }) => success)
-        .map(({ fileId }) => fileId);
+        .map(({ fileId, items }) => ({ fileId, items }));
     })
-    .then((completeFileIds) => {
+    .then((completeFiles) => {
       // If items analysis failed for some files, there is no point in encoding any of them.
-      if (completeFileIds.length !== filesList.length) {
+      if (completeFiles.length !== filesList.length) {
         throw new Error('Not all files were successfully analysed for items.');
       }
 
-      // TODO: trigger encoding, too.
+      // Split the completeFiles list into those that do and those that do not have their
+      // encodedItemsBasePath set - if they already have it, they do not need to be encoded again.
+      const previouslyEncodedFiles = completeFiles
+        .filter(({ fileId }) => !!files[fileId].encodedItemsBasePath)
+        .map(file => ({
+          ...file,
+          encodedItemsBasePath: files[file.fileId].encodedItemsBasePath,
+          encodedItems: files[file.fileId].encodedItems,
+        }));
+      const filesToEncode = completeFiles
+        .filter(({ fileId }) => !files[fileId].encodedItemsBasePath);
+
+      console.log({ previouslyEncodedFiles, filesToEncode });
+
+      // Trigger encoding of all files, too, and pass on the results merged with previously encoded
+      // files.
       dispatch(setEncodeTaskId(projectId, sequenceId, encodeTaskId));
-      // return createTaskWithProgress(dispatch, encodeAll, probeTaskId, existingFileIds);
+      return createTaskWithProgress(dispatch, encodeAll, encodeTaskId, filesToEncode)
+        .then(encodeResults => [
+          ...previouslyEncodedFiles.map(file => ({ ...file, success: true })),
+          ...encodeResults,
+        ]);
     })
-  // .then((encodeResults) => {})
+    .then((encodeResults) => {
+      // store the results in project store
+      // TODO: this should not be a dispatch as state does not need to be updated
+      dispatch(setFileProperties(
+        projectId, sequenceId,
+        encodeResults.map(({
+          success,
+          fileId,
+          basePath,
+          encodedItems,
+        }) => ({
+          fileId,
+          error: success ? null : 'Encoding failed.',
+          encodedItemsBasePath: success ? basePath : null,
+          encodedItems: success ? encodedItems : null,
+        })),
+      ));
+    })
     .catch((e) => {
       console.log(e); // TODO dismissable error in interface? reset results?
     });

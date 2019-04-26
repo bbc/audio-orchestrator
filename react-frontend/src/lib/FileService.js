@@ -109,10 +109,10 @@ class FileService {
   }
 
   /**
-   * Create a bunch of files at once, and provide progress updates. Resolve the returned promise
-   * when all files have been created successfully.
+   * Analyse a bunch of files for silence, returning the start times and durations for the items
+   * between the gaps.
    *
-   * @param {Array<Object>} files - files to create, each a { fileId, path } object.
+   * @param {Array<Object>} fileIds - list of previously created fileIds.
    */
   itemsAll(fileIds, callbacks = {}) {
     if (fileIds.length === 0) {
@@ -121,7 +121,25 @@ class FileService {
 
     return this.post('analyse/items', { fileIds })
       .then(({ success, batchId }) => {
-        if (!success) throw new Error('could not create batch for items analysis');
+        if (!success) throw new Error('Could not create batch for items analysis');
+
+        this.monitorBatch(batchId, callbacks);
+      });
+  }
+
+  /**
+   * Encode a bunch of files using the items information.
+   *
+   * @param {Array<Object>} files - files to create, each a { fileId, path, items } object.
+   */
+  encodeAll(files, callbacks = {}) {
+    if (files.length === 0) {
+      return shortcutSuccess(callbacks);
+    }
+
+    return this.post('analyse/encode', { files })
+      .then(({ success, batchId }) => {
+        if (!success) throw new Error('Could not create batch for encoding');
 
         this.monitorBatch(batchId, callbacks);
       });

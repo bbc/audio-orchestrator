@@ -14,6 +14,7 @@ const Review = ({
   projectId,
   sequenceIds,
   itemsTaskIds,
+  encodeTaskIds,
   presentationValid,
   presentationError,
   advancedValid,
@@ -28,7 +29,7 @@ const Review = ({
         <SettingsCheck name="Presentation settings" valid={presentationValid} error={presentationError} />
         <SettingsCheck name="Advanced settings" valid={advancedValid} />
         <TaskProgress name="Audio analysis" taskIds={itemsTaskIds} />
-        <TaskProgress name="Audio transcoding (not implemented)" taskIds={[]} />
+        <TaskProgress name="Audio transcoding" taskIds={encodeTaskIds} />
       </Table.Body>
     </Table>
 
@@ -49,7 +50,7 @@ const isUrl = (str) => {
 
 const isHostname = str => isUrl(`wss://${str}`) && !str.includes('/') && !str.includes(':');
 
-const mapStateToProps = ({ Project, UI }, { projectId }) => {
+const mapStateToProps = ({ Project }, { projectId }) => {
   const project = Project.projects[projectId] || {};
   const { sequencesList, sequences, settings } = project;
 
@@ -72,6 +73,9 @@ const mapStateToProps = ({ Project, UI }, { projectId }) => {
       .map(({ sequenceId }) => sequenceId),
     itemsTaskIds: sequencesList
       .map(({ sequenceId }) => sequences[sequenceId].itemsTaskId)
+      .filter(taskId => !!taskId),
+    encodeTaskIds: sequencesList
+      .map(({ sequenceId }) => sequences[sequenceId].encodeTaskId)
       .filter(taskId => !!taskId),
     presentationValid,
     presentationError,

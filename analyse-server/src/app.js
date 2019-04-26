@@ -64,6 +64,24 @@ app.post('/items', (req, res, next) => {
 });
 
 /**
+ * Encode a number of (previously created) files by fileId.
+ *
+ * Expects a request body of { files: [ { fileId, items } ] }
+ *
+ * Respond with a batch id that can be used to poll progress and results.
+ */
+app.post('/encode', (req, res, next) => {
+  analyser.batchEncode(req.body.files)
+    .then(({ batchId }) => {
+      res.json({
+        success: true,
+        batchId,
+      });
+    })
+    .catch(err => next(err));
+});
+
+/**
  * Poll the status of the given batch, returning the number of files processed only.
  */
 app.get('/batch/:batchId', (req, res, next) => {

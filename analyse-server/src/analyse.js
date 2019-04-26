@@ -1,7 +1,15 @@
+import { promisify } from 'util';
+import { mkdtemp as mkdtempCB } from 'fs';
+import os from 'os';
+import path from 'path';
 import uuidv4 from 'uuid/v4';
 import priorityQueue from 'async/priorityQueue';
-import path from 'path';
-import { processExists, processProbe, processItems } from './workers';
+import processExists from './workers/exists';
+import processProbe from './workers/probe';
+import processItems from './workers/items';
+import processEncode from './workers/encode';
+
+const mkdtemp = promisify(mkdtempCB);
 
 // how many tasks can be in progress at the same time
 const CONCURRENCY = 4;
@@ -11,6 +19,7 @@ const tasks = {
   EXISTS: processExists,
   PROBE: processProbe,
   ITEMS: processItems,
+  ENCODE: processEncode,
 };
 
 // task priorities, tasks are processed in ascending order
@@ -18,6 +27,7 @@ const priorities = {
   EXISTS: 10,
   PROBE: 20,
   ITEMS: 30,
+  ENCODE: 40,
 };
 
 /**
@@ -26,7 +36,12 @@ const priorities = {
  * Returns a function that processes one { task, batchId, fileId } it is given, updates the files
  * and batches objects with the results, and calls the callback when finished.
  */
-const getAnalysisWorker = (files, batches) => ({ task, fileId, batchId }, callback) => {
+const getAnalysisWorker = (files, batches) => ({
+  task,
+  fileId,
+  args,
+  batchId,
+}, callback) => {
   // Don't do anything if the batch does not exist - it may have been cancelled.
   if (!(batchId in batches)) {
     callback();
@@ -43,7 +58,7 @@ const getAnalysisWorker = (files, batches) => ({ task, fileId, batchId }, callba
   }
 
   // process the actual task, then store the result and success flag, only then call the callback.
-  task(files[fileId].path)
+  task(files[fileId].path, args)
     .then((result) => {
       const batch = batches[batchId];
       if (batch) {
@@ -170,6 +185,38 @@ class Analyser {
     });
 
     return Promise.resolve({ batchId });
+  }
+
+  /**
+   * Encode the given files, based on their items split.
+   *
+   * @param {Array} files - an array of { fileId, item: { start, duration, type } }
+   *
+   * @returns {Promise}
+   */
+  batchEncode(files) {
+    // create a temporary directory first, to hold the resulting files
+    return mkdtemp(path.join(os.tmpdir(), 'bbcat-orchestration-'))
+      .then((basePath) => {
+        // now create the batch and a task for every input file
+        const batch = this.initialiseBatch(files.length);
+        const { batchId } = batch;
+
+        files.forEach(({ fileId, items }) => {
+          this.queue.push(
+            {
+              task: tasks.ENCODE,
+              fileId,
+              batchId,
+              args: { items, basePath },
+            },
+            priorities.ENCODE,
+          );
+        });
+
+        // resolve to the { batchId } as usual, once it has been created.
+        return { batchId };
+      });
   }
 
   /**
