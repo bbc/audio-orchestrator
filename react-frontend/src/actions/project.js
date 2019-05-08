@@ -80,6 +80,7 @@ const setFileProperties = (projectId, sequenceId, files) => (dispatch) => {
       ...update,
     };
     delete updatedFile.fileId;
+
     updatedFiles[update.fileId] = updatedFile;
   });
 
@@ -317,9 +318,8 @@ const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
           encodedItems: files[file.fileId].encodedItems,
         }));
       const filesToEncode = completeFiles
-        .filter(({ fileId }) => !files[fileId].encodedItemsBasePath);
-
-      console.log({ previouslyEncodedFiles, filesToEncode });
+        .filter(({ fileId }) => !files[fileId].encodedItemsBasePath)
+        .map(file => ({ ...file, sequenceId }));
 
       // Trigger encoding of all files, too, and pass on the results merged with previously encoded
       // files.
@@ -338,12 +338,12 @@ const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
         encodeResults.map(({
           success,
           fileId,
-          basePath,
+          encodedItemsBasePath,
           encodedItems,
         }) => ({
           fileId,
           error: success ? null : 'Encoding failed.',
-          encodedItemsBasePath: success ? basePath : null,
+          encodedItemsBasePath: success ? encodedItemsBasePath : null,
           encodedItems: success ? encodedItems : null,
         })),
       ));
@@ -580,8 +580,6 @@ const initialiseSequenceFiles = (projectId, sequenceId, newFiles) => (dispatch) 
   dispatch(getSequenceObjects(projectId, sequenceId));
 
   // trigger analysis of the new files and update the UI, also updating files in store and state.
-  // TODO could re-use analysis results if some of the files have been used previously, here we
-  // assume they are all new.
   dispatch(analyseAllFiles(projectId, sequenceId));
 };
 
@@ -672,26 +670,35 @@ const parseMetadataFile = file => new Promise((resolve, reject) => {
   // create a file reader to get the contents of the selected file, and register events on it.
   const reader = new FileReader();
   reader.addEventListener('error', () => {
-    reject(new Error(''));
+    reject(new Error('Could not read metadata file.'));
   });
   reader.addEventListener('loadend', () => {
     const metadata = JSON.parse(reader.result) || {};
-    const objects = metadata.mdoObjects || null;
-
-    if (!Array.isArray(objects) || objects.length === 0) {
-      reject(new Error('Could not parse metadata file, format may be invalid or it may not contain any objects.'));
-      return;
-    }
-
-    if (!objects.every(object => ('objectNumber' in object && 'label' in object))) {
-      reject(new Error('Not every object has a number and label.'));
-      return;
-    }
+    const objects = metadata.mdoObjects || [];
     resolve(objects);
   });
 
   // start reading the file, will trigger the error or loadend event when finished.
   reader.readAsText(file);
+}).then((objects) => {
+  // ensure objects is valid
+  if (!Array.isArray(objects) || objects.length === 0) {
+    throw new Error('Could not parse metadata file, format may be invalid or it may not contain any objects.');
+  }
+  if (!objects.every(object => ('objectNumber' in object && 'label' in object))) {
+    throw new Error('Not every object has a number and label.');
+  }
+
+  // parse all orchestration metadata fields as integers (except the label)
+  return objects.map((object) => {
+    const parsedObject = { ...object };
+    Object.keys(object).forEach((key) => {
+      if (key !== 'label') {
+        parsedObject[key] = parseInt(object[key], 10);
+      }
+    });
+    return parsedObject;
+  });
 });
 
 /**

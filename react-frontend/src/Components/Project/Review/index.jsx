@@ -9,6 +9,8 @@ import {
 import SettingsCheck from './SettingsCheck';
 import SequenceCheck from './SequenceCheck';
 import TaskProgress from './TaskProgress';
+import ExportTypeSelection from './ExportTypeSelection';
+import ExportModal from './ExportModal';
 
 const Review = ({
   projectId,
@@ -33,8 +35,10 @@ const Review = ({
       </Table.Body>
     </Table>
 
-    <Button primary icon="eye" content="Start Preview" />
-    <Button icon="share" content="Export" labelPosition="right" />
+    <Button disabled icon="eye" content="Start Preview" />
+    <ExportTypeSelection projectId={projectId} />
+
+    <ExportModal />
   </Container>
 );
 

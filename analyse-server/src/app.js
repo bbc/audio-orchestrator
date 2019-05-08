@@ -66,12 +66,13 @@ app.post('/items', (req, res, next) => {
 /**
  * Encode a number of (previously created) files by fileId.
  *
- * Expects a request body of { files: [ { fileId, items } ] }
+ * Expects a request body of { files: [ { fileId, items, sequenceId } ] }
  *
  * Respond with a batch id that can be used to poll progress and results.
  */
 app.post('/encode', (req, res, next) => {
-  analyser.batchEncode(req.body.files)
+  const { files } = req.body;
+  analyser.batchEncode(files)
     .then(({ batchId }) => {
       res.json({
         success: true,

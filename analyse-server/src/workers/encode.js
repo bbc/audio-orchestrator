@@ -118,19 +118,20 @@ const generateHeaderlessDashManifest = (outputName, baseUrl, duration) => genera
  * Encode a single item, returning a promise that resolves to the output file location(s) when
  * ffmpeg exits.
  *
- * - Buffer items produce a single .mp4 file in basePath.
+ * - Buffer items produce a single .mp4 file in encodedItemsBasePath.
  * - Dash items produce two manifests, and two sets of segments, in a sub directory.
  *
- * The returned paths are relative to the basePath - to be used as URLs in sequence.json, and
- * mainly required to pass on the item file names generated here.
+ * The returned paths are relative to the encodedItemsBasePath - to be used as URLs in
+ * sequence.json, and mainly required to pass on the item file names generated here.
  */
 const encodeItem = ({
   index,
   filePath,
-  basePath,
+  encodedItemsBasePath,
   start,
   duration,
   type,
+  sequenceId,
 }, callback) => {
   // create a result item, to be populated with relativePath (and relativePathSafari) fields below.
   const resultItem = {
@@ -151,7 +152,7 @@ const encodeItem = ({
     .then(() => {
       // for DASH streams, all output files are stored in a per-item directory; create this.
       if (type === 'dash') {
-        return mkdir(path.join(basePath, outputName));
+        return mkdir(path.join(encodedItemsBasePath, outputName));
       }
       return null;
     })
@@ -170,7 +171,7 @@ const encodeItem = ({
           return [
             ...inputArgs,
             '-t', duration,
-            path.join(basePath, resultItem.relativePath),
+            path.join(encodedItemsBasePath, resultItem.relativePath),
           ];
         case 'dash':
           // For DASH streams, two outputes (with and without segment headers) are required to
@@ -182,10 +183,10 @@ const encodeItem = ({
             ...inputArgs,
             ...dashArgs,
             '-t', duration,
-            path.join(basePath, resultItem.relativePath),
+            path.join(encodedItemsBasePath, resultItem.relativePath),
             ...sarafiDashArgs,
             '-t', duration,
-            path.join(basePath, outputName, SAFARI_SEGMENT_NAMES),
+            path.join(encodedItemsBasePath, outputName, SAFARI_SEGMENT_NAMES),
           ];
         default:
           throw new Error(`Unknown item type ${type}`);
@@ -217,18 +218,15 @@ const encodeItem = ({
     .then(() => {
       // create the DASH manifests
       if (type === 'dash') {
-        const baseUrl = '/audio';
-        // TODO baseUrl should point to where the sequence audio is hosted on the server, but we
-        // cannot know this here. Either overwrite it during packaging, or use a relative URL and
-        // ensure this is interpreted correctly by the player.
+        const baseUrl = `audio/${sequenceId}`;
 
         return Promise.all([
           writeFile(
-            path.join(basePath, resultItem.relativePath),
+            path.join(encodedItemsBasePath, resultItem.relativePath),
             generateHeaderlessDashManifest(outputName, baseUrl, duration),
           ),
           writeFile(
-            path.join(basePath, resultItem.relativePathSafari),
+            path.join(encodedItemsBasePath, resultItem.relativePathSafari),
             generateSafariDashManifest(outputName, baseUrl, duration),
           ),
         ]);
@@ -250,15 +248,23 @@ const encodeItem = ({
  *
  * @returns {Promise}
  */
-const processEncode = (filePath, { items, basePath }) => new Promise((resolve, reject) => {
-  // Return a promise that resolves to the basePath and encoded items with relative paths.
-  // Encode items one-by-one in series using the mapSeries async abstraction.
+const processEncode = (
+  filePath,
+  {
+    items,
+    encodedItemsBasePath,
+    sequenceId,
+  },
+) => new Promise((resolve, reject) => {
+  // Return a promise that resolves to the encodedItemsBasePath and encodedItems with relative
+  // paths. Encode items one-by-one in series using the mapSeries async abstraction.
   mapSeries(
     items.map((item, index) => ({
       ...item,
       filePath,
-      basePath,
+      encodedItemsBasePath,
       index,
+      sequenceId,
     })),
     encodeItem,
     (err, encodedItems) => {
@@ -271,7 +277,7 @@ const processEncode = (filePath, { items, basePath }) => new Promise((resolve, r
     },
   );
 }).then(encodedItems => ({
-  basePath,
+  encodedItemsBasePath,
   encodedItems,
 }));
 

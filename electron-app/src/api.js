@@ -3,7 +3,8 @@
  */
 import { createServer } from 'http';
 import express from 'express';
-import analyse from 'bbcat-orchestration-builder-analyse-server';
+import analyseApp from 'bbcat-orchestration-builder-analyse-server';
+import exportApp from 'bbcat-orchestration-builder-export-server';
 
 // Create the top level application
 const app = express();
@@ -17,7 +18,8 @@ app.use((req, res, next) => {
 });
 
 // Hook each server application to a top-level path
-app.use('/analyse', analyse);
+app.use('/analyse', analyseApp);
+app.use('/export', exportApp);
 
 // Error handler defined last
 app.use((err, req, res, next) => {

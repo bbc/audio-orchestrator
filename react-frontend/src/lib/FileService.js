@@ -130,7 +130,7 @@ class FileService {
   /**
    * Encode a bunch of files using the items information.
    *
-   * @param {Array<Object>} files - files to create, each a { fileId, path, items } object.
+   * @param {Array<Object>} files - files to create, each like { fileId, path, items, sequenceId }.
    */
   encodeAll(files, callbacks = {}) {
     if (files.length === 0) {

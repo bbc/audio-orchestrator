@@ -4,8 +4,7 @@
   "workspaces": {
     "packages": [
       "analyse-server",
-      "encode-server",
-      "package-server",
+      "export-server",
       "electron-app",
       "react-frontend"
     ],

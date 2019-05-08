@@ -190,25 +190,25 @@ class Analyser {
   /**
    * Encode the given files, based on their items split.
    *
-   * @param {Array} files - an array of { fileId, item: { start, duration, type } }
+   * @param {Array} files - an array of { fileId, item: { start, duration, type }, sequenceId }.
    *
    * @returns {Promise}
    */
   batchEncode(files) {
     // create a temporary directory first, to hold the resulting files
     return mkdtemp(path.join(os.tmpdir(), 'bbcat-orchestration-'))
-      .then((basePath) => {
+      .then((encodedItemsBasePath) => {
         // now create the batch and a task for every input file
         const batch = this.initialiseBatch(files.length);
         const { batchId } = batch;
 
-        files.forEach(({ fileId, items }) => {
+        files.forEach(({ fileId, items, sequenceId }) => {
           this.queue.push(
             {
               task: tasks.ENCODE,
               fileId,
               batchId,
-              args: { items, basePath },
+              args: { items, encodedItemsBasePath, sequenceId },
             },
             priorities.ENCODE,
           );
