@@ -80,7 +80,7 @@ class ExportTypeSelection extends React.Component {
               <Button
                 content="Export distribution"
                 onClick={() => { requestExportDistribution(projectId); this.handleClose(); }}
-                disabled
+                primary
                 icon="download"
                 labelPosition="left"
               />

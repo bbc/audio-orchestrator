@@ -99,6 +99,18 @@ class ExportService {
       });
   }
 
+  /**
+   *
+   */
+  exportDistribution({ sequences, settings }, callbacks = {}) {
+    return this.post('export/distribution', { sequences, settings })
+      .then(({ success, taskId }) => {
+        if (!success) throw new Error('could not create task for exporting distribution');
+
+        this.monitorTask(taskId, callbacks);
+      });
+  }
+
   // TODO implement DELETE export/task/<id>
   deleteTask(taskId) {
     return Promise.reject(new Error('deleteTask not implemented'));

@@ -36,7 +36,9 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
     completed += 1;
   };
 
-  return fse.ensureDir(outputDir)
+  const audioOutputDir = path.join(outputDir, 'audio');
+
+  return fse.ensureDir(audioOutputDir)
     .then(() => {
       // Ensure each sequence has at least one object (the client decides which sequences to put
       // forward if some are optional).
@@ -139,8 +141,8 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
 
       return Promise.all(sequences.map(({ sequenceId }) => {
         // Create empty output directory for the sequence
-        console.log('about to create sequence output dir', outputDir, sequenceId);
-        return fse.emptyDir(sequenceOutputDir(outputDir, sequenceId));
+        console.log('about to create sequence output dir', audioOutputDir, sequenceId);
+        return fse.emptyDir(sequenceOutputDir(audioOutputDir, sequenceId));
       }))
         .then(() => new Promise((resolve, reject) => {
           // copy the files (or directory) for every item into the sequence output directory
@@ -150,7 +152,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
             // the returned value is a function taking the async callback
             return cb => fse.copy(
               encodedItemsBasePath,
-              sequenceOutputDir(outputDir, sequenceId),
+              sequenceOutputDir(audioOutputDir, sequenceId),
               { overwrite: false, errorOnExist: false },
               cb,
             );
@@ -204,7 +206,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
           };
 
           fse.writeFile(
-            path.join(sequenceOutputDir(outputDir, sequenceId), 'sequence.json'),
+            path.join(sequenceOutputDir(audioOutputDir, sequenceId), 'sequence.json'),
             JSON.stringify(sequenceMetadata, 0, 2),
             callback,
           );

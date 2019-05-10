@@ -7,6 +7,7 @@ const exportService = new ExportService(window.API_URL || 'http://localhost:8000
 
 const exportAudio = exportService.exportAudio.bind(exportService);
 const exportTemplate = exportService.exportTemplate.bind(exportService);
+const exportDistribution = exportService.exportDistribution.bind(exportService);
 
 /* --- private basic action creators --- */
 
@@ -69,6 +70,10 @@ const waitForExportTask = (dispatch, task, args) => {
       onError: (error) => {
         reject(error);
       },
+    }).catch((err) => {
+      // reject the promise even if there is an error in creating the task, that does not come back
+      // through the onError callback.
+      reject(err);
     });
   });
 };
@@ -161,7 +166,7 @@ export const requestExportAudio = projectId => (dispatch) => {
 };
 
 export const requestExportTemplate = projectId => (dispatch) => {
-  dispatch(startExport('audio'));
+  dispatch(startExport('template source'));
 
   ProjectStore.openProject(projectId)
     .then((project) => {
@@ -170,10 +175,11 @@ export const requestExportTemplate = projectId => (dispatch) => {
 
       return { sequences, settings };
     })
-    .then(({ sequences, settings }) => {
-      console.log(sequences, settings);
-      return waitForExportTask(dispatch, exportTemplate, { sequences, settings });
-    })
+    .then(({ sequences, settings }) => waitForExportTask(
+      dispatch,
+      exportTemplate,
+      { sequences, settings },
+    ))
     .then(({ result }) => {
       const { outputDir } = result;
       if (window.saveExportAs) {
@@ -194,9 +200,42 @@ export const requestExportTemplate = projectId => (dispatch) => {
     });
 };
 
-export const requestExportDistribution = projectId => (dispatch) => { };
+export const requestExportDistribution = projectId => (dispatch) => {
+  dispatch(startExport('built distribution'));
 
-export const requestOpenInFolder = (outputPath) => () => {
+  ProjectStore.openProject(projectId)
+    .then((project) => {
+      const sequences = getSequencesToExport(project);
+      const settings = project.get('settings');
+
+      return { sequences, settings };
+    })
+    .then(({ sequences, settings }) => waitForExportTask(
+      dispatch,
+      exportDistribution,
+      { sequences, settings },
+    ))
+    .then(({ result }) => {
+      const { outputDir } = result;
+      if (window.saveExportAs) {
+        return window.saveExportAs(outputDir)
+          .catch(() => outputDir); // return original path if it cannot be moved.
+      }
+      return outputDir;
+    })
+    .then((outputDir) => {
+      dispatch(completeExport(outputDir));
+    })
+    .catch((error) => {
+      dispatch(failExport(error.message));
+      if (error.missingEncodedItems) {
+        dispatch(encodeMissingItems(projectId, error.missingEncodedItems));
+      }
+      console.error('EXPORT ERROR', error);
+    });
+};
+
+export const requestOpenInFolder = outputPath => () => {
   if (window.openInFolder) {
     window.openInFolder(outputPath);
   }

@@ -16,12 +16,10 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
     completed += 1;
   };
 
-  const audioOutputDir = path.join(outputDir, 'audio');
-
   return fse.ensureDir(outputDir)
     .then(() => {
       nextStep('packaging audio');
-      return audioWorker({ sequences, outputDir: audioOutputDir }, () => {});
+      return audioWorker({ sequences, outputDir }, () => {});
     })
     .then(() => {
       nextStep('copying template source files');

@@ -6,6 +6,7 @@ import queue from 'async/queue';
 
 import audioWorker from './workers/audioWorker';
 import templateWorker from './workers/templateWorker';
+import distributionWorker from './workers/distributionWorker';
 
 // How many tasks can be in progress at the same time
 const CONCURRENCY = 1;
@@ -176,7 +177,20 @@ class Exporter {
    * @return {Promise<Object>} { taskId }
    */
   exportDistribution(sequences, settings) {
-    return Promise.reject(new Error('Distribution export not implemented.'));
+    const taskId = uuidv4();
+
+    this.tasks[taskId] = {};
+
+    this.queue.push({
+      worker: distributionWorker,
+      taskId,
+      args: {
+        sequences,
+        settings,
+      },
+    });
+
+    return Promise.resolve({ taskId });
   }
 
   /**
