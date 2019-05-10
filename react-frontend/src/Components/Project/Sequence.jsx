@@ -93,8 +93,8 @@ class Sequence extends React.Component {
 }
 
 Sequence.propTypes = {
-  projectId: PropTypes.number.isRequired,
-  sequenceId: PropTypes.number.isRequired,
+  projectId: PropTypes.string.isRequired,
+  sequenceId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onClose: PropTypes.func.isRequired,
   onSetName: PropTypes.func.isRequired,

@@ -42,7 +42,7 @@ const Project = ({
 };
 
 Project.propTypes = {
-  projectId: PropTypes.number.isRequired,
+  projectId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
   onSetName: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,

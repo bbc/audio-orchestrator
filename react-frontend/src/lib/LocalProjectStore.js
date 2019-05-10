@@ -1,3 +1,5 @@
+import uuidv4 from 'uuid/v4';
+
 const Storage = window.localStorage;
 
 /**
@@ -60,8 +62,7 @@ class LocalProjectStore {
    */
   static createProject(name = 'Untitled Project') {
     return new Promise((resolve) => {
-      // get the last projectId assigned and increment it (default to 1 if it's the first time)
-      const projectId = parseInt((Storage.getItem('lastProjectId') || 0), 10) + 1;
+      const projectId = uuidv4();
       Storage.setItem('lastProjectId', projectId);
 
       // Add the projectId to the stored list of ids, so we can iterate through projects later,

@@ -34,7 +34,7 @@ const SequenceItem = ({
 SequenceItem.propTypes = {
   name: PropTypes.string.isRequired,
   onOpen: PropTypes.func.isRequired,
-  sequenceId: PropTypes.number.isRequired,
+  sequenceId: PropTypes.string.isRequired,
   isMain: PropTypes.bool,
   isIntro: PropTypes.bool,
 };

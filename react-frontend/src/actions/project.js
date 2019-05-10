@@ -417,7 +417,7 @@ export const getSequencesList = projectId => (dispatch) => {
 export const addSequence = (projectId, { name, isMain, isIntro } = {}) => (dispatch) => {
   // Get current list and write back the list with one added element.
   const sequencesList = projects[projectId].get('sequencesList', []);
-  const sequenceId = sequencesList.length;
+  const sequenceId = uuidv4();
   const newSequencesList = [
     ...sequencesList,
     {

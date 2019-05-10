@@ -48,7 +48,7 @@ class Sequences extends React.Component {
 }
 
 Sequences.propTypes = {
-  projectId: PropTypes.number.isRequired,
+  projectId: PropTypes.string.isRequired,
 };
 
 export default Sequences;

@@ -94,8 +94,8 @@ class Audio extends React.Component {
 
 Audio.propTypes = {
   loading: PropTypes.bool.isRequired,
-  projectId: PropTypes.number.isRequired,
-  sequenceId: PropTypes.number.isRequired,
+  projectId: PropTypes.string.isRequired,
+  sequenceId: PropTypes.string.isRequired,
   filesList: PropTypes.arrayOf(PropTypes.object).isRequired,
   onReplaceAll: PropTypes.func.isRequired,
   onGetAudioFiles: PropTypes.func.isRequired,

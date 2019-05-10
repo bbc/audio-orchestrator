@@ -41,7 +41,7 @@ const App = ({
 
 App.propTypes = {
   currentPage: PropTypes.string.isRequired,
-  currentProjectId: PropTypes.number,
+  currentProjectId: PropTypes.string,
 };
 
 const mapStateToProps = ({ UI }) => ({
