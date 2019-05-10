@@ -1,5 +1,12 @@
 const POLL_TIMEOUT = 500;
 
+class ExportError extends Error {
+  constructor(message, missingEncodedItems = null) {
+    super(message);
+    this.missingEncodedItems = missingEncodedItems;
+  }
+}
+
 /**
  * ExportService class, wraps all interaction with the analyse, encode, and project build APIs.
  */
@@ -47,7 +54,7 @@ class ExportService {
           if (onProgress) onProgress({ completed, total, currentStep });
 
           if (error) {
-            if (onError) onError(error);
+            if (onError) onError(new ExportError(error, result.missingEncodedItems));
             return null;
           }
 
@@ -74,7 +81,19 @@ class ExportService {
   exportAudio({ sequences }, callbacks = {}) {
     return this.post('export/audio', { sequences })
       .then(({ success, taskId }) => {
-        if (!success) throw new Error('could not create task for encoding audio');
+        if (!success) throw new Error('could not create task for exporting audio');
+
+        this.monitorTask(taskId, callbacks);
+      });
+  }
+
+  /**
+   *
+   */
+  exportTemplate({ sequences, settings }, callbacks = {}) {
+    return this.post('export/template', { sequences, settings })
+      .then(({ success, taskId }) => {
+        if (!success) throw new Error('could not create task for exporting template');
 
         this.monitorTask(taskId, callbacks);
       });

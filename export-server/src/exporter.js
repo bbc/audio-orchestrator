@@ -5,6 +5,7 @@ import fse from 'fs-extra';
 import queue from 'async/queue';
 
 import audioWorker from './workers/audioWorker';
+import templateWorker from './workers/templateWorker';
 
 // How many tasks can be in progress at the same time
 const CONCURRENCY = 1;
@@ -39,14 +40,17 @@ const getExportWorker = tasks => ({ worker, args, taskId }, callback) => {
         task.currentStep = currentStep;
       },
     ))
-    .then(({ result, errorMessage }) => {
-      task.error = errorMessage;
+    .then(({ result }) => {
       task.result = result;
     })
     .catch((err) => {
-      console.log('caught error in exporter', err);
-      task.error = true;
-      task.result = null;
+      // TODO only pass on AudioWorkerValidationError, throw others?
+      console.log('error caught in exporter, passing on to clients', err);
+
+      task.error = err.message;
+      if (err.missingEncodedItems) {
+        task.missingEncodedItems = err.missingEncodedItems;
+      }
     })
     .then(() => callback());
 };
@@ -135,7 +139,20 @@ class Exporter {
    * @return {Promise<Object>} { taskId }
    */
   exportTemplate(sequences, settings) {
-    return Promise.reject(new Error('Template export not implemented.'));
+    const taskId = uuidv4();
+
+    this.tasks[taskId] = {};
+
+    this.queue.push({
+      worker: templateWorker,
+      taskId,
+      args: {
+        sequences,
+        settings,
+      },
+    });
+
+    return Promise.resolve({ taskId });
   }
 
   /**
@@ -185,7 +202,7 @@ class Exporter {
       currentStep: task.currentStep,
       result: {
         outputDir: (task.completed !== task.total) ? null : task.outputDir,
-        missingEncodedFiles: task.missingEncodedFiles || [],
+        missingEncodedItems: task.missingEncodedItems || [],
       },
     });
   }

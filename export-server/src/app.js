@@ -37,7 +37,7 @@ app.post('/audio', (req, res, next) => {
  * Creates a task that can be polled for progress using /task/<taskId>.
  */
 app.post('/template', (req, res, next) => {
-  exporter.exportAudio(req.body.sequences, req.body.settings)
+  exporter.exportTemplate(req.body.sequences, req.body.settings)
     .then(({ taskId }) => {
       res.json({
         success: true,

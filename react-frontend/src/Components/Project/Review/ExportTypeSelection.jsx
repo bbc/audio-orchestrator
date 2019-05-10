@@ -66,7 +66,7 @@ class ExportTypeSelection extends React.Component {
               <Button
                 content="Export template code"
                 onClick={() => { requestExportTemplate(projectId); this.handleClose(); }}
-                disabled
+                primary
                 icon="download"
                 labelPosition="left"
               />

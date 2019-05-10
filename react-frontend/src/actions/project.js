@@ -57,7 +57,7 @@ const openedProject = projectId => (dispatch) => {
 /**
  * Internal action creator, sets properties on a specified file in project store and local state.
  */
-const setFileProperties = (projectId, sequenceId, files) => (dispatch) => {
+export const setFileProperties = (projectId, sequenceId, files) => (dispatch) => {
   // update the interface state
   dispatch({
     type: 'SET_PROJECT_SEQUENCE_FILE_PROPERTIES',
@@ -183,7 +183,7 @@ const createTaskWithProgress = (dispatch, task, taskId, argument) => {
  * Internal action creator, checks files still exist and triggers all missing analysis steps for
  * all files referenced by the sequence.
  */
-const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
+export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
   const project = projects[projectId];
   const filesList = project.get(`sequences.${sequenceId}.filesList`, []);
   const files = project.get(`sequences.${sequenceId}.files`, {});

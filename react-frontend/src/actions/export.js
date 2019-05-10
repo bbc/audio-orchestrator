@@ -1,10 +1,12 @@
 import ExportService from '../lib/ExportService';
 import LocalProjectStore from '../lib/LocalProjectStore';
+import { setFileProperties, analyseAllFiles } from './project';
 
 const ProjectStore = window.ProjectStore || LocalProjectStore;
 const exportService = new ExportService(window.API_URL || 'http://localhost:8000');
 
 const exportAudio = exportService.exportAudio.bind(exportService);
+const exportTemplate = exportService.exportTemplate.bind(exportService);
 
 /* --- private basic action creators --- */
 
@@ -64,10 +66,66 @@ const waitForExportTask = (dispatch, task, args) => {
       onComplete: ({ result }) => {
         resolve({ result });
       },
-      onError: (errorMessage) => {
-        reject(new Error(errorMessage));
+      onError: (error) => {
+        reject(error);
       },
     });
+  });
+};
+
+const getSequencesToExport = (project) => {
+  // Create a list of sequences, each with a files object and an objects list
+  const sequencesList = project.get('sequencesList', []);
+  return sequencesList
+    .filter(({ sequenceId, isMain }) => {
+      // always include the main sequence - throw an error later if it doesn't have obejcts.
+      if (isMain) {
+        return true;
+      }
+
+      // also include all other sequences that have objects (so have either files or metadata).
+      const objectsList = project.get(`sequences.${sequenceId}.objectsList`, []);
+      return objectsList.length > 0;
+    })
+    .map(({ sequenceId, isIntro, isMain }) => {
+      const objectsList = project.get(`sequences.${sequenceId}.objectsList`, []);
+      const objects = project.get(`sequences.${sequenceId}.objects`, {});
+      const files = project.get(`sequences.${sequenceId}.files`, {});
+      const loop = !!isIntro; // only the intro sequence is looped
+
+      return {
+        sequenceId,
+        isMain,
+        isIntro,
+        files,
+        objects: objectsList.map(({ objectNumber }) => objects[objectNumber]),
+        loop,
+      };
+    });
+};
+
+const encodeMissingItems = (projectId, missingFiles) => (dispatch) => {
+  // remove encodeItems from projectStore for files affected
+  const missingBySequence = {};
+
+  missingFiles.forEach(({ sequenceId, fileId }) => {
+    if (!(sequenceId in missingBySequence)) {
+      missingBySequence[sequenceId] = [];
+    }
+    missingBySequence[sequenceId].push(fileId);
+  });
+
+  Object.keys(missingBySequence).forEach((sequenceId) => {
+    dispatch(setFileProperties(
+      projectId,
+      sequenceId,
+      missingBySequence[sequenceId].map(fileId => ({
+        fileId,
+        encodedItems: null,
+        encodedItemsBasePath: null,
+      })),
+    ));
+    dispatch(analyseAllFiles(projectId, sequenceId));
   });
 };
 
@@ -77,36 +135,11 @@ export const requestExportAudio = projectId => (dispatch) => {
   // Get the project information from the store
   // TODO wrap project store opening and accessing properties in a class to avoid duplication.
   // opening by projectId will not work well when the project was originally opened from a file.
-  return ProjectStore.openProject(projectId)
+  ProjectStore.openProject(projectId)
     .then((project) => {
-      // Create a list of sequences, each with a files object and an objects list
-      const sequencesList = project.get('sequencesList', []);
-      return sequencesList
-        .filter(({ sequenceId, isMain }) => {
-          // always include the main sequence - throw an error later if it doesn't have obejcts.
-          if (isMain) {
-            return true;
-          }
-
-          // also include all other sequences that have objects (so have either files or metadata).
-          const objectsList = project.get(`sequences.${sequenceId}.objectsList`, []);
-          return objectsList.length > 0;
-        })
-        .map(({ sequenceId, isIntro }) => {
-          const objectsList = project.get(`sequences.${sequenceId}.objectsList`, []);
-          const objects = project.get(`sequences.${sequenceId}.objects`, {});
-          const files = project.get(`sequences.${sequenceId}.files`, {});
-          const loop = !!isIntro; // only the intro sequence is looped
-
-          return {
-            sequenceId,
-            files,
-            objects: objectsList.map(({ objectNumber }) => objects[objectNumber]),
-            loop,
-          };
-        });
+      const sequences = getSequencesToExport(project);
+      return waitForExportTask(dispatch, exportAudio, { sequences });
     })
-    .then(sequences => waitForExportTask(dispatch, exportAudio, { sequences }))
     .then(({ result }) => {
       const { outputDir } = result;
       if (window.saveExportAs) {
@@ -119,12 +152,47 @@ export const requestExportAudio = projectId => (dispatch) => {
       dispatch(completeExport(outputDir));
     })
     .catch((error) => {
-      dispatch(failExport(`${error}`));
+      dispatch(failExport(error.message));
+      if (error.missingEncodedItems) {
+        dispatch(encodeMissingItems(projectId, error.missingEncodedItems));
+      }
       console.error('EXPORT ERROR', error);
     });
 };
 
-export const requestExportTemplate = projectId => (dispatch) => { };
+export const requestExportTemplate = projectId => (dispatch) => {
+  dispatch(startExport('audio'));
+
+  ProjectStore.openProject(projectId)
+    .then((project) => {
+      const sequences = getSequencesToExport(project);
+      const settings = project.get('settings');
+
+      return { sequences, settings };
+    })
+    .then(({ sequences, settings }) => {
+      console.log(sequences, settings);
+      return waitForExportTask(dispatch, exportTemplate, { sequences, settings });
+    })
+    .then(({ result }) => {
+      const { outputDir } = result;
+      if (window.saveExportAs) {
+        return window.saveExportAs(outputDir)
+          .catch(() => outputDir); // return original path if it cannot be moved.
+      }
+      return outputDir;
+    })
+    .then((outputDir) => {
+      dispatch(completeExport(outputDir));
+    })
+    .catch((error) => {
+      dispatch(failExport(error.message));
+      if (error.missingEncodedItems) {
+        dispatch(encodeMissingItems(projectId, error.missingEncodedItems));
+      }
+      console.error('EXPORT ERROR', error);
+    });
+};
 
 export const requestExportDistribution = projectId => (dispatch) => { };
 

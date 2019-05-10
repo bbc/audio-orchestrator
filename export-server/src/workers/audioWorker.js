@@ -3,7 +3,10 @@ import path from 'path';
 import mapSeries from 'async/mapSeries';
 
 class AudioWorkerValidationError extends Error {
-
+  constructor(message, missingEncodedItems = null) {
+    super(message);
+    this.missingEncodedItems = missingEncodedItems;
+  }
 }
 
 const sequenceOutputDir = (basePath, sequenceId) => path.join(basePath, `${sequenceId}`);
@@ -33,7 +36,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
     completed += 1;
   };
 
-  return Promise.resolve()
+  return fse.ensureDir(outputDir)
     .then(() => {
       // Ensure each sequence has at least one object (the client decides which sequences to put
       // forward if some are optional).
@@ -65,7 +68,14 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
       const encodedItemsToCheck = [];
 
       sequences.forEach(({ objects, files, sequenceId }) => {
-        const requiredFiles = objects.map(({ fileId }) => files[fileId]);
+        // generate a list of file objects including fileId for all files used by an object
+        const requiredFiles = objects.map(({ fileId }) => ({
+          fileId,
+          ...files[fileId],
+        }));
+
+        // Add an entry for each file into one of two lists, for those never encoded, and those
+        // where the encoded files should be checked.
         requiredFiles.forEach(({ fileId, encodedItems, encodedItemsBasePath }) => {
           if (!encodedItems) {
             missingEncodedItems.push({ sequenceId, fileId });
@@ -117,7 +127,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
         if (missingEncodedItems.length > 0) {
           throw new AudioWorkerValidationError(
             'Not all encoded audio files are available',
-            { missingEncodedItems },
+            missingEncodedItems,
           );
         }
 
@@ -210,13 +220,6 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
     .then((result) => {
       nextStep('finished'); // to ensure completed === total
       return { result };
-    })
-    .catch((err) => {
-      if (!(err instanceof AudioWorkerValidationError)) {
-        throw err;
-      }
-
-      return { errorMessage: `${err}` };
     });
 };
 
