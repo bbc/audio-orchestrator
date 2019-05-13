@@ -27,6 +27,7 @@
     "dev": "nodemon src/server.js --exec \"node -r @babel/register\"",
     "build": "npm run clean && mkdir ./dist/ && babel src -s -d dist",
     "clean": "rm -rf ./dist/",
-    "start": "dist/server.js"
+    "start": "dist/server.js",
+    "postinstall": "node scripts/install-template.js"
   }
 }

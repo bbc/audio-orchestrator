@@ -32,6 +32,7 @@
     "build-analyse-server": "(cd node_modules/bbcat-orchestration-builder-analyse-server && yarn build)",
     "build-servers": "yarn build-export-server && yarn build-analyse-server",
     "clean": "rm -rf ./dist/",
-    "dev": "concurrently \"(cd ../react-frontend && yarn dev)\" \"(yarn build-servers && yarn build-main && NODE_ENV=development electron .)\""
+    "dev": "concurrently \"(cd ../react-frontend && yarn dev)\" \"(yarn build-servers && yarn build-main && NODE_ENV=development electron .)\"",
+    "postinstall": "node scripts/install-template.js"
   }
 }

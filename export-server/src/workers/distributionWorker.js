@@ -1,11 +1,7 @@
 import { promisify } from 'util';
 import fse from 'fs-extra';
 import path from 'path';
-import mapSeries from 'async/mapSeries';
 import webpackCb from '@bbc/bbcat-orchestration-template/node_modules/webpack'; // TODO only installed as dependency of template, should be in ours.
-
-import templateWebpackConfig from '@bbc/bbcat-orchestration-template/webpack.config';
-
 import templateWorker from './templateWorker';
 
 const webpack = promisify(webpackCb);
@@ -45,11 +41,11 @@ const distributionWorker = ({ sequences, settings, outputDir }, onProgress = () 
           webpackConfig.mode = 'production';
           webpackConfig.resolve = {
             ...webpackConfig.resolve,
-            modules: [templateNodeModulesPath],
+            modules: [templateNodeModulesPath, 'node_modules'],
           };
           webpackConfig.resolveLoader = {
             ...webpackConfig.resolveLoader,
-            modules: [templateNodeModulesPath],
+            modules: [templateNodeModulesPath, 'node_modules'],
           };
 
           return webpack(webpackConfig)

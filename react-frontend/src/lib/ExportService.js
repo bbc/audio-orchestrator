@@ -68,6 +68,10 @@ class ExportService {
           setTimeout(poll, POLL_TIMEOUT);
 
           return null;
+        })
+        .catch((error) => {
+          // An error occured in getting the status from the server, raise it and stop polling.
+          if (onError) onError(error);
         });
     };
 
