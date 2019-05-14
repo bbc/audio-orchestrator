@@ -11,6 +11,9 @@ import SequenceCheck from './SequenceCheck';
 import TaskProgress from './TaskProgress';
 import ExportTypeSelection from './ExportTypeSelection';
 import ExportModal from './ExportModal';
+import {
+  requestStartPreview,
+} from '../../../actions/export';
 
 const Review = ({
   projectId,
@@ -20,6 +23,7 @@ const Review = ({
   presentationValid,
   presentationError,
   advancedValid,
+  requestStartPreview,
 }) => (
   <Container>
     <Message icon="lightbulb outline" header="Preview and export" content="The prototype experience can be previewed directly on this computer and devices on the same network. Once you're happy, you can export the encoded audio and source code template to publish or customise further." onDismiss={() => {}} />
@@ -35,7 +39,7 @@ const Review = ({
       </Table.Body>
     </Table>
 
-    <Button disabled icon="eye" content="Start Preview" />
+    <Button primary icon="eye" content="Start Preview" onClick={() => requestStartPreview(projectId)} />
     <ExportTypeSelection projectId={projectId} />
 
     <ExportModal />
@@ -87,4 +91,8 @@ const mapStateToProps = ({ Project }, { projectId }) => {
   };
 };
 
-export default connect(mapStateToProps)(Review);
+const mapDispatchToProps = dispatch => ({
+  requestStartPreview: projectId => dispatch(requestStartPreview(projectId)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Review);

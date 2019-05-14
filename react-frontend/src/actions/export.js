@@ -8,6 +8,7 @@ const exportService = new ExportService(window.API_URL || 'http://localhost:8000
 const exportAudio = exportService.exportAudio.bind(exportService);
 const exportTemplate = exportService.exportTemplate.bind(exportService);
 const exportDistribution = exportService.exportDistribution.bind(exportService);
+const startPreview = exportService.startPreview.bind(exportService);
 
 /* --- private basic action creators --- */
 
@@ -235,8 +236,43 @@ export const requestExportDistribution = projectId => (dispatch) => {
     });
 };
 
+export const requestStartPreview = projectId => (dispatch) => {
+  dispatch(startExport('preview'));
+
+  ProjectStore.openProject(projectId)
+    .then((project) => {
+      const sequences = getSequencesToExport(project);
+      const settings = project.get('settings');
+
+      return { sequences, settings };
+    })
+    .then(({ sequences, settings }) => waitForExportTask(
+      dispatch,
+      startPreview,
+      { sequences, settings },
+    ))
+    .then(({ result }) => {
+      // TODO preview-specific handling
+      dispatch(completeExport(result.url));
+    })
+    .catch((error) => {
+      dispatch(failExport(error.message));
+      if (error.missingEncodedItems) {
+        dispatch(encodeMissingItems(projectId, error.missingEncodedItems));
+      }
+      console.error('PREVIEW ERROR', error);
+    });
+};
+
+
 export const requestOpenInFolder = outputPath => () => {
   if (window.openInFolder) {
     window.openInFolder(outputPath);
+  }
+};
+
+export const requestOpenUrl = url => () => {
+  if (window.openUrl) {
+    window.openUrl(url);
   }
 };

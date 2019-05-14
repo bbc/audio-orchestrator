@@ -71,6 +71,21 @@ app.post('/distribution', (req, res, next) => {
 });
 
 /**
+ * Starts a preview server after running the distribution task. Cancelling the task stops the
+ * server.
+ */
+app.post('/preview', (req, res, next) => {
+  exporter.exportPreview(req.body.sequences, req.body.settings)
+    .then(({ taskId }) => {
+      res.json({
+        success: true,
+        taskId,
+      });
+    })
+    .catch(err => next(err));
+});
+
+/**
  * Poll the status of the given task, returning progress or an error flag.
  */
 app.get('/task/:taskId', (req, res, next) => {

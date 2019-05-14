@@ -51,7 +51,14 @@ class ExportService {
           }
 
           // Update progress
-          if (onProgress) onProgress({ completed, total, currentStep });
+          if (onProgress) {
+            onProgress({
+              completed,
+              total,
+              currentStep,
+              taskId,
+            });
+          }
 
           if (error) {
             if (onError) onError(new ExportError(error, result.missingEncodedItems));
@@ -60,7 +67,7 @@ class ExportService {
 
           // Task is already complete, no need to poll further. Call the appropriate callback.
           if (completed === total) {
-            if (onComplete) onComplete({ result });
+            if (onComplete) onComplete({ result, taskId });
             return null;
           }
 
@@ -110,6 +117,18 @@ class ExportService {
     return this.post('export/distribution', { sequences, settings })
       .then(({ success, taskId }) => {
         if (!success) throw new Error('could not create task for exporting distribution');
+
+        this.monitorTask(taskId, callbacks);
+      });
+  }
+
+  /**
+   *
+   */
+  startPreview({ sequences, settings }, callbacks = {}) {
+    return this.post('export/preview', { sequences, settings })
+      .then(({ success, taskId }) => {
+        if (!success) throw new Error('could not create task for starting preview');
 
         this.monitorTask(taskId, callbacks);
       });

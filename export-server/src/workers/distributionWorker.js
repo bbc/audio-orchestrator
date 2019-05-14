@@ -1,10 +1,8 @@
-import { promisify } from 'util';
 import fse from 'fs-extra';
 import path from 'path';
-import webpackCb from '@bbc/bbcat-orchestration-template/node_modules/webpack'; // TODO only installed as dependency of template, should be in ours.
+import webpack from '@bbc/bbcat-orchestration-template/node_modules/webpack'; // TODO only installed as dependency of template, should be in ours.
+import ProgressPlugin from '@bbc/bbcat-orchestration-template/node_modules/webpack/lib/ProgressPlugin';
 import templateWorker from './templateWorker';
-
-const webpack = promisify(webpackCb);
 
 const distributionWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) => {
   const total = 3;
@@ -48,14 +46,31 @@ const distributionWorker = ({ sequences, settings, outputDir }, onProgress = () 
             modules: [templateNodeModulesPath, 'node_modules'],
           };
 
-          return webpack(webpackConfig)
-            .then((stats) => {
-              if (stats.hasErrors()) {
-                const info = stats.toJson();
-                console.error(info.errors.join('\n\n'));
-                throw new Error(`template compilation failed with ${info.errors.length} errors.`);
+          const compiler = webpack(webpackConfig);
+
+          compiler.apply(new ProgressPlugin((progress, message) => {
+            console.log(`Webpack progress: ${progress * 100}% ${message}`);
+            onProgress({ completed: completed + progress, total, currentStep: `webpack ${message}` });
+          }));
+
+          return new Promise((resolve, reject) => {
+            compiler.run((err, stats) => {
+              if (err) {
+                console.log('webpack error:', err);
+                reject(err);
+              } else {
+                console.log('webpack resolved.');
+
+                if (stats.hasErrors()) {
+                  const info = stats.toJson();
+                  console.error(info.errors.join('\n\n'));
+                  reject(new Error(`template compilation failed with ${info.errors.length} errors.`));
+                } else {
+                  resolve();
+                }
               }
             });
+          });
         })
         .then(() => fse.remove(outputDirNodeModulesPath));
     })

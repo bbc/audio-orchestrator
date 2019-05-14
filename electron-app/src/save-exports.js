@@ -9,6 +9,10 @@ const {
   shell,
 } = remote;
 
+export const openUrl = (url) => {
+  shell.openExternal(url);
+};
+
 export const openInFolder = (outputPath) => {
   shell.showItemInFolder(outputPath);
 };

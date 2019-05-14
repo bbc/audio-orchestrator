@@ -7,6 +7,7 @@ import queue from 'async/queue';
 import audioWorker from './workers/audioWorker';
 import templateWorker from './workers/templateWorker';
 import distributionWorker from './workers/distributionWorker';
+import previewWorker from './workers/previewWorker';
 
 // How many tasks can be in progress at the same time
 const CONCURRENCY = 1;
@@ -41,8 +42,14 @@ const getExportWorker = tasks => ({ worker, args, taskId }, callback) => {
         task.currentStep = currentStep;
       },
     ))
-    .then(({ result }) => {
+    .then(({ result, url, stopPreview }) => {
       task.result = result;
+      if (stopPreview) {
+        task.stopPreview = stopPreview;
+      }
+      if (url) {
+        task.url = url;
+      }
     })
     .catch((err) => {
       // TODO only pass on AudioWorkerValidationError, throw others?
@@ -194,6 +201,42 @@ class Exporter {
   }
 
   /**
+   * Runs the same tasks as @link{exportDistribution} (with a modified settings object),
+   * then starts a preview web server serving the output directory.
+   *
+   * It:
+   *
+   * - runs the distribution export (@link{exportDistribution})
+   *
+   * It will also register a call back so that when task is cancelled, it:
+   *
+   * - stops the webserver, and
+   * - removes the temporary distribution folder.
+   *
+   * @param {Array<Object>} sequences, each sequence should contain a name, a list of objects, a
+   * list of files, and the optional isMain or isIntro flags.
+   * @param {Object} settings, the project settings used to populate the template files.
+   *
+   * @return {Promise<Object>} { taskId }
+   */
+  exportPreview(sequences, settings) {
+    const taskId = uuidv4();
+
+    this.tasks[taskId] = {};
+
+    this.queue.push({
+      worker: previewWorker,
+      taskId,
+      args: {
+        sequences,
+        settings,
+      },
+    });
+
+    return Promise.resolve({ taskId });
+  }
+
+  /**
    * Returns status information about the task, like the current step label and the number of steps
    * completed and remaining. Includes a result object if the task is completed or has failed.
    *
@@ -217,6 +260,7 @@ class Exporter {
       result: {
         outputDir: (task.completed !== task.total) ? null : task.outputDir,
         missingEncodedItems: task.missingEncodedItems || [],
+        url: task.url || null,
       },
     });
   }
@@ -243,6 +287,9 @@ class Exporter {
       .then(() => {
         if (task.outputDir) {
           return fse.remove(task.outputDir);
+        }
+        if (task.stopPreview) {
+          task.stopPreview();
         }
         return Promise.resolve();
       })
