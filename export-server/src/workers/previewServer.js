@@ -76,7 +76,7 @@ const startPreview = (distDir) => {
         const { port, address } = server.address();
         console.log(`Preview server for ${distDir} listening on ${address}:${port}.`);
         resolve({
-          stop: () => server.stop(),
+          stop: () => server.close(),
           url: `http://${address}:${port}`,
         });
       });

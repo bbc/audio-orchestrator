@@ -12,6 +12,7 @@ class ExportError extends Error {
  */
 class ExportService {
   constructor(apiBase) {
+    this.runningTasks = {};
     this.get = path => fetch(`${apiBase}/${path}`).then(response => response.json());
     this.post = (path, data) => fetch(
       `${apiBase}/${path}`,
@@ -24,6 +25,9 @@ class ExportService {
       },
     )
       .then(response => response.json());
+
+    this.delete = path => fetch(`${apiBase}/${path}`, { method: 'delete' })
+      .then(response => response.json());
   }
 
   /**
@@ -32,6 +36,7 @@ class ExportService {
    * @private
    */
   monitorTask(taskId, { onProgress, onComplete, onError } = {}) {
+    this.runningTasks[taskId] = true;
     const poll = () => {
       this.get(`export/task/${taskId}`)
         .then((response) => {
@@ -46,7 +51,7 @@ class ExportService {
 
           // Did not successfully poll the task status -> give up.
           if (!success) {
-            if (onError) onError();
+            if (onError) onError(new Error('could not get task status'));
             return this.deleteTask(taskId);
           }
 
@@ -134,9 +139,15 @@ class ExportService {
       });
   }
 
-  // TODO implement DELETE export/task/<id>
-  deleteTask(taskId) {
-    return Promise.reject(new Error('deleteTask not implemented'));
+  /**
+   *
+   */
+  cancelExports() {
+    return Promise.all(Object.keys(this.runningTasks)
+      .map(taskId => this.delete(`export/task/${taskId}`)
+        .then(() => {
+          delete this.runningTasks[taskId];
+        })));
   }
 }
 

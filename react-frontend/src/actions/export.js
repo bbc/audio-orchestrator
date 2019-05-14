@@ -9,6 +9,7 @@ const exportAudio = exportService.exportAudio.bind(exportService);
 const exportTemplate = exportService.exportTemplate.bind(exportService);
 const exportDistribution = exportService.exportDistribution.bind(exportService);
 const startPreview = exportService.startPreview.bind(exportService);
+const cancelExports = exportService.cancelExports.bind(exportService);
 
 /* --- private basic action creators --- */
 
@@ -43,6 +44,7 @@ export const requestCancelExport = () => (dispatch) => {
   console.log('request cancel');
   // TODO cancel export task on server and stop polling it.
   // close the export status overlay
+  cancelExports();
   dispatch(closeExport());
 };
 

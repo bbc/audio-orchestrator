@@ -266,7 +266,7 @@ class Exporter {
   }
 
   /**
-   * Deletes a task and its working directory, if set. Recursively deletes child tasks if used.
+   * Deletes a task and its working directory, if set. Stops the preview server if it exists.
    *
    * @param {string} taskId
    *
@@ -280,19 +280,9 @@ class Exporter {
 
     const task = this.tasks[taskId];
 
-    // Delete all child tasks, if any, then delete this task.
-    return Promise.all(
-      task.childTaskIds.map(child => this.deleteTask(child).catch()),
-    )
-      .then(() => {
-        if (task.outputDir) {
-          return fse.remove(task.outputDir);
-        }
-        if (task.stopPreview) {
-          task.stopPreview();
-        }
-        return Promise.resolve();
-      })
+    return Promise.resolve()
+      .then(() => (task.stopPreview ? task.stopPreview() : null))
+      .then(() => (task.outputDir ? fse.remove(task.outputDir) : null))
       .then(() => {
         delete this.tasks[taskId];
       });
