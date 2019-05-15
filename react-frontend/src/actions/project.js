@@ -660,6 +660,20 @@ export const setSequenceName = (projectId, sequenceId, name) => (dispatch) => {
   dispatch(getSequencesList(projectId));
 };
 
+const parseCsvMetadata = (contents) => {
+  const [keys, ...objectRows] = contents.split('\n').map(line => line.split(',').map(cell => cell.trim()));
+
+  const mdoObjects = objectRows.map((row) => {
+    const obj = {};
+    keys.forEach((key, i) => {
+      obj[key] = row[i];
+    });
+    return obj;
+  });
+
+  return { mdoObjects };
+};
+
 /**
  * Utility; parse a file contents string or buffer as a JSON object and extract the metadata
  * objects list.
@@ -673,9 +687,18 @@ const parseMetadataFile = file => new Promise((resolve, reject) => {
     reject(new Error('Could not read metadata file.'));
   });
   reader.addEventListener('loadend', () => {
-    const metadata = JSON.parse(reader.result) || {};
+    let metadata;
+    if (reader.result.startsWith('{')) {
+      metadata = JSON.parse(reader.result);
+    } else {
+      metadata = parseCsvMetadata(reader.result);
+    }
     const objects = metadata.mdoObjects || [];
-    resolve(objects);
+    resolve(objects.map(object => ({
+      // backwards compatibility, CSV format specified in bbcat-orchestration used mdoObjectLabel
+      ...object,
+      label: object.label || object.mdoObjectLabel,
+    })));
   });
 
   // start reading the file, will trigger the error or loadend event when finished.
@@ -689,12 +712,13 @@ const parseMetadataFile = file => new Promise((resolve, reject) => {
     throw new Error('Not every object has a number and label.');
   }
 
-  // parse all orchestration metadata fields as integers (except the label)
+  // parse all orchestration metadata fields as integers (except the label and image column)
   return objects.map((object) => {
     const parsedObject = { ...object };
+
     Object.keys(object).forEach((key) => {
-      if (key !== 'label') {
-        parsedObject[key] = parseInt(object[key], 10);
+      if (key !== 'label' && key !== 'image') { // TODO better sanitization of metadata object
+        parsedObject[key] = parseInt(object[key], 10) || 0;
       }
     });
     return parsedObject;
@@ -808,7 +832,7 @@ export const requestReplaceMetadata = (projectId, sequenceId) => (dispatch) => {
   new Promise((resolve, reject) => {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.json, .txt';
+    input.accept = '.json, .txt, .csv';
     input.multiple = false;
     input.style.display = 'none';
 
