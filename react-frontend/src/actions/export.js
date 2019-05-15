@@ -46,6 +46,7 @@ export const requestCancelExport = () => (dispatch) => {
   // close the export status overlay
   cancelExports();
   dispatch(closeExport());
+  dispatch(failExport('cancelled'));
 };
 
 /**

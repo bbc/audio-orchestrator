@@ -3,23 +3,18 @@ import path from 'path';
 import webpack from '@bbc/bbcat-orchestration-template/node_modules/webpack'; // TODO only installed as dependency of template, should be in ours.
 import ProgressPlugin from '@bbc/bbcat-orchestration-template/node_modules/webpack/lib/ProgressPlugin';
 import templateWorker from './templateWorker';
+import ProgressReporter from './progressReporter';
 
 const distributionWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) => {
-  const total = 3;
-  let completed = 0;
-
-  const nextStep = (currentStep) => {
-    onProgress({ completed, total, currentStep });
-    completed += 1;
-  };
+  const progress = new ProgressReporter(3, onProgress);
 
   return fse.ensureDir(outputDir)
     .then(() => {
-      nextStep('packaging audio and generating template source code');
-      return templateWorker({ sequences, settings, outputDir }, () => {});
+      const onTemplateProgress = progress.advance('packaging audio and generating template source code');
+      return templateWorker({ sequences, settings, outputDir }, onTemplateProgress);
     })
     .then(() => {
-      nextStep('compiling application');
+      const onCompileProgress = progress.advance('compiling application');
 
       // outputDir needs to have a node_modules so that the webpack.config can be resolved with
       // all its imports. The template config cannot be used because __dirname is resolved at the
@@ -47,10 +42,8 @@ const distributionWorker = ({ sequences, settings, outputDir }, onProgress = () 
           };
 
           const compiler = webpack(webpackConfig);
-
-          compiler.apply(new ProgressPlugin((progress, message) => {
-            console.log(`Webpack progress: ${progress * 100}% ${message}`);
-            onProgress({ completed: completed + progress, total, currentStep: `webpack ${message}` });
+          compiler.apply(new ProgressPlugin((percent, message) => {
+            onCompileProgress({ completed: percent * 100, total: 100, currentStep: message });
           }));
 
           return new Promise((resolve, reject) => {
@@ -75,13 +68,13 @@ const distributionWorker = ({ sequences, settings, outputDir }, onProgress = () 
         .then(() => fse.remove(outputDirNodeModulesPath));
     })
     .then(() => {
-      nextStep('removing temporary files'); // TODO would it be better to keep the template sources?
+      progress.advance('removing temporary files'); // TODO would it be better to keep the template sources?
       return fse.readdir(outputDir)
         .then(files => files.filter(name => name !== 'dist'))
         .then(files => Promise.all(files.map(file => fse.remove(path.join(outputDir, file)))));
     })
     .then(() => {
-      nextStep('finished'); // to ensure completed === total
+      progress.complete();
       return { result: true }; // TODO, have to return a { result } but there isn't really a value
     })
     .catch((err) => {

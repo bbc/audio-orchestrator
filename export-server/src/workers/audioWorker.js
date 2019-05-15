@@ -1,6 +1,7 @@
 import fse from 'fs-extra';
 import path from 'path';
 import mapSeries from 'async/mapSeries';
+import ProgressReporter from './progressReporter';
 
 class AudioWorkerValidationError extends Error {
   constructor(message, missingEncodedItems = null) {
@@ -28,13 +29,7 @@ const findSequenceDuration = (objects, files) => {
 };
 
 const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
-  const total = 6;
-  let completed = 0;
-
-  const nextStep = (currentStep) => {
-    onProgress({ completed, total, currentStep });
-    completed += 1;
-  };
+  const progress = new ProgressReporter(6, onProgress);
 
   const audioOutputDir = path.join(outputDir, 'audio');
 
@@ -42,7 +37,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
     .then(() => {
       // Ensure each sequence has at least one object (the client decides which sequences to put
       // forward if some are optional).
-      nextStep('checking that sequence metadata has been added');
+      progress.advance('checking that sequence metadata has been added');
 
       sequences.forEach((sequence) => {
         if (!sequence.objects || sequence.objects.length === 0) {
@@ -52,7 +47,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
     })
     .then(() => {
       // Ensure all objects have an assigned fileId, by iterating over the objects in each sequence
-      nextStep('checking that all objects are associated to a an audio file');
+      progress.advance('checking that all objects are associated to a an audio file');
 
       sequences.forEach((sequence) => {
         sequence.objects.forEach((object) => {
@@ -64,7 +59,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
     })
     .then(() => {
       // Ensure each file has encodedItems set, and the encodedItems.baseDir exists.
-      nextStep('checking that all audio files have been encoded');
+      progress.advance('checking that all audio files have been encoded');
 
       const missingEncodedItems = [];
       const encodedItemsToCheck = [];
@@ -102,7 +97,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
       return encodedItemsToCheck;
     })
     .then((encodedItemsToCheck) => {
-      nextStep('checking that all encoded audio files are available');
+      progress.advance('checking that all encoded audio files are available');
 
       const missingEncodedItems = [];
 
@@ -137,7 +132,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
       });
     })
     .then((requiredEncodedItems) => {
-      nextStep('copying encoded audio files');
+      progress.advance('copying encoded audio files');
 
       return Promise.all(sequences.map(({ sequenceId }) => {
         // Create empty output directory for the sequence
@@ -170,7 +165,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
         }));
     })
     .then(() => {
-      nextStep('generating metadata files');
+      progress.advance('generating metadata files');
       return new Promise((resolve, reject) => {
         console.log('generating metadata files (mapSeries)');
         mapSeries(sequences, (sequence, callback) => {
@@ -220,7 +215,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
       });
     })
     .then((result) => {
-      nextStep('finished'); // to ensure completed === total
+      progress.complete();
       return { result };
     });
 };

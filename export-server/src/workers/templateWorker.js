@@ -1,28 +1,22 @@
 import fse from 'fs-extra';
 import path from 'path';
 import mapSeries from 'async/mapSeries';
-
 import audioWorker from './audioWorker';
+import ProgressReporter from './progressReporter';
 
 // TODO replace with path into electron app bundle.
 const templateSourceDir = path.dirname(require.resolve('@bbc/bbcat-orchestration-template/package.json'));
 
 const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) => {
-  const total = 3;
-  let completed = 0;
-
-  const nextStep = (currentStep) => {
-    onProgress({ completed, total, currentStep });
-    completed += 1;
-  };
+  const progress = new ProgressReporter(3, onProgress);
 
   return fse.ensureDir(outputDir)
     .then(() => {
-      nextStep('packaging audio');
-      return audioWorker({ sequences, outputDir }, () => {});
+      const onAudioProgress = progress.advance('packaging audio');
+      return audioWorker({ sequences, outputDir }, onAudioProgress);
     })
     .then(() => {
-      nextStep('copying template source files');
+      progress.advance('copying template source files');
       return fse.readdir(templateSourceDir)
         .then((files) => {
           const filesToCopy = files.filter(file => path.basename(file) !== 'node_modules');
@@ -47,7 +41,7 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
         });
     })
     .then(() => {
-      nextStep('configuring template contents');
+      progress.advance('configuring template contents');
       const configPath = path.join(outputDir, 'src', 'config.js');
       console.log('reading', configPath);
 
@@ -77,7 +71,7 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
         .then(updatedContents => fse.writeFile(configPath, updatedContents));
     })
     .then(() => {
-      nextStep('finished'); // to ensure completed === total
+      progress.complete();
       return { result: true }; // TODO, have to return a { result } but there isn't really a value
     })
     .catch((err) => {

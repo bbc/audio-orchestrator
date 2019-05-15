@@ -38,6 +38,11 @@ class ExportService {
   monitorTask(taskId, { onProgress, onComplete, onError } = {}) {
     this.runningTasks[taskId] = true;
     const poll = () => {
+      // Don't poll if the task doesn't exist anymore.
+      if (!(taskId in this.runningTasks)) {
+        onError(new ExportError('Export cancelled by user'));
+      }
+
       this.get(`export/task/${taskId}`)
         .then((response) => {
           const {
