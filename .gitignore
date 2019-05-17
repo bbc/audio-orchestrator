@@ -90,4 +90,6 @@ typings/
 
 # DynamoDB Local files
 .dynamodb/
+
+builds/
 bbcat-orchestration-builder.log

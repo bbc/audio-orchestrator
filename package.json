@@ -1,6 +1,10 @@
 {
   "name": "bbcat-orchestration-builder",
   "private": true,
+  "scripts": {
+    "dev": "(cd electron-app && yarn dev)",
+    "build": "(cd electron-app && yarn build)"
+  },
   "workspaces": {
     "packages": [
       "analyse-server",

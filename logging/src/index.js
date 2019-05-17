@@ -1,3 +1,5 @@
+const os = require('os');
+const path = require('path');
 const winston = require('winston');
 
 // A format that prefixes the message with the component and removes the component property if set.
@@ -26,7 +28,7 @@ const rootLogger = winston.createLogger({
       handleExceptions: true,
     }),
     new winston.transports.File({
-      filename: 'bbcat-orchestration-builder.log',
+      filename: path.join(os.homedir(), 'bbcat-orchestration-builder.log'),
       level: 'silly',
       format: winston.format.combine(
         winston.format.timestamp(),

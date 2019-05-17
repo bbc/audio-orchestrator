@@ -1,4 +1,5 @@
-import { ipcRenderer } from 'electron';
+import os from 'os';
+import { ipcRenderer, remote } from 'electron';
 import ProjectStore from './project-store';
 import {
   openUrl,
@@ -6,6 +7,10 @@ import {
   saveExportAs,
   saveExportToDownloads,
 } from './save-exports';
+
+
+console.info(`current working directory: ${remote.process.cwd()}`);
+console.info(`log file location: ${os.homedir()}`);
 
 window.API_URL = ipcRenderer.sendSync('GET_API_URL');
 
