@@ -1,3 +1,4 @@
+import { electronLogger as logger } from 'bbcat-orchestration-builder-logging';
 import path from 'path';
 import { app, BrowserWindow, ipcMain } from 'electron';
 import { fork } from 'child_process';
@@ -48,11 +49,11 @@ function createWindow() {
   // install devTools
   if (process.env.NODE_ENV === 'development') {
     installExtension(REACT_DEVELOPER_TOOLS)
-        .then(name => console.log(`Added Extension:  ${name}`))
-        .catch(err => console.log('An error occurred: ', err));
+      .then(name => logger.info(`Added Extension:  ${name}`))
+      .catch(err => logger.warn('An error occurred: ', err));
     installExtension(REDUX_DEVTOOLS)
-        .then(name => console.log(`Added Extension:  ${name}`))
-        .catch(err => console.log('An error occurred: ', err));
+      .then(name => logger.info(`Added Extension:  ${name}`))
+      .catch(err => logger.warn('An error occurred: ', err));
   }
 
   if (process.env.NODE_ENV === 'development') {

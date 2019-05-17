@@ -1,3 +1,4 @@
+import { analyseLogger as logger } from 'bbcat-orchestration-builder-logging';
 import { promisify } from 'util';
 import { path as ffprobePath } from 'ffprobe-static';
 import ffprobeCB from 'node-ffprobe';
@@ -16,29 +17,33 @@ const roundTime = t => parseFloat(parseFloat(t).toFixed(TIME_DECIMALS));
  *
  * @returns {Promise}
  */
-const processProbe = filePath => ffprobe(filePath)
-  .then((data) => {
-    // ensure there is at least one stream detected in the file and return the first one
-    if (!data.streams || data.streams.length === 0) {
-      throw new Error('No media streams in file');
-    }
-    return data.streams[0];
-  })
-  .then((stream) => {
-    // ensure the stream is an audio stream before accessing its properties
-    if (stream.codec_type !== 'audio') {
-      throw new Error('First stream in file does not contain an audio codec');
-    }
-    /* eslint-disable-next-line camelcase */
-    const { sample_rate, channels, duration } = stream;
+const processProbe = (filePath) => {
+  logger.debug('processProbe', { ffprobePath, cwd: process.cwd() });
 
-    const probe = {
-      sampleRate: sample_rate,
-      numChannels: channels,
-      duration: roundTime(duration),
-    };
+  return ffprobe(filePath)
+    .then((data) => {
+      // ensure there is at least one stream detected in the file and return the first one
+      if (!data.streams || data.streams.length === 0) {
+        throw new Error('No media streams in file');
+      }
+      return data.streams[0];
+    })
+    .then((stream) => {
+      // ensure the stream is an audio stream before accessing its properties
+      if (stream.codec_type !== 'audio') {
+        throw new Error('First stream in file does not contain an audio codec');
+      }
+      /* eslint-disable-next-line camelcase */
+      const { sample_rate, channels, duration } = stream;
 
-    return { probe };
-  });
+      const probe = {
+        sampleRate: sample_rate,
+        numChannels: channels,
+        duration: roundTime(duration),
+      };
+
+      return { probe };
+    });
+};
 
 export default processProbe;

@@ -1,3 +1,4 @@
+import { analyseLogger as logger } from 'bbcat-orchestration-builder-logging';
 import { promisify } from 'util';
 import { spawn } from 'child_process';
 import { path as ffprobePath } from 'ffprobe-static';
@@ -53,7 +54,7 @@ const processItems = (filePath) => {
 
       // When the ffmpeg process errors, reject.
       ffmpegProcess.on('error', (err) => {
-        console.log('error');
+        logger.warn('ffmpeg error', err);
         reject(err);
       });
 
@@ -73,7 +74,7 @@ const processItems = (filePath) => {
       // When the process exits, resolve (or reject on error).
       ffmpegProcess.on('close', (code) => {
         if (code !== 0) {
-          console.log(code);
+          logger.warn(`ffmpeg exit code: ${code}`);
           reject(new Error(`ffmpeg exited with non-zero code: ${code}`));
           return;
         }

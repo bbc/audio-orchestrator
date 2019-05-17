@@ -6,7 +6,8 @@
       "analyse-server",
       "export-server",
       "electron-app",
-      "react-frontend"
+      "react-frontend",
+      "logging"
     ],
     "nohoist": [
       "bbcat-orchestration-builder-electron-app/**"

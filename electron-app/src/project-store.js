@@ -1,3 +1,4 @@
+import { electronLogger as logger } from 'bbcat-orchestration-builder-logging';
 import path from 'path';
 import Store from 'electron-store';
 import { remote } from 'electron';
@@ -17,7 +18,7 @@ function createProjectStore(selectedPath) {
   const name = path.basename(selectedPath, fileExtension);
   const cwd = path.dirname(selectedPath);
 
-  console.log(selectedPath, fileExtension, name, cwd);
+  logger.debug(`${selectedPath} ${fileExtension} ${name} cwd: ${cwd}`);
 
   const store = new Store({
     cwd,
@@ -56,7 +57,7 @@ class ProjectStore {
           filters: fileFilters,
         },
         (filePaths) => {
-          console.log(filePaths === undefined);
+          logger.debug(`filePaths === undefined: ${filePaths === undefined}`);
 
           // Make sure the user actually selected a file.
           if (filePaths === undefined || filePaths.length === 0) {

@@ -1,10 +1,12 @@
-/**
- * A server process combining all the API calls tobe available locally.
- */
+import { electronLogger as logger } from 'bbcat-orchestration-builder-logging';
 import { createServer } from 'http';
 import express from 'express';
 import analyseApp from 'bbcat-orchestration-builder-analyse-server';
 import exportApp from 'bbcat-orchestration-builder-export-server';
+
+/**
+ * A server process combining all the API calls tobe available locally.
+ */
 
 // Create the top level application
 const app = express();
@@ -23,7 +25,7 @@ app.use('/export', exportApp);
 
 // Error handler defined last
 app.use((err, req, res, next) => {
-  console.log(err);
+  logger.error(err);
   if (res.headersSent) {
     next(err);
   } else {
@@ -38,7 +40,7 @@ const host = '127.0.0.1';
 const server = createServer(app);
 server.listen(0, host, () => {
   const { port } = server.address();
-  console.log(`API listening on ${host}:${port}`);
+  logger.info(`API listening on ${host}:${port}`);
 
   process.send({
     ready: true,

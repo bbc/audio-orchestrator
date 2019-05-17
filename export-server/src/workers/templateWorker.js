@@ -1,3 +1,4 @@
+import { exportLogger as logger } from 'bbcat-orchestration-builder-logging';
 import fse from 'fs-extra';
 import path from 'path';
 import mapSeries from 'async/mapSeries';
@@ -43,7 +44,7 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
     .then(() => {
       progress.advance('configuring template contents');
       const configPath = path.join(outputDir, 'src', 'config.js');
-      console.log('reading', configPath);
+      logger.debug(`reading config from ${configPath}`);
 
       return fse.readFile(configPath, { encoding: 'utf8' })
         .then((contents) => {
@@ -75,7 +76,7 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
       return { result: true }; // TODO, have to return a { result } but there isn't really a value
     })
     .catch((err) => {
-      console.log(err);
+      logger.debug(`caught error, removing outputDir. ${err.message}`);
       return fse.remove(outputDir).finally(() => {
         throw err;
       });

@@ -1,7 +1,9 @@
+import { analyseLogger as logger } from 'bbcat-orchestration-builder-logging';
 import http from 'http';
 import express from 'express';
 import analyseApp from './app';
 
+// create express app for standalone server application
 const app = express();
 
 // Set the CORS header to allow cross-origin requests
@@ -17,7 +19,7 @@ app.use('/analyse', analyseApp);
 
 // last, define an error handler that masks the trace but logs the error
 app.use((err, req, res, next) => {
-  console.log(err);
+  logger.warn(err);
   if (res.headersSent) {
     next(err);
   } else {
@@ -29,4 +31,4 @@ app.use((err, req, res, next) => {
 // create and start a server on the specified or default port.
 const port = process.env.PORT || 8000;
 const server = http.createServer(app);
-server.listen(port, () => console.log(`analyse-server started on port ${port}`));
+server.listen(port, () => logger.info(`analyse-server started on port ${port}`));

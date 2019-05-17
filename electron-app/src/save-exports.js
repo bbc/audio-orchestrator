@@ -1,3 +1,4 @@
+import { electronLogger as logger } from 'bbcat-orchestration-builder-logging';
 import path from 'path';
 import fse from 'fs-extra';
 import { remote } from 'electron';
@@ -21,7 +22,7 @@ export const saveExportToDownloads = (exportDir) => {
   const dest = path.join(app.getPath('downloads'), path.basename(exportDir));
   return fse.move(exportDir, dest)
     .catch((err) => {
-      console.log(`failed to move ${exportDir} to ${dest}.`, err);
+      logger.error(`failed to move ${exportDir} to ${dest}.`, err);
       throw err;
     });
 };
@@ -47,7 +48,7 @@ export const saveExportAs = (exportDir) => {
   })
     .then(dest => fse.move(exportDir, dest).then(() => dest))
     .catch((err) => {
-      console.log(`failed to move ${exportDir} to selected destination`, err);
+      logger.error(`failed to move ${exportDir} to selected destination`, err);
       throw err;
     });
 };

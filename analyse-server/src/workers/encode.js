@@ -1,3 +1,4 @@
+import { analyseLogger as logger } from 'bbcat-orchestration-builder-logging';
 import { promisify } from 'util';
 import {
   writeFile as writeFileCB,
@@ -193,7 +194,7 @@ const encodeItem = ({
       }
     })
     .then(args => new Promise((resolve, reject) => {
-      // console.log(args.join(' '));
+      logger.debug(args.join(' '));
       const ffmpegProcess = spawn(
         ffmpegPath,
         args,
@@ -269,7 +270,7 @@ const processEncode = (
     encodeItem,
     (err, encodedItems) => {
       if (err) {
-        console.log('rejected in processEncode');
+        logger.warn('rejected in processEncode');
         reject(err);
       } else {
         resolve(encodedItems);

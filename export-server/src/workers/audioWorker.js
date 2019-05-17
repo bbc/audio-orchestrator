@@ -1,3 +1,4 @@
+import { exportLogger as logger } from 'bbcat-orchestration-builder-logging';
 import fse from 'fs-extra';
 import path from 'path';
 import mapSeries from 'async/mapSeries';
@@ -136,7 +137,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
 
       return Promise.all(sequences.map(({ sequenceId }) => {
         // Create empty output directory for the sequence
-        console.log('about to create sequence output dir', audioOutputDir, sequenceId);
+        logger.debug('about to create sequence output dir', audioOutputDir, sequenceId);
         return fse.emptyDir(sequenceOutputDir(audioOutputDir, sequenceId));
       }))
         .then(() => new Promise((resolve, reject) => {
@@ -167,7 +168,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
     .then(() => {
       progress.advance('generating metadata files');
       return new Promise((resolve, reject) => {
-        console.log('generating metadata files (mapSeries)');
+        logger.debug('generating metadata files (mapSeries)');
         mapSeries(sequences, (sequence, callback) => {
           const {
             sequenceId,

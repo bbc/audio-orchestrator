@@ -1,3 +1,4 @@
+import { analyseLogger as logger } from 'bbcat-orchestration-builder-logging';
 import { promisify } from 'util';
 import { mkdtemp as mkdtempCB } from 'fs';
 import os from 'os';
@@ -50,7 +51,7 @@ const getAnalysisWorker = (files, batches) => ({
 
   // Immediately save a non-successful result if the file has not been registered.
   if (!(fileId in files)) {
-    console.error(`fileId not registered: ${fileId}`);
+    logger.warn(`fileId not registered: ${fileId}`);
     batches[batchId].results.push({ fileId, success: false });
 
     callback();
@@ -68,7 +69,7 @@ const getAnalysisWorker = (files, batches) => ({
     .catch((err) => {
       const batch = batches[batchId];
       if (batch) {
-        console.error('worker task failed:', err);
+        logger.warn('worker task failed:', err);
         batch.results.push({ fileId, success: false });
       }
     })

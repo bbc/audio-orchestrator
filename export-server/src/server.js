@@ -1,3 +1,4 @@
+import { exportLogger as logger } from 'bbcat-orchestration-builder-logging';
 import http from 'http';
 import express from 'express';
 import exportApp from './app';
@@ -17,7 +18,7 @@ app.use('/export', exportApp);
 
 // last, define an error handler that masks the trace but logs the error
 app.use((err, req, res, next) => {
-  console.log(err);
+  logger.info(err);
   if (res.headersSent) {
     next(err);
   } else {
@@ -29,4 +30,4 @@ app.use((err, req, res, next) => {
 // create and start a server on the specified or default port.
 const port = process.env.PORT || 8000;
 const server = http.createServer(app);
-server.listen(port, () => console.log(`export-server started on port ${port}`));
+server.listen(port, () => logger.info(`export-server started on port ${port}`));

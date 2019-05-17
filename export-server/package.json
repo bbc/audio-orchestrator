@@ -8,6 +8,7 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
+    "bbcat-orchestration-builder-logging": "^0.0.1",
     "@bbc/bbcat-orchestration-template": "^0.1.1",
     "async": "^2.6.2",
     "body-parser": "^1.18.3",

@@ -1,3 +1,4 @@
+import { exportLogger as logger } from 'bbcat-orchestration-builder-logging';
 import uuidv4 from 'uuid/v4';
 import os from 'os';
 import path from 'path';
@@ -53,7 +54,7 @@ const getExportWorker = tasks => ({ worker, args, taskId }, callback) => {
     })
     .catch((err) => {
       // TODO only pass on AudioWorkerValidationError, throw others?
-      console.log('error caught in exporter, passing on to clients', err);
+      logger.warn('error caught in exporter, passing on to clients', err);
 
       task.error = err.message;
       if (err.missingEncodedItems) {

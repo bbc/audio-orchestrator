@@ -1,3 +1,4 @@
+import { exportLogger as logger } from 'bbcat-orchestration-builder-logging';
 import fse from 'fs-extra';
 import path from 'path';
 import startPreview from './previewServer';
@@ -34,7 +35,7 @@ const previewWorker = ({ sequences, settings, outputDir }, onProgress = () => {}
       return { result: true, url, stopPreview: stop };
     })
     .catch((err) => {
-      console.log(err);
+      logger.warn(err);
 
       return fse.remove(outputDir).finally(() => {
         throw err;

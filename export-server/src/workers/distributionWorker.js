@@ -1,3 +1,4 @@
+import { exportLogger as logger } from 'bbcat-orchestration-builder-logging';
 import fse from 'fs-extra';
 import path from 'path';
 import webpack from '@bbc/bbcat-orchestration-template/node_modules/webpack'; // TODO only installed as dependency of template, should be in ours.
@@ -49,14 +50,14 @@ const distributionWorker = ({ sequences, settings, outputDir }, onProgress = () 
           return new Promise((resolve, reject) => {
             compiler.run((err, stats) => {
               if (err) {
-                console.log('webpack error:', err);
+                logger.info('webpack error:', err);
                 reject(err);
               } else {
-                console.log('webpack resolved.');
+                logger.info('webpack resolved.');
 
                 if (stats.hasErrors()) {
                   const info = stats.toJson();
-                  console.error(info.errors.join('\n\n'));
+                  logger.error(info.errors.join('\n\n'));
                   reject(new Error(`template compilation failed with ${info.errors.length} errors.`));
                 } else {
                   resolve();
@@ -78,7 +79,7 @@ const distributionWorker = ({ sequences, settings, outputDir }, onProgress = () 
       return { result: true }; // TODO, have to return a { result } but there isn't really a value
     })
     .catch((err) => {
-      console.log(err);
+      logger.info(err);
       return fse.remove(outputDir).finally(() => {
         throw err;
       });

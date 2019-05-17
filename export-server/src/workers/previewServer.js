@@ -1,3 +1,4 @@
+import { exportLogger as logger } from 'bbcat-orchestration-builder-logging';
 import os from 'os';
 import net from 'net';
 import http from 'http';
@@ -41,14 +42,14 @@ const getHandle = (host, initialPort = DEFAULT_PORT, retries = 50) => {
   return new Promise((resolve, reject) => {
     server.on('error', (e) => {
       if (retries <= 0) {
-        console.log(e);
+        logger.debug(e);
         reject(new Error('Failed to select an available port for the preview server.'));
       } else {
         resolve(getHandle(host, initialPort + 1, retries - 1));
       }
     });
 
-    console.log(`Trying to bind to ${host}:${initialPort}`);
+    logger.debug(`Trying to bind to ${host}:${initialPort}`);
     server.listen(initialPort, host, () => {
       resolve(server);
     });
@@ -56,7 +57,7 @@ const getHandle = (host, initialPort = DEFAULT_PORT, retries = 50) => {
 };
 
 const startPreview = (distDir) => {
-  console.log('start preview');
+  logger.debug('start preview');
 
   const serve = serveStatic(distDir);
 
@@ -74,7 +75,7 @@ const startPreview = (distDir) => {
 
       server.listen(handle, () => {
         const { port, address } = server.address();
-        console.log(`Preview server for ${distDir} listening on ${address}:${port}.`);
+        logger.info(`Preview server for ${distDir} listening on ${address}:${port}.`);
         resolve({
           stop: () => server.close(),
           url: `http://${address}:${port}`,
