@@ -23,8 +23,10 @@ const distributionWorker = ({ sequences, settings, outputDir }, onProgress = () 
       const templateNodeModulesPath = path.join(
         path.dirname(require.resolve('@bbc/bbcat-orchestration-template/package.json')),
         'node_modules',
-      );
+      ).replace('app.asar/', 'app.asar.unpacked/');
       const outputDirNodeModulesPath = path.join(outputDir, 'node_modules');
+
+      logger.debug(`creating symlink to ${templateNodeModulesPath} as ${outputDirNodeModulesPath}`);
 
       return fse.ensureSymlink(templateNodeModulesPath, outputDirNodeModulesPath)
         .then(() => {

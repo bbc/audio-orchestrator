@@ -5,12 +5,13 @@ import {
   mkdir as mkdirCB,
 } from 'fs';
 import path from 'path';
-import { spawn } from 'child_process';
+import { execFile as execFileCB } from 'child_process';
 import { path as ffmpegPath } from 'ffmpeg-static';
 import mapSeries from 'async/mapSeries';
 
 const writeFile = promisify(writeFileCB);
 const mkdir = promisify(mkdirCB);
+const execFile = promisify(execFileCB);
 
 /**
  * Pads the given integer to minimum width by adding zeroes on the left.
@@ -193,29 +194,15 @@ const encodeItem = ({
           throw new Error(`Unknown item type ${type}`);
       }
     })
-    .then(args => new Promise((resolve, reject) => {
-      logger.debug(args.join(' '));
-      const ffmpegProcess = spawn(
-        ffmpegPath,
-        args,
-        { stdio: 'ignore' },
-      );
+    .then((ffmpegArgs) => {
+      logger.silly(`encode: ${ffmpegPath} ${ffmpegArgs.join(' ')}`);
 
-      // When the ffmpeg process errors, reject.
-      ffmpegProcess.on('error', (err) => {
-        reject(err);
-      });
-
-      // When the process exits, resolve (or reject on error).
-      ffmpegProcess.on('close', (code) => {
-        if (code !== 0) {
-          reject(new Error(`ffmpeg (encode) exited with non-zero code: ${code}`));
-          return;
-        }
-
-        resolve();
-      });
-    }))
+      return execFile(ffmpegPath, ffmpegArgs)
+        .catch((error) => {
+          logger.warn('ffmpeg (encode) failed.');
+          throw error;
+        });
+    })
     .then(() => {
       // create the DASH manifests
       if (type === 'dash') {

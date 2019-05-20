@@ -30,8 +30,8 @@ const processProbe = filePath => ffprobe(filePath, { path: ffprobePath })
     const { sample_rate, channels, duration } = stream;
 
     const probe = {
-      sampleRate: sample_rate,
-      numChannels: channels,
+      sampleRate: parseInt(sample_rate, 10),
+      numChannels: parseInt(channels, 10),
       duration: roundTime(duration),
     };
 

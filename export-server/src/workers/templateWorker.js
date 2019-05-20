@@ -5,8 +5,7 @@ import mapSeries from 'async/mapSeries';
 import audioWorker from './audioWorker';
 import ProgressReporter from './progressReporter';
 
-// TODO replace with path into electron app bundle.
-const templateSourceDir = path.dirname(require.resolve('@bbc/bbcat-orchestration-template/package.json'));
+const templateSourceDir = path.dirname(require.resolve('@bbc/bbcat-orchestration-template/package.json')).replace('app.asar', 'app.asar.unpacked');
 
 const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) => {
   const progress = new ProgressReporter(3, onProgress);
@@ -18,6 +17,7 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
     })
     .then(() => {
       progress.advance('copying template source files');
+      logger.debug(`copying template source files from ${templateSourceDir} to ${outputDir}`);
       return fse.readdir(templateSourceDir)
         .then((files) => {
           const filesToCopy = files.filter(file => path.basename(file) !== 'node_modules');
@@ -76,7 +76,7 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
       return { result: true }; // TODO, have to return a { result } but there isn't really a value
     })
     .catch((err) => {
-      logger.debug(`caught error, removing outputDir. ${err.message}`);
+      logger.debug(`removing outputDir ${outputDir} after error in templateWorker.`);
       return fse.remove(outputDir).finally(() => {
         throw err;
       });

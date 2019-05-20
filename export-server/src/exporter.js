@@ -54,7 +54,7 @@ const getExportWorker = tasks => ({ worker, args, taskId }, callback) => {
     })
     .catch((err) => {
       // TODO only pass on AudioWorkerValidationError, throw others?
-      logger.warn('error caught in exporter, passing on to clients', err);
+      logger.debug(`Error caught in exporter, passing on to clients: ${err.message}`);
 
       task.error = err.message;
       if (err.missingEncodedItems) {

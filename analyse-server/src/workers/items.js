@@ -1,8 +1,11 @@
 import { analyseLogger as logger } from 'bbcat-orchestration-builder-logging';
-import { spawn } from 'child_process';
+import { promisify } from 'util';
+import { execFile as execFileCB } from 'child_process';
 import { path as ffprobePath } from 'ffprobe-static';
 import { path as ffmpegPath } from 'ffmpeg-static';
 import ffprobe from 'ffprobe-client';
+
+const execFile = promisify(execFileCB);
 
 const MIN_SILENCE_DURATION = 1;
 const MAX_BUFFER_DURATION = 10;
@@ -11,6 +14,8 @@ const SILENCE_NOISE_FLOOR = '-80dB';
 
 const TIME_DECIMALS = 2;
 const roundTime = t => parseFloat(parseFloat(t).toFixed(TIME_DECIMALS));
+
+logger.debug(`ffmpegPath: ${ffmpegPath}.`);
 
 /**
  * Run ffmpeg on the file with a null target to detect silent sections in the audio content.
@@ -33,48 +38,33 @@ const processItems = (filePath) => {
   // then run the silence analysis
   // then convert the results to items format
   return ffprobe(filePath, { path: ffprobePath })
-    .then(data => data.streams[0].duration)
-    .then(fileDuration => new Promise((resolve, reject) => {
-      const silence = [];
+    .then(data => roundTime(data.streams[0].duration))
+    .then((fileDuration) => {
+      logger.silly(`items: ${ffmpegPath} ${ffmpegArgs.join(' ')}`);
 
-      const ffmpegProcess = spawn(
-        ffmpegPath,
-        ffmpegArgs,
-        {
-          stdio: ['ignore', 'pipe', 'pipe'],
-        },
-      );
+      return execFile(ffmpegPath, ffmpegArgs, { maxBuffer: 1024 * 1024 * 8 })
+        .catch((error) => {
+          logger.warn('ffmpeg (items) failed.');
+          throw error;
+        })
+        .then(({ stderr }) => {
+          const silence = [];
 
-      // When the ffmpeg process errors, reject.
-      ffmpegProcess.on('error', (err) => {
-        logger.warn('ffmpeg error', err);
-        reject(err);
-      });
+          stderr.split('\n').forEach((data) => {
+            const match = `${data}`.match(silenceExpression);
 
-      // When a new line of output is received, create a silence entry if it matches the regex.
-      ffmpegProcess.stderr.on('data', (data) => {
-        const match = `${data}`.match(silenceExpression);
+            if (match) {
+              const { end, duration } = match.groups;
 
-        if (match) {
-          const { end, duration } = match.groups;
+              if (!!end && !!duration) {
+                silence.push({ end, duration });
+              }
+            }
+          });
 
-          if (!!end && !!duration) {
-            silence.push({ end, duration });
-          }
-        }
-      });
-
-      // When the process exits, resolve (or reject on error).
-      ffmpegProcess.on('close', (code) => {
-        if (code !== 0) {
-          logger.warn(`ffmpeg exit code: ${code}`);
-          reject(new Error(`ffmpeg exited with non-zero code: ${code}`));
-          return;
-        }
-
-        resolve({ fileDuration, silence });
-      });
-    }))
+          return { fileDuration, silence };
+        });
+    })
     .then(({ fileDuration, silence }) => {
       const items = [];
       let nextStart = 0;

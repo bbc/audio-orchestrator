@@ -26,7 +26,7 @@
     "electron-packager": "^13.1.1"
   },
   "scripts": {
-    "build": "yarn build-frontend && yarn build-servers && yarn build-main && electron-packager . --overwrite",
+    "build": "yarn build-frontend && yarn build-servers && yarn build-main && electron-packager . --overwrite --asar.unpackDir=node_modules/@bbc/bbcat-orchestration-template",
     "build-frontend": "(cd node_modules/bbcat-orchestration-builder-react-frontend/ && yarn run webpack --mode production)",
     "build-main": "yarn clean && mkdir ./dist/ && babel src -s -d dist",
     "build-export-server": "(cd node_modules/bbcat-orchestration-builder-export-server/ && yarn build)",
@@ -35,5 +35,8 @@
     "clean": "rm -rf ./dist/",
     "dev": "concurrently \"(cd ../react-frontend && yarn dev)\" \"(yarn build-servers && yarn build-main && NODE_ENV=development electron .)\"",
     "postinstall": "node scripts/install-template.js"
+  },
+  "build": {
+
   }
 }
