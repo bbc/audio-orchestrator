@@ -1,15 +1,8 @@
 import { analyseLogger as logger } from 'bbcat-orchestration-builder-logging';
-import { promisify } from 'util';
 import { spawn } from 'child_process';
 import { path as ffprobePath } from 'ffprobe-static';
 import { path as ffmpegPath } from 'ffmpeg-static';
-import ffprobeCB from 'node-ffprobe';
-
-// configure the ffprobe module with the path to the bundled ffprobe
-ffprobeCB.FFPROBE_PATH = ffprobePath;
-
-// wrap callback-based methods in a promise API:
-const ffprobe = promisify(ffprobeCB);
+import ffprobe from 'ffprobe-client';
 
 const MIN_SILENCE_DURATION = 1;
 const MAX_BUFFER_DURATION = 10;
@@ -39,7 +32,7 @@ const processItems = (filePath) => {
   // then get the duration from the probe results
   // then run the silence analysis
   // then convert the results to items format
-  return ffprobe(filePath)
+  return ffprobe(filePath, { path: ffprobePath })
     .then(data => data.streams[0].duration)
     .then(fileDuration => new Promise((resolve, reject) => {
       const silence = [];

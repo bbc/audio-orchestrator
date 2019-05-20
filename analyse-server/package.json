@@ -8,13 +8,13 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "bbcat-orchestration-builder-logging": "^0.1.0",
     "async": "^2.6.2",
+    "bbcat-orchestration-builder-logging": "^0.1.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "ffmpeg-static": "^2.4.0",
+    "ffprobe-client": "^1.1.2",
     "ffprobe-static": "^3.0.0",
-    "node-ffprobe": "^1.2.2",
     "uuid": "^3.3.2"
   },
   "devDependencies": {

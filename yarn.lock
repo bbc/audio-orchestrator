@@ -3729,6 +3729,11 @@ ffmpeg-static@^2.4.0:
   resolved "https://registry.yarnpkg.com/ffmpeg-static/-/ffmpeg-static-2.4.0.tgz#eb3a248849943d493c2a311c0e5e45a06259103a"
   integrity sha512-OcYTewd3we/Zi4W+VJtEqrfDzRSMwLs0NyAa61qw/FqtbttidGrm+BFsq44prtT3s6/LV6+aoXNpyNBOshXBuA==
 
+ffprobe-client@^1.1.2:
+  version "1.1.2"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/ffprobe-client/-/ffprobe-client-1.1.2.tgz#df604393ad7d39d9f2137228803fe89bd0482070"
+  integrity sha1-32BDk619OdnyE3IogD/om9BIIHA=
+
 ffprobe-static@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/ffprobe-static/-/ffprobe-static-3.0.0.tgz#479689c8a237987beca5627968f3d87429bf569d"
@@ -5781,11 +5786,6 @@ no-case@^2.2.0:
   integrity sha512-rmTZ9kz+f3rCvK2TD1Ue/oZlns7OGoIWP4fc3llxxRXlOkHKoWPPWJOfFYpITabSow43QJbRIoHQXtt10VldyQ==
   dependencies:
     lower-case "^1.1.1"
-
-node-ffprobe@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/node-ffprobe/-/node-ffprobe-1.2.2.tgz#ab2e7152c9d2b7e296fce2f77a97ef249baa6d33"
-  integrity sha1-qy5xUsnSt+KW/OL3epfvJJuqbTM=
 
 node-forge@0.7.5:
   version "0.7.5"
