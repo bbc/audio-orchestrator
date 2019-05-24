@@ -74,3 +74,5 @@ yarn install
 To start a development version of the app, run `yarn dev`. This rebuilds the `analyse-server` and `export-server`, starts a development server with hot-reloading for the `react-frontend`, and runs the `electron-app`.
 
 To build the app for the current platform, run `yarn build`. This rebuilds the `analyse-server` and `export-server`, and creates a production package for the `react-frontend`. All of these and the required dependencies are then included in the bundled `electron-app` package.
+
+The versions of all packages in this repo are kept in sync by using `yarn version` to apply version bumps across all packages.

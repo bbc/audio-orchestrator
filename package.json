@@ -3,7 +3,8 @@
   "private": true,
   "scripts": {
     "dev": "(cd electron-app && yarn dev)",
-    "build": "(cd electron-app && yarn build)"
+    "build": "(cd electron-app && yarn build)",
+    "version": "node scripts/version"
   },
   "workspaces": {
     "packages": [

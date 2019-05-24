@@ -3,7 +3,9 @@ import { promisify } from 'util';
 import {
   writeFile as writeFileCB,
   mkdir as mkdirCB,
+  mkdtempSync,
 } from 'fs';
+import os from 'os';
 import path from 'path';
 import { execFile as execFileCB } from 'child_process';
 import { path as ffmpegPath } from 'ffmpeg-static';
@@ -36,7 +38,6 @@ function formatPT(seconds) {
   return `PT${Math.floor(seconds / 60)}M${(seconds % 60).toFixed(2)}S`;
 }
 
-
 const SAMPLE_RATE = 48000; // TODO assuming a fixed sample rate, maybe use ffprobe output instead
 const ENCODE_CODEC = 'aac'; // TODO prefer 'libfdk_aac', but this cannot be shipped as a binary due to its license.
 const ENCODE_BITRATE = '128k';
@@ -44,6 +45,8 @@ const BUFFER_EXTENSION = '.m4a';
 const SEGMENT_DURATION = (192 * 1024) / SAMPLE_RATE; // 4.096 seconds at 48kHz
 const SAFARI_SEGMENT_NAMES = `safari_%05d${BUFFER_EXTENSION}`; // ffmpeg format string for outputting segments
 const SAFARI_SEGMENT_MEDIA = `safari_$Number%05d$${BUFFER_EXTENSION}`; // different placeholder format for use in manifest
+const SILENCE_DURATION = SEGMENT_DURATION;
+const SILENCE_PATH = path.join(mkdtempSync(path.join(os.tmpdir(), 'bbcat-orchestration-')), 'silence.wav');
 
 const dashArgs = [
   '-c:a', ENCODE_CODEC,
@@ -60,6 +63,38 @@ const sarafiDashArgs = [
   '-f', 'segment',
   '-segment_time', SEGMENT_DURATION,
 ];
+
+const silenceArgs = [
+  '-i', SILENCE_PATH,
+  '-filter_complex', '[0:a] concat=n=2:v=0:a=1',
+];
+
+
+let silencePromise = null;
+
+/**
+ * ensures the silence file is available at SILENCE_PATH, regenerates it if it is not.
+ *
+ * @returns {Promise}
+ */
+const ensureSilence = () => {
+  if (silencePromise !== null) {
+    return silencePromise;
+  }
+
+  silencePromise = execFile(ffmpegPath, [
+    '-y',
+    '-f', 'lavfi',
+    '-i', 'anullsrc=r=48000:cl=mono',
+    '-t', SILENCE_DURATION,
+    SILENCE_PATH,
+  ])
+    .then(() => {
+      logger.info(`generated silence file at ${SILENCE_PATH}`);
+    });
+
+  return silencePromise;
+};
 
 /**
  * Generates a DASH manifest
@@ -176,20 +211,21 @@ const encodeItem = ({
             path.join(encodedItemsBasePath, resultItem.relativePath),
           ];
         case 'dash':
-          // For DASH streams, two outputes (with and without segment headers) are required to
+          // For DASH streams, two outputs (with and without segment headers) are required to
           // support all browsers. Both are stored in the same directory, using different naming
           // schemes for manifests and segments, but generated from a single ffmpeg command.
           resultItem.relativePath = path.join(outputName, 'manifest.mpd');
           resultItem.relativePathSafari = path.join(outputName, 'manifest-safari.mpd');
-          return [
+          return ensureSilence().then(() => [
             ...inputArgs,
+            ...silenceArgs,
             ...dashArgs,
-            '-t', duration,
+            '-t', duration + SILENCE_DURATION,
             path.join(encodedItemsBasePath, resultItem.relativePath),
             ...sarafiDashArgs,
-            '-t', duration,
+            '-t', duration + SILENCE_DURATION,
             path.join(encodedItemsBasePath, outputName, SAFARI_SEGMENT_NAMES),
-          ];
+          ]);
         default:
           throw new Error(`Unknown item type ${type}`);
       }
@@ -211,11 +247,11 @@ const encodeItem = ({
         return Promise.all([
           writeFile(
             path.join(encodedItemsBasePath, resultItem.relativePath),
-            generateHeaderlessDashManifest(outputName, baseUrl, duration),
+            generateHeaderlessDashManifest(outputName, baseUrl, duration + SILENCE_DURATION),
           ),
           writeFile(
             path.join(encodedItemsBasePath, resultItem.relativePathSafari),
-            generateSafariDashManifest(outputName, baseUrl, duration),
+            generateSafariDashManifest(outputName, baseUrl, duration + SILENCE_DURATION),
           ),
         ]);
       }
