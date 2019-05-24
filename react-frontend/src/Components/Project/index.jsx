@@ -12,6 +12,7 @@ import {
   setProjectName,
 } from '../../actions/project';
 import Sequences from './Sequences';
+import Rules from './Rules';
 import Presentation from './Presentation';
 import Advanced from './Advanced';
 import Review from './Review';
@@ -25,6 +26,7 @@ const Project = ({
 }) => {
   const tabPanes = [
     { menuItem: 'Sequences', render: () => <Sequences projectId={projectId} /> },
+    { menuItem: 'Rules', render: () => <Rules projectId={projectId} /> },
     { menuItem: 'Presentation', render: () => <Presentation projectId={projectId} /> },
     { menuItem: 'Advanced', render: () => <Advanced projectId={projectId} /> },
     { menuItem: 'Preview and Export', render: () => <Review projectId={projectId} /> },

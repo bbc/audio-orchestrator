@@ -1007,13 +1007,13 @@
     weak-map "^1.0.5"
     winston "^2.4.0"
 
-"@bbc/bbcat-orchestration-template@^0.1.3":
-  version "0.1.3"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.1.3.tgz#f0cb76deff66201ee71e606b086ad5deac7267be"
-  integrity sha1-8Mt23v9mIB7nHmBrCGrV3qxyZ74=
+"@bbc/bbcat-orchestration-template@^0.2.0":
+  version "0.2.0"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.2.0.tgz#33decd896d07276a18521e489d6bac54bcb49eab"
+  integrity sha1-M97NiW0HJ2oYUh5InWusVLy0nqs=
   dependencies:
     "@babel/polyfill" "^7.0.0"
-    "@bbc/bbcat-orchestration" "^0.2.6"
+    "@bbc/bbcat-orchestration" "^0.3.0"
     "@bbc/reith-fonts-npm" "^0.1.1-rd-iic"
     bowser "^2.0.0-beta.1"
     gel-grid "^4.0.0"
@@ -1029,10 +1029,10 @@
     uuid "^3.3.2"
     whatwg-fetch "^2.0.4"
 
-"@bbc/bbcat-orchestration@^0.2.6":
-  version "0.2.6"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration/-/@bbc/bbcat-orchestration-0.2.6.tgz#4218b22b45e3c3793db7b1354c0b4e339f1baae1"
-  integrity sha1-QhiyK0Xjw3k9t7E1TAtOM58bquE=
+"@bbc/bbcat-orchestration@^0.3.0":
+  version "0.3.1"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration/-/@bbc/bbcat-orchestration-0.3.1.tgz#f7cd51b5784b28cdf45f58474061784166ec519c"
+  integrity sha1-981RtXhLKM30X1hHQGF4QWbsUZw=
   dependencies:
     "@bbc/bbcat-orchestration-bbcat" "^0.1.0"
     "@bbc/bbcat-orchestration-cloud-sync-client" "^2.2.0"

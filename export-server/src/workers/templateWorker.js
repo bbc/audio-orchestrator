@@ -69,6 +69,21 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
             return line;
           }).join('\n');
         })
+        .then((contents) => {
+          // Find and replace definition of zones in config.js, unless no custom zones are defined.
+          if (!settings.zones || settings.zones === []) {
+            return contents; // do not overwrite the template's default zones
+          }
+
+          const zones = settings.zones.map(({ name, friendlyName }) => ({ name, friendlyName }));
+
+          // ?: non-greedy matching.
+          // [\s\S] character classes of white space and non white space to include line breaks.
+          return contents.replace(
+            /export const ZONES = \[[\s\S]*?\];/,
+            `export const ZONES = ${JSON.stringify(zones, null, 2)};`,
+          );
+        })
         .then(updatedContents => fse.writeFile(configPath, updatedContents));
     })
     .then(() => {

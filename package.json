@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "(cd electron-app && yarn dev)",
     "build": "(cd electron-app && yarn build)",
-    "version": "node scripts/version"
+    "bump": "node scripts/version.js"
   },
   "workspaces": {
     "packages": [
@@ -17,5 +17,6 @@
     "nohoist": [
       "bbcat-orchestration-builder-electron-app/**"
     ]
-  }
+  },
+  "version": "0.0.0"
 }
