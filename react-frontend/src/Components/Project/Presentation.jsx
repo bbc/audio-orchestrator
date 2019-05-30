@@ -8,7 +8,6 @@ import {
 } from 'semantic-ui-react';
 
 import {
-  getProjectSettings,
   setProjectSetting,
 } from '../../actions/project';
 
@@ -24,23 +23,17 @@ class Presentation extends React.Component {
     };
   }
 
-  componentDidMount() {
-    const { onGetProjectSettings } = this.props;
-    onGetProjectSettings();
-  }
-
   render() {
     const {
       title,
       startLabel,
       introduction,
-      loading,
     } = this.props;
 
     return (
       <Container>
         <Message icon="lightbulb outline" header="Presentation settings" content="These labels are used in the preview and the prototype interface. They can be easily changed when adapting the prototype for a specific design." />
-        <Form loading={loading}>
+        <Form>
           <Form.Input
             label="Title"
             name="title"
@@ -69,9 +62,7 @@ Presentation.propTypes = {
   title: PropTypes.string,
   startLabel: PropTypes.string,
   introduction: PropTypes.string,
-  loading: PropTypes.bool.isRequired,
   onChangeSetting: PropTypes.func.isRequired,
-  onGetProjectSettings: PropTypes.func.isRequired,
 };
 
 Presentation.defaultProps = {
@@ -83,7 +74,6 @@ Presentation.defaultProps = {
 const mapStateToProps = (state, { projectId }) => {
   const project = state.Project.projects[projectId];
 
-  const loading = project.settingsLoading;
   const {
     title,
     startLabel,
@@ -91,7 +81,6 @@ const mapStateToProps = (state, { projectId }) => {
   } = project.settings;
 
   return {
-    loading,
     title,
     startLabel,
     introduction,
@@ -100,7 +89,6 @@ const mapStateToProps = (state, { projectId }) => {
 
 const mapDispatchToProps = (dispatch, { projectId }) => ({
   onChangeSetting: (key, value) => dispatch(setProjectSetting(projectId, key, value)),
-  onGetProjectSettings: () => dispatch(getProjectSettings(projectId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Presentation);

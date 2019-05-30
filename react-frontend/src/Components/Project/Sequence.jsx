@@ -10,7 +10,7 @@ import Audio from './Audio';
 import Metadata from './Metadata';
 import Images from './Images';
 import EditableMenuHeader from './EditableMenuHeader';
-import { setSequenceName } from '../../actions/project';
+import { requestSetSequenceName } from '../../actions/project';
 
 class Sequence extends React.Component {
   constructor(props) {
@@ -110,7 +110,7 @@ const mapStateToProps = (state, { projectId, sequenceId }) => {
 };
 
 const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
-  onSetName: name => dispatch(setSequenceName(projectId, sequenceId, name)),
+  onSetName: name => dispatch(requestSetSequenceName(projectId, sequenceId, name)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sequence);

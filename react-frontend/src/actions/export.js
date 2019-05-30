@@ -1,3 +1,4 @@
+import Project from '../lib/Project';
 import ExportService from '../lib/ExportService';
 import LocalProjectStore from '../lib/LocalProjectStore';
 import { setFileProperties, analyseAllFiles } from './project';
@@ -84,7 +85,7 @@ const waitForExportTask = (dispatch, task, args) => {
 
 const getSequencesToExport = (project) => {
   // Create a list of sequences, each with a files object and an objects list
-  const sequencesList = project.get('sequencesList', []);
+  const { sequencesList } = project;
   return sequencesList
     .filter(({ sequenceId, isMain }) => {
       // always include the main sequence - throw an error later if it doesn't have obejcts.
@@ -93,13 +94,16 @@ const getSequencesToExport = (project) => {
       }
 
       // also include all other sequences that have objects (so have either files or metadata).
-      const objectsList = project.get(`sequences.${sequenceId}.objectsList`, []);
+      const { objectsList } = project.sequences[sequenceId] || [];
       return objectsList.length > 0;
     })
     .map(({ sequenceId, isIntro, isMain }) => {
-      const objectsList = project.get(`sequences.${sequenceId}.objectsList`, []);
-      const objects = project.get(`sequences.${sequenceId}.objects`, {});
-      const files = project.get(`sequences.${sequenceId}.files`, {});
+      const sequence = project.sequences[sequenceId];
+      const {
+        objectsList,
+        objects,
+        files,
+      } = sequence;
       const loop = !!isIntro; // only the intro sequence is looped
 
       return {
@@ -145,7 +149,8 @@ export const requestExportAudio = projectId => (dispatch) => {
   // TODO wrap project store opening and accessing properties in a class to avoid duplication.
   // opening by projectId will not work well when the project was originally opened from a file.
   ProjectStore.openProject(projectId)
-    .then((project) => {
+    .then((store) => {
+      const project = new Project(store);
       const sequences = getSequencesToExport(project);
       return waitForExportTask(dispatch, exportAudio, { sequences });
     })
@@ -173,9 +178,10 @@ export const requestExportTemplate = projectId => (dispatch) => {
   dispatch(startExport('template source'));
 
   ProjectStore.openProject(projectId)
-    .then((project) => {
+    .then((store) => {
+      const project = new Project(store);
       const sequences = getSequencesToExport(project);
-      const settings = project.get('settings');
+      const { settings } = project;
 
       return { sequences, settings };
     })
@@ -208,9 +214,10 @@ export const requestExportDistribution = projectId => (dispatch) => {
   dispatch(startExport('built distribution'));
 
   ProjectStore.openProject(projectId)
-    .then((project) => {
+    .then((store) => {
+      const project = new Project(store);
       const sequences = getSequencesToExport(project);
-      const settings = project.get('settings');
+      const { settings } = project;
 
       return { sequences, settings };
     })
@@ -243,9 +250,10 @@ export const requestStartPreview = projectId => (dispatch) => {
   dispatch(startExport('preview'));
 
   ProjectStore.openProject(projectId)
-    .then((project) => {
+    .then((store) => {
+      const project = new Project(store);
       const sequences = getSequencesToExport(project);
-      const settings = project.get('settings');
+      const { settings } = project;
 
       return { sequences, settings };
     })

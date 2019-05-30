@@ -10,7 +10,6 @@ import {
   Button,
 } from 'semantic-ui-react';
 import {
-  getProjectSettings,
   setProjectSetting,
 } from '../../actions/project';
 
@@ -51,11 +50,6 @@ class Rules extends React.Component {
 
       onChangeSetting('zones', zones.filter(({ zoneId }) => (zoneId !== id)));
     };
-  }
-
-  componentDidMount() {
-    const { onGetProjectSettings } = this.props;
-    onGetProjectSettings();
   }
 
   render() {
@@ -109,7 +103,6 @@ class Rules extends React.Component {
 
 Rules.propTypes = {
   onChangeSetting: PropTypes.func.isRequired,
-  onGetProjectSettings: PropTypes.func.isRequired,
   zones: PropTypes.arrayOf(PropTypes.shape({
     name: PropTypes.string,
     friendlyName: PropTypes.string,
@@ -134,7 +127,6 @@ const mapStateToProps = (state, { projectId }) => {
 
 const mapDispatchToProps = (dispatch, { projectId }) => ({
   onChangeSetting: (key, value) => dispatch(setProjectSetting(projectId, key, value)),
-  onGetProjectSettings: () => dispatch(getProjectSettings(projectId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Rules);

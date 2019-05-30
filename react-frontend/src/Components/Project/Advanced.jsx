@@ -7,7 +7,6 @@ import {
 } from 'semantic-ui-react';
 
 import {
-  getProjectSettings,
   setProjectSetting,
 } from '../../actions/project';
 
@@ -23,20 +22,14 @@ class Advanced extends React.Component {
     };
   }
 
-  componentDidMount() {
-    const { onGetProjectSettings } = this.props;
-    onGetProjectSettings();
-  }
-
   render() {
     const {
       joiningLink,
       cloudSyncHostname,
-      loading,
     } = this.props;
 
     return (
-      <Form loading={loading}>
+      <Form>
         <Message icon="lightbulb outline" header="Advanced technical details" content="These settings are only required for hosting the exported application on a public server. They are not used in the preview and can be easily changed by a developer later." onDismiss={() => {}} />
         <Form.Input
           label="Short joining link"
@@ -59,16 +52,12 @@ class Advanced extends React.Component {
 
 Advanced.propTypes = {
   onChangeSetting: PropTypes.func.isRequired,
-  onGetProjectSettings: PropTypes.func.isRequired,
   joiningLink: PropTypes.string,
   cloudSyncHostname: PropTypes.string,
-  loading: PropTypes.string,
 };
 
 const mapStateToProps = (state, { projectId }) => {
   const project = state.Project.projects[projectId];
-
-  const loading = state.settingsLoading;
 
   const {
     joiningLink,
@@ -76,7 +65,6 @@ const mapStateToProps = (state, { projectId }) => {
   } = project.settings;
 
   return {
-    loading,
     joiningLink,
     cloudSyncHostname,
   };
@@ -84,7 +72,6 @@ const mapStateToProps = (state, { projectId }) => {
 
 const mapDispatchToProps = (dispatch, { projectId }) => ({
   onChangeSetting: (key, value) => dispatch(setProjectSetting(projectId, key, value)),
-  onGetProjectSettings: () => dispatch(getProjectSettings(projectId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Advanced);

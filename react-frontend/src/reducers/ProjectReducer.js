@@ -8,7 +8,6 @@ const initialState = {
 
 const projectDefaults = {
   settings: {},
-  settingsLoading: false,
   sequencesList: [],
   sequencesListLoading: false,
   sequences: {},
@@ -48,22 +47,25 @@ const updateProject = (state, projectId, update) => ({
 });
 
 // Convenience method for updating nested properties in a specific sequence in a specific project.
-const updateSequence = (state, projectId, sequenceId, update) => ({
-  ...state,
-  projects: {
-    ...state.projects,
-    [projectId]: {
-      ...state.projects[projectId],
-      sequences: {
-        ...state.projects[projectId].sequences,
-        [sequenceId]: {
-          ...(state.projects[projectId].sequences[sequenceId] || sequenceDefaults),
-          ...update,
+const updateSequence = (state, projectId, sequenceId, update) => {
+  const project = state.projects[projectId] || projectDefaults;
+  return {
+    ...state,
+    projects: {
+      ...state.projects,
+      [projectId]: {
+        ...project,
+        sequences: {
+          ...project.sequences,
+          [sequenceId]: {
+            ...(project.sequences[sequenceId] || sequenceDefaults),
+            ...update,
+          },
         },
       },
     },
-  },
-});
+  };
+};
 
 // Convenience method for updating nested properties in specified files in a specific sequence.
 const updateFiles = (state, projectId, sequenceId, updates) => {
@@ -112,11 +114,6 @@ const ProjectReducer = (state = initialState, action) => {
       return updateProject(
         state, action.projectId,
         { name: action.name },
-      );
-    case 'SET_PROJECT_SETTINGS_LOADING':
-      return updateProject(
-        state, action.projectId,
-        { settingsLoading: action.loading },
       );
     case 'SET_PROJECT_SETTINGS':
       return updateProject(

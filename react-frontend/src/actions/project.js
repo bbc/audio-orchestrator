@@ -1,5 +1,6 @@
 import uuidv4 from 'uuid/v4';
 import LocalProjectStore from '../lib/LocalProjectStore';
+import Project from '../lib/Project';
 import FileService from '../lib/FileService';
 
 // Project store is the interface to the persistent project data accessed by projectId.
@@ -39,13 +40,81 @@ export const requestListProjects = () => (dispatch) => {
 };
 
 /**
+ * Internal action, updates the user interface with the list of files for the sequence.
+ */
+const loadSequenceFiles = (projectId, sequenceId) => {
+  // TODO apply the same filtering here as in setFileProperties (e.g. remove path, items results)
+  // ^^ this currently happens in reducer.
+  const { filesList, files } = projects[projectId].sequences[sequenceId];
+
+  return {
+    type: 'SET_PROJECT_SEQUENCE_FILES',
+    projectId,
+    sequenceId,
+    filesList,
+    files,
+  };
+};
+
+/**
+ * Internal action, updates the user interface with the list of objects for the sequence.
+ */
+const loadSequenceObjects = (projectId, sequenceId) => {
+  const { objectsList, objects } = projects[projectId].sequences[sequenceId];
+
+  return {
+    type: 'SET_PROJECT_SEQUENCE_OBJECTS',
+    projectId,
+    sequenceId,
+    objectsList,
+    objects,
+  };
+};
+
+/**
+ * Internal action, updates the UI with all sequence information for the project.
+ */
+const loadSequences = projectId => (dispatch) => {
+  const { sequencesList } = projects[projectId];
+
+  sequencesList.forEach(({
+    sequenceId,
+    name,
+    isMain,
+    isIntro,
+  }) => {
+    dispatch({
+      type: 'SET_PROJECT_SEQUENCE_INFO',
+      projectId,
+      sequenceId,
+      name,
+      isMain,
+      isIntro,
+    });
+
+    dispatch(loadSequenceFiles(projectId, sequenceId));
+    dispatch(loadSequenceObjects(projectId, sequenceId));
+  });
+
+  dispatch({ type: 'SET_PROJECT_SEQUENCES_LIST', projectId, sequencesList });
+};
+
+/**
  * Action creator, populates the state with info from the opened project and updates the UI.
  *
  * For use by other actions in this file only so not exported.
  */
 const openedProject = projectId => (dispatch) => {
+  const { name, settings } = projects[projectId];
+
   // Set the project name for use in UI
-  dispatch({ type: 'SET_PROJECT_NAME', projectId, name: projects[projectId].get('name') });
+  dispatch({ type: 'SET_PROJECT_NAME', projectId, name });
+
+  // Set the project settings for use in UI
+  dispatch({ type: 'SET_PROJECT_SETTINGS', projectId, settings });
+
+  // Get the sequences for the UI
+  dispatch(loadSequences(projectId));
 
   // Move onto the project page - this will trigger requesting more project data for each UI page.
   dispatch({ type: 'UI_OPEN_PROJECT', projectId });
@@ -68,9 +137,10 @@ export const setFileProperties = (projectId, sequenceId, files) => (dispatch) =>
 
   // update the project store
   const project = projects[projectId];
-  const key = `sequences.${sequenceId}.files`;
+  const sequence = project.sequences[sequenceId];
+
   const updatedFiles = {
-    ...project.get(key),
+    ...sequence.files,
   };
 
   files.forEach((update) => {
@@ -84,22 +154,7 @@ export const setFileProperties = (projectId, sequenceId, files) => (dispatch) =>
     updatedFiles[update.fileId] = updatedFile;
   });
 
-  project.set(key, updatedFiles);
-};
-
-/**
- * Action creator, updates the user interface with the list of files for the sequence.
- */
-export const getSequenceFiles = (projectId, sequenceId) => (dispatch) => {
-  // TODO apply the same filtering here as in setFileProperties (e.g. remove path, items results)
-  // ^^ this currently happens in reducer.
-  dispatch({
-    type: 'SET_PROJECT_SEQUENCE_FILES',
-    projectId,
-    sequenceId,
-    filesList: projects[projectId].get(`sequences.${sequenceId}.filesList`, []),
-    files: projects[projectId].get(`sequences.${sequenceId}.files`, {}),
-  });
+  sequence.files = updatedFiles;
 };
 
 const setFilesLoading = (projectId, sequenceId, loading, taskId) => ({
@@ -130,16 +185,6 @@ const setEncodeTaskId = (projectId, sequenceId, taskId) => ({
   sequenceId,
   taskId,
 });
-
-export const getSequenceObjects = (projectId, sequenceId) => (dispatch) => {
-  dispatch({
-    type: 'SET_PROJECT_SEQUENCE_OBJECTS',
-    projectId,
-    sequenceId,
-    objectsList: projects[projectId].get(`sequences.${sequenceId}.objectsList`, []),
-    objects: projects[projectId].get(`sequences.${sequenceId}.objects`, {}),
-  });
-};
 
 const setTaskProgress = (taskId, completed, total) => ({
   type: 'UI_SET_TASK_PROGRESS',
@@ -185,8 +230,8 @@ const createTaskWithProgress = (dispatch, task, taskId, argument) => {
  */
 export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
   const project = projects[projectId];
-  const filesList = project.get(`sequences.${sequenceId}.filesList`, []);
-  const files = project.get(`sequences.${sequenceId}.files`, {});
+  const sequence = project.sequences[sequenceId];
+  const { filesList, files } = sequence;
 
   const createTaskId = uuidv4();
   const probeTaskId = uuidv4();
@@ -197,7 +242,7 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
   dispatch(setFilesLoading(projectId, sequenceId, true, createTaskId));
 
   // load current info from store into state
-  dispatch(getSequenceFiles(projectId, sequenceId));
+  dispatch(loadSequenceFiles(projectId, sequenceId));
 
   // bind file service methods to pass into task creator
   const createAll = fileService.createAll.bind(fileService);
@@ -349,7 +394,7 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
       ));
     })
     .catch((e) => {
-      console.log(e); // TODO dismissable error in interface? reset results?
+      console.error(e); // TODO dismissable error in interface? reset results?
     });
 };
 
@@ -361,95 +406,53 @@ export const requestOpenProject = (projectId = null) => (dispatch) => {
 
   ProjectStore.openProject(projectId)
     .then((store) => {
-      projects[projectId] = store;
+      projects[projectId] = new Project(store);
     })
     .then(() => {
-      projects[projectId].get('sequencesList').forEach(({ sequenceId }) => {
-        // TODO load pretty much everything here and get rid of the "onGetFoo" dispatches in components.
+      projects[projectId].sequencesList.forEach(({ sequenceId }) => {
         // trigger background analysis for all files in any of the sequences in the opened project.
         dispatch(analyseAllFiles(projectId, sequenceId));
 
         // load the object metadata
-        dispatch(getSequenceObjects(projectId, sequenceId));
+        dispatch(loadSequenceObjects(projectId, sequenceId));
       });
     })
     .then(() => {
       dispatch(openedProject(projectId));
     })
     .catch((e) => {
-      console.info(e);
+      console.error(e);
       dispatch(closeProject());
     });
 };
 
 /**
- * Action creator, gets the list of sequences in the project from the store.
- */
-export const getSequencesList = projectId => (dispatch) => {
-  dispatch({ type: 'SET_PROJECT_SEQUENCES_LIST_LOADING', projectId, loading: true });
-
-  const sequencesList = projects[projectId].get('sequencesList', []);
-
-  sequencesList.forEach(({
-    sequenceId,
-    name,
-    isMain,
-    isIntro,
-  }) => {
-    dispatch({
-      type: 'SET_PROJECT_SEQUENCE_INFO',
-      projectId,
-      sequenceId,
-      name,
-      isMain,
-      isIntro,
-    });
-  });
-
-  dispatch({ type: 'SET_PROJECT_SEQUENCES_LIST', projectId, sequencesList });
-
-  dispatch({ type: 'SET_PROJECT_SEQUENCES_LIST_LOADING', projectId, loading: false });
-};
-
-/**
- * Action creator, creates a new empty sequence in the project
- */
-export const addSequence = (projectId, { name, isMain, isIntro } = {}) => (dispatch) => {
-  // Get current list and write back the list with one added element.
-  const sequencesList = projects[projectId].get('sequencesList', []);
-  const sequenceId = uuidv4();
-  const newSequencesList = [
-    ...sequencesList,
-    {
-      sequenceId,
-      name: (name || `Sequence ${sequencesList.length + 1}`),
-      isMain,
-      isIntro,
-    },
-  ];
-
-  projects[projectId].set('sequencesList', newSequencesList);
-
-  dispatch(getSequencesList(projectId));
-};
-
-/**
- * Action creator, creates a new project in the store (or triggers a file-save dialogue).
+ * Action creator, creates a new project in the store (or triggers a file-save dialogue) and opens
+ * it.
  */
 export const requestCreateProject = () => (dispatch) => {
-  dispatch({ type: 'SET_PROJECT_LOADING', loading: true });
-
   ProjectStore.createProject()
     .then(({ projectId, store }) => {
-      projects[projectId] = store;
-      dispatch(addSequence(projectId, { name: 'Main', isMain: true }));
-      dispatch(addSequence(projectId, { name: 'Intro Loop', isIntro: true }));
+      const project = new Project(store);
+      projects[projectId] = project;
+      project.addSequence({ name: 'Main', isMain: true });
+      project.addSequence({ name: 'Intro Loop', isIntro: true });
+
       dispatch(openedProject(projectId));
     })
     .catch((e) => {
-      console.info(e);
+      console.error(e);
       dispatch(closeProject());
     });
+};
+
+/**
+ * Action creator, adds a sequence to the project and reloads the sequence data.
+ */
+export const requestAddSequence = projectId => (dispatch) => {
+  const project = projects[projectId];
+  project.addSequence();
+  dispatch(loadSequences(projectId));
 };
 
 /**
@@ -467,7 +470,8 @@ export const checkFileOpen = () => (dispatch) => {
  * Action creator, sets the current project's name.
  */
 export const setProjectName = (projectId, name) => (dispatch) => {
-  projects[projectId].set('name', name);
+  const project = projects[projectId];
+  project.name = name;
   dispatch({ type: 'SET_PROJECT_NAME', projectId, name });
 };
 
@@ -475,20 +479,11 @@ export const setProjectName = (projectId, name) => (dispatch) => {
  * Action creator, changes a single value in the project's settings.
  */
 export const setProjectSetting = (projectId, key, value) => (dispatch) => {
-  const settings = projects[projectId].get('settings', {});
-  const newSettings = { ...settings, [key]: value };
-  projects[projectId].set('settings', newSettings);
+  const project = projects[projectId];
+  const newSettings = { ...project.settings, [key]: value };
+  project.settings = newSettings;
 
   dispatch({ type: 'SET_PROJECT_SETTINGS', projectId, settings: newSettings });
-};
-
-/**
- * Action creator, gets the project settings from the store.
- */
-export const getProjectSettings = projectId => (dispatch) => {
-  dispatch({ type: 'SET_PROJECT_SETTINGS_LOADING', projectId, loading: true });
-  dispatch({ type: 'SET_PROJECT_SETTINGS', projectId, settings: projects[projectId].get('settings', {}) });
-  dispatch({ type: 'SET_PROJECT_SETTINGS_LOADING', projectId, loading: false });
 };
 
 const fileNameToObjectNumber = name => parseInt(name, 10) || null;
@@ -499,10 +494,15 @@ const fileNameToObjectNumber = name => parseInt(name, 10) || null;
 const matchObjectsToFiles = (projectId, sequenceId) => {
   // load required data from project store
   const project = projects[projectId];
-  const filesList = project.get(`sequences.${sequenceId}.filesList`, []);
-  const files = project.get(`sequences.${sequenceId}.files`, {});
-  const objectsList = project.get(`sequences.${sequenceId}.objectsList`, []);
-  const objects = project.get(`sequences.${sequenceId}.objects`, {});
+  const sequence = project.sequences[sequenceId];
+  const {
+    filesList,
+    files,
+    objectsList,
+    objects,
+  } = sequence;
+
+  const newObjects = { ...objects };
 
   // select or create objects for all files, updating only fileId if one already exists
   filesList
@@ -514,7 +514,7 @@ const matchObjectsToFiles = (projectId, sequenceId) => {
       }
 
       // merge with existing object if there already was one.
-      objects[objectNumber] = {
+      newObjects[objectNumber] = {
         ...(objects[objectNumber] || {}),
         ...{ objectNumber, fileId },
       };
@@ -522,9 +522,9 @@ const matchObjectsToFiles = (projectId, sequenceId) => {
 
   // remove fileId from objects where the file doesn't exist anymore
   objectsList.forEach(({ objectNumber }) => {
-    const { fileId } = objects[objectNumber];
+    const { fileId } = newObjects[objectNumber];
     if (!(fileId in files)) {
-      objects[objectNumber].fileId = null;
+      newObjects[objectNumber].fileId = null;
     }
   });
 
@@ -532,7 +532,7 @@ const matchObjectsToFiles = (projectId, sequenceId) => {
   // above; if the objects list is replaced no file would have a matching object.
 
   // update project with modified objects
-  project.set(`sequences.${sequenceId}.objects`, objects);
+  sequence.objects = newObjects;
 
   // Note that the objectsList is not updated, because only objects that are listed in the metadata
   // files should be displayed in the interface; and the objectsList is created when it is loaded.
@@ -547,8 +547,7 @@ const initialiseSequenceFiles = (projectId, sequenceId, newFiles) => (dispatch) 
   const filesWithIds = newFiles.map(file => ({ ...file, fileId: uuidv4() }));
 
   const project = projects[projectId];
-  const key = `sequences.${sequenceId}.files`;
-  const listKey = `sequences.${sequenceId}.filesList`;
+  const sequence = project.sequences[sequenceId];
 
   // create a file object, initially only containing the path and name, to store more detailed info
   // about each file.
@@ -569,15 +568,15 @@ const initialiseSequenceFiles = (projectId, sequenceId, newFiles) => (dispatch) 
     });
 
   // store both in project
-  project.set(key, files);
-  project.set(listKey, filesList);
+  sequence.files = files;
+  sequence.filesList = filesList;
 
   // attempt to link objects to these new files; or create placeholder objects.
   matchObjectsToFiles(projectId, sequenceId);
 
   // update the interface state to match what was just stored
-  dispatch(getSequenceFiles(projectId, sequenceId));
-  dispatch(getSequenceObjects(projectId, sequenceId));
+  dispatch(loadSequenceFiles(projectId, sequenceId));
+  dispatch(loadSequenceObjects(projectId, sequenceId));
 
   // trigger analysis of the new files and update the UI, also updating files in store and state.
   dispatch(analyseAllFiles(projectId, sequenceId));
@@ -633,31 +632,17 @@ export const requestReplaceAllAudioFiles = (projectId, sequenceId) => (dispatch)
 };
 
 /**
- * Action creator, change a property of a sequence in the state and store.
- */
-export const setSequenceSetting = (projectId, sequenceId, settingKey, value) => (dispatch) => {
-  const key = `sequences.${sequenceId}.settings`;
-  const settings = projects[projectId].get(key, {});
-  const newSettings = { ...settings, [settingKey]: value };
-  projects[projectId].set(key, newSettings);
-
-  dispatch({ type: 'SET_PROJECT_SEQUENCE_SETTINGS', projectId, settings: newSettings });
-};
-
-/**
  * Action creator, changes a sequence's name.
  */
-export const setSequenceName = (projectId, sequenceId, name) => (dispatch) => {
-  // replace name in sequences list stored with the project file
-  const sequencesList = projects[projectId].get('sequencesList', []);
-  const newSequencesList = sequencesList.map(sequence => ({
-    ...sequence,
-    name: (sequence.sequenceId === sequenceId) ? name : sequence.name,
-  }));
-  projects[projectId].set('sequencesList', newSequencesList);
+export const requestSetSequenceName = (projectId, sequenceId, name) => (dispatch) => {
+  const { sequences } = projects[projectId];
 
-  // update the sequences list also in the UI
-  dispatch(getSequencesList(projectId));
+  // Replace the name in the sequence settings
+  const { settings } = sequences[sequenceId];
+  settings.name = name;
+
+  // reload the sequence information to update the UI
+  dispatch(loadSequences(projectId));
 };
 
 const parseCsvMetadata = (contents) => {
@@ -729,11 +714,12 @@ const parseMetadataFile = file => new Promise((resolve, reject) => {
  * Action; replaces the objects associated with the given sequence, updates the project store, and
  * dispatches an update to the UI state.
  *
- * @param {Array<Object>} newObjects
+ * @param {Array<Object>} rawObjects - containing the objects parsed from JSON only.
  */
-const initialiseSequenceObjects = (projectId, sequenceId, newObjectsList) => (dispatch) => {
+const initialiseSequenceObjects = (projectId, sequenceId, rawObjects) => (dispatch) => {
   const project = projects[projectId];
-  const oldObjects = project.get(`sequences.${sequenceId}.objects`, {});
+  const sequence = project.sequences[sequenceId];
+  const { objects } = sequence;
 
   const suffixToChannelMapping = {
     L: 'left',
@@ -747,81 +733,41 @@ const initialiseSequenceObjects = (projectId, sequenceId, newObjectsList) => (di
     M: 0,
   };
 
-  const objects = {};
-  const objectsList = newObjectsList.map(({ objectNumber, label }) => ({
+  const newObjects = {};
+  const newObjectsList = rawObjects.map(({ objectNumber, label }) => ({
     objectNumber: parseInt(objectNumber, 10),
     label,
   }));
-  newObjectsList.forEach(({
-    objectNumber,
-    label,
-    // group,
-    mdoThreshold,
-    mdoOnly,
-    // mdoMethod,
-    // speakerNumber,
-    // diffuseness,
-    mdoSpread,
-    // mdoDynamic,
-    // mdoGainDB,
-    muteIfObject,
-    exclusivity,
-    nearFront,
-    nearSide,
-    nearRear,
-    farFront,
-    farSide,
-    farRear,
-    above,
-    onDropin,
-    onDropout,
-    minQuality,
-  }) => {
-    const objectNumberInt = parseInt(objectNumber, 10);
-    const oldObject = oldObjects[objectNumberInt] || {};
+
+  rawObjects.forEach((data) => {
+    const objectNumber = parseInt(data.objectNumber, 10);
+    const { label } = data;
+
+    const oldObject = objects[objectNumber] || {};
+
     const suffix = label[label.length - 1] || 0;
-    objects[objectNumberInt] = ({
-      objectNumber: objectNumberInt,
+    newObjects[objectNumber] = ({
+      objectNumber,
       label,
       fileId: null,
       panning: oldObject.panning || suffixToPanning[suffix] || 0,
       channelMapping: oldObject.channelMapping || suffixToChannelMapping[suffix] || 'mono',
       orchestration: {
-        // group,
-        mdoThreshold,
-        mdoOnly,
-        // mdoMethod,
-        // speakerNumber,
-        // diffuseness,
-        mdoSpread,
-        // mdoDynamic,
-        // mdoGainDB,
-        muteIfObject,
-        exclusivity,
-        nearFront,
-        nearSide,
-        nearRear,
-        farFront,
-        farSide,
-        farRear,
-        above,
-        onDropin,
-        onDropout,
-        minQuality,
-        image: oldObject.image || null,
+        ...data,
+        image: oldObject.image || data.image || null,
       },
     });
   });
 
   // store results in project store
-  project.set(`sequences.${sequenceId}.objectsList`, objectsList);
-  project.set(`sequences.${sequenceId}.objects`, objects);
+  sequence.objectsList = newObjectsList;
+  sequence.objects = newObjects;
 
   // Update store with new object-file mappings
   matchObjectsToFiles(projectId, sequenceId);
 
   // load objects into state.
-  dispatch(getSequenceObjects(projectId, sequenceId));
+  dispatch(loadSequenceObjects(projectId, sequenceId));
 };
 
 /**
