@@ -13,7 +13,7 @@ import {
 import AudioFileRow from './AudioFileRow';
 import {
   requestReplaceAllAudioFiles,
-} from '../../actions/project';
+} from '../../../actions/project';
 
 const Audio = ({
   filesList,

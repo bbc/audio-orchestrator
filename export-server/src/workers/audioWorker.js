@@ -173,6 +173,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
           const {
             sequenceId,
             loop,
+            outPoints,
             objects,
             files,
           } = sequence;
@@ -182,7 +183,7 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
           const sequenceMetadata = {
             duration,
             loop,
-            outPoints: [],
+            outPoints,
             objects: objects.map(object => ({
               objectId: `${object.objectNumber}-${object.label}`,
               orchestration: {

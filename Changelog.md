@@ -3,6 +3,13 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.3.0`
+_2019-06-11_
+
+* New feature: Branching narratives may be defined by adding multiple choices in the new _Settings_ tab when editing a sequence.
+* New feature: The looping behaviour of a sequence may now be specified in the interface.
+* Caveat: The format for the permanent project storage has been changed, old projects may not open correctly anymore.
+
 # `0.2.0`
 
 _2019-05-24_

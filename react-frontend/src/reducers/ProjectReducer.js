@@ -20,8 +20,11 @@ const sequenceDefaults = {
   files: {},
   objectsList: [],
   objects: {},
-  isMain: false,
   isIntro: false,
+  loop: false,
+  hold: false,
+  skippable: false,
+  next: [],
   probeTaskId: null,
   itemsTaskId: null,
   encodeTaskId: null,
@@ -140,8 +143,11 @@ const ProjectReducer = (state = initialState, action) => {
         state, action.projectId, action.sequenceId,
         {
           name: action.name,
-          isMain: action.isMain,
           isIntro: action.isIntro,
+          loop: action.loop,
+          skippable: action.skippable,
+          hold: action.hold,
+          next: action.next,
         },
       );
     case 'SET_PROJECT_SEQUENCE_FILES_LOADING':

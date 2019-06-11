@@ -83,40 +83,6 @@ const waitForExportTask = (dispatch, task, args) => {
   });
 };
 
-const getSequencesToExport = (project) => {
-  // Create a list of sequences, each with a files object and an objects list
-  const { sequencesList } = project;
-  return sequencesList
-    .filter(({ sequenceId, isMain }) => {
-      // always include the main sequence - throw an error later if it doesn't have obejcts.
-      if (isMain) {
-        return true;
-      }
-
-      // also include all other sequences that have objects (so have either files or metadata).
-      const { objectsList } = project.sequences[sequenceId] || [];
-      return objectsList.length > 0;
-    })
-    .map(({ sequenceId, isIntro, isMain }) => {
-      const sequence = project.sequences[sequenceId];
-      const {
-        objectsList,
-        objects,
-        files,
-      } = sequence;
-      const loop = !!isIntro; // only the intro sequence is looped
-
-      return {
-        sequenceId,
-        isMain,
-        isIntro,
-        files,
-        objects: objectsList.map(({ objectNumber }) => objects[objectNumber]),
-        loop,
-      };
-    });
-};
-
 const encodeMissingItems = (projectId, missingFiles) => (dispatch) => {
   // remove encodeItems from projectStore for files affected
   const missingBySequence = {};
@@ -151,7 +117,7 @@ export const requestExportAudio = projectId => (dispatch) => {
   ProjectStore.openProject(projectId)
     .then((store) => {
       const project = new Project(store);
-      const sequences = getSequencesToExport(project);
+      const sequences = project.getSequencesToExport(project);
       return waitForExportTask(dispatch, exportAudio, { sequences });
     })
     .then(({ result }) => {
@@ -180,7 +146,7 @@ export const requestExportTemplate = projectId => (dispatch) => {
   ProjectStore.openProject(projectId)
     .then((store) => {
       const project = new Project(store);
-      const sequences = getSequencesToExport(project);
+      const sequences = project.getSequencesToExport(project);
       const { settings } = project;
 
       return { sequences, settings };
@@ -216,7 +182,7 @@ export const requestExportDistribution = projectId => (dispatch) => {
   ProjectStore.openProject(projectId)
     .then((store) => {
       const project = new Project(store);
-      const sequences = getSequencesToExport(project);
+      const sequences = project.getSequencesToExport(project);
       const { settings } = project;
 
       return { sequences, settings };
@@ -252,7 +218,7 @@ export const requestStartPreview = projectId => (dispatch) => {
   ProjectStore.openProject(projectId)
     .then((store) => {
       const project = new Project(store);
-      const sequences = getSequencesToExport(project);
+      const sequences = project.getSequencesToExport(project);
       const { settings } = project;
 
       return { sequences, settings };

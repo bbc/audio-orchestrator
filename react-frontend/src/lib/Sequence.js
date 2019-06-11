@@ -9,11 +9,23 @@ class SequenceSettings {
 
   loadFromStore() {
     const { store, data, sequenceId } = this;
-    const { name, isMain, isIntro } = store.get(`sequences.${sequenceId}.settings`, {});
+    const {
+      name,
+      isIntro,
+      loop,
+      outPoints,
+      hold,
+      skippable,
+      next,
+    } = store.get(`sequences.${sequenceId}.settings`, {});
 
     data.name = name || '';
-    data.isMain = !!isMain;
     data.isIntro = !!isIntro;
+    data.loop = !!loop;
+    data.outPoints = outPoints || [];
+    data.hold = !!hold;
+    data.skippable = !!skippable;
+    data.next = next || [];
   }
 
   saveToStore() {
@@ -24,9 +36,17 @@ class SequenceSettings {
 
   get name() { return this.data.name; }
 
-  get isMain() { return this.data.isMain; }
-
   get isIntro() { return this.data.isIntro; }
+
+  get loop() { return this.data.loop; }
+
+  get outPoints() { return this.data.outPoints; }
+
+  get hold() { return this.data.hold; }
+
+  get skippable() { return this.data.skippable; }
+
+  get next() { return this.data.next; }
 
   set name(name) {
     const { data } = this;
@@ -34,16 +54,65 @@ class SequenceSettings {
     this.saveToStore();
   }
 
-  set isMain(isMain) {
-    const { data } = this;
-    data.isMain = isMain;
-    this.saveToStore();
-  }
-
   set isIntro(isIntro) {
     const { data } = this;
     data.isIntro = isIntro;
     this.saveToStore();
+  }
+
+  set loop(loop) {
+    const { data } = this;
+    data.loop = loop;
+    this.saveToStore();
+  }
+
+  set outPoints(outPoints) {
+    const { data } = this;
+    data.outPoints = outPoints;
+    this.saveToStore();
+  }
+
+  set hold(hold) {
+    const { data } = this;
+    data.hold = hold;
+    this.saveToStore();
+  }
+
+  set skippable(skippable) {
+    const { data } = this;
+    data.skippable = skippable;
+    this.saveToStore();
+  }
+
+  set next(next) {
+    const { data } = this;
+    data.next = next;
+    this.saveToStore();
+  }
+
+  /**
+   * return the sequence settings required for exporting as a plain object.
+   */
+  getExportData() {
+    const {
+      name,
+      isIntro,
+      loop,
+      outPoints,
+      hold,
+      skippable,
+      next,
+    } = this;
+
+    return {
+      name,
+      isIntro,
+      loop,
+      outPoints,
+      hold,
+      skippable,
+      next,
+    };
   }
 }
 
@@ -106,6 +175,27 @@ class Sequence {
     const { store, sequenceId, data } = this;
     data.objects = objects;
     store.set(`sequences.${sequenceId}.objects`, objects);
+  }
+
+  /**
+   * return the sequence data required for exporting as a plain object, with all settings included
+   * at the top level, a list of objects, and a files object.
+   */
+  getExportData() {
+    const {
+      sequenceId,
+      objectsList,
+      objects,
+      files,
+      settings,
+    } = this;
+
+    return {
+      sequenceId,
+      files,
+      objects: objectsList.map(({ objectNumber }) => objects[objectNumber]),
+      ...settings.getExportData(),
+    };
   }
 }
 

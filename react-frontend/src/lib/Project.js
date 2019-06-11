@@ -42,14 +42,12 @@ class Project {
       const { settings } = this.sequences[sequenceId];
       const {
         name,
-        isMain,
         isIntro,
       } = settings;
 
       return {
         sequenceId,
         name,
-        isMain,
         isIntro,
       };
     });
@@ -95,12 +93,12 @@ class Project {
    *
    * @param {Object} [options] - initial sequence settings
    * @param {string} [options.name] - sequence name
-   * @param {boolean} [options.isMain] - whether the sequence is the main sequence
    * @param {boolean} [options.isIntro] - whether the sequence is the intro loop
+   *
+   * @returns {Sequence} - the newly created sequence object
    */
   addSequence({
     name = 'New Sequence',
-    isMain = false,
     isIntro = false,
   } = {}) {
     const { store, data } = this;
@@ -113,14 +111,45 @@ class Project {
     const sequence = new Sequence(store, newSequenceId);
     const { settings } = sequence;
     settings.name = name;
-    settings.isMain = isMain;
     settings.isIntro = isIntro;
+
+    if (isIntro) {
+      settings.loop = true;
+      settings.skippable = true;
+      settings.hold = false;
+    } else {
+      settings.loop = false;
+      settings.skippable = false;
+      settings.hold = true;
+    }
 
     // Save the sequence object
     sequences[newSequenceId] = sequence;
 
     // Refresh the stored sequencesList, only storing the sequenceId.
     store.set('sequenceIds', this.sequencesList.map(({ sequenceId }) => sequenceId));
+
+    return sequence;
+  }
+
+  /**
+   * Selects which sequences to include in an export, and returns them in the export format as
+   * a list of plain objects.
+   *
+   * @return {Array<Object>}
+   */
+  getSequencesToExport() {
+    const { sequencesList } = this;
+    return sequencesList
+      .filter(({ sequenceId }) => {
+        // include all sequences that have objects (so have either audio files or metadata).
+        const { objectsList } = this.sequences[sequenceId] || [];
+        return objectsList.length > 0;
+      })
+      .map(({ sequenceId }) => {
+        const sequence = this.sequences[sequenceId];
+        return sequence.getExportData();
+      });
   }
 }
 

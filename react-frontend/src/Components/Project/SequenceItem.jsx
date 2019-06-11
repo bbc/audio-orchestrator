@@ -9,7 +9,6 @@ const SequenceItem = ({
   name,
   onOpen,
   sequenceId,
-  isMain,
   isIntro,
 }) => (
   <Card
@@ -20,8 +19,7 @@ const SequenceItem = ({
   >
     <Card.Content>
       <Card.Header content={name} />
-      { isMain ? <Card.Meta content="Required, represents the main story." /> : null }
-      { isIntro ? <Card.Meta content="Optional, looped while setting up devices." /> : null }
+      { isIntro ? <Card.Meta content="Initial sequence, the story begins here." /> : null }
     </Card.Content>
     <Card.Content extra textAlign="right">
       <Button.Group>
@@ -35,12 +33,10 @@ SequenceItem.propTypes = {
   name: PropTypes.string.isRequired,
   onOpen: PropTypes.func.isRequired,
   sequenceId: PropTypes.string.isRequired,
-  isMain: PropTypes.bool,
   isIntro: PropTypes.bool,
 };
 
 SequenceItem.defaultProps = {
-  isMain: false,
   isIntro: false,
 };
 

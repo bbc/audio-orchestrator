@@ -10,7 +10,6 @@ import {
 
 const SequenceCheck = ({
   isIntro,
-  isMain,
   name,
   numFilesAdded,
   numObjectsAdded,
@@ -21,11 +20,10 @@ const SequenceCheck = ({
   filesLoading,
 }) => {
   let error = null;
-  let summary = 'Additional sequence, not used in preview.';
+  let summary = '';
+
   if (isIntro) {
-    summary = 'Intro sequence, optional.';
-  } else if (isMain) {
-    summary = 'Main sequence, required.';
+    summary = 'Initial sequence.';
   }
 
   if (numFilesAdded === 0) {
@@ -70,7 +68,6 @@ const mapStateToProps = ({ Project }, { projectId, sequenceId }) => {
   const sequence = project.sequences[sequenceId] || {};
   const {
     isIntro,
-    isMain,
     name,
     filesList,
     objectsList,
@@ -80,7 +77,6 @@ const mapStateToProps = ({ Project }, { projectId, sequenceId }) => {
 
   return {
     isIntro,
-    isMain,
     name,
     numFilesAdded: filesList.length || 0,
     numObjectsAdded: objectsList.length || 0,

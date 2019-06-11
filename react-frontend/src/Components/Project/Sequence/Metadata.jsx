@@ -10,7 +10,7 @@ import {
   Message,
 } from 'semantic-ui-react';
 
-import { requestReplaceMetadata } from '../../actions/project';
+import { requestReplaceMetadata } from '../../../actions/project';
 
 const Metadata = ({
   objects,

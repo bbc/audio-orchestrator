@@ -100,7 +100,7 @@ class Exporter {
    * - missing encoded files (sequenceId and fileId), so the client can trigger encoding again.
    *
    * @param {Array<Object>} sequences, each sequence should contain a name, a list of objects, a
-   * list of files, and the optional isMain or isIntro flags.
+   * list of files, and the optional isIntro flag.
    *
    * @return {Promise<Object>} { taskId }
    */
@@ -142,7 +142,7 @@ class Exporter {
    * template export, an error message will be included.
    *
    * @param {Array<Object>} sequences, each sequence should contain a name, a list of objects, a
-   * list of files, and the optional isMain or isIntro flags.
+   * list of files, and the optional isIntro flag.
    * @param {Object} settings, the project settings used to populate the template files.
    *
    * @return {Promise<Object>} { taskId }
@@ -179,7 +179,7 @@ class Exporter {
    * - removes the temporary source folder.
    *
    * @param {Array<Object>} sequences, each sequence should contain a name, a list of objects, a
-   * list of files, and the optional isMain or isIntro flags.
+   * list of files, and the optional isIntro flag.
    * @param {Object} settings, the project settings used to populate the template files.
    *
    * @return {Promise<Object>} { taskId }
@@ -215,7 +215,7 @@ class Exporter {
    * - removes the temporary distribution folder.
    *
    * @param {Array<Object>} sequences, each sequence should contain a name, a list of objects, a
-   * list of files, and the optional isMain or isIntro flags.
+   * list of files, and the optional isIntro flag.
    * @param {Object} settings, the project settings used to populate the template files.
    *
    * @return {Promise<Object>} { taskId }

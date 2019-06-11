@@ -9,8 +9,9 @@ import {
 import Audio from './Audio';
 import Metadata from './Metadata';
 import Images from './Images';
-import EditableMenuHeader from './EditableMenuHeader';
-import { requestSetSequenceName } from '../../actions/project';
+import Settings from './Settings';
+import EditableMenuHeader from '../EditableMenuHeader';
+import { setSequenceSetting } from '../../../actions/project';
 
 class Sequence extends React.Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class Sequence extends React.Component {
     this.goToAudio = () => this.setState({ currentStep: 'audio' });
     this.goToMetadata = () => this.setState({ currentStep: 'metadata' });
     this.goToImages = () => this.setState({ currentStep: 'images' });
+    this.goToSettings = () => this.setState({ currentStep: 'settings' });
   }
 
   componentDidUpdate(previousProps) {
@@ -50,6 +52,9 @@ class Sequence extends React.Component {
       case 'images':
         CurrentStep = Images;
         break;
+      case 'settings':
+        CurrentStep = Settings;
+        break;
       default:
         throw new Error('currentStep is invalid');
     }
@@ -61,7 +66,7 @@ class Sequence extends React.Component {
           <Menu.Item position="right" icon="close" content="close" onClick={onClose} />
         </Menu>
 
-        <Step.Group widths={3} attached="top">
+        <Step.Group widths={4} attached="top">
           <Step
             link
             active={currentStep === 'audio'}
@@ -84,6 +89,13 @@ class Sequence extends React.Component {
             title="Images"
             description="Add artwork images"
             onClick={this.goToImages}
+          />
+          <Step
+            active={currentStep === 'settings'}
+            icon="random"
+            title="Settings"
+            description="Set looping and branching behaviour"
+            onClick={this.goToSettings}
           />
         </Step.Group>
         <CurrentStep projectId={projectId} sequenceId={sequenceId} />
@@ -110,7 +122,7 @@ const mapStateToProps = (state, { projectId, sequenceId }) => {
 };
 
 const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
-  onSetName: name => dispatch(requestSetSequenceName(projectId, sequenceId, name)),
+  onSetName: name => dispatch(setSequenceSetting(projectId, sequenceId, 'name', name)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sequence);

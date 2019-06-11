@@ -13,7 +13,12 @@ class ExportError extends Error {
 class ExportService {
   constructor(apiBase) {
     this.runningTasks = {};
-    this.get = path => fetch(`${apiBase}/${path}`).then(response => response.json());
+
+    // GET request wrapper
+    this.get = path => fetch(`${apiBase}/${path}`)
+      .then(response => response.json());
+
+    // POST request wrapper
     this.post = (path, data) => fetch(
       `${apiBase}/${path}`,
       {
@@ -26,6 +31,7 @@ class ExportService {
     )
       .then(response => response.json());
 
+    // DELETE request wrapper
     this.delete = path => fetch(`${apiBase}/${path}`, { method: 'delete' })
       .then(response => response.json());
   }

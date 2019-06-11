@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-analyse-server",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Service for analysing audio files on the local file system.",
   "main": "dist/index.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
@@ -9,7 +9,7 @@
   "private": true,
   "dependencies": {
     "async": "^2.6.2",
-    "bbcat-orchestration-builder-logging": "^0.2.1",
+    "bbcat-orchestration-builder-logging": "^0.3.0",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "ffmpeg-static": "^2.4.0",

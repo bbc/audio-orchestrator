@@ -71,6 +71,18 @@ const loadSequenceObjects = (projectId, sequenceId) => {
   };
 };
 
+const loadSequenceSettings = (projectId, sequenceId) => {
+  const { sequences } = projects[projectId];
+  const { settings } = sequences[sequenceId];
+
+  return {
+    type: 'SET_PROJECT_SEQUENCE_INFO',
+    projectId,
+    sequenceId,
+    ...settings.getExportData(),
+  };
+};
+
 /**
  * Internal action, updates the UI with all sequence information for the project.
  */
@@ -79,19 +91,8 @@ const loadSequences = projectId => (dispatch) => {
 
   sequencesList.forEach(({
     sequenceId,
-    name,
-    isMain,
-    isIntro,
   }) => {
-    dispatch({
-      type: 'SET_PROJECT_SEQUENCE_INFO',
-      projectId,
-      sequenceId,
-      name,
-      isMain,
-      isIntro,
-    });
-
+    dispatch(loadSequenceSettings(projectId, sequenceId));
     dispatch(loadSequenceFiles(projectId, sequenceId));
     dispatch(loadSequenceObjects(projectId, sequenceId));
   });
@@ -433,10 +434,30 @@ export const requestOpenProject = (projectId = null) => (dispatch) => {
 export const requestCreateProject = () => (dispatch) => {
   ProjectStore.createProject()
     .then(({ projectId, store }) => {
+      // create the project
       const project = new Project(store);
       projects[projectId] = project;
-      project.addSequence({ name: 'Main', isMain: true });
-      project.addSequence({ name: 'Intro Loop', isIntro: true });
+
+      // create the standard sequences
+      const introSequence = project.addSequence({ name: 'Intro Loop', isIntro: true });
+      const mainSequence = project.addSequence({ name: 'Main Story' });
+
+      // link the standard sequences together:
+      // the intro points to the main sequence, and can be skipped; and
+      // the main sequence links back to itself, holds at the end, and cannot be skipped.
+      introSequence.settings.next = [
+        {
+          sequenceId: mainSequence.sequenceId,
+          label: 'Continue',
+        },
+      ];
+
+      mainSequence.settings.next = [
+        {
+          sequenceId: mainSequence.sequenceId,
+          label: 'Listen Again',
+        },
+      ];
 
       dispatch(openedProject(projectId));
     })
@@ -486,6 +507,17 @@ export const setProjectSetting = (projectId, key, value) => (dispatch) => {
   dispatch({ type: 'SET_PROJECT_SETTINGS', projectId, settings: newSettings });
 };
 
+/**
+ * Action creator, changes a single value in a sequence's settings.
+ */
+export const setSequenceSetting = (projectId, sequenceId, key, value) => (dispatch) => {
+  const { sequences } = projects[projectId];
+  const { settings } = sequences[sequenceId];
+
+  settings[key] = value;
+
+  dispatch(loadSequenceSettings(projectId, sequenceId));
+};
 const fileNameToObjectNumber = name => parseInt(name, 10) || null;
 
 /**
@@ -629,20 +661,6 @@ export const requestReplaceAllAudioFiles = (projectId, sequenceId) => (dispatch)
   }).catch((e) => {
     console.error(e);
   });
-};
-
-/**
- * Action creator, changes a sequence's name.
- */
-export const requestSetSequenceName = (projectId, sequenceId, name) => (dispatch) => {
-  const { sequences } = projects[projectId];
-
-  // Replace the name in the sequence settings
-  const { settings } = sequences[sequenceId];
-  settings.name = name;
-
-  // reload the sequence information to update the UI
-  dispatch(loadSequences(projectId));
 };
 
 const parseCsvMetadata = (contents) => {

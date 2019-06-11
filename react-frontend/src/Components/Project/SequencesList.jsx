@@ -20,7 +20,6 @@ const SequencesList = ({
     {sequencesList.map(({
       sequenceId,
       name,
-      isMain,
       isIntro,
     }) => (
       <SequenceItem
@@ -28,7 +27,6 @@ const SequencesList = ({
         sequenceId={sequenceId}
         name={name}
         onOpen={onOpenSequence}
-        isMain={isMain}
         isIntro={isIntro}
       />
     ))}

@@ -7,6 +7,8 @@ import ProgressReporter from './progressReporter';
 
 const templateSourceDir = path.dirname(require.resolve('@bbc/bbcat-orchestration-template/package.json')).replace('app.asar', 'app.asar.unpacked');
 
+const formatContentId = sequenceId => `bbcat-orchestration:${sequenceId}`;
+
 const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) => {
   const progress = new ProgressReporter(3, onProgress);
 
@@ -49,25 +51,57 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
       return fse.readFile(configPath, { encoding: 'utf8' })
         .then((contents) => {
           const lines = contents.split('\n');
-          const loopSequence = sequences.find(({ isIntro }) => isIntro) || sequences[0] || {};
-          const mainSequence = sequences.find(({ isMain }) => isMain) || sequences[0] || {};
+          const introSequence = sequences.find(({ isIntro }) => isIntro) || sequences[0] || {};
 
-          return lines.map((line) => {
-            // TODO: implement more flexible sequence specification in template and adjust here.
-            if (line.startsWith('const SEQUENCE_LOOP')) {
-              return `const SEQUENCE_LOOP = 'audio/${loopSequence.sequenceId}/sequence.json';`;
-            }
+          return lines
+            // remove unneccessary definitions (remove lines that start with any of these)
+            .filter(line => [
+              'const CONTENT_ID_LOOP',
+              'const CONTENT_ID_MAIN',
+              'const SEQUENCE_MAIN',
+              'const SEQUENCE_LOOP',
+            ].every(start => !line.startsWith(start)))
+            // replace single line simple definitions
+            .map((line) => {
+              if (line.startsWith('export const INITIAL_CONTENT_ID')) {
+                return `export const INITIAL_CONTENT_ID = ${JSON.stringify(formatContentId(introSequence.sequenceId))};`;
+              }
 
-            if (line.startsWith('const SEQUENCE_MAIN')) {
-              return `const SEQUENCE_MAIN = 'audio/${mainSequence.sequenceId}/sequence.json';`;
-            }
+              if (line.startsWith('export const JOIN_URL')) {
+                return `export const JOIN_URL = ${JSON.stringify(settings.joiningLink)};`;
+              }
 
-            if (line.startsWith('export const JOIN_URL')) {
-              return `export const JOIN_URL = '${settings.joiningLink}';`;
-            }
+              return line;
+            })
+            // return config contents as a single string again
+            .join('\n');
+        })
+        .then((contents) => {
+          // Find and replace definition of sequence URLs in config.js
+          const sequenceUrls = sequences.map(({
+            sequenceId,
+            name,
+            hold,
+            skippable,
+            next,
+          }) => ({
+            name, // for template code readability only
+            contentId: formatContentId(sequenceId),
+            url: `audio/${sequenceId}/sequence.json`,
+            hold,
+            skippable,
+            next: next.map(option => ({
+              contentId: formatContentId(option.sequenceId),
+              label: option.label,
+            })),
+          }));
 
-            return line;
-          }).join('\n');
+          // ?: non-greedy matching.
+          // [\s\S] character classes of white space and non white space to include line breaks.
+          return contents.replace(
+            /export const SEQUENCE_URLS = \[[\s\S]*?\];/,
+            `export const SEQUENCE_URLS = ${JSON.stringify(sequenceUrls, null, 2)};`,
+          );
         })
         .then((contents) => {
           // Find and replace definition of zones in config.js, unless no custom zones are defined.
