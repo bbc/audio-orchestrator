@@ -46,7 +46,7 @@ class Presentation extends React.Component {
             defaultValue={startLabel}
             onBlur={this.handleBlur}
           />
-          <Form.TextArea
+          <Form.Input
             label="Introduction"
             name="introduction"
             defaultValue={introduction}

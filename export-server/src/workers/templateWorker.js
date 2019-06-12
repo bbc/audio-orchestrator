@@ -6,11 +6,12 @@ import audioWorker from './audioWorker';
 import ProgressReporter from './progressReporter';
 
 const templateSourceDir = path.dirname(require.resolve('@bbc/bbcat-orchestration-template/package.json')).replace('app.asar', 'app.asar.unpacked');
+const templateDir = path.join(__dirname, '../../', 'templates');
 
 const formatContentId = sequenceId => `bbcat-orchestration:${sequenceId}`;
 
 const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) => {
-  const progress = new ProgressReporter(3, onProgress);
+  const progress = new ProgressReporter(4, onProgress);
 
   return fse.ensureDir(outputDir)
     .then(() => {
@@ -44,7 +45,7 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
         });
     })
     .then(() => {
-      progress.advance('configuring template contents');
+      progress.advance('configuring template settings');
       const configPath = path.join(outputDir, 'src', 'config.js');
       logger.debug(`reading config from ${configPath}`);
 
@@ -119,6 +120,29 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
           );
         })
         .then(updatedContents => fse.writeFile(configPath, updatedContents));
+    })
+    .then(() => {
+      progress.advance('customising start page');
+
+      const templatePath = path.join(templateDir, 'StartPage.jsx');
+      const outputPath = path.join(outputDir, 'src', 'presentation', 'Pages', 'Start', 'index.jsx');
+      logger.debug(`reading template from ${templatePath}, and writing to ${outputPath}.`);
+
+      // define which template variables need to be replaced
+      const templateVariables = [
+        { name: 'TITLE', value: settings.title },
+        { name: 'INTRODUCTION', value: settings.introduction },
+        { name: 'START_BUTTON_LABEL', value: settings.startButtonLabel },
+      ];
+
+      // replace each template variable in the file contents, wrapping them as a JSON.stringify
+      // string within {} to ensure no new JSX tags can be introduced.
+      return fse.readFile(templatePath, { encoding: 'utf8' })
+        .then(contents => templateVariables.reduce(
+          (acc, { name, value }) => acc.replace(`{{ ${name} }}`, `{ ${JSON.stringify(value || name)} }`),
+          contents,
+        ))
+        .then(contents => fse.writeFile(outputPath, contents));
     })
     .then(() => {
       progress.complete();
