@@ -18,7 +18,7 @@ const StartPage = ({
 
     <p>
       <LargeButton
-        text={{ START_BUTTON_LABEL }}
+        text={{ START_LABEL }}
         secondaryText="Start on the device with the best speakers."
         onClick={startSession}
       />

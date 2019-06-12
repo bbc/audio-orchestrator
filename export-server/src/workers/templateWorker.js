@@ -11,7 +11,7 @@ const templateDir = path.join(__dirname, '../../', 'templates');
 const formatContentId = sequenceId => `bbcat-orchestration:${sequenceId}`;
 
 const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) => {
-  const progress = new ProgressReporter(4, onProgress);
+  const progress = new ProgressReporter(5, onProgress);
 
   return fse.ensureDir(outputDir)
     .then(() => {
@@ -122,6 +122,33 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
         .then(updatedContents => fse.writeFile(configPath, updatedContents));
     })
     .then(() => {
+      progress.advance('applying colour theme');
+      const coloursPath = path.join(outputDir, 'src', 'presentation', 'colours.scss');
+      logger.debug(`reading colours from ${coloursPath}`);
+
+      return fse.readFile(coloursPath, { encoding: 'utf8' })
+        .then((contents) => {
+          const lines = contents.split('\n');
+
+          // define variable to replace
+          const variables = [
+            { name: '$button-background', value: settings.accentColour },
+          ];
+
+          return lines
+            .map((line) => {
+              const variable = variables.find(({ name }) => line.startsWith(`${name}:`));
+              // only replace if value is set and is a colour
+              if (variable && !variable.value.match(/^#[0-9a-fA-F]$/)) {
+                return `${variable.name}: ${variable.value};`;
+              }
+              return line;
+            })
+            .join('\n');
+        })
+        .then(updatedContents => fse.writeFile(coloursPath, updatedContents));
+    })
+    .then(() => {
       progress.advance('customising start page');
 
       const templatePath = path.join(templateDir, 'StartPage.jsx');
@@ -132,7 +159,7 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
       const templateVariables = [
         { name: 'TITLE', value: settings.title },
         { name: 'INTRODUCTION', value: settings.introduction },
-        { name: 'START_BUTTON_LABEL', value: settings.startButtonLabel },
+        { name: 'START_LABEL', value: settings.startLabel },
       ];
 
       // replace each template variable in the file contents, wrapping them as a JSON.stringify
