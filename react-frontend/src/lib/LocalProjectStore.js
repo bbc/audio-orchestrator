@@ -22,6 +22,10 @@ function createProjectStore(projectId, name) {
       const key = `projects.${projectId}.${projectKey}`;
       return !!Storage.getItem(key);
     },
+    delete: (projectKey) => { // delete, not remove, to match electron-store API.
+      const key = `projects.${projectId}.${projectKey}`;
+      Storage.removeItem(key);
+    },
   };
 
   store.set('lastOpened', new Date().toISOString());

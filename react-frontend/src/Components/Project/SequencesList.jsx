@@ -9,12 +9,14 @@ import SequenceItem from './SequenceItem';
 
 import {
   requestAddSequence,
+  requestDeleteSequence,
 } from '../../actions/project';
 
 const SequencesList = ({
   sequencesList,
   onAddSequence,
   onOpenSequence,
+  onDeleteSequence,
 }) => (
   <Card.Group stackable itemsPerRow={3}>
     {sequencesList.map(({
@@ -27,6 +29,7 @@ const SequencesList = ({
         sequenceId={sequenceId}
         name={name}
         onOpen={onOpenSequence}
+        onDelete={onDeleteSequence}
         isIntro={isIntro}
       />
     ))}
@@ -46,6 +49,7 @@ SequencesList.propTypes = {
   sequencesList: PropTypes.arrayOf(PropTypes.object).isRequired,
   onAddSequence: PropTypes.func.isRequired,
   onOpenSequence: PropTypes.func.isRequired,
+  onDeleteSequence: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state, { projectId }) => {
@@ -60,6 +64,7 @@ const mapStateToProps = (state, { projectId }) => {
 
 const mapDispatchToProps = (dispatch, { projectId }) => ({
   onAddSequence: () => dispatch(requestAddSequence(projectId)),
+  onDeleteSequence: (sequenceId) => dispatch(requestDeleteSequence(projectId, sequenceId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SequencesList);

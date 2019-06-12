@@ -34,6 +34,11 @@ class SequenceSettings {
     store.set(`sequences.${sequenceId}.settings`, data);
   }
 
+  delete() {
+    const { store, sequenceId } = this;
+    store.delete(`sequences.${sequenceId}.settings`);
+  }
+
   get name() { return this.data.name; }
 
   get isIntro() { return this.data.isIntro; }
@@ -141,6 +146,23 @@ class Sequence {
     data.files = store.get(`sequences.${sequenceId}.files`, {});
 
     data.settings = new SequenceSettings(store, sequenceId);
+  }
+
+  /**
+   * delete all data about this sequence from the store.
+   */
+  delete() {
+    const { store, data, sequenceId } = this;
+    const { settings } = data;
+    settings.delete();
+    delete data.settings;
+
+    [
+      `sequences.${sequenceId}.objectsList`,
+      `sequences.${sequenceId}.objects`,
+      `sequences.${sequenceId}.filesList`,
+      `sequences.${sequenceId}.files`,
+    ].forEach(key => store.delete(key));
   }
 
   get filesList() { return this.data.filesList; }

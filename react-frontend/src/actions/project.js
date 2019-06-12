@@ -477,6 +477,15 @@ export const requestAddSequence = projectId => (dispatch) => {
 };
 
 /**
+ * Action creator, adds a sequence to the project and reloads the sequence data.
+ */
+export const requestDeleteSequence = (projectId, sequenceId) => (dispatch) => {
+  const project = projects[projectId];
+  project.deleteSequence(sequenceId);
+  dispatch(loadSequences(projectId));
+};
+
+/**
  * Action creator, updates the state with whether the backing store supports opening unlisted
  * projects (using a native file-open dialogue).
  */

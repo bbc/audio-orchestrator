@@ -133,6 +133,38 @@ class Project {
   }
 
   /**
+   * Deletes a sequence
+   *
+   * @param {string} sequenceId
+   */
+  deleteSequence(sequenceId) {
+    const { data, store } = this;
+    const { sequences } = data;
+
+    // if the sequence doesn't exist, silently move on.
+    if (!(sequenceId in sequences)) {
+      return;
+    }
+
+    // remove links to the deleted sequence from other sequences
+    Object.keys(sequences).forEach((k) => {
+      const sequence = sequences[k];
+      const { next } = sequence.settings;
+      if (next.some(choice => choice.sequenceId === sequenceId)) {
+        sequence.settings.next = next.filter(choice => choice.sequenceId !== sequenceId);
+      }
+    });
+
+    // delete the sequence itself
+    const sequence = sequences[sequenceId];
+    sequence.delete();
+    delete sequences[sequenceId];
+
+    // Refresh the stored sequencesList, only storing the sequenceId.
+    store.set('sequenceIds', this.sequencesList.map(({ sequenceId }) => sequenceId));
+  }
+
+  /**
    * Selects which sequences to include in an export, and returns them in the export format as
    * a list of plain objects.
    *
