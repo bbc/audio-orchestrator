@@ -527,7 +527,7 @@ export const setSequenceSetting = (projectId, sequenceId, key, value) => (dispat
 
   settings[key] = value;
 
-  dispatch(loadSequenceSettings(projectId, sequenceId));
+  dispatch(loadSequences(projectId));
 };
 const fileNameToObjectNumber = name => parseInt(name, 10) || null;
 
