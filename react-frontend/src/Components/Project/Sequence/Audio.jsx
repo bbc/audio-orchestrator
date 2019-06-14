@@ -9,6 +9,7 @@ import {
   Table,
   Dimmer,
   Loader,
+  Label,
 } from 'semantic-ui-react';
 import AudioFileRow from './AudioFileRow';
 import {
@@ -23,6 +24,8 @@ const Audio = ({
   loadingCompleted,
   loadingTotal,
   onReplaceAll,
+  sequenceAudioError,
+  sequenceAudioConfirmation,
 }) => {
   if (!loading && filesList.length === 0) {
     return (
@@ -35,6 +38,14 @@ const Audio = ({
           </Header.Subheader>
         </Header>
         <Button primary icon="linkify" content="Link audio files" labelPosition="left" onClick={onReplaceAll} />
+        { sequenceAudioError
+          ? (
+            <div>
+              <Label pointing="above" basic color="red" content={sequenceAudioError} />
+            </div>
+          )
+          : null
+        }
       </Segment>
     );
   }
@@ -71,6 +82,22 @@ const Audio = ({
         </Table.Body>
       </Table>
       <Button negative icon="refresh" content="Replace audio files" onClick={onReplaceAll} />
+      { sequenceAudioError
+        ? (
+          <div>
+            <Label pointing="above" basic color="red" content={sequenceAudioError} />
+          </div>
+        )
+        : null
+      }
+      { sequenceAudioConfirmation
+        ? (
+          <div>
+            <Label pointing="above" basic color="green" content={sequenceAudioConfirmation} icon="checkmark" />
+          </div>
+        )
+        : null
+      }
     </Segment>
   );
 };
@@ -83,11 +110,15 @@ Audio.propTypes = {
   sequenceId: PropTypes.string.isRequired,
   filesList: PropTypes.arrayOf(PropTypes.object).isRequired,
   onReplaceAll: PropTypes.func.isRequired,
+  sequenceAudioConfirmation: PropTypes.string,
+  sequenceAudioError: PropTypes.string,
 };
 
 Audio.defaultProps = {
   loadingCompleted: 0,
   loadingTotal: 0,
+  sequenceAudioConfirmation: null,
+  sequenceAudioError: null,
 };
 
 const mapStateToProps = (state, { projectId, sequenceId }) => {
@@ -100,11 +131,18 @@ const mapStateToProps = (state, { projectId, sequenceId }) => {
 
   const { total, completed } = state.UI.tasks[filesTaskId] || {};
 
+  const {
+    sequenceAudioConfirmation,
+    sequenceAudioError,
+  } = state.UI;
+
   return {
     loading: filesLoading,
     loadingTotal: total,
     loadingCompleted: completed,
     filesList,
+    sequenceAudioConfirmation,
+    sequenceAudioError,
   };
 };
 

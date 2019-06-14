@@ -2,6 +2,15 @@ import uuidv4 from 'uuid/v4';
 import LocalProjectStore from '../lib/LocalProjectStore';
 import Project from '../lib/Project';
 import FileService from '../lib/FileService';
+import {
+  setTaskProgress,
+  openProjectPage,
+  closeProjectPage,
+  confirmSequenceAudioReplaced,
+  confirmSequenceMetadataReplaced,
+  setSequenceAudioError,
+  setSequenceMetadataError,
+} from './ui';
 
 // Project store is the interface to the persistent project data accessed by projectId.
 const ProjectStore = window.ProjectStore || LocalProjectStore;
@@ -15,7 +24,7 @@ const projects = {};
  * Action creator, closes the project view.
  */
 export const closeProject = (projectId = null) => (dispatch) => {
-  dispatch({ type: 'UI_CLOSE_PROJECT' });
+  dispatch(closeProjectPage());
   if (projectId) {
     dispatch({ type: 'SET_PROJECT_LOADING', projectId, loading: false });
   }
@@ -117,8 +126,8 @@ const openedProject = projectId => (dispatch) => {
   // Get the sequences for the UI
   dispatch(loadSequences(projectId));
 
-  // Move onto the project page - this will trigger requesting more project data for each UI page.
-  dispatch({ type: 'UI_OPEN_PROJECT', projectId });
+  // Move onto the project page
+  dispatch(openProjectPage(projectId));
 
   // Hide the loading indicator
   dispatch({ type: 'SET_PROJECT_LOADING', projectId, loading: false });
@@ -185,13 +194,6 @@ const setEncodeTaskId = (projectId, sequenceId, taskId) => ({
   projectId,
   sequenceId,
   taskId,
-});
-
-const setTaskProgress = (taskId, completed, total) => ({
-  type: 'UI_SET_TASK_PROGRESS',
-  taskId,
-  completed,
-  total,
 });
 
 /**
@@ -621,6 +623,8 @@ const initialiseSequenceFiles = (projectId, sequenceId, newFiles) => (dispatch) 
 
   // trigger analysis of the new files and update the UI, also updating files in store and state.
   dispatch(analyseAllFiles(projectId, sequenceId));
+
+  // TODO: dispatch(confirmAudioFilesReplaced(projectId, sequenceId));
 };
 
 /**
@@ -667,7 +671,9 @@ export const requestReplaceAllAudioFiles = (projectId, sequenceId) => (dispatch)
     return files;
   }).then((files) => {
     dispatch(initialiseSequenceFiles(projectId, sequenceId, files));
+    dispatch(confirmSequenceAudioReplaced('New audio files linked.'));
   }).catch((e) => {
+    dispatch(setSequenceAudioError('No valid files selected.'));
     console.error(e);
   });
 };
@@ -829,7 +835,9 @@ export const requestReplaceMetadata = (projectId, sequenceId) => (dispatch) => {
     return parseMetadataFile(file);
   }).then((objects) => {
     dispatch(initialiseSequenceObjects(projectId, sequenceId, objects));
+    dispatch(confirmSequenceMetadataReplaced('New metadata loaded.'));
   }).catch((e) => {
-    console.error(e); // TODO dispatch error action to display a dismissable message in UI
+    dispatch(setSequenceMetadataError('No file selected or invalid format.'));
+    console.error(e);
   });
 };

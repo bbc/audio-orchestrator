@@ -8,6 +8,15 @@ import {
   Icon,
 } from 'semantic-ui-react';
 
+import {
+  PAGE_SEQUENCE_AUDIO,
+  PAGE_SEQUENCE_METADATA,
+} from '../../../reducers/UIReducer';
+
+import {
+  openSequencePage,
+} from '../../../actions/ui';
+
 const SequenceCheck = ({
   isIntro,
   name,
@@ -15,11 +24,12 @@ const SequenceCheck = ({
   numObjectsAdded,
   allObjectsHaveFiles,
   allFilesAreGood,
-  onReviewSequence,
+  onOpenSequencePage,
   sequenceId,
   filesLoading,
 }) => {
   let error = null;
+  let reviewPage;
   let summary = '';
 
   if (isIntro) {
@@ -28,12 +38,16 @@ const SequenceCheck = ({
 
   if (numFilesAdded === 0) {
     error = 'No audio files have been added.';
+    reviewPage = PAGE_SEQUENCE_AUDIO;
   } else if (numObjectsAdded === 0) {
     error = 'No metadata file has been added.';
+    reviewPage = PAGE_SEQUENCE_METADATA;
   } else if (!allObjectsHaveFiles) {
     error = 'Not all objects in the metadata have been matched to audio files.';
+    reviewPage = PAGE_SEQUENCE_METADATA;
   } else if (!allFilesAreGood) {
     error = 'Some audio files have errors.';
+    reviewPage = PAGE_SEQUENCE_AUDIO;
   }
 
   return (
@@ -53,7 +67,7 @@ const SequenceCheck = ({
               content="Review"
               icon="edit"
               labelPosition="left"
-              onClick={() => onReviewSequence(sequenceId)}
+              onClick={() => onOpenSequencePage(reviewPage)}
             />
           )
           : null
@@ -86,4 +100,8 @@ const mapStateToProps = ({ Project }, { projectId, sequenceId }) => {
   };
 };
 
-export default connect(mapStateToProps)(SequenceCheck);
+const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
+  onOpenSequencePage: page => dispatch(openSequencePage(projectId, sequenceId, page)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SequenceCheck);

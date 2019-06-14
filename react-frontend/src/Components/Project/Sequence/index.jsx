@@ -13,116 +13,114 @@ import Settings from './Settings';
 import EditableMenuHeader from '../EditableMenuHeader';
 import { setSequenceSetting } from '../../../actions/project';
 
-class Sequence extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { currentStep: 'audio' };
-    this.goToAudio = () => this.setState({ currentStep: 'audio' });
-    this.goToMetadata = () => this.setState({ currentStep: 'metadata' });
-    this.goToImages = () => this.setState({ currentStep: 'images' });
-    this.goToSettings = () => this.setState({ currentStep: 'settings' });
+import {
+  PAGE_SEQUENCE_AUDIO,
+  PAGE_SEQUENCE_METADATA,
+  PAGE_SEQUENCE_IMAGES,
+  PAGE_SEQUENCE_SETTINGS,
+} from '../../../reducers/UIReducer';
+
+import {
+  openSequencePage,
+  closeSequencePage,
+} from '../../../actions/ui';
+
+const Sequence = ({
+  sequenceId,
+  projectId,
+  name,
+  onSetName,
+  onCloseSequence,
+  onOpenSequencePage,
+  currentSequencePage,
+}) => {
+  let CurrentStep;
+  switch (currentSequencePage) {
+    case PAGE_SEQUENCE_AUDIO:
+      CurrentStep = Audio;
+      break;
+    case PAGE_SEQUENCE_METADATA:
+      CurrentStep = Metadata;
+      break;
+    case PAGE_SEQUENCE_IMAGES:
+      CurrentStep = Images;
+      break;
+    case PAGE_SEQUENCE_SETTINGS:
+      CurrentStep = Settings;
+      break;
+    default:
+      throw new Error(`currentSequencePage is invalid (${currentSequencePage})`);
   }
 
-  componentDidUpdate(previousProps) {
-    // When switching between sequences, always go back to the audio step as it is always available.
-    const { projectId, sequenceId } = this.props;
-    if (sequenceId !== previousProps.sequenceId || projectId !== previousProps.projectId) {
-      this.goToAudio();
-    }
-  }
+  return (
+    <Container>
+      <Menu inverted color="green" attached="top">
+        <EditableMenuHeader value={name} onChange={onSetName} />
+        <Menu.Item position="right" icon="close" content="close" onClick={onCloseSequence} />
+      </Menu>
 
-  render() {
-    const {
-      sequenceId,
-      projectId,
-      name,
-      onClose,
-      onSetName,
-    } = this.props;
-    const { currentStep } = this.state;
-
-    let CurrentStep;
-    switch (currentStep) {
-      case 'audio':
-        CurrentStep = Audio;
-        break;
-      case 'metadata':
-        CurrentStep = Metadata;
-        break;
-      case 'images':
-        CurrentStep = Images;
-        break;
-      case 'settings':
-        CurrentStep = Settings;
-        break;
-      default:
-        throw new Error('currentStep is invalid');
-    }
-
-    return (
-      <Container>
-        <Menu inverted color="green" attached="top">
-          <EditableMenuHeader value={name} onChange={onSetName} />
-          <Menu.Item position="right" icon="close" content="close" onClick={onClose} />
-        </Menu>
-
-        <Step.Group widths={4} attached="top">
-          <Step
-            link
-            active={currentStep === 'audio'}
-            icon="file audio outline"
-            title="Audio"
-            description="Import audio files"
-            onClick={this.goToAudio}
-          />
-          <Step
-            link
-            active={currentStep === 'metadata'}
-            icon="file code outline"
-            title="Metadata"
-            description="Add and review metadata"
-            onClick={this.goToMetadata}
-          />
-          <Step
-            active={currentStep === 'images'}
-            icon="file image outline"
-            title="Images"
-            description="Add artwork images"
-            onClick={this.goToImages}
-          />
-          <Step
-            active={currentStep === 'settings'}
-            icon="random"
-            title="Settings"
-            description="Set looping and branching behaviour"
-            onClick={this.goToSettings}
-          />
-        </Step.Group>
-        <CurrentStep projectId={projectId} sequenceId={sequenceId} />
-      </Container>
-    );
-  }
-}
+      <Step.Group widths={4} attached="top">
+        <Step
+          link
+          active={currentSequencePage === PAGE_SEQUENCE_AUDIO}
+          icon="file audio outline"
+          title="Audio"
+          description="Import audio files"
+          onClick={() => onOpenSequencePage(PAGE_SEQUENCE_AUDIO)}
+        />
+        <Step
+          link
+          active={currentSequencePage === PAGE_SEQUENCE_METADATA}
+          icon="file code outline"
+          title="Metadata"
+          description="Add and review metadata"
+          onClick={() => onOpenSequencePage(PAGE_SEQUENCE_METADATA)}
+        />
+        <Step
+          active={currentSequencePage === PAGE_SEQUENCE_IMAGES}
+          icon="file image outline"
+          title="Images"
+          description="Add artwork images"
+          onClick={() => onOpenSequencePage(PAGE_SEQUENCE_IMAGES)}
+        />
+        <Step
+          active={currentSequencePage === PAGE_SEQUENCE_SETTINGS}
+          icon="cog"
+          title="Settings"
+          description="Set looping and branching behaviour"
+          onClick={() => onOpenSequencePage(PAGE_SEQUENCE_SETTINGS)}
+        />
+      </Step.Group>
+      <CurrentStep projectId={projectId} sequenceId={sequenceId} />
+    </Container>
+  );
+};
 
 Sequence.propTypes = {
   projectId: PropTypes.string.isRequired,
   sequenceId: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  onClose: PropTypes.func.isRequired,
+  onCloseSequence: PropTypes.func.isRequired,
   onSetName: PropTypes.func.isRequired,
+  onOpenSequencePage: PropTypes.func.isRequired,
+  currentSequencePage: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state, { projectId, sequenceId }) => {
   const project = state.Project.projects[projectId];
-  const sequence = project.sequences[sequenceId];
+  const { name } = project.sequences[sequenceId];
+  const { currentSequencePage } = state.UI;
 
   return ({
-    name: sequence.name,
+    name,
+    currentSequencePage,
   });
 };
 
 const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
   onSetName: name => dispatch(setSequenceSetting(projectId, sequenceId, 'name', name)),
+  onOpenSequencePage: page => dispatch(openSequencePage(projectId, sequenceId, page)),
+  onCloseSequence: () => dispatch(closeSequencePage()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Sequence);

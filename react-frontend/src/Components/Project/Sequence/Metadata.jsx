@@ -8,6 +8,7 @@ import {
   Icon,
   Header,
   Message,
+  Label,
 } from 'semantic-ui-react';
 
 import { requestReplaceMetadata } from '../../../actions/project';
@@ -17,6 +18,8 @@ const Metadata = ({
   files,
   objectsList,
   onReplaceMetadata,
+  sequenceMetadataConfirmation,
+  sequenceMetadataError,
 }) => {
   if (objectsList.length === 0) {
     return (
@@ -29,6 +32,14 @@ const Metadata = ({
           </Header.Subheader>
         </Header>
         <Button primary icon="folder open" content="Load metadata file" labelPosition="left" onClick={onReplaceMetadata} />
+        { sequenceMetadataError
+          ? (
+            <div>
+              <Label pointing="above" basic color="red" content={sequenceMetadataError} />
+            </div>
+          )
+          : null
+        }
       </Segment>
     );
   }
@@ -84,15 +95,29 @@ const Metadata = ({
           ))}
         </Table.Body>
       </Table>
-      <Button.Group>
-        <Button
-          negative
-          icon="refresh"
-          labelPosition="left"
-          content="Replace metadata file"
-          onClick={onReplaceMetadata}
-        />
-      </Button.Group>
+      <Button
+        negative
+        icon="refresh"
+        labelPosition="left"
+        content="Replace metadata file"
+        onClick={onReplaceMetadata}
+      />
+      { sequenceMetadataError
+        ? (
+          <div>
+            <Label pointing="above" basic color="red" content={sequenceMetadataError} />
+          </div>
+        )
+        : null
+      }
+      { sequenceMetadataConfirmation
+        ? (
+          <div>
+            <Label pointing="above" basic color="green" content={sequenceMetadataConfirmation} icon="checkmark" />
+          </div>
+        )
+        : null
+      }
     </Segment>
   );
 };
@@ -100,6 +125,8 @@ const Metadata = ({
 Metadata.propTypes = {
   objectsList: PropTypes.arrayOf(PropTypes.object).isRequired,
   onReplaceMetadata: PropTypes.func.isRequired,
+  sequenceMetadataConfirmation: PropTypes.string,
+  sequenceMetadataError: PropTypes.string,
   objects: PropTypes.shape({
     fileId: PropTypes.string,
   }).isRequired,
@@ -108,14 +135,25 @@ Metadata.propTypes = {
   }).isRequired,
 };
 
-const mapStateToProps = ({ Project }, { projectId, sequenceId }) => {
+Metadata.defaultProps = {
+  sequenceMetadataConfirmation: null,
+  sequenceMetadataError: null,
+};
+
+const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
   const project = Project.projects[projectId] || {};
   const sequence = project.sequences[sequenceId] || {};
+  const {
+    sequenceMetadataConfirmation,
+    sequenceMetadataError,
+  } = UI;
 
   return {
     objectsList: sequence.objectsList || [],
     objects: sequence.objects || {},
     files: sequence.files || {},
+    sequenceMetadataConfirmation,
+    sequenceMetadataError,
   };
 };
 

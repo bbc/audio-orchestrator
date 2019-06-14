@@ -8,6 +8,10 @@ import {
 import SequenceItem from './SequenceItem';
 
 import {
+  openSequencePage,
+} from '../../actions/ui';
+
+import {
   requestAddSequence,
   requestDeleteSequence,
 } from '../../actions/project';
@@ -63,8 +67,9 @@ const mapStateToProps = (state, { projectId }) => {
 };
 
 const mapDispatchToProps = (dispatch, { projectId }) => ({
+  onOpenSequence: sequenceId => dispatch(openSequencePage(projectId, sequenceId)),
   onAddSequence: () => dispatch(requestAddSequence(projectId)),
-  onDeleteSequence: (sequenceId) => dispatch(requestDeleteSequence(projectId, sequenceId)),
+  onDeleteSequence: sequenceId => dispatch(requestDeleteSequence(projectId, sequenceId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SequencesList);

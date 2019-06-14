@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import {
   Container,
   Message,
@@ -7,48 +8,42 @@ import {
 import SequencesList from './SequencesList';
 import Sequence from './Sequence';
 
-class Sequences extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      currentSequenceId: null,
-    };
-
-    this.openSequence = (sequenceId) => {
-      this.setState({ currentSequenceId: sequenceId });
-    };
-
-    this.closeSequence = () => {
-      this.setState({ currentSequenceId: null });
-    };
-  }
-
-  render() {
-    const { projectId } = this.props;
-    const { currentSequenceId } = this.state;
-
-    if (currentSequenceId === null) {
-      return (
-        <Container>
-          <Message icon="lightbulb outline" header="Sequence audio and metadata" content="Each sequence is an independent section of content, corresponding to one DAW session. The default template supports two sequences: The intro loop is played while users connect their devices, and the main content follows once they decide to move on." onDismiss={() => {}} />
-          <SequencesList projectId={projectId} onOpenSequence={this.openSequence} />
-        </Container>
-      );
-    }
-
+const Sequences = ({
+  projectId,
+  currentSequenceId,
+}) => {
+  if (currentSequenceId === null) {
     return (
-      <Sequence
-        projectId={projectId}
-        sequenceId={currentSequenceId}
-        onClose={this.closeSequence}
-      />
+      <Container>
+        <Message icon="lightbulb outline" header="Sequence audio and metadata" content="Each sequence is an independent section of content, corresponding to one DAW session." onDismiss={() => {}} />
+        <SequencesList projectId={projectId} />
+      </Container>
     );
   }
-}
+
+  return (
+    <Sequence
+      projectId={projectId}
+      sequenceId={currentSequenceId}
+    />
+  );
+};
 
 Sequences.propTypes = {
   projectId: PropTypes.string.isRequired,
+  currentSequenceId: PropTypes.string,
 };
 
-export default Sequences;
+Sequences.defaultProps = {
+  currentSequenceId: null,
+};
+
+const mapDispatchToProps = (state) => {
+  const { currentSequenceId } = state.UI;
+
+  return {
+    currentSequenceId,
+  };
+};
+
+export default connect(mapDispatchToProps)(Sequences);
