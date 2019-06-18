@@ -11,6 +11,7 @@ const projectDefaults = {
   sequencesList: [],
   sequencesListLoading: false,
   sequences: {},
+  reviewItems: [],
 };
 
 const sequenceDefaults = {
@@ -123,6 +124,8 @@ const ProjectReducer = (state = initialState, action) => {
         state, action.projectId,
         { settings: action.settings },
       );
+    case 'SET_PROJECT_REVIEW_ITEMS':
+      return updateProject(state, action.projectId, { reviewItems: action.reviewItems });
     case 'SET_PROJECT_SEQUENCES_LIST_LOADING':
       return updateProject(
         state, action.projectId,

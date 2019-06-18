@@ -1,5 +1,5 @@
 import React from 'react';
-import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import {
   Table,
   Header,
@@ -7,24 +7,44 @@ import {
 } from 'semantic-ui-react';
 
 const SettingsCheck = ({
-  name,
+  title,
+  message,
   error,
-  valid,
+  warning,
   onReview,
-}) => (
-  <Table.Row positive={!!valid} negative={!valid}>
-    <Table.Cell icon={valid ? 'checkmark' : 'exclamation circle'} />
-    <Table.Cell>
-      <Header as="h4" content={name} />
-      {valid ? 'Valid.' : (error || 'Invalid settings detected.')}
-    </Table.Cell>
-    <Table.Cell>
-      {!valid && !!onReview
-        ? <Button content="Review" icon="edit" labelPosition="left" onClick={onReview} />
-        : null
-      }
-    </Table.Cell>
-  </Table.Row>
-);
+}) => {
+  const valid = !warning && !error;
+  const invalidIcon = error ? 'delete' : 'exclamation';
+  return (
+    <Table.Row positive={valid} negative={error} warning={warning}>
+      <Table.Cell icon={valid ? 'checkmark' : invalidIcon} />
+      <Table.Cell>
+        <Header as="h4" content={title} />
+        {valid ? 'Valid.' : (message || 'Invalid settings detected.')}
+      </Table.Cell>
+      <Table.Cell>
+        {!valid && !!onReview
+          ? <Button content="Review" icon="edit" labelPosition="left" onClick={onReview} />
+          : null
+        }
+      </Table.Cell>
+    </Table.Row>
+  );
+};
+
+SettingsCheck.propTypes = {
+  title: PropTypes.string.isRequired,
+  message: PropTypes.string,
+  error: PropTypes.bool,
+  warning: PropTypes.bool,
+  onReview: PropTypes.func,
+};
+
+SettingsCheck.defaultProps = {
+  message: null,
+  error: false,
+  warning: false,
+  onReview: () => {},
+};
 
 export default SettingsCheck;

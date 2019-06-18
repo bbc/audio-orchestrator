@@ -1,6 +1,29 @@
 import uuidv4 from 'uuid/v4';
 import Sequence from './Sequence';
 
+import {
+  PAGE_PROJECT_PRESENTATION,
+  PAGE_PROJECT_ADVANCED,
+} from '../reducers/UIReducer';
+
+/**
+ * Helper for validating URL in advanced project settings
+ */
+const isUrl = (str) => {
+  try {
+    /* eslint-disable-next-line no-unused-vars */
+    const _ = new URL(str);
+    return true;
+  } catch (_) {
+    return false;
+  }
+};
+
+/**
+ * Helper for validating cloud-sync hostname in advanced project settings
+ */
+const isHostname = str => isUrl(`wss://${str}`) && !str.includes('/') && !str.includes(':');
+
 /**
  * Class representing an open project.
  */
@@ -30,6 +53,21 @@ class Project {
     });
   }
 
+  /**
+   * Updates the stored list of sequenceIds.
+   *
+   * @private
+   */
+  updateSequencesList() {
+    const { store, sequencesList } = this;
+    store.set('sequenceIds', sequencesList.map(({ sequenceId }) => sequenceId));
+  }
+
+  /**
+   * Gets the project name.
+   *
+   * @returns {string}
+   */
   get name() { return this.data.name; }
 
   /**
@@ -126,8 +164,7 @@ class Project {
     // Save the sequence object
     sequences[newSequenceId] = sequence;
 
-    // Refresh the stored sequencesList, only storing the sequenceId.
-    store.set('sequenceIds', this.sequencesList.map(({ sequenceId }) => sequenceId));
+    this.updateSequencesList();
 
     return sequence;
   }
@@ -138,7 +175,7 @@ class Project {
    * @param {string} sequenceId
    */
   deleteSequence(sequenceId) {
-    const { data, store } = this;
+    const { data } = this;
     const { sequences } = data;
 
     // if the sequence doesn't exist, silently move on.
@@ -161,7 +198,7 @@ class Project {
     delete sequences[sequenceId];
 
     // Refresh the stored sequencesList, only storing the sequenceId.
-    store.set('sequenceIds', this.sequencesList.map(({ sequenceId }) => sequenceId));
+    this.updateSequencesList();
   }
 
   /**
@@ -182,6 +219,112 @@ class Project {
         const sequence = this.sequences[sequenceId];
         return sequence.getExportData();
       });
+  }
+
+  /**
+   * Validates the presentation settings by checking that each text field has been filled in.
+   *
+   * @private
+   */
+  validatePresentationSettings() {
+    const { data } = this;
+    const { settings } = data;
+    const {
+      title,
+      startLabel,
+      introduction,
+    } = settings;
+
+    const valid = title && startLabel && introduction;
+
+    return {
+      key: 'presentation',
+      title: 'Presentation Settings',
+      message: valid ? null : 'Not all fields have been completed.',
+      warning: !valid,
+      error: false,
+      projectPage: PAGE_PROJECT_PRESENTATION,
+    };
+  }
+
+  /**
+   * Validates the advanced project settings
+   */
+  validateAdvancedSettings() {
+    const { data } = this;
+    const { settings } = data;
+    const {
+      joiningLink,
+      cloudSyncHostname,
+    } = settings;
+    const joiningLinkValid = !joiningLink || isUrl(joiningLink);
+    const cloudSyncHostnameValid = !cloudSyncHostname || isHostname(cloudSyncHostname);
+    const valid = joiningLinkValid && cloudSyncHostnameValid;
+
+    let message = null;
+
+    if (!joiningLinkValid) {
+      message = 'Joining link is not a valid URL.';
+    }
+
+    if (!cloudSyncHostnameValid) {
+      message = 'Cloud-Sync hostname is not a valid hostname.';
+    }
+
+    return {
+      key: 'advanced',
+      title: 'Advanced Settings',
+      message,
+      warning: false,
+      error: !valid,
+      projectPage: PAGE_PROJECT_ADVANCED,
+    };
+  }
+
+  /**
+   * Validates the project's orchestration rules settings
+   */
+  validateRulesSettings() {
+    const { data } = this;
+    const { settings } = data;
+    const { zones } = settings;
+
+    const haveZones = (zones && zones.length === 0);
+    const zonesValid = (zones || []).every(({ name, friendlyName }) => !name || !friendlyName);
+
+    const warning = haveZones && zonesValid;
+    const error = !zonesValid;
+
+    let message = haveZones ? 'Custom rules have been defined.' : 'The default rules are being used.';
+
+    if (!zonesValid && haveZones) {
+      message = 'Some rule definitions are incomplete';
+    }
+
+    return {
+      key: 'rules',
+      title: 'Rules',
+      message,
+      warning,
+      error,
+    };
+  }
+
+  /**
+   * Validates the entire project, including settings and sequences. Returns a list of report items
+   * for groups of settings and each sequence.
+   *
+   * @returns {Array<Object>}
+   */
+  validate() {
+    const { data } = this;
+    const { sequences } = data;
+
+    return [
+      this.validatePresentationSettings(),
+      this.validateAdvancedSettings(),
+      ...Object.keys(sequences).map(sequenceId => sequences[sequenceId].validate()),
+    ];
   }
 }
 

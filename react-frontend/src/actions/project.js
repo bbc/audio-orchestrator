@@ -109,6 +109,12 @@ const loadSequences = projectId => (dispatch) => {
   dispatch({ type: 'SET_PROJECT_SEQUENCES_LIST', projectId, sequencesList });
 };
 
+export const validateProject = projectId => ({
+  type: 'SET_PROJECT_REVIEW_ITEMS',
+  projectId,
+  reviewItems: projects[projectId].validate(),
+});
+
 /**
  * Action creator, populates the state with info from the opened project and updates the UI.
  *
@@ -131,6 +137,9 @@ const openedProject = projectId => (dispatch) => {
 
   // Hide the loading indicator
   dispatch({ type: 'SET_PROJECT_LOADING', projectId, loading: false });
+
+  // TODO do this pretty much anywhere the project is updated
+  dispatch(validateProject(projectId));
 };
 
 /**
@@ -165,6 +174,8 @@ export const setFileProperties = (projectId, sequenceId, files) => (dispatch) =>
   });
 
   sequence.files = updatedFiles;
+
+  dispatch(validateProject(projectId));
 };
 
 const setFilesLoading = (projectId, sequenceId, loading, taskId) => ({
@@ -516,6 +527,8 @@ export const setProjectSetting = (projectId, key, value) => (dispatch) => {
   project.settings = newSettings;
 
   dispatch({ type: 'SET_PROJECT_SETTINGS', projectId, settings: newSettings });
+
+  dispatch(validateProject(projectId));
 };
 
 /**
@@ -528,7 +541,9 @@ export const setSequenceSetting = (projectId, sequenceId, key, value) => (dispat
   settings[key] = value;
 
   dispatch(loadSequences(projectId));
+  dispatch(validateProject(projectId));
 };
+
 const fileNameToObjectNumber = name => parseInt(name, 10) || null;
 
 /**
@@ -672,6 +687,7 @@ export const requestReplaceAllAudioFiles = (projectId, sequenceId) => (dispatch)
   }).then((files) => {
     dispatch(initialiseSequenceFiles(projectId, sequenceId, files));
     dispatch(confirmSequenceAudioReplaced('New audio files linked.'));
+    dispatch(validateProject(projectId));
   }).catch((e) => {
     dispatch(setSequenceAudioError('No valid files selected.'));
     console.error(e);
@@ -801,6 +817,7 @@ const initialiseSequenceObjects = (projectId, sequenceId, rawObjects) => (dispat
 
   // load objects into state.
   dispatch(loadSequenceObjects(projectId, sequenceId));
+  dispatch(validateProject(projectId));
 };
 
 /**
@@ -836,8 +853,10 @@ export const requestReplaceMetadata = (projectId, sequenceId) => (dispatch) => {
   }).then((objects) => {
     dispatch(initialiseSequenceObjects(projectId, sequenceId, objects));
     dispatch(confirmSequenceMetadataReplaced('New metadata loaded.'));
+    dispatch(validateProject(projectId));
   }).catch((e) => {
     dispatch(setSequenceMetadataError('No file selected or invalid format.'));
+    dispatch(validateProject(projectId));
     console.error(e);
   });
 };

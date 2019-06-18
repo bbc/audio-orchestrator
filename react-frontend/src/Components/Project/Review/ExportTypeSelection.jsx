@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Modal,
@@ -27,14 +28,24 @@ class ExportTypeSelection extends React.Component {
     const { open } = this.state;
     const {
       projectId,
-      requestExportAudio,
-      requestExportTemplate,
-      requestExportDistribution,
+      onExportAudio,
+      onExportTemplate,
+      onExportDistribution,
+      disabled,
     } = this.props;
 
     return (
       <Modal
-        trigger={<Button primary content="Export" labelPosition="right" icon="share" onClick={this.handleOpen} />}
+        trigger={(
+          <Button
+            primary
+            content="Export"
+            labelPosition="right"
+            icon="share"
+            onClick={this.handleOpen}
+            disabled={disabled}
+          />
+        )}
         open={open}
         onClose={this.handleClose}
         centered={false}
@@ -51,7 +62,7 @@ class ExportTypeSelection extends React.Component {
               </Header>
               <Button
                 content="Export audio only"
-                onClick={() => { requestExportAudio(projectId); this.handleClose(); }}
+                onClick={() => { onExportAudio(projectId); this.handleClose(); }}
                 primary
                 icon="download"
                 labelPosition="left"
@@ -65,7 +76,7 @@ class ExportTypeSelection extends React.Component {
               </Header>
               <Button
                 content="Export template code"
-                onClick={() => { requestExportTemplate(projectId); this.handleClose(); }}
+                onClick={() => { onExportTemplate(projectId); this.handleClose(); }}
                 primary
                 icon="download"
                 labelPosition="left"
@@ -79,7 +90,7 @@ class ExportTypeSelection extends React.Component {
               </Header>
               <Button
                 content="Export distribution"
-                onClick={() => { requestExportDistribution(projectId); this.handleClose(); }}
+                onClick={() => { onExportDistribution(projectId); this.handleClose(); }}
                 primary
                 icon="download"
                 labelPosition="left"
@@ -95,12 +106,24 @@ class ExportTypeSelection extends React.Component {
   }
 }
 
+ExportTypeSelection.propTypes = {
+  projectId: PropTypes.string.isRequired,
+  onExportAudio: PropTypes.func.isRequired,
+  onExportTemplate: PropTypes.func.isRequired,
+  onExportDistribution: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
+};
+
+ExportTypeSelection.defaultProps = {
+  disabled: false,
+};
+
 const mapStateToProps = () => ({ });
 
 const mapDispatchToProps = dispatch => ({
-  requestExportAudio: projectId => dispatch(requestExportAudio(projectId)),
-  requestExportTemplate: projectId => dispatch(requestExportTemplate(projectId)),
-  requestExportDistribution: projectId => dispatch(requestExportDistribution(projectId)),
+  onExportAudio: projectId => dispatch(requestExportAudio(projectId)),
+  onExportTemplate: projectId => dispatch(requestExportTemplate(projectId)),
+  onExportDistribution: projectId => dispatch(requestExportDistribution(projectId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExportTypeSelection);
