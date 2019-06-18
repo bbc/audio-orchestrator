@@ -1,9 +1,11 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Segment,
   Header,
   Form,
+  List,
 } from 'semantic-ui-react';
 import { setSequenceSetting } from '../../../actions/project';
 import NextChoices from './NextChoices';
@@ -24,14 +26,13 @@ class Settings extends React.Component {
       // loop implies skippable; because otherwise the loop will be unescapable.
       if (name === 'loop' && value === true) {
         onChangeSetting('skippable', true);
+        onChangeSetting('hold', false);
       }
     };
   }
 
   render() {
     const {
-      projectId,
-      sequenceId,
       loop,
       skippable,
       hold,
@@ -44,25 +45,44 @@ class Settings extends React.Component {
         <Header content="Behaviour" />
 
         <Form>
-          <Form.Checkbox
-            checked={loop}
-            label={`Loop: the sequence ${loop ? 'repeats until the user makes a choice' : 'does not repeat'}.`}
-            onChange={(e, { checked }) => this.handleChange('loop', checked)}
-          />
-
-          <Form.Checkbox
-            checked={skippable}
-            disabled={loop}
-            label={`Skippable: the choices are ${skippable ? 'always displayed' : 'displayed only when the sequence has ended'}.`}
-            onChange={(e, { checked }) => this.handleChange('skippable', checked)}
-          />
-
-          <Form.Checkbox
-            checked={hold}
-            disabled={loop}
-            label={`Hold: the player ${hold ? 'waits for the user to make a choice' : 'automatically moves on'} when the sequence ends.`}
-            onChange={(e, { checked }) => this.handleChange('hold', checked)}
-          />
+          <List relaxed>
+            <List.Item>
+              <List.Content as={Form.Field}>
+                <List.Header>
+                  <Form.Checkbox
+                    checked={loop}
+                    label="Loop"
+                    onChange={(e, { checked }) => this.handleChange('loop', checked)}
+                  />
+                </List.Header>
+                <List.Description content={`The sequence ${loop ? 'will repeat until the user makes a choice' : 'will not repeat'}.`} />
+              </List.Content>
+            </List.Item>
+            <List.Item>
+              <List.Content as={Form.Field} disabled={loop}>
+                <List.Header>
+                  <Form.Checkbox
+                    checked={skippable}
+                    label="Skippable"
+                    onChange={(e, { checked }) => this.handleChange('skippable', checked)}
+                  />
+                </List.Header>
+                <List.Description content={`The choices will ${skippable ? 'always be displayed' : 'only be shown when the sequence ends'}.`} />
+              </List.Content>
+            </List.Item>
+            <List.Item>
+              <List.Content as={Form.Field} disabled={loop}>
+                <List.Header>
+                  <Form.Checkbox
+                    checked={hold}
+                    label="Hold"
+                    onChange={(e, { checked }) => this.handleChange('hold', checked)}
+                  />
+                </List.Header>
+                <List.Description content={`The player will ${hold ? 'pause and wait for the user to make a choice' : 'automatically move on to the first choice'} when the sequence ends.`} />
+              </List.Content>
+            </List.Item>
+          </List>
         </Form>
 
         <Header content="Choices" />
@@ -75,6 +95,25 @@ class Settings extends React.Component {
     );
   }
 }
+
+Settings.propTypes = {
+// projectId: PropTypes.string.isRequired,
+// sequenceId: PropTypes.string.isRequired,
+  loop: PropTypes.bool.isRequired,
+  skippable: PropTypes.bool.isRequired,
+  hold: PropTypes.bool.isRequired,
+  next: PropTypes.arrayOf(PropTypes.shape({
+    choiceId: PropTypes.string,
+    sequenceId: PropTypes.string,
+    label: PropTypes.string,
+  })).isRequired,
+  sequencesList: PropTypes.arrayOf(PropTypes.shape({
+    isIntro: PropTypes.bool,
+    name: PropTypes.string.isRequired,
+    sequenceId: PropTypes.string.isRequired,
+  })).isRequired,
+  onChangeSetting: PropTypes.func.isRequired,
+};
 
 const mapStateToProps = (state, { projectId, sequenceId }) => {
   const { sequences, sequencesList } = state.Project.projects[projectId];

@@ -79,8 +79,11 @@ class Home extends React.Component {
               <Header icon>
                 <Icon name="file outline" />
                 Start a new project
+                <Header.Subheader>
+                  A project describes an orchestrated audio prototype with one or more sequences.
+                </Header.Subheader>
               </Header>
-              <Button primary content="Create" labelPosition="left" icon="file outline" onClick={onCreateProject} />
+              <Button primary content="Create" labelPosition="left" icon="plus" onClick={onCreateProject} />
             </Grid.Column>
           </Grid>
         </Segment>

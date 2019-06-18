@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Card,
-  Button,
 } from 'semantic-ui-react';
 import SequenceItem from './SequenceItem';
 
@@ -12,13 +11,11 @@ import {
 } from '../../actions/ui';
 
 import {
-  requestAddSequence,
   requestDeleteSequence,
 } from '../../actions/project';
 
 const SequencesList = ({
   sequencesList,
-  onAddSequence,
   onOpenSequence,
   onDeleteSequence,
 }) => (
@@ -37,21 +34,11 @@ const SequencesList = ({
         isIntro={isIntro}
       />
     ))}
-    <Card>
-      <Card.Content>
-        <Card.Header>Add Sequence</Card.Header>
-        <Card.Meta content="Additional sequences can be created but will require custom development and are not supported for previewing in this app." />
-      </Card.Content>
-      <Card.Content extra textAlign="right">
-        <Button icon="plus" content="Add" onClick={onAddSequence} />
-      </Card.Content>
-    </Card>
   </Card.Group>
 );
 
 SequencesList.propTypes = {
   sequencesList: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onAddSequence: PropTypes.func.isRequired,
   onOpenSequence: PropTypes.func.isRequired,
   onDeleteSequence: PropTypes.func.isRequired,
 };
@@ -68,7 +55,6 @@ const mapStateToProps = (state, { projectId }) => {
 
 const mapDispatchToProps = (dispatch, { projectId }) => ({
   onOpenSequence: sequenceId => dispatch(openSequencePage(projectId, sequenceId)),
-  onAddSequence: () => dispatch(requestAddSequence(projectId)),
   onDeleteSequence: sequenceId => dispatch(requestDeleteSequence(projectId, sequenceId)),
 });
 

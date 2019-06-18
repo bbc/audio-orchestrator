@@ -37,7 +37,7 @@ const Audio = ({
             There should be one continuous mono WAV file for each object.
           </Header.Subheader>
         </Header>
-        <Button primary icon="linkify" content="Link audio files" labelPosition="left" onClick={onReplaceAll} />
+        <Button primary icon="linkify" content="Link audio files" onClick={onReplaceAll} />
         { sequenceAudioError
           ? (
             <div>
@@ -58,22 +58,17 @@ const Audio = ({
           : <Loader inline="centered" content={`Checking Audio Files (${loadingCompleted}/${loadingTotal})`} />
         }
       </Dimmer>
-      <Table>
+      <Table collapsing>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>File</Table.HeaderCell>
-            <Table.HeaderCell>Channels</Table.HeaderCell>
-            <Table.HeaderCell>Channel Configuration</Table.HeaderCell>
-            <Table.HeaderCell>Sample Rate</Table.HeaderCell>
-            <Table.HeaderCell>Duration</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {loading ? null : filesList.map(({ name, fileId, channelConfiguration }) => (
+          {loading ? null : filesList.map(({ name, fileId }) => (
             <AudioFileRow
               key={fileId}
               name={name}
-              channelConfiguration={channelConfiguration}
               projectId={projectId}
               sequenceId={sequenceId}
               fileId={fileId}
@@ -81,23 +76,20 @@ const Audio = ({
           ))}
         </Table.Body>
       </Table>
-      <Button negative icon="refresh" content="Replace audio files" onClick={onReplaceAll} />
-      { sequenceAudioError
-        ? (
-          <div>
-            <Label pointing="above" basic color="red" content={sequenceAudioError} />
-          </div>
-        )
-        : null
-      }
-      { sequenceAudioConfirmation
-        ? (
-          <div>
-            <Label pointing="above" basic color="green" content={sequenceAudioConfirmation} icon="checkmark" />
-          </div>
-        )
-        : null
-      }
+      <Button
+        primary
+        icon="linkify"
+        content="Replace audio files"
+        onClick={onReplaceAll}
+        label={(sequenceAudioError || sequenceAudioConfirmation) ? {
+          as: 'a',
+          basic: true,
+          color: sequenceAudioError ? 'red' : 'green',
+          content: sequenceAudioError || sequenceAudioConfirmation,
+          pointing: 'left',
+          icon: sequenceAudioError ? '' : 'checkmark',
+        } : null}
+      />
     </Segment>
   );
 };

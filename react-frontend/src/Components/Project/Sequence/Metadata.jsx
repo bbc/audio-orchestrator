@@ -31,7 +31,7 @@ const Metadata = ({
             {'The metadata file should have an entry for every object, where the object number corresponds to an audio file.'}
           </Header.Subheader>
         </Header>
-        <Button primary icon="folder open" content="Load metadata file" labelPosition="left" onClick={onReplaceMetadata} />
+        <Button primary icon="folder open" content="Load metadata file" onClick={onReplaceMetadata} />
         { sequenceMetadataError
           ? (
             <div>
@@ -66,7 +66,7 @@ const Metadata = ({
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>#</Table.HeaderCell>
-            <Table.HeaderCell>Label</Table.HeaderCell>
+            <Table.HeaderCell>Object Label</Table.HeaderCell>
             <Table.HeaderCell>Matching audio file</Table.HeaderCell>
             <Table.HeaderCell>Channel mapping</Table.HeaderCell>
           </Table.Row>
@@ -90,34 +90,25 @@ const Metadata = ({
                   </Table.Cell>
                 )
               }
-              <Table.Cell>{channelMapping}</Table.Cell>
+              <Table.Cell>{channelMapping === 'mono' ? 'centre' : channelMapping}</Table.Cell>
             </Table.Row>
           ))}
         </Table.Body>
       </Table>
       <Button
-        negative
-        icon="refresh"
-        labelPosition="left"
+        primary
+        icon="folder open"
         content="Replace metadata file"
         onClick={onReplaceMetadata}
+        label={(sequenceMetadataError || sequenceMetadataConfirmation) ? {
+          as: 'a',
+          basic: true,
+          color: sequenceMetadataError ? 'red' : 'green',
+          content: sequenceMetadataError || sequenceMetadataConfirmation,
+          pointing: 'left',
+          icon: sequenceMetadataError ? '' : 'checkmark',
+        } : null}
       />
-      { sequenceMetadataError
-        ? (
-          <div>
-            <Label pointing="above" basic color="red" content={sequenceMetadataError} />
-          </div>
-        )
-        : null
-      }
-      { sequenceMetadataConfirmation
-        ? (
-          <div>
-            <Label pointing="above" basic color="green" content={sequenceMetadataConfirmation} icon="checkmark" />
-          </div>
-        )
-        : null
-      }
     </Segment>
   );
 };

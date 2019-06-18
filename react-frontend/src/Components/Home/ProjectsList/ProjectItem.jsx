@@ -3,29 +3,27 @@ import React from 'react';
 import { connect } from 'react-redux';
 import {
   Card,
-  Container,
   Button,
-  Progress,
-  Icon,
 } from 'semantic-ui-react';
-
-import { requestOpenProject } from '../../../actions/project';
+import ConfirmDeleteButton from '../../ConfirmDeleteButton';
+import {
+  requestOpenProject,
+  requestDeleteProject,
+} from '../../../actions/project';
 
 const ProjectItem = ({
   projectId,
   name,
-  lastOpened,
   onOpen,
+  onDelete,
 }) => (
-  <Card color="orange" onClick={onOpen}>
+  <Card color="orange">
     <Card.Content>
       <Card.Header content={name} />
-      <Card.Meta content={`Last opened ${lastOpened}`} />
     </Card.Content>
     <Card.Content extra textAlign="right">
-      <Button.Group>
-        <Button icon="edit" labelPosition="left" content="Open" onClick={onOpen} />
-      </Button.Group>
+      <ConfirmDeleteButton header="Delete Project" name={name} onDelete={onDelete} />
+      <Button icon="edit" labelPosition="left" content="Open" onClick={onOpen} color="orange" />
     </Card.Content>
   </Card>
 );
@@ -37,6 +35,7 @@ const ProjectItem = ({
 //    <Progress percent={74} attached="bottom" color="green" />
 const mapDispatchToProps = (dispatch, { projectId }) => ({
   onOpen: () => dispatch(requestOpenProject(projectId)),
+  onDelete: () => dispatch(requestDeleteProject(projectId)),
 });
 
 export default connect(null, mapDispatchToProps)(ProjectItem);

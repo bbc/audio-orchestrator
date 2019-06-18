@@ -4,7 +4,7 @@ import {
   Card,
   Button,
 } from 'semantic-ui-react';
-import ConfirmSequenceDeleteButton from './ConfirmSequenceDeleteButton';
+import ConfirmDeleteButton from '../ConfirmDeleteButton';
 
 const SequenceItem = ({
   name,
@@ -21,13 +21,19 @@ const SequenceItem = ({
     <Card.Content extra textAlign="right">
       { isIntro
         ? <Button disabled icon="trash" />
-        : <ConfirmSequenceDeleteButton name={name} sequenceId={sequenceId} onDelete={onDelete} />
+        : (
+          <ConfirmDeleteButton
+            header="Delete Sequence"
+            name={name}
+            onDelete={() => onDelete(sequenceId)}
+          />
+        )
       }
       <Button
-        primary
         icon="edit"
         labelPosition="left"
-        content="Edit"
+        content="Open"
+        color="green"
         onClick={() => {
           onOpen(sequenceId);
         }}

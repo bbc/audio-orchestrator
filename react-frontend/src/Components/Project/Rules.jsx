@@ -9,6 +9,7 @@ import {
   Input,
   Button,
 } from 'semantic-ui-react';
+import ConfirmDeleteButton from '../ConfirmDeleteButton';
 import {
   setProjectSetting,
 } from '../../actions/project';
@@ -59,7 +60,7 @@ class Rules extends React.Component {
 
     return (
       <Container>
-        <Message icon="lightbulb outline" header="Rendering Rules" content="You can customise the zones used for allocating objects to devices; these must match the metadata fields in all sequences." />
+        <Message icon="lightbulb outline" header="Loudspeaker Tags" content="You can customise the tags used for allocating objects to devices; these must match the metadata fields in all sequences. Delete all custom tags to use the standard locations." />
 
         <Table collapsing>
           <Table.Header>
@@ -87,14 +88,18 @@ class Rules extends React.Component {
                   />
                 </Table.Cell>
                 <Table.Cell>
-                  <Button negative icon="delete" onClick={() => this.handleDeleteZone(zoneId)} />
+                  <ConfirmDeleteButton
+                    header="Delete Tag"
+                    name={friendlyName || name}
+                    onDelete={() => this.handleDeleteZone(zoneId)}
+                  />
                 </Table.Cell>
               </Table.Row>
             ))}
           </Table.Body>
         </Table>
         <p>
-          <Button content="Add zone" onClick={this.handleAddZone} icon="plus" labelPosition="left" />
+          <Button primary content="Add tag" onClick={this.handleAddZone} icon="plus" labelPosition="left" />
         </p>
       </Container>
     );

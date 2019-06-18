@@ -14,8 +14,8 @@ const ProjectsList = ({
 }) => (
   <Card.Group stackable itemsPerRow={3}>
     <Loader active={loading} inline="centered" />
-    {projects.map(({ projectId, name, lastOpened }) => (
-      <ProjectItem key={projectId} projectId={projectId} name={name} lastOpened={lastOpened} />
+    {projects.map(({ projectId, name }) => (
+      <ProjectItem key={projectId} projectId={projectId} name={name} />
     ))}
   </Card.Group>
 );

@@ -5,7 +5,7 @@ import {
   Modal,
 } from 'semantic-ui-react';
 
-class ConfirmSequenceDeleteButton extends React.Component {
+class ConfirmDeleteButton extends React.Component {
   constructor(props) {
     super(props);
 
@@ -22,8 +22,9 @@ class ConfirmSequenceDeleteButton extends React.Component {
 
   render() {
     const {
+      header,
       name,
-      sequenceId,
+      content,
       onDelete,
     } = this.props;
 
@@ -32,16 +33,16 @@ class ConfirmSequenceDeleteButton extends React.Component {
     return (
       <Modal
         closeIcon
-        trigger={<Button negative icon="trash" />}
+        trigger={<Button negative icon="trash" content={content} />}
         open={open}
         onOpen={() => this.handleOpen()}
         onClose={() => this.handleClose()}
       >
-        <Modal.Header content="Delete Sequence" />
+        <Modal.Header content={header} />
         <Modal.Content>
-          {'You are about to delete the '}
+          {'You are about to delete '}
           <b>{name}</b>
-          {' sequence. This action cannot be reversed.'}
+          {'. Are you sure?'}
         </Modal.Content>
         <Modal.Actions>
           <Button
@@ -54,7 +55,7 @@ class ConfirmSequenceDeleteButton extends React.Component {
             icon="trash"
             labelPosition="left"
             onClick={() => {
-              onDelete(sequenceId);
+              onDelete();
               this.handleClose();
             }}
           />
@@ -64,10 +65,16 @@ class ConfirmSequenceDeleteButton extends React.Component {
   }
 }
 
-ConfirmSequenceDeleteButton.propTypes = {
-  name: PropTypes.string.isRequired,
-  sequenceId: PropTypes.string.isRequired,
+ConfirmDeleteButton.propTypes = {
+  header: PropTypes.string.isRequired,
+  name: PropTypes.string,
   onDelete: PropTypes.func.isRequired,
+  content: PropTypes.string,
 };
 
-export default ConfirmSequenceDeleteButton;
+ConfirmDeleteButton.defaultProps = {
+  content: null,
+  name: 'untitled',
+};
+
+export default ConfirmDeleteButton;

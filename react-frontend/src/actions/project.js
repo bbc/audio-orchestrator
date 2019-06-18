@@ -452,22 +452,14 @@ export const requestCreateProject = () => (dispatch) => {
       projects[projectId] = project;
 
       // create the standard sequences
-      const introSequence = project.addSequence({ name: 'Intro Loop', isIntro: true });
-      const mainSequence = project.addSequence({ name: 'Main Story' });
+      const introSequence = project.addSequence({ name: 'Initial Sequence', isIntro: true });
 
       // link the standard sequences together:
       // the intro points to the main sequence, and can be skipped; and
       // the main sequence links back to itself, holds at the end, and cannot be skipped.
       introSequence.settings.next = [
         {
-          sequenceId: mainSequence.sequenceId,
-          label: 'Continue',
-        },
-      ];
-
-      mainSequence.settings.next = [
-        {
-          sequenceId: mainSequence.sequenceId,
+          sequenceId: introSequence.sequenceId,
           label: 'Listen Again',
         },
       ];
@@ -487,6 +479,7 @@ export const requestAddSequence = projectId => (dispatch) => {
   const project = projects[projectId];
   project.addSequence();
   dispatch(loadSequences(projectId));
+  dispatch(validateProject(projectId));
 };
 
 /**
@@ -496,6 +489,15 @@ export const requestDeleteSequence = (projectId, sequenceId) => (dispatch) => {
   const project = projects[projectId];
   project.deleteSequence(sequenceId);
   dispatch(loadSequences(projectId));
+  dispatch(validateProject(projectId));
+};
+
+/**
+ * Action creator, deletes a project.
+ */
+export const requestDeleteProject = (projectId) => (dispatch) => {
+  // const project = projects[projectId];
+  console.warn('project deletion is not implemented');
 };
 
 /**

@@ -8,7 +8,7 @@ import {
 } from 'semantic-ui-react';
 import Audio from './Audio';
 import Metadata from './Metadata';
-import Images from './Images';
+// import Images from './Images';
 import Settings from './Settings';
 import EditableMenuHeader from '../EditableMenuHeader';
 import { setSequenceSetting } from '../../../actions/project';
@@ -16,7 +16,7 @@ import { setSequenceSetting } from '../../../actions/project';
 import {
   PAGE_SEQUENCE_AUDIO,
   PAGE_SEQUENCE_METADATA,
-  PAGE_SEQUENCE_IMAGES,
+  // PAGE_SEQUENCE_IMAGES,
   PAGE_SEQUENCE_SETTINGS,
 } from '../../../reducers/UIReducer';
 
@@ -42,9 +42,9 @@ const Sequence = ({
     case PAGE_SEQUENCE_METADATA:
       CurrentStep = Metadata;
       break;
-    case PAGE_SEQUENCE_IMAGES:
-      CurrentStep = Images;
-      break;
+    // case PAGE_SEQUENCE_IMAGES:
+    //   CurrentStep = Images;
+    //   break;
     case PAGE_SEQUENCE_SETTINGS:
       CurrentStep = Settings;
       break;
@@ -59,7 +59,7 @@ const Sequence = ({
         <Menu.Item position="right" icon="close" content="close" onClick={onCloseSequence} />
       </Menu>
 
-      <Step.Group widths={4} attached="top">
+      <Step.Group widths={3} attached="top">
         <Step
           link
           active={currentSequencePage === PAGE_SEQUENCE_AUDIO}
@@ -77,13 +77,6 @@ const Sequence = ({
           onClick={() => onOpenSequencePage(PAGE_SEQUENCE_METADATA)}
         />
         <Step
-          active={currentSequencePage === PAGE_SEQUENCE_IMAGES}
-          icon="file image outline"
-          title="Images"
-          description="Add artwork images"
-          onClick={() => onOpenSequencePage(PAGE_SEQUENCE_IMAGES)}
-        />
-        <Step
           active={currentSequencePage === PAGE_SEQUENCE_SETTINGS}
           icon="cog"
           title="Settings"
@@ -95,6 +88,14 @@ const Sequence = ({
     </Container>
   );
 };
+
+// <Step
+//   active={currentSequencePage === PAGE_SEQUENCE_IMAGES}
+//   icon="file image outline"
+//   title="Images"
+//   description="Add artwork images"
+//   onClick={() => onOpenSequencePage(PAGE_SEQUENCE_IMAGES)}
+// />
 
 Sequence.propTypes = {
   projectId: PropTypes.string.isRequired,

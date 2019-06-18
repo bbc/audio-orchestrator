@@ -6,6 +6,7 @@ import {
   Form,
   Table,
 } from 'semantic-ui-react';
+import ConfirmDeleteButton from '../../ConfirmDeleteButton';
 
 class NextChoices extends React.Component {
   constructor(props) {
@@ -123,13 +124,10 @@ class NextChoices extends React.Component {
                   />
                 </Table.Cell>
                 <Table.Cell>
-                  <Form.Button
-                    type="button"
-                    negative
-                    icon="trash"
-                    labelPosition="left"
-                    content="Delete"
-                    onClick={() => this.handleDeleteChoice(choiceId)}
+                  <ConfirmDeleteButton
+                    header="Delete Choice"
+                    name={label}
+                    onDelete={() => this.handleDeleteChoice(choiceId)}
                   />
                 </Table.Cell>
               </Table.Row>
