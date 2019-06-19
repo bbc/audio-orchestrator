@@ -65,9 +65,6 @@ function createWindow() {
   } else {
     // load the webpack-generated user interface index.html
     win.loadFile('node_modules/bbcat-orchestration-builder-react-frontend/dist/index.html');
-
-    // TODO: Disable DevTools when app is more stable.
-    win.webContents.openDevTools();
   }
 
   // Emitted when the window is closed.
