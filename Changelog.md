@@ -3,6 +3,17 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.4.2`
+_2019-06-19_
+
+* New feature: Projects and sequences can now be deleted.
+* New feature: Presentation settings are now applied to the compiled template and preview.
+* New feature: Success of replacing audio files or metadata is now indicated next to the buttons.
+* Change: New projects are now created with only one sequence.
+* Change: Various UI elements have been tweaked.
+* Change: The Export buttons are disabled if there are errors in any sequence.
+* Bugfix: The review buttons now link to the relevant sequence or project settings page.
+
 # `0.3.0`
 _2019-06-11_
 

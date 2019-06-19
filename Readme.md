@@ -18,15 +18,13 @@ Export the orchestration metadata file from the S3A plugins. _TODO: Exporting is
 
 ### 2. Create a project and import audio and metadata
 
-Open the _Orchestration Builder_ app and create a new project. You can edit its name by clicking it (_Untitled Project_) in the top left corner.
+Open the _Orchestration Builder_ app and create a new project. You can edit its name by clicking it in the top left corner.
 
-In the _Sequences_ tab, open the _Main_ sequence. The _Intro Loop_ sequence can be ignored initially.
+In the _Sequences_ tab, open the _Initial Sequence_.
 
 In the _Audio_ section, link audio files (selecting all the exported files from the previous step).
 
 In the _Metadata_ section, import the metadata file.
-
-NB: The _Images_ section is not yet implemented and can be ignored.
 
 ### 3. Wait for encoding to finish and start a preview
 
