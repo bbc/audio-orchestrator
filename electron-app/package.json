@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-electron-app",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Electron desktop application for generating orchestrated audio applications.",
   "main": "dist/main.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
@@ -8,10 +8,10 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "bbcat-orchestration-builder-logging": "^0.4.2",
-    "bbcat-orchestration-builder-analyse-server": "^0.4.2",
-    "bbcat-orchestration-builder-export-server": "^0.4.2",
-    "bbcat-orchestration-builder-react-frontend": "^0.4.2",
+    "bbcat-orchestration-builder-logging": "^0.4.3",
+    "bbcat-orchestration-builder-analyse-server": "^0.4.3",
+    "bbcat-orchestration-builder-export-server": "^0.4.3",
+    "bbcat-orchestration-builder-react-frontend": "^0.4.3",
     "electron": "^4.1.1",
     "electron-devtools-installer": "^2.2.4",
     "electron-store": "^3.0.0",

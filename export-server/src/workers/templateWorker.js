@@ -139,7 +139,7 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
             .map((line) => {
               const variable = variables.find(({ name }) => line.startsWith(`${name}:`));
               // only replace if value is set and is a colour
-              if (variable && !variable.value.match(/^#[0-9a-fA-F]$/)) {
+              if (variable && variable.value && !variable.value.match(/^#[0-9a-fA-F]$/)) {
                 return `${variable.name}: ${variable.value};`;
               }
               return line;

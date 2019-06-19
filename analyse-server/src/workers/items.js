@@ -53,7 +53,7 @@ const processItems = (filePath) => {
           stderr.split('\n').forEach((data) => {
             const match = `${data}`.match(silenceExpression);
 
-            if (match) {
+            if (match && match.groups) {
               const { end, duration } = match.groups;
 
               if (!!end && !!duration) {
