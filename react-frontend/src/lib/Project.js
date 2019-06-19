@@ -202,6 +202,25 @@ class Project {
   }
 
   /**
+   * Deletes the entire project and all sequences within it
+   */
+  delete() {
+    const { data, store } = this;
+    const { sequences } = data;
+
+    // delete all sequences
+    Object.keys(sequences).forEach(sequenceId => this.deleteSequence(sequenceId));
+
+    // delete project keys from the store
+    store.delete('name');
+    store.delete('lastOpened');
+    store.delete('settings');
+    store.delete('sequenceIds');
+
+    // NOTE: to fully delete a project it needs to be removed from the ProjectStore and state, too.
+  }
+
+  /**
    * Selects which sequences to include in an export, and returns them in the export format as
    * a list of plain objects.
    *

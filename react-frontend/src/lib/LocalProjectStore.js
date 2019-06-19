@@ -104,6 +104,14 @@ class LocalProjectStore {
     );
   }
 
+  /**
+   * Deletes the project entries from the store and projects list.
+   */
+  static deleteProject(projectId) {
+    const projectIds = JSON.parse(Storage.getItem('projectIds')) || [];
+    Storage.setItem('projectIds', JSON.stringify(projectIds.filter(p => p !== projectId)));
+  }
+
   static canOpenUnlisted() {
     return false;
   }

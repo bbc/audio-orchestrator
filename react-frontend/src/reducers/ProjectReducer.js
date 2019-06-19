@@ -194,6 +194,15 @@ const ProjectReducer = (state = initialState, action) => {
       );
     case 'SET_PROJECT_SEQUENCE_FILE_PROPERTIES':
       return updateFiles(state, action.projectId, action.sequenceId, action.files);
+    case 'DELETE_PROJECT':
+      return {
+        ...state,
+        projects: {
+          ...state.projects,
+          [action.projectId]: null,
+        },
+        projectsList: state.projectsList.filter(({ projectId }) => projectId !== action.projectId),
+      };
     default:
       return state;
   }

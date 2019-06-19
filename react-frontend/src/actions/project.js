@@ -493,11 +493,33 @@ export const requestDeleteSequence = (projectId, sequenceId) => (dispatch) => {
 };
 
 /**
+ * Delete the project from the state.
+ */
+const deleteProject = projectId => ({
+  type: 'PROJECT_DELETE_PROJECT',
+  projectId,
+});
+
+/**
  * Action creator, deletes a project.
  */
-export const requestDeleteProject = (projectId) => (dispatch) => {
-  // const project = projects[projectId];
-  console.warn('project deletion is not implemented');
+export const requestDeleteProject = projectId => (dispatch) => {
+  // Have to open the project first to create the Project object, because this action is triggered
+  // from outside the project page.
+  ProjectStore.openProject(projectId)
+    .then((store) => {
+      const project = new Project(store);
+      project.delete();
+    })
+    .then(() => {
+      delete projects[projectId];
+      ProjectStore.deleteProject(projectId);
+    })
+    .then(() => {
+      dispatch(deleteProject());
+      dispatch(closeProjectPage());
+      dispatch(requestListProjects());
+    });
 };
 
 /**
