@@ -300,17 +300,45 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
     })
     .then((probeResults) => {
       // update error messages and probe information
+      // Augment probe results with error message and unset success flag if additional tests fail.
+      const firstProbe = (probeResults[0] || {}).probe;
+      const augmentedProbeResults = probeResults.map((result) => {
+        const { probe, success } = result;
+
+        let error = success ? null : 'Analysis failed, file may not contain an audio stream.';
+
+        // if the probe worked, compare against the first file duration and required sampleRate.
+        if (success && !error && firstProbe) {
+          if (probe.duration !== firstProbe.duration) {
+            error = 'All audio files must have the same duration.';
+          } else if (probe.sampleRate !== 48000) {
+            error = 'All audio files must have the project sample rate (48000 Hz).';
+          }
+        }
+
+        return ({
+          ...result,
+          error,
+          success: error ? false : success,
+        });
+      });
+
       dispatch(setFileProperties(
         projectId, sequenceId,
-        probeResults.map(({ success, fileId, probe }) => ({
+        augmentedProbeResults.map(({
+          success,
           fileId,
-          error: success ? null : 'Analysis failed, file may not contain an audio stream.',
+          probe,
+          error,
+        }) => ({
+          fileId,
+          error,
           probe: success ? probe : null,
         })),
       ));
 
       // Pass on a list of successfully probed fileIds
-      return probeResults
+      return augmentedProbeResults
         .filter(({ success }) => success)
         .map(({ fileId }) => fileId);
     })

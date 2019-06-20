@@ -231,6 +231,7 @@ class Sequence {
       objectsList,
       objects,
       filesList,
+      files,
       settings,
     } = this;
 
@@ -246,7 +247,7 @@ class Sequence {
     const numFilesAdded = filesList.length;
     const numObjectsAdded = objectsList.length || 0;
     const allObjectsHaveFiles = objectsList.every(({ objectNumber }) => !!objects[objectNumber].fileId);
-    const allFilesAreGood = filesList.every(file => !file.error);
+    const allFilesAreGood = filesList.every(({ fileId }) => !files[fileId].error);
 
     if (numFilesAdded === 0) {
       message = 'No audio files have been added.';
