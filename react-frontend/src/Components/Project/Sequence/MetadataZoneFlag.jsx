@@ -16,21 +16,21 @@ const color = (level) => {
   if (level in levels) {
     return levels[level].color;
   }
-  return null;
+  return 'red';
 };
 
 const description = (level) => {
   if (level in levels) {
     return levels[level].description;
   }
-  return 'has an invalid value set for this tag; it may still be';
+  return 'has no value set for this tag; it may still be';
 };
 
 const icon = (level) => {
   if (level in levels) {
     return levels[level].icon;
   }
-  return 'exclamation';
+  return 'question circle';
 };
 
 const MetadataZoneFlag = ({
@@ -51,8 +51,12 @@ const MetadataZoneFlag = ({
 );
 
 MetadataZoneFlag.propTypes = ({
-  value: PropTypes.number.isRequired,
+  value: PropTypes.number,
   name: PropTypes.string.isRequired,
+});
+
+MetadataZoneFlag.defaultProps = ({
+  value: null,
 });
 
 export default MetadataZoneFlag;

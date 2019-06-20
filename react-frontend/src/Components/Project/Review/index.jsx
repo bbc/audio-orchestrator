@@ -58,7 +58,7 @@ const Review = ({
             <SettingsCheck
               {...item}
               projectId={projectId}
-              onReview={() => onOpenSequencePage(projectId, item.sequenceId, item.sequencePage)}
+              onReview={() => onOpenSequencePage(projectId, item.sequenceId)}
             />
           ))
         }
@@ -103,7 +103,6 @@ Review.propTypes = {
     warning: PropTypes.bool,
     sequenceId: PropTypes.string,
     projectPage: PropTypes.string,
-    sequencePage: PropTypes.string,
   })).isRequired,
   onStartPreview: PropTypes.func.isRequired,
   canExport: PropTypes.bool,
@@ -133,8 +132,8 @@ const mapStateToProps = ({ Project }, { projectId }) => {
 
 const mapDispatchToProps = dispatch => ({
   onStartPreview: projectId => dispatch(requestStartPreview(projectId)),
-  onOpenSequencePage: (projectId, sequenceId, sequencePage) => {
-    dispatch(openSequencePage(projectId, sequenceId, sequencePage));
+  onOpenSequencePage: (projectId, sequenceId) => {
+    dispatch(openSequencePage(projectId, sequenceId));
   },
   onOpenProjectPage: (projectId, projectPage) => {
     dispatch(openProjectPage(projectId, projectPage));

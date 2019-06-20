@@ -9,19 +9,12 @@ export const PAGE_PROJECT_PRESENTATION = 'presentation';
 export const PAGE_PROJECT_ADVANCED = 'advanced';
 export const PAGE_PROJECT_REVIEW = 'review';
 
-// Third level, within the PAGE_PROJECT_SEQUENCES, if a currentSequenceId is set:
-export const PAGE_SEQUENCE_AUDIO = 'audio';
-export const PAGE_SEQUENCE_METADATA = 'metadata';
-export const PAGE_SEQUENCE_IMAGES = 'images';
-export const PAGE_SEQUENCE_SETTINGS = 'settings';
-
 // Initial state, home page without an open project or sequence opened.
 const initialState = {
   currentPage: PAGE_HOME,
   currentProjectId: null,
   currentProjectPage: PAGE_PROJECT_SEQUENCES,
   currentSequenceId: null,
-  currentSequencePage: PAGE_SEQUENCE_AUDIO,
   tasks: {},
   sequenceAudioConfirmation: null,
   sequenceAudioError: null,
@@ -53,7 +46,6 @@ const UIReducer = (state = initialState, action) => {
         currentProjectPage: PAGE_PROJECT_SEQUENCES,
         currentProjectId: action.projectId,
         currentSequenceId: action.sequenceId,
-        currentSequencePage: action.sequencePage || PAGE_SEQUENCE_AUDIO,
         sequenceAudioConfirmation: null,
         sequenceAudioError: null,
         sequenceMetadataConfirmation: null,

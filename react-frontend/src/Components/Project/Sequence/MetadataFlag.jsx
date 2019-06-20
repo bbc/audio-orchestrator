@@ -24,9 +24,13 @@ const MetadataFlag = ({
 );
 
 MetadataFlag.propTypes = ({
-  value: PropTypes.number.isRequired,
+  value: PropTypes.number,
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
+});
+
+MetadataFlag.defaultProps = ({
+  value: null,
 });
 
 export default MetadataFlag;

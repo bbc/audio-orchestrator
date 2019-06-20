@@ -41,7 +41,7 @@ class Settings extends React.Component {
     } = this.props;
 
     return (
-      <Segment attached>
+      <Segment>
         <Header content="Behaviour" />
 
         <Form>

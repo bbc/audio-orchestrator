@@ -3,6 +3,14 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.5.0`
+_1019-06-20_
+
+* New feature: Indicators of object metadata fields are now shown in metadata table, redundant file information has been removed.
+* Change: Audio, Metadata, and Settings page for sequences have been combined into a single page.
+* Caveat: Developer tools are now disabled in production builds, and cannot easily be brought back.
+* Bugfix: Avoid errors during export when the accentColour has not been selected.
+
 # `0.4.2`
 _2019-06-19_
 

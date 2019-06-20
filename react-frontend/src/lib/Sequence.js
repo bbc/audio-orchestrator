@@ -1,9 +1,3 @@
-import {
-  PAGE_SEQUENCE_AUDIO,
-  PAGE_SEQUENCE_METADATA,
-  PAGE_SEQUENCE_SETTINGS,
-} from '../reducers/UIReducer';
-
 class SequenceSettings {
   constructor(store, sequenceId) {
     this.data = {};
@@ -237,7 +231,6 @@ class Sequence {
       objectsList,
       objects,
       filesList,
-      files,
       settings,
     } = this;
 
@@ -247,7 +240,6 @@ class Sequence {
     } = settings;
 
     let message = null;
-    let sequencePage = null;
     let error = false;
     let warning = false;
 
@@ -259,26 +251,21 @@ class Sequence {
     if (numFilesAdded === 0) {
       message = 'No audio files have been added.';
       error = true;
-      sequencePage = PAGE_SEQUENCE_AUDIO;
     } else if (numObjectsAdded === 0) {
       message = 'No metadata file has been added.';
       error = true;
-      sequencePage = PAGE_SEQUENCE_METADATA;
     } else if (!allObjectsHaveFiles) {
       message = 'Not all objects in the metadata have been matched to audio files.';
       error = true;
-      sequencePage = PAGE_SEQUENCE_METADATA;
     } else if (!allFilesAreGood) {
       message = 'Some audio files have errors.';
       error = true;
-      sequencePage = PAGE_SEQUENCE_AUDIO;
     }
 
     if (!error) {
       if (!next || next.length === 0) {
         message = 'No links to other sequences have been added.';
         warning = true;
-        sequencePage = PAGE_SEQUENCE_SETTINGS;
       }
     }
 
@@ -289,7 +276,6 @@ class Sequence {
       warning,
       error,
       sequenceId,
-      sequencePage,
     };
   }
 }

@@ -2,13 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Table,
-  Label,
   Icon,
 } from 'semantic-ui-react';
 import MetadataFlag from './MetadataFlag';
 import MetadataZoneFlag from './MetadataZoneFlag';
 
-const MetadataRow = ({
+const ObjectRow = ({
   objectNumber,
   channelMapping,
   label,
@@ -28,18 +27,20 @@ const MetadataRow = ({
   } = orchestration;
 
   return (
-    <Table.Row negative={!file}>
+    <Table.Row negative={!file || !!file.error}>
       <Table.Cell>{objectNumber}</Table.Cell>
       <Table.Cell>{label}</Table.Cell>
+
       { file
         ? <Table.Cell>{file.name}</Table.Cell>
         : (
           <Table.Cell>
             <Icon name="exclamation" />
-            No audio file name matches the object number.
+            No audio file matches the object number.
           </Table.Cell>
         )
       }
+
       <Table.Cell>{channelMapping === 'mono' ? 'centre' : channelMapping}</Table.Cell>
 
       <Table.Cell>
@@ -85,7 +86,7 @@ const MetadataRow = ({
 };
 
 
-MetadataRow.propTypes = {
+ObjectRow.propTypes = {
   objectNumber: PropTypes.number.isRequired,
   channelMapping: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
@@ -109,9 +110,10 @@ MetadataRow.propTypes = {
   })),
 };
 
-MetadataRow.defaultProps = {
+ObjectRow.defaultProps = {
   file: null,
   zones: [],
+  orchestration: {}
 };
 
-export default MetadataRow;
+export default ObjectRow;

@@ -1,6 +1,5 @@
 import {
   PAGE_PROJECT_SEQUENCES,
-  PAGE_SEQUENCE_AUDIO,
 } from '../reducers/UIReducer';
 
 export const openProjectPage = (projectId, projectPage = PAGE_PROJECT_SEQUENCES) => ({
@@ -13,11 +12,10 @@ export const closeProjectPage = () => ({
   type: 'UI_CLOSE_PROJECT_PAGE',
 });
 
-export const openSequencePage = (projectId, sequenceId, sequencePage = PAGE_SEQUENCE_AUDIO) => ({
+export const openSequencePage = (projectId, sequenceId) => ({
   type: 'UI_OPEN_SEQUENCE_PAGE',
   projectId,
   sequenceId,
-  sequencePage,
 });
 
 export const closeSequencePage = () => ({
