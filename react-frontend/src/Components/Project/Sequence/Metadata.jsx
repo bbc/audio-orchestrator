@@ -9,17 +9,23 @@ import {
   Header,
   Message,
   Label,
+  Grid,
 } from 'semantic-ui-react';
 
+import MetadataRow from './MetadataRow';
 import { requestReplaceMetadata } from '../../../actions/project';
+import { PAGE_PROJECT_RULES } from '../../../reducers/UIReducer';
+import { openProjectPage } from '../../../actions/ui';
 
 const Metadata = ({
   objects,
   files,
   objectsList,
   onReplaceMetadata,
+  onReviewTags,
   sequenceMetadataConfirmation,
   sequenceMetadataError,
+  zones,
 }) => {
   if (objectsList.length === 0) {
     return (
@@ -47,6 +53,7 @@ const Metadata = ({
   const objectsWithFiles = objectsList.map(({ objectNumber, label }) => ({
     objectNumber,
     label,
+    orchestration: objects[objectNumber].orchestration,
     file: files[objects[objectNumber].fileId],
     channelMapping: objects[objectNumber].channelMapping,
   }));
@@ -62,13 +69,26 @@ const Metadata = ({
         )
         : null
       }
-      <Table>
+      { (!zones || zones.length === 0)
+        ? (
+          <Message warning>
+            <Icon name="exclamation" />
+            {'No device tags have been defined for the project. These are needed for the object placement algorithm and must match the metadata files for all sequences.'}
+            <p><Button content="Edit custom tags" onClick={onReviewTags} /></p>
+          </Message>
+        )
+        : null
+      }
+      <Table singleLine verticalAlign="top">
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>#</Table.HeaderCell>
             <Table.HeaderCell>Object Label</Table.HeaderCell>
-            <Table.HeaderCell>Matching audio file</Table.HeaderCell>
+            <Table.HeaderCell>Matched file</Table.HeaderCell>
             <Table.HeaderCell>Channel mapping</Table.HeaderCell>
+            <Table.HeaderCell content="Placement rules" />
+            <Table.HeaderCell content="Device tags" />
+            <Table.HeaderCell content="Image" />
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -77,21 +97,19 @@ const Metadata = ({
             channelMapping,
             label,
             file,
+            orchestration,
           }) => (
-            <Table.Row negative={!file} key={objectNumber}>
-              <Table.Cell>{objectNumber}</Table.Cell>
-              <Table.Cell>{label}</Table.Cell>
-              { file
-                ? <Table.Cell>{file.name}</Table.Cell>
-                : (
-                  <Table.Cell>
-                    <Icon name="exclamation" />
-                    No audio file name matches the object number.
-                  </Table.Cell>
-                )
-              }
-              <Table.Cell>{channelMapping === 'mono' ? 'centre' : channelMapping}</Table.Cell>
-            </Table.Row>
+            <MetadataRow
+              {...{
+                objectNumber,
+                channelMapping,
+                label,
+                file,
+                orchestration,
+                zones,
+              }}
+              key={objectNumber}
+            />
           ))}
         </Table.Body>
       </Table>
@@ -124,11 +142,17 @@ Metadata.propTypes = {
   files: PropTypes.shape({
     name: PropTypes.string,
   }).isRequired,
+  zones: PropTypes.arrayOf(PropTypes.shape({
+    zoneId: PropTypes.string,
+    name: PropTypes.string,
+    label: PropTypes.string,
+  })),
 };
 
 Metadata.defaultProps = {
   sequenceMetadataConfirmation: null,
   sequenceMetadataError: null,
+  zones: null,
 };
 
 const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
@@ -145,11 +169,13 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
     files: sequence.files || {},
     sequenceMetadataConfirmation,
     sequenceMetadataError,
+    zones: project.settings.zones || [],
   };
 };
 
 const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
   onReplaceMetadata: () => { dispatch(requestReplaceMetadata(projectId, sequenceId)); },
+  onReviewTags: () => { dispatch(openProjectPage(projectId, PAGE_PROJECT_RULES)); },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Metadata);
