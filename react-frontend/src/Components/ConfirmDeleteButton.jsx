@@ -33,7 +33,7 @@ class ConfirmDeleteButton extends React.Component {
     return (
       <Modal
         closeIcon
-        trigger={<Button negative icon="trash" content={content} />}
+        trigger={<Button type="button" negative icon="trash" content={content} />}
         open={open}
         onOpen={() => this.handleOpen()}
         onClose={() => this.handleClose()}

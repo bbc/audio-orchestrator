@@ -3,16 +3,31 @@ import PropTypes from 'prop-types';
 import uuidv4 from 'uuid/v4';
 
 import {
-  Form,
+  Container,
+  Button,
+  Dropdown,
   Table,
 } from 'semantic-ui-react';
 import ConfirmDeleteButton from '../../ConfirmDeleteButton';
+import RequiredTextInput from '../../RequiredTextInput';
 
 class NextChoices extends React.Component {
   constructor(props) {
     super(props);
 
+    this.labelRefs = {};
     this.ensureChoiceIds();
+  }
+
+  componentDidUpdate(prevProps) {
+    const { value } = this.props;
+    // Check if the number of choices has just increased by one, ie. we've just added one.
+    if (prevProps.value && value && value.length === prevProps.value.length + 1) {
+      const lastChoiceId = value[value.length - 1].choiceId;
+      if (lastChoiceId in this.labelRefs) {
+        this.labelRefs[lastChoiceId].select();
+      }
+    }
   }
 
   fireChangeEvent(value) {
@@ -48,7 +63,6 @@ class NextChoices extends React.Component {
     }));
   }
 
-
   handleDeleteChoice(choiceId) {
     const { value } = this.props;
 
@@ -81,6 +95,23 @@ class NextChoices extends React.Component {
     }
   }
 
+  handleKeyPress(e, choiceId) {
+    const { value } = this.props;
+    const { key, target } = e;
+
+    if (key === 'Enter') {
+      target.blur();
+
+      // Move to the next row or create a new choice.
+      const nextChoice = value[value.findIndex(choice => choice.choiceId === choiceId) + 1];
+      if (!nextChoice) {
+        this.handleAddChoice();
+      } else if (nextChoice.choiceId in this.labelRefs) {
+        this.labelRefs[nextChoice.choiceId].select();
+      }
+    }
+  }
+
   render() {
     const {
       value,
@@ -94,12 +125,12 @@ class NextChoices extends React.Component {
     }));
 
     return (
-      <Form>
+      <Container>
         <Table collapsing>
           <Table.Header>
             <Table.Row>
+              <Table.HeaderCell content="Choice Label" />
               <Table.HeaderCell content="Target Sequence" />
-              <Table.HeaderCell content="Label" />
               <Table.HeaderCell content="" />
             </Table.Row>
           </Table.Header>
@@ -107,20 +138,24 @@ class NextChoices extends React.Component {
             { value.map(({ sequenceId, label, choiceId }) => (
               <Table.Row key={choiceId}>
                 <Table.Cell>
-                  <Form.Select
-                    placeholder="Target Sequence"
+                  <RequiredTextInput
+                    ref={(ref) => { this.labelRefs[choiceId] = ref; }}
+                    placeholder="Label"
+                    error={!label}
+                    defaultValue={label}
+                    onKeyPress={e => this.handleKeyPress(e, choiceId)}
+                    onBlur={e => this.handleChangeLabel(choiceId, e.target.value)}
+                  />
+                </Table.Cell>
+                <Table.Cell>
+                  <Dropdown
+                    placeholder="Select a sequence"
+                    search
+                    selection
                     error={!sequenceId}
                     value={sequenceId}
                     options={sequenceOptions}
                     onChange={(e, d) => this.handleSelectSequence(choiceId, d.value)}
-                  />
-                </Table.Cell>
-                <Table.Cell>
-                  <Form.Input
-                    placeholder="Label"
-                    error={!label || label.length === 0}
-                    defaultValue={label}
-                    onBlur={e => this.handleChangeLabel(choiceId, e.target.value)}
                   />
                 </Table.Cell>
                 <Table.Cell>
@@ -134,7 +169,7 @@ class NextChoices extends React.Component {
             ))}
           </Table.Body>
         </Table>
-        <Form.Button
+        <Button
           type="button"
           icon="plus"
           primary
@@ -142,7 +177,7 @@ class NextChoices extends React.Component {
           content="Add choice"
           onClick={() => this.handleAddChoice()}
         />
-      </Form>
+      </Container>
     );
   }
 }

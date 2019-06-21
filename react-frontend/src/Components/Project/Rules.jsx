@@ -6,10 +6,10 @@ import {
   Container,
   Message,
   Table,
-  Input,
   Button,
 } from 'semantic-ui-react';
 import ConfirmDeleteButton from '../ConfirmDeleteButton';
+import RequiredTextInput from '../RequiredTextInput';
 import {
   setProjectSetting,
 } from '../../actions/project';
@@ -17,6 +17,8 @@ import {
 class Rules extends React.Component {
   constructor(props) {
     super(props);
+
+    this.nameRefs = {};
 
     this.handleBlur = (e, id) => {
       const { onChangeSetting, zones } = this.props;
@@ -36,21 +38,50 @@ class Rules extends React.Component {
       onChangeSetting('zones', newZones);
     };
 
+    this.handleKeyPress = (e, id) => {
+      const { zones } = this.props;
+      const { key, target } = e;
+
+      // When the user presses enter inside a form field, ...
+      if (key === 'Enter') {
+        // Remove focus from that form field, also triggering a save action.
+        target.blur();
+
+        // Move to the next row or create a new zone.
+        const nextZone = zones[zones.findIndex(zone => zone.zoneId === id) + 1];
+        if (!nextZone) {
+          this.handleAddZone();
+        } else if (nextZone.zoneId in this.nameRefs) {
+          this.nameRefs[nextZone.zoneId].select();
+        }
+      }
+    };
+
     this.handleAddZone = () => {
       const { onChangeSetting, zones } = this.props;
 
       onChangeSetting('zones', [
         ...zones,
-        { name: `newZone-${zones.length}`, friendlyName: `New zone ${zones.length}`, zoneId: uuidv4() },
+        { name: `tag${zones.length}`, friendlyName: `tag${zones.length}`, zoneId: uuidv4() },
       ]);
     };
-
 
     this.handleDeleteZone = (id) => {
       const { onChangeSetting, zones } = this.props;
 
       onChangeSetting('zones', zones.filter(({ zoneId }) => (zoneId !== id)));
     };
+  }
+
+  componentDidUpdate(prevProps) {
+    const { zones } = this.props;
+    // Check if the number of zones has just increased by one, ie. we've just added a zone
+    if (prevProps.zones && zones && zones.length === prevProps.zones.length + 1) {
+      const lastZoneId = zones[zones.length - 1].zoneId;
+      if (lastZoneId in this.nameRefs) {
+        this.nameRefs[lastZoneId].select();
+      }
+    }
   }
 
   render() {
@@ -73,23 +104,26 @@ class Rules extends React.Component {
             { zones.map(({ zoneId, name, friendlyName }) => (
               <Table.Row key={zoneId}>
                 <Table.Cell>
-                  <Input
-                    name="name"
+                  <RequiredTextInput
+                    ref={(ref) => { this.nameRefs[zoneId] = ref; }}
                     defaultValue={name}
+                    name="name"
+                    onKeyPress={e => this.handleKeyPress(e, zoneId)}
                     onBlur={e => this.handleBlur(e, zoneId)}
                   />
                 </Table.Cell>
                 <Table.Cell>
-                  <Input
+                  <RequiredTextInput
                     name="friendlyName"
                     defaultValue={friendlyName}
+                    onKeyPress={e => this.handleKeyPress(e, zoneId)}
                     onBlur={e => this.handleBlur(e, zoneId)}
                   />
                 </Table.Cell>
                 <Table.Cell>
                   <ConfirmDeleteButton
                     header="Delete Tag"
-                    name={friendlyName || name}
+                    name={name}
                     onDelete={() => this.handleDeleteZone(zoneId)}
                   />
                 </Table.Cell>

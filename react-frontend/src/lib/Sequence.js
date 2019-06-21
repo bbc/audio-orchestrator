@@ -248,6 +248,7 @@ class Sequence {
     const numObjectsAdded = objectsList.length || 0;
     const allObjectsHaveFiles = objectsList.every(({ objectNumber }) => !!objects[objectNumber].fileId);
     const allFilesAreGood = filesList.every(({ fileId }) => !files[fileId].error);
+    const choicesAreGood = next.every(choice => !!choice.label && !!choice.sequenceId);
 
     if (numFilesAdded === 0) {
       message = 'No audio files have been added.';
@@ -261,6 +262,9 @@ class Sequence {
     } else if (!allFilesAreGood) {
       message = 'Some audio files have errors.';
       error = true;
+    } else if (!choicesAreGood) {
+      message = 'Not all choices have a valid label and sequence.';
+      error = true;
     }
 
     if (!error) {
@@ -272,7 +276,7 @@ class Sequence {
 
     return {
       key: sequenceId,
-      title: `Sequence: ${name}`,
+      title: name,
       message,
       warning,
       error,

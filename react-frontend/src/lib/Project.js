@@ -4,6 +4,7 @@ import Sequence from './Sequence';
 import {
   PAGE_PROJECT_PRESENTATION,
   PAGE_PROJECT_ADVANCED,
+  PAGE_PROJECT_RULES,
 } from '../reducers/UIReducer';
 
 /**
@@ -308,24 +309,29 @@ class Project {
     const { settings } = data;
     const { zones } = settings;
 
-    const haveZones = (zones && zones.length === 0);
-    const zonesValid = (zones || []).every(({ name, friendlyName }) => !name || !friendlyName);
+    const haveZones = (zones && zones.length > 0);
+    const zonesValid = (zones || []).every(({ name, friendlyName }) => !!name && !!friendlyName);
 
-    const warning = haveZones && zonesValid;
-    const error = !zonesValid;
+    const warning = false;
+    const error = !haveZones || !zonesValid;
 
-    let message = haveZones ? 'Custom rules have been defined.' : 'The default rules are being used.';
+    let message = null;
+
+    if (!haveZones) {
+      message = 'No device tags have been defined.';
+    }
 
     if (!zonesValid && haveZones) {
-      message = 'Some rule definitions are incomplete';
+      message = 'Not all tag definitions are valid.';
     }
 
     return {
       key: 'rules',
-      title: 'Rules',
+      title: 'Device Tags',
       message,
       warning,
       error,
+      projectPage: PAGE_PROJECT_RULES,
     };
   }
 
@@ -340,6 +346,7 @@ class Project {
     const { sequences } = data;
 
     return [
+      this.validateRulesSettings(),
       this.validatePresentationSettings(),
       this.validateAdvancedSettings(),
       ...Object.keys(sequences).map(sequenceId => sequences[sequenceId].validate()),
