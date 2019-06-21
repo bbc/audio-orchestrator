@@ -136,7 +136,7 @@ class NextChoices extends React.Component {
           </Table.Header>
           <Table.Body>
             { value.map(({ sequenceId, label, choiceId }) => (
-              <Table.Row key={choiceId}>
+              <Table.Row key={choiceId || 'initial'}>
                 <Table.Cell>
                   <RequiredTextInput
                     ref={(ref) => { this.labelRefs[choiceId] = ref; }}

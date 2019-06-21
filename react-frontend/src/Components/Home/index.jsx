@@ -15,6 +15,7 @@ import {
   Loader,
 } from 'semantic-ui-react';
 import ProjectsList from './ProjectsList';
+import DeveloperMenu from './DeveloperMenu';
 
 import {
   requestCreateProject,
@@ -22,7 +23,6 @@ import {
   requestListProjects,
   checkFileOpen,
 } from '../../actions/project';
-
 
 class Home extends React.Component {
   componentDidMount() {
@@ -52,9 +52,10 @@ class Home extends React.Component {
 
         <Menu inverted color="blue" attached="bottom">
           <Menu.Item header>Home</Menu.Item>
-          <Menu.Item position="right">
-            {`Orchestration Builder ${VERSION}`}
-          </Menu.Item>
+          <Menu.Menu position="right">
+            <Menu.Item content={`Orchestration Builder ${VERSION}`} />
+            <DeveloperMenu />
+          </Menu.Menu>
         </Menu>
 
         <Segment placeholder>

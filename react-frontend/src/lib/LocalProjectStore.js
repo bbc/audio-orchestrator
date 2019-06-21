@@ -1,5 +1,6 @@
 import uuidv4 from 'uuid/v4';
 
+const CURRENT_PROJECT_STORE_VERSION = 1;
 const Storage = window.localStorage;
 
 /**
@@ -27,6 +28,12 @@ function createProjectStore(projectId, name) {
       Storage.removeItem(key);
     },
   };
+
+  const projectStoreVersion = store.get('_PROJECT_STORE_VERSION', 0);
+  if (projectStoreVersion < CURRENT_PROJECT_STORE_VERSION) {
+    console.warn(`Mismatched project store version, migration from version ${projectStoreVersion} to ${CURRENT_PROJECT_STORE_VERSION} is a no-op.`);
+    store.set('_PROJECT_STORE_VERSION', CURRENT_PROJECT_STORE_VERSION);
+  }
 
   store.set('lastOpened', new Date().toISOString());
   if (!store.has('name')) {
@@ -67,7 +74,6 @@ class LocalProjectStore {
   static createProject(name = 'Untitled Project') {
     return new Promise((resolve) => {
       const projectId = uuidv4();
-      Storage.setItem('lastProjectId', projectId);
 
       // Add the projectId to the stored list of ids, so we can iterate through projects later,
       // by adding it to the previously stored list (or the empty list if there is none).
@@ -110,10 +116,52 @@ class LocalProjectStore {
   static deleteProject(projectId) {
     const projectIds = JSON.parse(Storage.getItem('projectIds')) || [];
     Storage.setItem('projectIds', JSON.stringify(projectIds.filter(p => p !== projectId)));
+    Storage.removeItem(`projects.${projectId}._PROJECT_STORE_VERSION`);
   }
 
   static canOpenUnlisted() {
     return false;
+  }
+
+  static dumpProjectData(projectId) {
+    const dump = {
+      dumpDate: new Date().toISOString(),
+      projectIds: [projectId],
+    };
+
+    for (let i = 0; i < Storage.length; i += 1) {
+      const key = Storage.key(i);
+      if (key.startsWith(`projects.${projectId}.`)) {
+        dump[key] = JSON.parse(Storage.getItem(key));
+      }
+    }
+
+    return dump;
+  }
+
+  static importProjectData(dump) {
+    const existingProjectIds = JSON.parse(Storage.getItem('projectIds')) || [];
+    dump.projectIds.forEach((projectId) => {
+      // generate a new project id to avoid overwriting an existing one
+      let newProjectId = projectId;
+      if (existingProjectIds.includes(projectId)) {
+        newProjectId = uuidv4();
+      }
+
+      // copy each key into the store
+      Object.keys(dump)
+        .filter(key => key.startsWith(`projects.${projectId}.`))
+        .forEach((key) => {
+          const newKey = key.replace(`projects.${projectId}.`, `projects.${newProjectId}.`);
+          Storage.setItem(newKey, JSON.stringify(dump[key]));
+        });
+
+      // append new project id to list of projects
+      Storage.setItem('projectIds', JSON.stringify([
+        ...(JSON.parse(Storage.getItem('projectIds')) || []),
+        newProjectId,
+      ]));
+    });
   }
 }
 

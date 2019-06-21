@@ -21,3 +21,5 @@ window.openUrl = openUrl;
 window.openInFolder = openInFolder;
 window.saveExportAs = saveExportAs;
 window.saveExportToDownloads = saveExportToDownloads;
+
+window.openDevTools = () => { ipcRenderer.send('OPEN_DEV_TOOLS'); };

@@ -22,16 +22,24 @@ const waitForApi = new Promise((resolve) => {
 // stop the server when the application exits
 process.on('exit', apiProcess.kill);
 
+// Keep a global reference of the window object, if you don't, the window will
+// be closed automatically when the JavaScript object is garbage collected.
+let win;
+
 // expose the API URL to the preload script as a synchronous ipc response
 ipcMain.on('GET_API_URL', (event) => {
   /* eslint-disable-next-line no-param-reassign */
   event.returnValue = apiUrl;
 });
 
+// Allow the web page to trigger the developer tools (hack, because app menu is broken in
+// production build)
+ipcMain.on('OPEN_DEV_TOOLS', () => {
+  if (win) {
+    win.webContents.openDevTools();
+  }
+});
 
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
-let win;
 
 function createWindow() {
   // Create the browser window.
