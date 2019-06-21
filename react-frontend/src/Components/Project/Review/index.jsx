@@ -7,6 +7,7 @@ import {
   Button,
   Message,
   Header,
+  Grid,
 } from 'semantic-ui-react';
 import SettingsCheck from './SettingsCheck';
 import TaskProgress from './TaskProgress';
@@ -31,50 +32,59 @@ const Review = ({
   canExport,
 }) => (
   <Container>
-    <Message icon="lightbulb outline" header="Preview and export" content="The prototype can be previewed directly on this computer and devices on the same network. Ensure all errors are resolved before starting a preview or export." />
+    <Message icon="lightbulb outline" header="Preview and export" content="The prototype can be previewed directly on this computer and devices on the same network once all content and settings are filled in." />
 
-    <Header content="Settings" />
-    <Table basic collapsing>
-      <Table.Body>
-        { reviewItems
-          .filter(item => !item.sequenceId)
-          .map(item => (
-            <SettingsCheck
-              {...item}
-              projectId={projectId}
-              onReview={() => onOpenProjectPage(projectId, item.projectPage)}
-            />
-          ))
-        }
-      </Table.Body>
-    </Table>
-
-    <Header content="Sequences" />
-    <Table basic collapsing>
-      <Table.Body>
-        { reviewItems
-          .filter(item => !!item.sequenceId)
-          .map(item => (
-            <SettingsCheck
-              {...item}
-              projectId={projectId}
-              onReview={() => onOpenSequencePage(projectId, item.sequenceId)}
-            />
-          ))
-        }
-      </Table.Body>
-    </Table>
-
-
-    <Header content="Background tasks" />
-    <Table basic collapsing>
-      <Table.Body>
-        <TaskProgress name="Audio analysis" taskIds={itemsTaskIds} />
-        <TaskProgress name="Audio transcoding" taskIds={encodeTaskIds} />
-      </Table.Body>
-    </Table>
+    <Grid columns={3} stackable doubling>
+      <Grid.Column>
+        <Header content="Settings" />
+        <Table basic verticalAlign="top">
+          <Table.Body>
+            { reviewItems
+              .filter(item => !item.sequenceId)
+              .map(item => (
+                <SettingsCheck
+                  {...item}
+                  projectId={projectId}
+                  onReview={() => onOpenProjectPage(projectId, item.projectPage)}
+                />
+              ))
+            }
+          </Table.Body>
+        </Table>
+      </Grid.Column>
+      <Grid.Column>
+        <Header content="Sequences" />
+        <Table basic verticalAlign="top">
+          <Table.Body>
+            { reviewItems
+              .filter(item => !!item.sequenceId)
+              .map(item => (
+                <SettingsCheck
+                  {...item}
+                  projectId={projectId}
+                  onReview={() => onOpenSequencePage(projectId, item.sequenceId)}
+                />
+              ))
+            }
+          </Table.Body>
+        </Table>
+      </Grid.Column>
+      <Grid.Column>
+        <Header content="Background tasks" />
+        <Table basic>
+          <Table.Body>
+            <TaskProgress name="Audio analysis" taskIds={itemsTaskIds} />
+            <TaskProgress name="Audio transcoding" taskIds={encodeTaskIds} />
+          </Table.Body>
+        </Table>
+      </Grid.Column>
+    </Grid>
 
     <Header content="Export" />
+    { !canExport
+      ? <Message error header="Not ready to export" content="You must fix the errors highlighted above before you can preview or export the project." icon="delete" />
+      : null
+    }
     <Button
       primary
       disabled={!canExport}

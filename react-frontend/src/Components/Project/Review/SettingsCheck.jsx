@@ -24,7 +24,7 @@ const SettingsCheck = ({
       </Table.Cell>
       <Table.Cell>
         {!valid && !!onReview
-          ? <Button content="Review" icon="edit" labelPosition="left" onClick={onReview} />
+          ? <Button icon="edit" onClick={onReview} />
           : null
         }
       </Table.Cell>
