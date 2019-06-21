@@ -1007,10 +1007,10 @@
     weak-map "^1.0.5"
     winston "^2.4.0"
 
-"@bbc/bbcat-orchestration-template@^0.3.1":
-  version "0.3.1"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.3.1.tgz#67bc76a996d713df3d6a23542bf04a2f857b608a"
-  integrity sha1-Z7x2qZbXE989aiNUK/BKL4V7YIo=
+"@bbc/bbcat-orchestration-template@^0.4.1":
+  version "0.4.1"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.4.1.tgz#f7ee3011601d154ac876f074fc18bf47be1cb600"
+  integrity sha1-9+4wEWAdFUrIdvB0/Bi/R74ctgA=
   dependencies:
     "@babel/polyfill" "^7.0.0"
     "@bbc/bbcat-orchestration" "^0.3.2"

@@ -60,8 +60,7 @@ class Rules extends React.Component {
 
     return (
       <Container>
-        <Message icon="lightbulb outline" header="Loudspeaker Tags" content="You can customise the tags used for allocating objects to devices; these must match the metadata fields in all sequences. Delete all custom tags to use the standard locations." />
-
+        <Message icon="lightbulb outline" header="Device tags" content="Tags determine which objects can be in each auxiliary device. Each device selects one tag, but multiple devices can use the same one." />
         <Table collapsing>
           <Table.Header>
             <Table.Row>

@@ -31,7 +31,7 @@ const Review = ({
   canExport,
 }) => (
   <Container>
-    <Message icon="lightbulb outline" header="Preview and export" content="The prototype experience can be previewed directly on this computer and devices on the same network. Once you're happy, you can export the encoded audio and source code template to publish or customise further." onDismiss={() => {}} />
+    <Message icon="lightbulb outline" header="Preview and export" content="The prototype can be previewed directly on this computer and devices on the same network. Ensure all errors are resolved before starting a preview or export." />
 
     <Header content="Settings" />
     <Table basic collapsing>

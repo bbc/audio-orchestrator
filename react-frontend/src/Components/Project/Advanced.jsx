@@ -30,7 +30,7 @@ class Advanced extends React.Component {
 
     return (
       <Form>
-        <Message icon="lightbulb outline" header="Advanced technical details" content="These settings are only required for hosting the exported application on a public server. They are not used in the preview and can be easily changed by a developer later." onDismiss={() => {}} />
+        <Message icon="lightbulb outline" header="Advanced settings" content="These settings can usually be left at their default values. They may be needed for hosting the exported application on a public server." />
         <Form.Input
           label="Short joining link"
           placeholder="https://example.com/#!/join"

@@ -45,7 +45,7 @@ const Project = ({
     },
     {
       page: PAGE_PROJECT_RULES,
-      menuItem: 'Custom Tags',
+      menuItem: 'Device Tags',
       render: () => <Rules projectId={projectId} />,
     },
     {

@@ -43,7 +43,7 @@ class Presentation extends React.Component {
 
     return (
       <Container>
-        <Message icon="lightbulb outline" header="Presentation settings" content="These labels are used in the preview and the prototype interface. They can be easily changed when adapting the prototype for a specific design." />
+        <Message icon="lightbulb outline" header="Presentation settings" content="The presentation settings customise the look and feel of the preview and exported prototype application." />
         <Form>
           <Form.Input
             label="Title"

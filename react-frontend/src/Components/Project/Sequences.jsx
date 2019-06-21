@@ -22,7 +22,7 @@ const Sequences = ({
   if (currentSequenceId === null) {
     return (
       <Container>
-        <Message icon="lightbulb outline" header="Sequence audio and metadata" content="Each sequence is an independent section of content." onDismiss={() => {}} />
+        <Message icon="lightbulb outline" header="Sequence audio and metadata" content="Each sequence is an independent section of content. Add metadata and audio files, and define links to other sequences." />
         <SequencesList projectId={projectId} />
         <Divider hidden />
         <Button primary icon="plus" content="Add Sequence" onClick={onAddSequence} labelPosition="left" />
