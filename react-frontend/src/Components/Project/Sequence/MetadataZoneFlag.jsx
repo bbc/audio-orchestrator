@@ -5,24 +5,23 @@ import {
   Icon,
 } from 'semantic-ui-react';
 
-const levels = [
-  null,
-  {
+const levels = {
+  1: {
     description: 'The object is not allowed in a device with this tag.',
     icon: 'square outline',
     color: 'red',
   },
-  {
+  2: {
     description: 'The object is allowed in a device with this tag.',
     icon: 'minus square',
     color: 'yellow',
   },
-  {
+  3: {
     description: 'The object\'s target device is one with this tag.',
     icon: 'plus square',
     color: 'green',
   },
-];
+};
 
 const color = (level) => {
   if (level in levels) {

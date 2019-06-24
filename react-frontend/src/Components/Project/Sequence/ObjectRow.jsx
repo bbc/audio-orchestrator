@@ -104,7 +104,7 @@ const ObjectRow = ({
         : (
           <Table.Cell>
             <Icon name="exclamation" />
-            Project has no device tags.
+            Project has no tags.
           </Table.Cell>
         )
       }

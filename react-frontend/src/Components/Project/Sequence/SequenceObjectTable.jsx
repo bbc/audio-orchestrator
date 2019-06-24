@@ -63,8 +63,8 @@ const SequenceObjectTable = ({
         ? (
           <Message warning>
             <Icon name="exclamation" />
-            {'No device tags have been defined for the project. These are needed for the object placement algorithm and must match the metadata files for all sequences.'}
-            <p><Button content="Edit custom tags" onClick={onReviewTags} /></p>
+            {'No tags have been defined for the project. These are needed for the object placement algorithm and must match the metadata files for all sequences.'}
+            <p><Button content="Edit device tags" onClick={onReviewTags} /></p>
           </Message>
         )
         : null
