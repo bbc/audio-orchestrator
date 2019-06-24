@@ -19,6 +19,7 @@ class Rules extends React.Component {
     super(props);
 
     this.nameRefs = {};
+    this.addZoneRef = {};
 
     this.handleBlur = (e, id) => {
       const { onChangeSetting, zones } = this.props;
@@ -49,9 +50,13 @@ class Rules extends React.Component {
 
         // Move to the next row or create a new zone.
         const nextZone = zones[zones.findIndex(zone => zone.zoneId === id) + 1];
-        if (!nextZone) {
-          this.handleAddZone();
-        } else if (nextZone.zoneId in this.nameRefs) {
+        // TODO: removed this because in creating the new zone, it will reset the currently edited
+        // zone's name. Should probably be something that happens in the reducer, or uses component
+        // state.
+        // if (!nextZone) {
+        //   this.handleAddZone();
+        // } else if (nextZone.zoneId in this.nameRefs) {
+        if (nextZone && nextZone.zoneId in this.nameRefs) {
           this.nameRefs[nextZone.zoneId].select();
         }
       }
@@ -62,7 +67,7 @@ class Rules extends React.Component {
 
       onChangeSetting('zones', [
         ...zones,
-        { name: `tag${zones.length}`, friendlyName: `tag${zones.length}`, zoneId: uuidv4() },
+        { name: `tag${zones.length + 1}`, friendlyName: `tag${zones.length + 1}`, zoneId: uuidv4() },
       ]);
     };
 

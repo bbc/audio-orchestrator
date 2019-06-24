@@ -7,9 +7,21 @@ import {
 
 const levels = [
   null,
-  { color: 'red', description: 'can not be', icon: 'square outline' },
-  { color: 'yellow', description: 'is allowed', icon: 'minus square' },
-  { color: 'green', description: 'should be', icon: 'plus square' },
+  {
+    description: 'The object is not allowed in a device with this tag.',
+    icon: 'square outline',
+    color: 'red',
+  },
+  {
+    description: 'The object is allowed in a device with this tag.',
+    icon: 'minus square',
+    color: 'yellow',
+  },
+  {
+    description: 'The object\'s target device is one with this tag.',
+    icon: 'plus square',
+    color: 'green',
+  },
 ];
 
 const color = (level) => {
@@ -23,7 +35,7 @@ const description = (level) => {
   if (level in levels) {
     return levels[level].description;
   }
-  return 'has no value set for this tag; it may still be';
+  return 'This object has no value set for this tag!';
 };
 
 const icon = (level) => {
@@ -39,7 +51,7 @@ const MetadataZoneFlag = ({
 }) => (
   <Popup
     header={name}
-    content={`The object ${description(value)} in a device with this tag.`}
+    content={description(value)}
     horizontalOffset={12}
     trigger={(
       <Icon

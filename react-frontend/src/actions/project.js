@@ -820,13 +820,11 @@ const parseMetadataFile = file => new Promise((resolve, reject) => {
 const initialiseSequenceObjects = (projectId, sequenceId, rawObjects) => (dispatch) => {
   const project = projects[projectId];
   const sequence = project.sequences[sequenceId];
-  const { objects } = sequence;
 
   const suffixToChannelMapping = {
     L: 'left',
     R: 'right',
     M: 'mono',
-    S: 'stereo', // not supported in encoding or playback; included here for completeness.
   };
   const suffixToPanning = {
     L: 30,
@@ -844,18 +842,16 @@ const initialiseSequenceObjects = (projectId, sequenceId, rawObjects) => (dispat
     const objectNumber = parseInt(data.objectNumber, 10);
     const { label } = data;
 
-    const oldObject = objects[objectNumber] || {};
-
     const suffix = label[label.length - 1] || 0;
     newObjects[objectNumber] = ({
       objectNumber,
       label,
       fileId: null,
-      panning: oldObject.panning || suffixToPanning[suffix] || 0,
-      channelMapping: oldObject.channelMapping || suffixToChannelMapping[suffix] || 'mono',
+      panning: suffixToPanning[suffix] || 0,
+      channelMapping: suffixToChannelMapping[suffix] || 'mono',
       orchestration: {
         ...data,
-        image: oldObject.image || data.image || null,
+        image: data.image || null,
       },
     });
   });

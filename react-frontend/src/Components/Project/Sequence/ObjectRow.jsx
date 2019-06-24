@@ -84,19 +84,30 @@ const ObjectRow = ({
         />
         <MetadataFlag
           value={muteIfObject}
-          name="muteIf"
+          name="Mute if"
           description={`This object is ${!muteIfObject ? 'not ' : ''}disabled if ${muteIfObject ? `the object with number ${muteIfObject}` : 'a specified object'} is active.`}
         />
       </Table.Cell>
 
-      <Table.Cell>
-        { (zones && zones.length > 0)
-          ? zones.map(zone => (
-            <MetadataZoneFlag value={orchestration[zone.name]} name={zone.name} key={zone.zoneId} />
-          ))
-          : 'N/A'
-        }
-      </Table.Cell>
+      { (zones && zones.length > 0)
+        ? (
+          <Table.Cell>
+            { zones.map(zone => (
+              <MetadataZoneFlag
+                value={orchestration[zone.name]}
+                name={zone.name}
+                key={zone.zoneId}
+              />
+            ))}
+          </Table.Cell>
+        )
+        : (
+          <Table.Cell>
+            <Icon name="exclamation" />
+            Project has no device tags.
+          </Table.Cell>
+        )
+      }
 
       <Table.Cell content={image} />
     </Table.Row>

@@ -105,7 +105,8 @@ class NextChoices extends React.Component {
       // Move to the next row or create a new choice.
       const nextChoice = value[value.findIndex(choice => choice.choiceId === choiceId) + 1];
       if (!nextChoice) {
-        this.handleAddChoice();
+        // this.handleAddChoice();
+        // TODO: enable this again without disregarding the currently edited field's value.
       } else if (nextChoice.choiceId in this.labelRefs) {
         this.labelRefs[nextChoice.choiceId].select();
       }
