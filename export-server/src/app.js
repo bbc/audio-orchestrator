@@ -5,7 +5,7 @@ import Exporter from './exporter';
 const exporter = new Exporter();
 
 const app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
 
 /**
  * Checks that all referenced encoded files exist, copies them into one temporary folder, and
