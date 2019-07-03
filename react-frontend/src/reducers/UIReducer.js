@@ -20,6 +20,8 @@ const initialState = {
   sequenceAudioError: null,
   sequenceMetadataConfirmation: null,
   sequenceMetadataError: null,
+  error: null,
+  warning: null,
 };
 
 const UIReducer = (state = initialState, action) => {
@@ -86,6 +88,21 @@ const UIReducer = (state = initialState, action) => {
           ...state.tasks,
           [action.taskId]: { completed: action.completed, total: action.total },
         },
+      };
+    case 'UI_SET_ERROR':
+      return {
+        ...state,
+        error: action.error,
+      };
+    case 'UI_SET_WARNING':
+      return {
+        ...state,
+        warning: action.warning,
+      };
+    case 'UI_CLEAR_WARNING':
+      return {
+        ...state,
+        warning: action.warning,
       };
     default:
       return state;

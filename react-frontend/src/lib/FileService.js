@@ -17,7 +17,12 @@ const shortcutSuccess = ({ onProgress, onComplete } = {}) => {
  */
 class FileService {
   constructor(apiBase) {
-    this.get = path => fetch(`${apiBase}/${path}`).then(response => response.json());
+    this.get = path => fetch(`${apiBase}/${path}`)
+      .then(response => response.json())
+      .catch((e) => {
+        console.error(e);
+        throw new Error('Failed to contact FileService API.');
+      });
     this.post = (path, data) => fetch(
       `${apiBase}/${path}`,
       {
@@ -28,7 +33,11 @@ class FileService {
         body: JSON.stringify(data),
       },
     )
-      .then(response => response.json());
+      .then(response => response.json())
+      .catch((e) => {
+        console.error(e);
+        throw new Error('Failed to contact FileService API.');
+      });
   }
 
   /**
@@ -84,7 +93,7 @@ class FileService {
 
     return this.post('analyse/create', { files })
       .then(({ success, batchId }) => {
-        if (!success) throw new Error('could not create batch for creating files');
+        if (!success) throw new Error('Could not create batch for creating files');
 
         this.monitorBatch(batchId, callbacks);
       });

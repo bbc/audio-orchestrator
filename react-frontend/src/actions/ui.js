@@ -48,3 +48,17 @@ export const setSequenceMetadataError = error => ({
   type: 'UI_SEQUENCE_METADATA_ERROR',
   error,
 });
+
+export const setAppError = error => ({
+  type: 'UI_SET_ERROR',
+  error,
+});
+
+export const setAppWarning = warning => ({
+  type: 'UI_SET_WARNING',
+  warning,
+});
+
+export const clearAppWarning = () => ({
+  type: 'UI_CLEAR_WARNING',
+});

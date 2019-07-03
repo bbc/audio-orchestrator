@@ -10,6 +10,8 @@ import {
   confirmSequenceMetadataReplaced,
   setSequenceAudioError,
   setSequenceMetadataError,
+  setAppWarning,
+  setAppError,
 } from './ui';
 
 // Project store is the interface to the persistent project data accessed by projectId.
@@ -234,7 +236,10 @@ const createTaskWithProgress = (dispatch, task, taskId, argument) => {
       onError: () => {
         reject();
       },
-    });
+    })
+      .catch((e) => {
+        reject(e);
+      });
   });
 };
 
@@ -436,7 +441,8 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
       ));
     })
     .catch((e) => {
-      console.error(e); // TODO dismissable error in interface? reset results?
+      console.error(e);
+      dispatch(setAppError('Failed to analyse files. The analysis service might be unavailable.'));
     });
 };
 
@@ -464,6 +470,7 @@ export const requestOpenProject = (projectId = null) => (dispatch) => {
     })
     .catch((e) => {
       console.error(e);
+      setAppWarning('The project could not be opened.');
       dispatch(closeProject());
     });
 };
@@ -496,6 +503,7 @@ export const requestCreateProject = () => (dispatch) => {
     })
     .catch((e) => {
       console.error(e);
+      setAppWarning('The project could not be created.');
       dispatch(closeProject());
     });
 };
@@ -741,8 +749,8 @@ export const requestReplaceAllAudioFiles = (projectId, sequenceId) => (dispatch)
     dispatch(confirmSequenceAudioReplaced('New audio files linked.'));
     dispatch(validateProject(projectId));
   }).catch((e) => {
-    dispatch(setSequenceAudioError('No valid files selected.'));
     console.error(e);
+    dispatch(setSequenceAudioError('No valid files selected.'));
   });
 };
 

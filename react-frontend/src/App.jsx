@@ -10,14 +10,17 @@ import {
 // Semantic-UI's theme CSS provides the styling of the page and has to be imported once.
 import 'semantic-ui-css/semantic.min.css';
 
-import Demo from './Components/DemoPage';
+import {
+  clearAppWarning,
+} from './actions/ui';
+
 import Project from './Components/Project';
 import Home from './Components/Home';
+import ErrorModal from './Components/ErrorModal';
+import WarningModal from './Components/WarningModal';
 
 const getCurrentPageComponent = (currentPage) => {
   switch (currentPage) {
-    case 'demo':
-      return Demo;
     case 'home':
       return Home;
     case 'project':
@@ -32,21 +35,43 @@ const getCurrentPageComponent = (currentPage) => {
 const App = ({
   currentPage,
   currentProjectId,
+  onCloseWarning,
+  error,
+  warning,
 }) => {
   const Page = getCurrentPageComponent(currentPage);
   return (
-    <Page projectId={currentProjectId} />
+    <div>
+      <Page projectId={currentProjectId} />
+      <ErrorModal content={error} />
+      <WarningModal content={warning} onClose={onCloseWarning} />
+    </div>
   );
 };
 
 App.propTypes = {
   currentPage: PropTypes.string.isRequired,
   currentProjectId: PropTypes.string,
+  onCloseWarning: PropTypes.func.isRequired,
+  error: PropTypes.string,
+  warning: PropTypes.string,
+};
+
+App.defaultProps = {
+  currentProjectId: null,
+  error: null,
+  warning: null,
 };
 
 const mapStateToProps = ({ UI }) => ({
   currentPage: UI.currentPage,
   currentProjectId: UI.currentProjectId,
+  error: UI.error,
+  warning: UI.warning,
 });
 
-export default hot(connect(mapStateToProps)(App));
+const mapDispatchToProps = dispatch => ({
+  onCloseWarning: () => dispatch(clearAppWarning()),
+});
+
+export default hot(connect(mapStateToProps, mapDispatchToProps)(App));
