@@ -30,7 +30,6 @@ const UIReducer = (state = initialState, action) => {
         currentPage: PAGE_PROJECT,
         currentProjectId: action.projectId,
         currentProjectPage: action.projectPage || PAGE_PROJECT_SEQUENCES,
-        currentSequenceId: null, // close the currently open sequence when opening a project page
       };
     case 'UI_CLOSE_PROJECT_PAGE':
       return {
