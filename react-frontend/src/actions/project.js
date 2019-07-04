@@ -285,7 +285,7 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
         projectId, sequenceId,
         results.map(({ success, fileId }) => ({
           fileId,
-          error: success ? null : 'File could not be accessed.',
+          error: success ? null : 'File is missing.',
         })),
       ));
 
@@ -351,7 +351,7 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
       // If not all files were probed, cancel the rest of the chain (no need to analyse further).
       // TODO: Check if previous analysis results can be re-used to avoid re-running the analysis.
       if (probedFileIds.length !== filesList.length) {
-        throw new Error('Not all files were successfully probed.');
+        return [];
       }
 
       // Otherwise, start the items analysis for all files that didn't already have results.
@@ -397,7 +397,7 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
     .then((completeFiles) => {
       // If items analysis failed for some files, there is no point in encoding any of them.
       if (completeFiles.length !== filesList.length) {
-        throw new Error('Not all files were successfully analysed for items.');
+        return [];
       }
 
       // Split the completeFiles list into those that do and those that do not have their
