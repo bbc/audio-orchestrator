@@ -4,7 +4,6 @@ export const PAGE_PROJECT = 'project';
 
 // Second level, one of the pages within the PAGE_PROJECT (requires a currentProjectId to be set):
 export const PAGE_PROJECT_SEQUENCES = 'sequences';
-export const PAGE_PROJECT_RULES = 'rules';
 export const PAGE_PROJECT_PRESENTATION = 'presentation';
 export const PAGE_PROJECT_ADVANCED = 'advanced';
 export const PAGE_PROJECT_REVIEW = 'review';
@@ -22,6 +21,7 @@ const initialState = {
   sequenceMetadataError: null,
   error: null,
   warning: null,
+  expandTable: false,
 };
 
 const UIReducer = (state = initialState, action) => {
@@ -103,6 +103,11 @@ const UIReducer = (state = initialState, action) => {
       return {
         ...state,
         warning: action.warning,
+      };
+    case 'UI_SET_TABLE_EXPANDED':
+      return {
+        ...state,
+        expandTable: action.expanded,
       };
     default:
       return state;

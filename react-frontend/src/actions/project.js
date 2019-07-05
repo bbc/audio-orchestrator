@@ -876,6 +876,29 @@ const initialiseSequenceObjects = (projectId, sequenceId, rawObjects) => (dispat
   dispatch(validateProject(projectId));
 };
 
+export const setObjectOrchestrationFields = (
+  projectId, sequenceId, objectNumber, fields,
+) => (dispatch) => {
+  const project = projects[projectId];
+  const sequence = project.sequences[sequenceId];
+
+  const object = sequence.objects[objectNumber];
+  const newObject = {
+    ...object,
+    orchestration: {
+      ...object.orchestration,
+      ...fields,
+    },
+  };
+
+  sequence.objects = {
+    ...sequence.objects,
+    [objectNumber]: newObject,
+  };
+
+  dispatch(loadSequenceObjects(projectId, sequenceId));
+};
+
 /**
  * Replace metadata file, open a file-open dialogue and replace the object metadata if a valid file
  * is selected.
@@ -915,4 +938,86 @@ export const requestReplaceMetadata = (projectId, sequenceId) => (dispatch) => {
     dispatch(validateProject(projectId));
     console.error(e);
   });
+};
+
+export const addZone = (projectId, name) => (dispatch) => {
+  const project = projects[projectId];
+  const { sequencesList, sequences, settings } = project;
+  const { zones } = settings;
+
+  if (!name) {
+    dispatch(setAppWarning('The tag name cannot be empty. Please enter a name.'));
+    return;
+  }
+
+  if (zones.some(z => z.name === name)) {
+    dispatch(setAppWarning(`The tag '${name}' already exists. Tag names have to be unique.`));
+    return;
+  }
+
+  dispatch(setProjectSetting(
+    projectId,
+    'zones',
+    [
+      ...zones,
+      {
+        zoneId: uuidv4(),
+        name,
+        friendlyName: name,
+      },
+    ],
+  ));
+
+  // For all objects in all sequences, if they hadn't had the zone set already, set it to 'never'.
+  sequencesList.forEach(({ sequenceId }) => {
+    const sequence = sequences[sequenceId];
+
+    const { objectsList, objects } = sequence;
+    const newObjects = {};
+
+    objectsList.forEach(({ objectNumber }) => {
+      const { orchestration, ...rest } = objects[objectNumber];
+
+      newObjects[objectNumber] = {
+        orchestration: {
+          ...orchestration,
+          [name]: orchestration[name] || 1,
+        },
+        ...rest,
+      };
+    });
+
+    sequence.objects = newObjects;
+    dispatch(loadSequenceObjects(projectId, sequenceId));
+  });
+};
+
+export const renameZone = (projectId, renameZoneId, friendlyName) => (dispatch) => {
+  const project = projects[projectId];
+  const { zones } = project.settings;
+
+  dispatch(setProjectSetting(
+    projectId,
+    'zones',
+    zones.map((z) => {
+      if (z.zoneId === renameZoneId) {
+        return {
+          ...z,
+          friendlyName,
+        };
+      }
+      return z;
+    }),
+  ));
+};
+
+export const deleteZone = (projectId, deleteZoneId) => (dispatch) => {
+  const project = projects[projectId];
+  const { zones } = project.settings;
+
+  dispatch(setProjectSetting(
+    projectId,
+    'zones',
+    zones.filter(({ zoneId }) => zoneId !== deleteZoneId),
+  ));
 };

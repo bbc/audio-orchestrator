@@ -3,8 +3,22 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.7.0`
+_2019-07-05_
+
+* New feature: Object metadata fields can now be edited on the sequence page.
+* Change: The device tags are now edited on the sequence page, instead of on a separate page.
+* Change: The last opened sequence is now remembered when changing project pages.
+* Bugfix: An error is displayed if the API server is unreachable, instead of a never-ending loading screen.
+
+# `0.6.0`
+_2019-06-21_
+
+* New feature: Home screen developer menu to toggle developer tools and export project data files.
+* Change: File errors are now also shown on the export screen, and the export screen layout has been changed.
+
 # `0.5.0`
-_1019-06-20_
+_2019-06-20_
 
 * New feature: Indicators of object metadata fields are now shown in metadata table, redundant file information has been removed.
 * Change: Audio, Metadata, and Settings page for sequences have been combined into a single page.

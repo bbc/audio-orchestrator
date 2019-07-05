@@ -8,12 +8,15 @@ import {
 
 const OrphanedFileRow = ({
   file,
+  zones,
+  expanded,
 }) => (
   <Table.Row negative>
-    <Table.Cell content="N/A" />
-    <Table.Cell>
-      <Icon name="exclamation" />
-      No corresponding metadata entry.
+    <Table.Cell collapsing>
+      <Popup
+        trigger={<Icon name="exclamation" />}
+        content="No corresponding metadata entry."
+      />
     </Table.Cell>
 
     <Table.Cell>
@@ -34,17 +37,23 @@ const OrphanedFileRow = ({
     </Table.Cell>
 
     <Table.Cell content="N/A" />
-    <Table.Cell content="N/A" />
-    <Table.Cell content="N/A" />
+    <Table.Cell content="N/A" textAlign="center" colSpan={expanded ? 5 : undefined} />
+    <Table.Cell content="N/A" textAlign="center" colSpan={expanded ? (zones.length || 1) : undefined} />
     <Table.Cell content="N/A" />
   </Table.Row>
 );
 
 OrphanedFileRow.propTypes = {
+  zones: PropTypes.arrayOf(PropTypes.shape({ zoneId: PropTypes.string })),
   file: PropTypes.shape({
     name: PropTypes.string,
     error: PropTypes.string,
   }).isRequired,
+  expanded: PropTypes.bool.isRequired,
+};
+
+OrphanedFileRow.defaultProps = {
+  zones: [],
 };
 
 export default OrphanedFileRow;

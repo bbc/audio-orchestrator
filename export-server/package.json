@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-export-server",
-  "version": "0.6.6",
+  "version": "0.7.0",
   "description": "Service for exporting and packaging audio files, metadata, and JavaScript code.",
   "main": "dist/index.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
@@ -9,7 +9,7 @@
   "private": true,
   "dependencies": {
     "@bbc/bbcat-orchestration-template": "^0.4.1",
-    "bbcat-orchestration-builder-logging": "^0.6.6",
+    "bbcat-orchestration-builder-logging": "^0.7.0",
     "async": "^2.6.2",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",

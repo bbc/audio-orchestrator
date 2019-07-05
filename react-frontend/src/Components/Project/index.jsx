@@ -7,7 +7,6 @@ import {
   Tab,
 } from 'semantic-ui-react';
 import Sequences from './Sequences';
-import Rules from './Rules';
 import Presentation from './Presentation';
 import Advanced from './Advanced';
 import Review from './Review';
@@ -21,7 +20,6 @@ import {
 } from '../../actions/ui';
 import {
   PAGE_PROJECT_SEQUENCES,
-  PAGE_PROJECT_RULES,
   PAGE_PROJECT_PRESENTATION,
   PAGE_PROJECT_ADVANCED,
   PAGE_PROJECT_REVIEW,
@@ -42,11 +40,6 @@ const Project = ({
       page: PAGE_PROJECT_SEQUENCES,
       menuItem: 'Sequences',
       render: () => <Sequences projectId={projectId} />,
-    },
-    {
-      page: PAGE_PROJECT_RULES,
-      menuItem: 'Device Tags',
-      render: () => <Rules projectId={projectId} />,
     },
     {
       page: PAGE_PROJECT_PRESENTATION,

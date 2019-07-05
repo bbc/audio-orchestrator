@@ -18,7 +18,6 @@ class RequiredTextInput extends React.Component {
   }
 
   validate() {
-    console.log('validating');
     if (this.inputRef) {
       // TODO: hack, accessing undocumented properties of <Input /> to get at the value
       try {

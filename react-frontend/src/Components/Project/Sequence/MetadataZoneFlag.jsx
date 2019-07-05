@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Popup,
   Icon,
+  Button,
 } from 'semantic-ui-react';
 
 const levels = {
@@ -10,16 +11,19 @@ const levels = {
     description: 'The object is not allowed in a device with this tag.',
     icon: 'square outline',
     color: 'red',
+    name: 'never',
   },
   2: {
     description: 'The object is allowed in a device with this tag.',
     icon: 'minus square',
     color: 'yellow',
+    name: 'allowed',
   },
   3: {
     description: 'The object\'s target device is one with this tag.',
     icon: 'plus square',
     color: 'green',
+    name: 'target',
   },
 };
 
@@ -44,18 +48,39 @@ const icon = (level) => {
   return 'question circle';
 };
 
+const levelName = (level) => {
+  if (level in levels) {
+    return levels[level].name;
+  }
+  return '???';
+};
+
 const MetadataZoneFlag = ({
   value,
   name,
+  expanded,
+  onClick,
 }) => (
   <Popup
     header={name}
     content={description(value)}
-    horizontalOffset={12}
-    trigger={(
+    horizontalOffset={expanded ? 3 : 12}
+    trigger={expanded ? (
+      <Button
+        size="mini"
+        content={levelName(value)}
+        compact
+        basic
+        color={color(value)}
+        icon={icon(value)}
+        onClick={onClick}
+      />
+    ) : (
       <Icon
+        link
         color={color(value)}
         name={icon(value)}
+        onClick={onClick}
       />
     )}
   />
@@ -64,10 +89,13 @@ const MetadataZoneFlag = ({
 MetadataZoneFlag.propTypes = ({
   value: PropTypes.number,
   name: PropTypes.string.isRequired,
+  expanded: PropTypes.bool.isRequired,
+  onClick: PropTypes.func,
 });
 
 MetadataZoneFlag.defaultProps = ({
   value: null,
+  onClick: () => {},
 });
 
 export default MetadataZoneFlag;
