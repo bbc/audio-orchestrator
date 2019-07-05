@@ -6,7 +6,7 @@ import {
   Button,
 } from 'semantic-ui-react';
 
-const MetadataFlag = ({
+const MetadataFlag = React.memo(({
   value,
   name,
   description,
@@ -37,7 +37,7 @@ const MetadataFlag = ({
       />
     )}
   />
-);
+));
 
 MetadataFlag.propTypes = ({
   value: PropTypes.number,

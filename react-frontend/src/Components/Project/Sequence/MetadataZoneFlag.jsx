@@ -55,7 +55,7 @@ const levelName = (level) => {
   return '???';
 };
 
-const MetadataZoneFlag = ({
+const MetadataZoneFlag = React.memo(({
   value,
   name,
   expanded,
@@ -84,7 +84,7 @@ const MetadataZoneFlag = ({
       />
     )}
   />
-);
+));
 
 MetadataZoneFlag.propTypes = ({
   value: PropTypes.number,

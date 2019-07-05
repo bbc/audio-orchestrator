@@ -10,6 +10,7 @@ import {
   Message,
   Container,
 } from 'semantic-ui-react';
+import ObjectHeader from './ObjectHeader';
 import ObjectRow from './ObjectRow';
 import OrphanedFileRow from './OrphanedFileRow';
 import ZonesModal from './ZonesModal';
@@ -81,19 +82,6 @@ class SequenceObjectTable extends React.Component {
         file: files[fileId],
       }));
 
-    const objectOptions = [
-      {
-        key: 0,
-        value: 0,
-        text: '0: none',
-      },
-      ...objectsList.map(({ objectNumber, label }) => ({
-        key: objectNumber,
-        value: objectNumber,
-        text: `${objectNumber}: ${label}`,
-      })),
-    ];
-
     return (
       <Container style={{ overflowX: 'auto' }}>
         <Dimmer active={filesLoading} inverted verticalAlign="top">
@@ -123,72 +111,27 @@ class SequenceObjectTable extends React.Component {
         }
 
         <Table singleLine verticalAlign="top" style={{ overflowX: 'auto' }}>
-          <Table.Header>
-            { expanded
-              ? (
-                <Table.Row>
-                  <Table.HeaderCell collapsing>#</Table.HeaderCell>
-                  <Table.HeaderCell>Audio file</Table.HeaderCell>
-                  <Table.HeaderCell>Panning</Table.HeaderCell>
-                  <Table.HeaderCell content="Exclusive" />
-                  <Table.HeaderCell content="Auxiliary only" />
-                  <Table.HeaderCell content="Spread" />
-                  <Table.HeaderCell content="Threshold" />
-                  <Table.HeaderCell content="Mute if" />
-                  { (!zones || zones.length === 0)
-                    ? (
-                      <Table.HeaderCell>
-                        Device tags
-                        {' '}
-                        <Icon name="cog" link onClick={this.handleOpenTagEditor} />
-                      </Table.HeaderCell>
-                    )
-                    : null
-                  }
-                  { zones.map(({ zoneId, name }, i) => (
-                    <Table.HeaderCell key={zoneId}>
-                      {name}
-                      {' '}
-                      { (i === zones.length - 1)
-                        ? <Icon name="cog" link onClick={this.handleOpenTagEditor} />
-                        : null
-                      }
-                    </Table.HeaderCell>
-                  ))}
-                  <Table.HeaderCell content="Image" />
-                </Table.Row>
-              ) : (
-                <Table.Row>
-                  <Table.HeaderCell content="#" collapsing />
-                  <Table.HeaderCell content="Audio file" />
-                  <Table.HeaderCell content="Panning" />
-                  <Table.HeaderCell content="Placement rules" />
-                  <Table.HeaderCell>
-                    Device tags
-                    {' '}
-                    <Icon name="cog" link onClick={this.handleOpenTagEditor} />
-                  </Table.HeaderCell>
-                  <Table.HeaderCell content="Image" />
-                </Table.Row>
-              )
-            }
-          </Table.Header>
+          <ObjectHeader {...{ expanded, zones }} onEditTags={this.handleOpenTagEditor} />
           <Table.Body>
-            { objectsWithFiles.map(object => (
+            { (tagEditorOpen ? [] : objectsWithFiles).map(object => (
               <ObjectRow
                 key={object.objectNumber}
-                zones={zones}
-                expanded={expanded}
-                onChangeField={onChangeField}
-                objectOptions={objectOptions}
+                {...{
+                  zones,
+                  expanded,
+                  onChangeField,
+                  objectsList,
+                }}
                 {...object}
               />
             ))}
-            { filesWithoutObjects.map(file => (
+            { (tagEditorOpen ? [] : filesWithoutObjects).map(file => (
               <OrphanedFileRow
                 key={file.fileId}
-                expanded={expanded}
-                zones={zones}
+                {...{
+                  expanded,
+                  zones,
+                }}
                 {...file}
               />
             ))}
