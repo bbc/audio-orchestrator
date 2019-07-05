@@ -943,7 +943,7 @@ export const requestReplaceMetadata = (projectId, sequenceId) => (dispatch) => {
 export const addZone = (projectId, name) => (dispatch) => {
   const project = projects[projectId];
   const { sequencesList, sequences, settings } = project;
-  const { zones } = settings;
+  const zones = settings.zones || [];
 
   if (!name) {
     dispatch(setAppWarning('The tag name cannot be empty. Please enter a name.'));

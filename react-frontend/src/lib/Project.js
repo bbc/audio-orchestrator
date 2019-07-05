@@ -4,7 +4,7 @@ import Sequence from './Sequence';
 import {
   PAGE_PROJECT_PRESENTATION,
   PAGE_PROJECT_ADVANCED,
-  PAGE_PROJECT_RULES,
+  PAGE_PROJECT_SEQUENCES,
 } from '../reducers/UIReducer';
 
 /**
@@ -331,7 +331,7 @@ class Project {
       message,
       warning,
       error,
-      projectPage: PAGE_PROJECT_RULES,
+      projectPage: PAGE_PROJECT_SEQUENCES,
     };
   }
 

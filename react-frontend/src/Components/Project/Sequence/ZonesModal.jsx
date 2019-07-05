@@ -4,7 +4,6 @@ import {
   Modal,
   Header,
   Button,
-  Input,
   Table,
   Form,
 } from 'semantic-ui-react';
@@ -126,7 +125,11 @@ ZonesModal.propTypes = {
     zoneId: PropTypes.string,
     name: PropTypes.string,
     label: PropTypes.string,
-  })).isRequired,
+  })),
+};
+
+ZonesModal.defaultProps = {
+  zones: [],
 };
 
 export default ZonesModal;

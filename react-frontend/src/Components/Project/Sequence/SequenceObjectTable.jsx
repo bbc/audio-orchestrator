@@ -238,7 +238,7 @@ SequenceObjectTable.propTypes = {
 SequenceObjectTable.defaultProps = {
   filesLoadingCompleted: 0,
   filesLoadingTotal: 0,
-  zones: null,
+  zones: [],
 };
 
 const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {

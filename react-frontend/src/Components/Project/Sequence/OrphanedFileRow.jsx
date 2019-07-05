@@ -37,8 +37,8 @@ const OrphanedFileRow = ({
     </Table.Cell>
 
     <Table.Cell content="N/A" />
-    <Table.Cell content="N/A" textAlign="center" colSpan={expanded ? 5 : undefined} />
-    <Table.Cell content="N/A" textAlign="center" colSpan={expanded ? (zones.length || 1) : undefined} />
+    <Table.Cell content="N/A" textAlign={expanded ? 'center' : 'left'} colSpan={expanded ? 5 : undefined} />
+    <Table.Cell content="N/A" textAlign={expanded ? 'center' : 'left'} colSpan={expanded ? (zones.length || 1) : undefined} />
     <Table.Cell content="N/A" />
   </Table.Row>
 );
