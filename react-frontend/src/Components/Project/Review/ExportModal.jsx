@@ -10,6 +10,7 @@ import {
   requestOpenInFolder,
   requestOpenUrl,
 } from '../../../actions/export';
+import QRCode from './QRCode';
 
 const ExportModal = ({
   title,
@@ -52,6 +53,10 @@ const ExportModal = ({
           {progressDescription}
         </Progress>
       </Modal.Content>
+      { preview && complete
+        ? (
+          <Modal.Content content={<QRCode url={outputPath} />} />
+        ) : null }
       <Modal.Actions>
         { complete && preview
           ? <Button icon="external" content="Open in browser" onClick={() => requestOpenUrl(outputPath)} />
