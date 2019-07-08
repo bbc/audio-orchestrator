@@ -21,7 +21,7 @@ const initialState = {
   sequenceMetadataError: null,
   error: null,
   warning: null,
-  expandTable: false,
+  expandTable: true,
 };
 
 const UIReducer = (state = initialState, action) => {

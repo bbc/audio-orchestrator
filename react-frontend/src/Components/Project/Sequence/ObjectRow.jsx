@@ -4,16 +4,14 @@ import {
   Table,
   Icon,
   Popup,
-  Dropdown,
 } from 'semantic-ui-react';
-import MetadataFlag from './MetadataFlag';
-import MetadataZoneFlag from './MetadataZoneFlag';
 
-const thresholdOptions = new Array(11).fill(undefined).map((_, i) => ({
-  key: i,
-  value: i,
-  text: (i === 0) ? '0 (no threshold)' : `${i}+`,
-}));
+import MdoOnlyFlag from './MdoOnlyFlag';
+import SpreadFlag from './SpreadFlag';
+// import ThresholdFlag from './ThresholdFlag';
+import ExclusivityFlag from './ExclusivityFlag';
+import MuteIfFlag from './MuteIfFlag';
+import MetadataZoneFlag from './MetadataZoneFlag';
 
 class ObjectRow extends React.PureComponent {
   render() {
@@ -30,86 +28,27 @@ class ObjectRow extends React.PureComponent {
     } = this.props;
 
     const {
-      exclusivity,
       mdoOnly,
       mdoSpread,
-      mdoThreshold,
+      exclusivity,
+      // mdoThreshold,
       muteIfObject,
       // onDropin,
       // onDropout,
-      image,
+      // image,
     } = orchestration;
 
-    const objectOptions = [
-      {
-        key: 0,
-        value: 0,
-        text: '0: none',
-      },
-      ...objectsList.map(o => ({
-        key: o.objectNumber,
-        value: o.objectNumber,
-        text: `${o.objectNumber}: ${o.label}`,
-      })),
-    ];
-
+    const flagProps = {
+      onChangeField,
+      objectNumber,
+      expanded: false, // TODO: expanded is not actually used inside these at the moment
+    };
     const metadataFlags = [
-      <MetadataFlag
-        expanded={expanded}
-        key="exclusivity"
-        value={exclusivity}
-        name="Exclusive"
-        description={`${exclusivity ? 'No other' : 'Other'} objects can share the auxiliary device this object is assigned to.`}
-        onClick={() => onChangeField(objectNumber, { exclusivity: (exclusivity + 1) % 2 })}
-      />,
-      <MetadataFlag
-        expanded={expanded}
-        key="mdoOnly"
-        value={mdoOnly}
-        name="Auxiliary only"
-        description={`This object can be in ${mdoOnly ? 'an auxiliary device only' : 'either the stereo bed or an auxiliary device'}.`}
-        onClick={() => onChangeField(objectNumber, { mdoOnly: (mdoOnly + 1) % 2 })}
-      />,
-      <MetadataFlag
-        expanded={expanded}
-        key="mdoSpread"
-        value={mdoSpread}
-        name="Spread"
-        description={`This object is ${!mdoSpread ? 'not ' : ''}replicated across all suitable devices.`}
-        onClick={() => onChangeField(objectNumber, { mdoSpread: (mdoSpread + 1) % 2 })}
-      />,
-      <Dropdown
-        value={mdoThreshold}
-        key="mdoThreshold"
-        options={thresholdOptions}
-        onChange={(e, { value }) => onChangeField(objectNumber, { mdoThreshold: value })}
-        scrolling
-        icon={null}
-        trigger={(
-          <MetadataFlag
-            expanded={expanded}
-            value={mdoThreshold}
-            name="Threshold"
-            description={`This object is inactive until at least ${mdoThreshold} auxiliary ${mdoThreshold === 1 ? 'device is' : 'devices are'} connected.`}
-          />
-        )}
-      />,
-      <Dropdown
-        value={muteIfObject}
-        key="muteIfObject"
-        options={objectOptions}
-        onChange={(e, { value }) => onChangeField(objectNumber, { muteIfObject: value })}
-        scrolling
-        icon={null}
-        trigger={(
-          <MetadataFlag
-            expanded={expanded}
-            value={muteIfObject}
-            name="Mute if"
-            description={`This object is ${!muteIfObject ? 'not ' : ''}disabled if ${muteIfObject ? `the object with number ${muteIfObject}` : 'a specified object'} is active.`}
-          />
-        )}
-      />,
+      <MdoOnlyFlag mdoOnly={mdoOnly} {...flagProps} key="mdoOnly" />,
+      <SpreadFlag mdoSpread={mdoSpread} {...flagProps} key="mdoSpread" />,
+      <ExclusivityFlag exclusivity={exclusivity} {...flagProps} key="exclusivity" />,
+      // <ThresholdFlag mdoThreshold={mdoThreshold} {...flagProps} key="mdoThreshold" />,
+      <MuteIfFlag muteIfObject={muteIfObject} objectsList={objectsList} {...flagProps} key="muteIf" />,
     ];
 
     const zoneFlags = (zones && zones.length > 0) ? zones.map(zone => (
@@ -127,8 +66,7 @@ class ObjectRow extends React.PureComponent {
       />
     )) : [(
       <span key="no-tags">
-        <Icon name="exclamation" />
-        Project has no tags.
+        N/A
       </span>
     )];
 
@@ -168,7 +106,7 @@ class ObjectRow extends React.PureComponent {
         { expanded
           ? (
             metadataFlags.map(f => (
-              <Table.Cell key={f.key} content={f} />
+              <Table.Cell textAlign="center" key={f.key} content={f} />
             ))
           )
           : (
@@ -178,14 +116,12 @@ class ObjectRow extends React.PureComponent {
 
         { expanded
           ? zoneFlags.map(f => (
-            <Table.Cell key={f.key} content={f} />
+            <Table.Cell textAlign="center" key={f.key} content={f} />
           ))
           : (
             <Table.Cell content={zoneFlags} />
           )
         }
-
-        <Table.Cell content={image} />
       </Table.Row>
     );
   }
@@ -203,11 +139,11 @@ ObjectRow.propTypes = {
     exclusivity: PropTypes.number,
     mdoOnly: PropTypes.number,
     mdoSpread: PropTypes.number,
-    mdoThreshold: PropTypes.number,
+    // mdoThreshold: PropTypes.number,
     muteIfObject: PropTypes.number,
     // onDropin: PropTypes.number,
     // onDropout: PropTypes.number,
-    image: PropTypes.string,
+    // image: PropTypes.string,
   }).isRequired,
   zones: PropTypes.arrayOf(PropTypes.shape({
     zoneId: PropTypes.string,

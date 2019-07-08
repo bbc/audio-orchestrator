@@ -10,25 +10,14 @@ const MetadataFlag = React.memo(({
   value,
   name,
   description,
-  expanded,
+  // expanded,
   onClick,
 }) => (
   <Popup
     header={name}
     content={description}
-    horizontalOffset={expanded ? 3 : 12}
-    trigger={expanded ? (
-      <Button
-        size="mini"
-        content={value}
-        compact
-        circular
-        basic
-        color={value ? 'green' : 'red'}
-        icon={value ? 'check circle' : 'circle outline'}
-        onClick={onClick}
-      />
-    ) : (
+    horizontalOffset={12}
+    trigger={(
       <Icon
         link
         color={value ? 'green' : 'red'}
@@ -43,7 +32,7 @@ MetadataFlag.propTypes = ({
   value: PropTypes.number,
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
-  expanded: PropTypes.bool.isRequired,
+  // expanded: PropTypes.bool.isRequired,
   onClick: PropTypes.func,
 });
 
