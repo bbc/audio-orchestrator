@@ -15,9 +15,6 @@ import ObjectRow from './ObjectRow';
 import OrphanedFileRow from './OrphanedFileRow';
 import ZonesModal from './ZonesModal';
 import {
-  setTableExpanded,
-} from '../../../actions/ui';
-import {
   setObjectOrchestrationFields,
   deleteZone,
   renameZone,
@@ -55,12 +52,16 @@ class SequenceObjectTable extends React.Component {
       objects,
       zones,
       expanded,
-      onSetExpanded,
       onChangeField,
       onDeleteZone,
       onAddZone,
       onRenameZone,
     } = this.props;
+
+    // do not render the table if no files are available.
+    if (!filesList || filesList.length === 0) {
+      return null;
+    }
 
     const {
       tagEditorOpen,
@@ -82,8 +83,9 @@ class SequenceObjectTable extends React.Component {
         file: files[fileId],
       }));
 
+
     return (
-      <Container style={{ overflowX: 'auto' }}>
+      <Container>
         <Dimmer active={filesLoading} inverted verticalAlign="top">
           { !filesLoadingTotal
             ? <Loader indeterminate inline="centered" content="Checking Audio Files" />
@@ -138,13 +140,6 @@ class SequenceObjectTable extends React.Component {
           </Table.Body>
         </Table>
 
-        <p>
-          { expanded
-            ? <Button icon="compress" content="simplify table" onClick={() => onSetExpanded(false)} />
-            : <Button icon="expand" content="expand table" onClick={() => onSetExpanded(true)} />
-          }
-        </p>
-
         <ZonesModal
           open={tagEditorOpen}
           onClose={this.handleCloseTagEditor}
@@ -173,8 +168,6 @@ SequenceObjectTable.propTypes = {
     name: PropTypes.string,
     label: PropTypes.string,
   })),
-  onSetExpanded: PropTypes.func.isRequired,
-  expanded: PropTypes.bool.isRequired,
   onChangeField: PropTypes.func.isRequired,
 };
 
@@ -216,7 +209,6 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
 };
 
 const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
-  onSetExpanded: expanded => dispatch(setTableExpanded(expanded)),
   onChangeField: (objectNumber, fields) => dispatch(setObjectOrchestrationFields(
     projectId,
     sequenceId,

@@ -4,10 +4,9 @@ import { connect } from 'react-redux';
 import {
   Button,
   Segment,
+  Container,
   Icon,
   Header,
-  Grid,
-  Divider,
   Label,
 } from 'semantic-ui-react';
 
@@ -15,6 +14,10 @@ import {
   requestReplaceMetadata,
   requestReplaceAllAudioFiles,
 } from '../../../actions/project';
+
+import {
+  setTableExpanded,
+} from '../../../actions/ui';
 
 const SequenceHeader = ({
   haveMetadata,
@@ -25,39 +28,15 @@ const SequenceHeader = ({
   sequenceAudioConfirmation,
   sequenceMetadataError,
   sequenceMetadataConfirmation,
-}) => (
-  <Segment attached placeholder>
-    <Divider vertical content="and" />
-    <Grid columns={2} textAlign="center">
-      <Grid.Column>
-        <Header icon>
-          <Icon name="file code outline" />
-          Import Metadata
-          <Header.Subheader content="The metadata file should have an entry for every object, where the object number corresponds to an audio file." />
-        </Header>
-        <Button
-          primary
-          icon="folder open"
-          content={`${haveMetadata ? 'Replace' : 'Add'} metadata file`}
-          onClick={onReplaceMetadata}
-        />
-        { (sequenceMetadataError || sequenceMetadataConfirmation)
-          ? (
-            <Label
-              basic
-              pointing="above"
-              color={sequenceMetadataError ? 'red' : 'green'}
-              content={sequenceMetadataError || sequenceMetadataConfirmation}
-              icon={sequenceMetadataError ? 'exclamation' : 'checkmark'}
-            />
-          )
-          : null
-        }
-      </Grid.Column>
-      <Grid.Column>
+  expandTable,
+  onSetExpanded,
+}) => {
+  if (!haveFiles) {
+    return (
+      <Segment placeholder>
         <Header icon>
           <Icon name="file audio outline" />
-          Link Audio files
+          Audio files
           <Header.Subheader>
             There should be one continuous mono WAV file for each object.
           </Header.Subheader>
@@ -65,25 +44,58 @@ const SequenceHeader = ({
         <Button
           primary
           icon="linkify"
-          content={`${haveFiles ? 'Replace' : 'Add'} audio files`}
+          content="Add audio files"
           onClick={onReplaceAudioFiles}
         />
-        { (sequenceAudioError || sequenceAudioConfirmation)
-          ? (
-            <Label
-              basic
-              pointing="above"
-              color={sequenceAudioError ? 'red' : 'green'}
-              content={sequenceAudioError || sequenceAudioConfirmation}
-              icon={sequenceAudioError ? 'exclamation' : 'checkmark'}
-            />
-          )
-          : null
-        }
-      </Grid.Column>
-    </Grid>
-  </Segment>
-);
+      </Segment>
+    );
+  }
+
+  return (
+    <Container>
+      <Button
+        primary
+        icon="linkify"
+        content="Replace audio files"
+        onClick={onReplaceAudioFiles}
+      />
+      <Button
+        icon="folder open"
+        content="Import metadata file"
+        onClick={onReplaceMetadata}
+      />
+
+      { expandTable
+        ? <Button icon="compress" content="simplify table" onClick={() => onSetExpanded(false)} />
+        : <Button icon="expand" content="expand table" onClick={() => onSetExpanded(true)} />
+      }
+
+      { (sequenceAudioError || sequenceAudioConfirmation)
+        ? (
+          <Label
+            basic
+            color={sequenceAudioError ? 'red' : 'green'}
+            content={sequenceAudioError || sequenceAudioConfirmation}
+            icon={sequenceAudioError ? 'exclamation' : 'checkmark'}
+          />
+        )
+        : null
+      }
+
+      { (sequenceMetadataError || sequenceMetadataConfirmation)
+        ? (
+          <Label
+            basic
+            color={sequenceMetadataError ? 'red' : 'green'}
+            content={sequenceMetadataError || sequenceMetadataConfirmation}
+            icon={sequenceMetadataError ? 'exclamation' : 'checkmark'}
+          />
+        )
+        : null
+      }
+    </Container>
+  );
+};
 
 SequenceHeader.propTypes = {
   haveMetadata: PropTypes.bool.isRequired,
@@ -94,6 +106,8 @@ SequenceHeader.propTypes = {
   sequenceMetadataConfirmation: PropTypes.string,
   onReplaceMetadata: PropTypes.func.isRequired,
   onReplaceAudioFiles: PropTypes.func.isRequired,
+  expandTable: PropTypes.bool.isRequired,
+  onSetExpanded: PropTypes.func.isRequired,
 };
 
 SequenceHeader.defaultProps = {
@@ -116,6 +130,7 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
     sequenceMetadataError,
     sequenceAudioError,
     sequenceAudioConfirmation,
+    expandTable,
   } = UI;
 
   return {
@@ -125,12 +140,14 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
     sequenceAudioError,
     sequenceMetadataConfirmation,
     sequenceMetadataError,
+    expandTable,
   };
 };
 
 const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
   onReplaceMetadata: () => dispatch(requestReplaceMetadata(projectId, sequenceId)),
   onReplaceAudioFiles: () => dispatch(requestReplaceAllAudioFiles(projectId, sequenceId)),
+  onSetExpanded: expanded => dispatch(setTableExpanded(expanded)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SequenceHeader);

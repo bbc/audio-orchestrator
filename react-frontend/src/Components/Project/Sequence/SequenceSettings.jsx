@@ -2,13 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Segment,
-  Header,
+  Container,
   Form,
   List,
 } from 'semantic-ui-react';
 import { setSequenceSetting } from '../../../actions/project';
-import NextChoices from './NextChoices';
 
 class Settings extends React.Component {
   constructor(props) {
@@ -36,14 +34,10 @@ class Settings extends React.Component {
       loop,
       skippable,
       hold,
-      next,
-      sequencesList,
     } = this.props;
 
     return (
-      <Segment>
-        <Header content="Behaviour" />
-
+      <Container>
         <Form>
           <List relaxed>
             <List.Item>
@@ -84,14 +78,7 @@ class Settings extends React.Component {
             </List.Item>
           </List>
         </Form>
-
-        <Header content="Choices" />
-        <NextChoices
-          value={next}
-          sequencesList={sequencesList}
-          onChange={(e, { value }) => this.handleChange('next', value)}
-        />
-      </Segment>
+      </Container>
     );
   }
 }
@@ -102,16 +89,6 @@ Settings.propTypes = {
   loop: PropTypes.bool.isRequired,
   skippable: PropTypes.bool.isRequired,
   hold: PropTypes.bool.isRequired,
-  next: PropTypes.arrayOf(PropTypes.shape({
-    choiceId: PropTypes.string,
-    sequenceId: PropTypes.string,
-    label: PropTypes.string,
-  })).isRequired,
-  sequencesList: PropTypes.arrayOf(PropTypes.shape({
-    isIntro: PropTypes.bool,
-    name: PropTypes.string.isRequired,
-    sequenceId: PropTypes.string.isRequired,
-  })).isRequired,
   onChangeSetting: PropTypes.func.isRequired,
 };
 
@@ -121,14 +98,12 @@ const mapStateToProps = (state, { projectId, sequenceId }) => {
     loop,
     skippable,
     hold,
-    next,
   } = sequences[sequenceId];
 
   return {
     loop,
     skippable,
     hold,
-    next,
     sequencesList,
   };
 };

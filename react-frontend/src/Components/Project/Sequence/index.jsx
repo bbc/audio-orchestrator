@@ -1,21 +1,19 @@
 import React from 'react';
-import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import {
   Container,
   Menu,
+  Header,
 } from 'semantic-ui-react';
 
 import SequenceHeader from './SequenceHeader';
 import SequenceObjectTable from './SequenceObjectTable';
 import SequenceSettings from './SequenceSettings';
-
+import SequenceChoices from './SequenceChoices';
 import EditableMenuHeader from '../EditableMenuHeader';
 import { setSequenceSetting } from '../../../actions/project';
-
-import {
-  closeSequencePage,
-} from '../../../actions/ui';
+import { closeSequencePage } from '../../../actions/ui';
 
 const Sequence = ({
   sequenceId,
@@ -25,13 +23,17 @@ const Sequence = ({
   onCloseSequence,
 }) => (
   <Container>
-    <Menu inverted color="green" attached="top">
+    <Menu inverted color="green">
       <EditableMenuHeader value={name} onChange={onSetName} />
       <Menu.Item position="right" icon="close" content="close" onClick={onCloseSequence} />
     </Menu>
+    <Header content="Objects" subheader="Add audio files and specify metadata that determine if and on which devices the objects are rendered." />
     <SequenceHeader {...{ sequenceId, projectId }} />
     <SequenceObjectTable {...{ sequenceId, projectId }} />
+    <Header content="Behaviour" subheader="Specify whether the sequence is looped, and when the choices will be displayed." />
     <SequenceSettings {...{ sequenceId, projectId }} />
+    <Header content="Choices" subheader="Specify choices for the user to move to another sequence." />
+    <SequenceChoices {...{ sequenceId, projectId }} />
   </Container>
 );
 

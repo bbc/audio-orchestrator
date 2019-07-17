@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import uuidv4 from 'uuid/v4';
 
 import {
@@ -10,8 +11,9 @@ import {
 } from 'semantic-ui-react';
 import ConfirmDeleteButton from '../../ConfirmDeleteButton';
 import RequiredTextInput from '../../RequiredTextInput';
+import { setSequenceSetting } from '../../../actions/project';
 
-class NextChoices extends React.Component {
+class SequenceChoices extends React.Component {
   constructor(props) {
     super(props);
 
@@ -20,25 +22,25 @@ class NextChoices extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { value } = this.props;
+    const { next } = this.props;
     // Check if the number of choices has just increased by one, ie. we've just added one.
-    if (prevProps.value && value && value.length === prevProps.value.length + 1) {
-      const lastChoiceId = value[value.length - 1].choiceId;
+    if (prevProps.next && next && next.length === prevProps.next.length + 1) {
+      const lastChoiceId = next[next.length - 1].choiceId;
       if (lastChoiceId in this.labelRefs) {
         this.labelRefs[lastChoiceId].select();
       }
     }
   }
 
-  fireChangeEvent(value) {
+  handleChange(value) {
     const { onChange } = this.props;
-    onChange({}, { value });
+    onChange(value);
   }
 
   handleSelectSequence(choiceId, sequenceId) {
-    const { value } = this.props;
+    const { next } = this.props;
 
-    this.fireChangeEvent(value.map((choice) => {
+    this.handleChange(next.map((choice) => {
       if (choice.choiceId !== choiceId) {
         return choice;
       }
@@ -50,9 +52,9 @@ class NextChoices extends React.Component {
   }
 
   handleChangeLabel(choiceId, label) {
-    const { value } = this.props;
+    const { next } = this.props;
 
-    this.fireChangeEvent(value.map((choice) => {
+    this.handleChange(next.map((choice) => {
       if (choice.choiceId !== choiceId) {
         return choice;
       }
@@ -64,25 +66,25 @@ class NextChoices extends React.Component {
   }
 
   handleDeleteChoice(choiceId) {
-    const { value } = this.props;
+    const { next } = this.props;
 
-    this.fireChangeEvent(value.filter(choice => choice.choiceId !== choiceId));
+    this.handleChange(next.filter(choice => choice.choiceId !== choiceId));
   }
 
   handleAddChoice() {
-    const { value } = this.props;
+    const { next } = this.props;
 
-    this.fireChangeEvent([
-      ...value,
+    this.handleChange([
+      ...next,
       { choiceId: uuidv4() },
     ]);
   }
 
   ensureChoiceIds() {
-    const { value } = this.props;
+    const { next } = this.props;
 
-    if (value.some(({ choiceId }) => !choiceId)) {
-      this.fireChangeEvent(value.map((choice) => {
+    if (next.some(({ choiceId }) => !choiceId)) {
+      this.handleChange(next.map((choice) => {
         if (choice.choiceId) {
           return choice;
         }
@@ -96,14 +98,14 @@ class NextChoices extends React.Component {
   }
 
   handleKeyPress(e, choiceId) {
-    const { value } = this.props;
+    const { next } = this.props;
     const { key, target } = e;
 
     if (key === 'Enter') {
       target.blur();
 
       // Move to the next row or create a new choice.
-      const nextChoice = value[value.findIndex(choice => choice.choiceId === choiceId) + 1];
+      const nextChoice = next[next.findIndex(choice => choice.choiceId === choiceId) + 1];
       if (!nextChoice) {
         // this.handleAddChoice();
         // TODO: enable this again without disregarding the currently edited field's value.
@@ -115,7 +117,7 @@ class NextChoices extends React.Component {
 
   render() {
     const {
-      value,
+      next,
       sequencesList,
     } = this.props;
 
@@ -136,7 +138,7 @@ class NextChoices extends React.Component {
             </Table.Row>
           </Table.Header>
           <Table.Body>
-            { value.map(({ sequenceId, label, choiceId }) => (
+            { next.map(({ sequenceId, label, choiceId }) => (
               <Table.Row key={choiceId || 'initial'}>
                 <Table.Cell>
                   <RequiredTextInput
@@ -183,8 +185,8 @@ class NextChoices extends React.Component {
   }
 }
 
-NextChoices.propTypes = {
-  value: PropTypes.arrayOf(PropTypes.shape({
+SequenceChoices.propTypes = {
+  next: PropTypes.arrayOf(PropTypes.shape({
     choiceId: PropTypes.string,
     sequenceId: PropTypes.string,
     label: PropTypes.string,
@@ -196,4 +198,18 @@ NextChoices.propTypes = {
   onChange: PropTypes.func.isRequired,
 };
 
-export default NextChoices;
+const mapStateToProps = (state, { projectId, sequenceId }) => {
+  const { sequences, sequencesList } = state.Project.projects[projectId];
+  const { next } = sequences[sequenceId];
+
+  return {
+    next,
+    sequencesList,
+  };
+};
+
+const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
+  onChange: value => dispatch(setSequenceSetting(projectId, sequenceId, 'next', value)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(SequenceChoices);

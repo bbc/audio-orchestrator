@@ -612,48 +612,108 @@ const fileNameToObjectNumber = name => parseInt(name, 10) || null;
 const matchObjectsToFiles = (projectId, sequenceId) => {
   // load required data from project store
   const project = projects[projectId];
+  const { zones } = project.settings;
   const sequence = project.sequences[sequenceId];
-  const {
-    filesList,
-    files,
-    objectsList,
-    objects,
-  } = sequence;
 
-  const newObjects = { ...objects };
+  const suffixToChannelMapping = {
+    _L: 'left',
+    _R: 'right',
+    _M: 'mono',
+    _C: 'mono',
+  };
 
-  // select or create objects for all files, updating only fileId if one already exists
-  filesList
-    .forEach(({ fileId, name }) => {
-      // do not create dummy objects for files that don't match the naming convention (TODO: error?)
-      const objectNumber = fileNameToObjectNumber(name);
-      if (objectNumber === null) {
-        console.warn(`${name} does not match naming convention, should start with a number`);
-      }
+  const suffixToPanning = {
+    _L: 30,
+    _R: -30,
+    _M: 0,
+    _C: 0,
+  };
 
-      // merge with existing object if there already was one.
+  // The default orchestration metadata for a new object
+  const defaultOrchestration = {
+    mdoOnly: 0,
+    mdoSpread: 0,
+    exclusivity: 0,
+    mdoThreshold: 0,
+    muteIfObject: 0,
+    onDropin: 0,
+    onDropout: 0,
+    image: null,
+  };
+
+  (zones || []).forEach(({ name }) => {
+    defaultOrchestration[name] = 1;
+  });
+
+  const newObjects = { ...sequence.objects };
+
+  // select or create objects for all files.
+  (sequence.filesList || []).forEach(({ fileId, name }) => {
+    // do not create dummy objects for files that don't match the naming convention (TODO: error?)
+    const objectNumber = fileNameToObjectNumber(name);
+    if (objectNumber === null) {
+      console.warn(`${name} does not match naming convention, should start with a number`);
+      return;
+    }
+
+    // Create a label from the section of the file name between object number and extension
+    const baseName = name.slice(0, name.lastIndexOf('.'));
+    const label = baseName.replace(/^[0-9]*[_-\s]*/, '');
+    const suffix = baseName.slice(-2);
+
+    const oldObject = sequence.objects[objectNumber];
+    if (!oldObject) {
+      // Create an object with the default metadata
       newObjects[objectNumber] = {
-        ...(objects[objectNumber] || {}),
-        ...{ objectNumber, fileId },
+        objectNumber,
+        label,
+        orchestration: { ...defaultOrchestration },
+        fileId,
+        panning: suffixToPanning[suffix] || 0,
+        channelMapping: suffixToChannelMapping[suffix] || 'mono',
       };
-    });
-
-  // remove fileId from objects where the file doesn't exist anymore
-  objectsList.forEach(({ objectNumber }) => {
-    const { fileId } = newObjects[objectNumber];
-    if (!(fileId in files)) {
-      newObjects[objectNumber].fileId = null;
+    } else {
+      // Merge the object with the defaults, to ensure there are values for all fields.
+      // overwrite the label and fileId because these are always based on the file.
+      newObjects[objectNumber] = {
+        ...newObjects[objectNumber],
+        label,
+        fileId,
+        orchestration: {
+          ...defaultOrchestration,
+          ...newObjects[objectNumber].orchestration,
+        },
+      };
     }
   });
 
-  // select files for objects that don't have a corresponding file: this case should be covered
-  // above; if the objects list is replaced no file would have a matching object.
-
   // update project with modified objects
   sequence.objects = newObjects;
+  sequence.objectsList = Object.keys(newObjects).map(objectNumber => ({
+    objectNumber: Number(objectNumber),
+    label: newObjects[objectNumber].label,
+  }));
 
-  // Note that the objectsList is not updated, because only objects that are listed in the metadata
-  // files should be displayed in the interface; and the objectsList is created when it is loaded.
+  // go through all objects, and remove fileId from objects where not present any more.
+  (sequence.objectsList || []).forEach(({ objectNumber }) => {
+    // remove fileId from objects where the file doesn't exist anymore
+    const object = sequence.objects[objectNumber];
+    const { fileId } = object;
+
+    sequence.objects = {
+      ...sequence.objects,
+      [objectNumber]: {
+        panning: 0,
+        channelMapping: 'mono',
+        ...object,
+        orchestration: {
+          ...defaultOrchestration,
+          ...object.orchestration,
+        },
+        fileId: (fileId in sequence.files) ? fileId : null,
+      },
+    };
+  });
 };
 
 /**
@@ -829,17 +889,6 @@ const initialiseSequenceObjects = (projectId, sequenceId, rawObjects) => (dispat
   const project = projects[projectId];
   const sequence = project.sequences[sequenceId];
 
-  const suffixToChannelMapping = {
-    L: 'left',
-    R: 'right',
-    M: 'mono',
-  };
-  const suffixToPanning = {
-    L: 30,
-    R: -30,
-    M: 0,
-  };
-
   const newObjects = {};
   const newObjectsList = rawObjects.map(({ objectNumber, label }) => ({
     objectNumber: parseInt(objectNumber, 10),
@@ -848,17 +897,13 @@ const initialiseSequenceObjects = (projectId, sequenceId, rawObjects) => (dispat
 
   rawObjects.forEach((data) => {
     const objectNumber = parseInt(data.objectNumber, 10);
-    const { label } = data;
 
-    const suffix = label[label.length - 1] || 0;
     newObjects[objectNumber] = ({
       objectNumber,
-      label,
+      label: '',
       fileId: null,
-      panning: suffixToPanning[suffix] || 0,
-      channelMapping: suffixToChannelMapping[suffix] || 'mono',
       orchestration: {
-        ...data,
+        ...data, // TODO: filter to required columns only?
         image: data.image || null,
       },
     });
