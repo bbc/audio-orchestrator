@@ -944,6 +944,32 @@ export const setObjectOrchestrationFields = (
   dispatch(loadSequenceObjects(projectId, sequenceId));
 };
 
+export const setObjectPanning = (
+  projectId, sequenceId, objectNumber, channelMapping,
+) => (dispatch) => {
+  const project = projects[projectId];
+  const sequence = project.sequences[sequenceId];
+
+  const channelMappingToPanning = {
+    left: 30,
+    mono: 0,
+    right: -30,
+  };
+
+  const object = sequence.objects[objectNumber];
+  const newObject = {
+    ...object,
+    channelMapping: channelMapping,
+    panning: channelMappingToPanning[channelMapping],
+  };
+
+  sequence.objects = {
+    ...sequence.objects,
+    [objectNumber]: newObject,
+  };
+
+  dispatch(loadSequenceObjects(projectId, sequenceId));
+};
 /**
  * Replace metadata file, open a file-open dialogue and replace the object metadata if a valid file
  * is selected.

@@ -12,10 +12,10 @@ import {
 } from 'semantic-ui-react';
 import ObjectHeader from './ObjectHeader';
 import ObjectRow from './ObjectRow';
-import OrphanedFileRow from './OrphanedFileRow';
 import ZonesModal from './ZonesModal';
 import {
   setObjectOrchestrationFields,
+  setObjectPanning,
   deleteZone,
   renameZone,
   addZone,
@@ -53,6 +53,7 @@ class SequenceObjectTable extends React.Component {
       zones,
       expanded,
       onChangeField,
+      onChangePanning,
       onDeleteZone,
       onAddZone,
       onRenameZone,
@@ -76,14 +77,6 @@ class SequenceObjectTable extends React.Component {
       channelMapping: objects[objectNumber].channelMapping,
     }));
 
-    const filesWithoutObjects = filesList
-      .filter(({ fileId }) => objectsWithFiles.every(o => o.fileId !== fileId))
-      .map(({ fileId }) => ({
-        fileId,
-        file: files[fileId],
-      }));
-
-
     return (
       <Container>
         <Dimmer active={filesLoading} inverted verticalAlign="top">
@@ -96,7 +89,7 @@ class SequenceObjectTable extends React.Component {
           ? (
             <Message negative>
               <Icon name="exclamation" />
-              {'Not all objects have an associated audio file. Check that all audio files have been added and are named according to their object number.'}
+              {'Not all objects have an associated audio file. Check that all audio files have been added and are named starting with their object number.'}
             </Message>
           )
           : null
@@ -122,19 +115,10 @@ class SequenceObjectTable extends React.Component {
                   zones,
                   expanded,
                   onChangeField,
+                  onChangePanning,
                   objectsList,
                 }}
                 {...object}
-              />
-            ))}
-            { (tagEditorOpen ? [] : filesWithoutObjects).map(file => (
-              <OrphanedFileRow
-                key={file.fileId}
-                {...{
-                  expanded,
-                  zones,
-                }}
-                {...file}
               />
             ))}
           </Table.Body>
@@ -214,6 +198,12 @@ const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
     sequenceId,
     objectNumber,
     fields,
+  )),
+  onChangePanning: (objectNumber, channelMapping) => dispatch(setObjectPanning(
+    projectId,
+    sequenceId,
+    objectNumber,
+    channelMapping,
   )),
   onAddZone: name => dispatch(addZone(projectId, name)),
   onRenameZone: (zoneId, friendlyName) => dispatch(renameZone(projectId, zoneId, friendlyName)),

@@ -6,6 +6,7 @@ import {
   Popup,
 } from 'semantic-ui-react';
 
+import PanningFlag from './PanningFlag';
 import MdoOnlyFlag from './MdoOnlyFlag';
 import SpreadFlag from './SpreadFlag';
 // import ThresholdFlag from './ThresholdFlag';
@@ -25,6 +26,7 @@ class ObjectRow extends React.PureComponent {
       expanded,
       onChangeField,
       objectsList,
+      onChangePanning,
     } = this.props;
 
     const {
@@ -101,7 +103,13 @@ class ObjectRow extends React.PureComponent {
           )
         }
 
-        <Table.Cell>{channelMapping === 'mono' ? 'centre' : channelMapping}</Table.Cell>
+        <Table.Cell>
+          <PanningFlag
+            channelMapping={channelMapping}
+            onChange={onChangePanning}
+            objectNumber={objectNumber}
+          />
+        </Table.Cell>
 
         { expanded
           ? (
@@ -152,6 +160,7 @@ ObjectRow.propTypes = {
   })),
   expanded: PropTypes.bool.isRequired,
   onChangeField: PropTypes.func.isRequired,
+  onChangePanning: PropTypes.func.isRequired,
   objectsList: PropTypes.arrayOf(PropTypes.shape({
     objectNumber: PropTypes.number,
     label: PropTypes.string,
