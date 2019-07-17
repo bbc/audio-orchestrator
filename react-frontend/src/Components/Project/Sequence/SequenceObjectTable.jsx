@@ -16,6 +16,7 @@ import ZonesModal from './ZonesModal';
 import {
   setObjectOrchestrationFields,
   setObjectPanning,
+  resetObjectMetadata,
   deleteZone,
   renameZone,
   addZone,
@@ -57,6 +58,7 @@ class SequenceObjectTable extends React.Component {
       onDeleteZone,
       onAddZone,
       onRenameZone,
+      onResetObject,
     } = this.props;
 
     // do not render the table if no files are available.
@@ -114,9 +116,10 @@ class SequenceObjectTable extends React.Component {
                 {...{
                   zones,
                   expanded,
+                  objectsList,
                   onChangeField,
                   onChangePanning,
-                  objectsList,
+                  onResetObject,
                 }}
                 {...object}
               />
@@ -204,6 +207,11 @@ const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
     sequenceId,
     objectNumber,
     channelMapping,
+  )),
+  onResetObject: objectNumber => dispatch(resetObjectMetadata(
+    projectId,
+    sequenceId,
+    objectNumber,
   )),
   onAddZone: name => dispatch(addZone(projectId, name)),
   onRenameZone: (zoneId, friendlyName) => dispatch(renameZone(projectId, zoneId, friendlyName)),

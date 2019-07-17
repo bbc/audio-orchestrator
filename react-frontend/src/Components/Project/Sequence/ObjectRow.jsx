@@ -4,6 +4,7 @@ import {
   Table,
   Icon,
   Popup,
+  Button,
 } from 'semantic-ui-react';
 
 import PanningFlag from './PanningFlag';
@@ -27,6 +28,7 @@ class ObjectRow extends React.PureComponent {
       onChangeField,
       objectsList,
       onChangePanning,
+      onResetObject,
     } = this.props;
 
     const {
@@ -130,6 +132,10 @@ class ObjectRow extends React.PureComponent {
             <Table.Cell content={zoneFlags} />
           )
         }
+
+        <Table.Cell>
+          <Button icon="undo" onClick={() => onResetObject(objectNumber)} />
+        </Table.Cell>
       </Table.Row>
     );
   }
@@ -161,6 +167,7 @@ ObjectRow.propTypes = {
   expanded: PropTypes.bool.isRequired,
   onChangeField: PropTypes.func.isRequired,
   onChangePanning: PropTypes.func.isRequired,
+  onResetObject: PropTypes.func.isRequired,
   objectsList: PropTypes.arrayOf(PropTypes.shape({
     objectNumber: PropTypes.number,
     label: PropTypes.string,

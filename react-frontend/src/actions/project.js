@@ -921,6 +921,21 @@ const initialiseSequenceObjects = (projectId, sequenceId, rawObjects) => (dispat
   dispatch(validateProject(projectId));
 };
 
+export const resetObjectMetadata = (projectId, sequenceId, objectNumber) => (dispatch) => {
+  const project = projects[projectId];
+  const sequence = project.sequences[sequenceId];
+
+  // replace the object with an empty object, so it can be filled in based on the file name.
+  sequence.objects = {
+    ...sequence.objects,
+    [objectNumber]: { objectNumber },
+  };
+
+  matchObjectsToFiles(projectId, sequenceId);
+
+  dispatch(loadSequenceObjects(projectId, sequenceId));
+};
+
 export const setObjectOrchestrationFields = (
   projectId, sequenceId, objectNumber, fields,
 ) => (dispatch) => {

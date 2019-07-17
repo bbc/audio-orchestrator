@@ -35,6 +35,7 @@ const ObjectHeader = ({
             {' '}
             <Icon name="cog" link onClick={onEditTags} />
           </Table.HeaderCell>
+          <Table.HeaderCell content="Actions" />
         </Table.Row>
       )
       : null
@@ -61,18 +62,20 @@ const ObjectHeader = ({
               <Popup trigger={<span style={flagNameStyle}>{name}</span>} content="Specify whether an object should be, could be, or must never be in a device that has selected this tag." />
             </Table.HeaderCell>
           ))}
+          <Table.HeaderCell content="" />
         </Table.Row>
       ) : (
         <Table.Row>
           <Table.HeaderCell content="#" collapsing />
           <Table.HeaderCell content="Audio file" />
           <Table.HeaderCell content="Panning" />
-          <Table.HeaderCell content="Placement rules" />
+          <Table.HeaderCell content="Behaviour" />
           <Table.HeaderCell>
             Device tags
             {' '}
             <Icon name="cog" link onClick={onEditTags} />
           </Table.HeaderCell>
+          <Table.HeaderCell content="Actions" />
         </Table.Row>
       )
     }
