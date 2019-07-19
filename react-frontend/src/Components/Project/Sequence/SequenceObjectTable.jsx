@@ -109,26 +109,28 @@ class SequenceObjectTable extends React.Component {
           : null
         }
 
-        <Table singleLine celled={expanded} verticalAlign="top" style={{ overflowX: 'auto' }}>
-          <ObjectHeader {...{ expanded, zones }} onEditTags={this.handleOpenTagEditor} />
-          <Table.Body>
-            { (tagEditorOpen ? [] : objectsWithFiles).map(object => (
-              <ObjectRow
-                key={object.objectNumber}
-                {...{
-                  zones,
-                  expanded,
-                  objectsList,
-                  onChangeField,
-                  onChangePanning,
-                  onResetObject,
-                  onDeleteObject,
-                }}
-                {...object}
-              />
-            ))}
-          </Table.Body>
-        </Table>
+        <Container style={{ overflowX: 'auto', margin: '1em 0' }}>
+          <Table singleLine celled={expanded} verticalAlign="top">
+            <ObjectHeader {...{ expanded, zones }} onEditTags={this.handleOpenTagEditor} />
+            <Table.Body>
+              { (tagEditorOpen ? [] : objectsWithFiles).map(object => (
+                <ObjectRow
+                  key={object.objectNumber}
+                  {...{
+                    zones,
+                    expanded,
+                    objectsList,
+                    onChangeField,
+                    onChangePanning,
+                    onResetObject,
+                    onDeleteObject,
+                  }}
+                  {...object}
+                />
+              ))}
+            </Table.Body>
+          </Table>
+        </Container>
 
         <ZonesModal
           open={tagEditorOpen}

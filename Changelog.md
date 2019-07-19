@@ -3,6 +3,16 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.8.0`
+_2019-07-19_
+
+* Change: Importing a metadata file is now optional, and can only be done after linking audio files. Basic object metadata is automatically generated when a file is added.
+* Change: Panning column can now be edited, as left, right, or centre. It is initially populated from the filename suffix (`_L` or `_R`).
+* Change: User interface for the sequence objects table has been improved.
+* New feature: A QR code is displayed when the preview is completed.
+* New feature: An object row's metadata can be reset to the default settings.
+* New feature: An object can be removed from a sequence.
+
 # `0.7.0`
 _2019-07-05_
 
