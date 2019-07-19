@@ -17,6 +17,7 @@ import {
   setObjectOrchestrationFields,
   setObjectPanning,
   resetObjectMetadata,
+  deleteObject,
   deleteZone,
   renameZone,
   addZone,
@@ -59,6 +60,7 @@ class SequenceObjectTable extends React.Component {
       onAddZone,
       onRenameZone,
       onResetObject,
+      onDeleteObject,
     } = this.props;
 
     // do not render the table if no files are available.
@@ -120,6 +122,7 @@ class SequenceObjectTable extends React.Component {
                   onChangeField,
                   onChangePanning,
                   onResetObject,
+                  onDeleteObject,
                 }}
                 {...object}
               />
@@ -209,6 +212,11 @@ const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
     channelMapping,
   )),
   onResetObject: objectNumber => dispatch(resetObjectMetadata(
+    projectId,
+    sequenceId,
+    objectNumber,
+  )),
+  onDeleteObject: objectNumber => dispatch(deleteObject(
     projectId,
     sequenceId,
     objectNumber,

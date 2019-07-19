@@ -936,6 +936,31 @@ export const resetObjectMetadata = (projectId, sequenceId, objectNumber) => (dis
   dispatch(loadSequenceObjects(projectId, sequenceId));
 };
 
+export const deleteObject = (projectId, sequenceId, objectNumber) => (dispatch) => {
+  const project = projects[projectId];
+  const sequence = project.sequences[sequenceId];
+
+  // remove file entry from sequence files and file list
+  const { fileId } = sequence.objects[objectNumber];
+  if (fileId in sequence.files) {
+    const newFiles = { ...sequence.files };
+    delete newFiles[fileId];
+    sequence.files = newFiles;
+    sequence.filesList = sequence.filesList.filter(f => f.fileId !== fileId);
+  }
+
+  // remove object from sequence objects, and objects list.
+  const newObjects = { ...sequence.objects };
+  delete newObjects[objectNumber];
+  sequence.objects = newObjects;
+  sequence.objectsList = sequence.objectsList.filter(o => o.objectNumber !== objectNumber);
+
+  // ensure objects and files are still consistent, and reload both.
+  matchObjectsToFiles(projectId, sequenceId);
+  dispatch(loadSequenceFiles(projectId, sequenceId));
+  dispatch(loadSequenceObjects(projectId, sequenceId));
+};
+
 export const setObjectOrchestrationFields = (
   projectId, sequenceId, objectNumber, fields,
 ) => (dispatch) => {

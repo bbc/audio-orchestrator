@@ -144,14 +144,27 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
           // copy the files (or directory) for every item into the sequence output directory
 
           // make a list of copy tasks to run in parallel
-          const copyTasks = requiredEncodedItems.map(({ sequenceId, encodedItemsBasePath }) => {
-            // the returned value is a function taking the async callback
-            return cb => fse.copy(
-              encodedItemsBasePath,
-              sequenceOutputDir(audioOutputDir, sequenceId),
-              { overwrite: false, errorOnExist: false },
-              cb,
-            );
+          const copyTasks = [];
+
+          requiredEncodedItems.forEach(({
+            sequenceId,
+            encodedItems,
+            encodedItemsBasePath,
+          }) => {
+            const sequenceDestPath = sequenceOutputDir(audioOutputDir, sequenceId);
+            encodedItems.forEach(({ relativePath }) => {
+              const relativeSourcePath = relativePath.replace(/\/manifest.mpd/, '');
+              const sourcePath = path.join(encodedItemsBasePath, relativeSourcePath);
+              const destPath = path.join(sequenceDestPath, relativeSourcePath);
+
+              // the task is a function taking the async callback
+              copyTasks.push(cb => fse.copy(
+                sourcePath,
+                destPath,
+                { overwrite: false, errorOnExist: false },
+                cb,
+              ));
+            });
           });
 
           // do the copy operations by calling the prepared functions, and resolve or reject the

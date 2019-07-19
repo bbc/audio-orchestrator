@@ -14,13 +14,14 @@ import SpreadFlag from './SpreadFlag';
 import ExclusivityFlag from './ExclusivityFlag';
 import MuteIfFlag from './MuteIfFlag';
 import MetadataZoneFlag from './MetadataZoneFlag';
+import ConfirmDeleteButton from '../../ConfirmDeleteButton';
 
 class ObjectRow extends React.PureComponent {
   render() {
     const {
       objectNumber,
       channelMapping,
-      // label,
+      label,
       file,
       orchestration,
       zones,
@@ -29,6 +30,7 @@ class ObjectRow extends React.PureComponent {
       objectsList,
       onChangePanning,
       onResetObject,
+      onDeleteObject,
     } = this.props;
 
     const {
@@ -135,6 +137,11 @@ class ObjectRow extends React.PureComponent {
 
         <Table.Cell>
           <Button icon="undo" onClick={() => onResetObject(objectNumber)} />
+          <ConfirmDeleteButton
+            header="Delete Object"
+            name={`${label} (object number ${objectNumber})`}
+            onDelete={() => onDeleteObject(objectNumber)}
+          />
         </Table.Cell>
       </Table.Row>
     );
@@ -144,7 +151,7 @@ class ObjectRow extends React.PureComponent {
 ObjectRow.propTypes = {
   objectNumber: PropTypes.number.isRequired,
   channelMapping: PropTypes.string.isRequired,
-  // label: PropTypes.string.isRequired,
+  label: PropTypes.string.isRequired,
   file: PropTypes.shape({
     name: PropTypes.string,
     error: PropTypes.string,
@@ -168,6 +175,7 @@ ObjectRow.propTypes = {
   onChangeField: PropTypes.func.isRequired,
   onChangePanning: PropTypes.func.isRequired,
   onResetObject: PropTypes.func.isRequired,
+  onDeleteObject: PropTypes.func.isRequired,
   objectsList: PropTypes.arrayOf(PropTypes.shape({
     objectNumber: PropTypes.number,
     label: PropTypes.string,
