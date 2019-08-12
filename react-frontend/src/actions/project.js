@@ -936,6 +936,7 @@ export const resetObjectMetadata = (projectId, sequenceId, objectNumber) => (dis
   matchObjectsToFiles(projectId, sequenceId);
 
   dispatch(loadSequenceObjects(projectId, sequenceId));
+  dispatch(validateProject(projectId));
 };
 
 export const deleteObject = (projectId, sequenceId, objectNumber) => (dispatch) => {
@@ -961,6 +962,7 @@ export const deleteObject = (projectId, sequenceId, objectNumber) => (dispatch) 
   matchObjectsToFiles(projectId, sequenceId);
   dispatch(loadSequenceFiles(projectId, sequenceId));
   dispatch(loadSequenceObjects(projectId, sequenceId));
+  dispatch(validateProject(projectId));
 };
 
 export const setObjectOrchestrationFields = (
