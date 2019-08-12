@@ -3,6 +3,8 @@ import fse from 'fs-extra';
 import path from 'path';
 import mapSeries from 'async/mapSeries';
 import ProgressReporter from './progressReporter';
+import generateSequenceMetatata from './generateSequenceMetadata';
+import { headerlessDashManifest, safariDashManifest } from './dashManifests';
 
 class AudioWorkerValidationError extends Error {
   constructor(message, missingEncodedItems = null) {
@@ -13,23 +15,8 @@ class AudioWorkerValidationError extends Error {
 
 const sequenceOutputDir = (basePath, sequenceId) => path.join(basePath, `${sequenceId}`);
 
-/**
- * Finds the duration of the sequence from that of the longest file referenced by an object.
- *
- * @returns {number}
- */
-const findSequenceDuration = (objects, files) => {
-  let duration = 0;
 
-  objects.forEach(({ fileId }) => {
-    const file = files[fileId];
-    duration = Math.max(duration, file.probe.duration);
-  });
-
-  return duration;
-};
-
-const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
+const audioWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) => {
   const progress = new ProgressReporter(6, onProgress);
 
   const audioOutputDir = path.join(outputDir, 'audio');
@@ -143,8 +130,9 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
         .then(() => new Promise((resolve, reject) => {
           // copy the files (or directory) for every item into the sequence output directory
 
-          // make a list of copy tasks to run in parallel
-          const copyTasks = [];
+          // make a list of tasks to run asynchronously, each is a function taking a callback
+          // as its only argument.
+          const tasks = [];
 
           requiredEncodedItems.forEach(({
             sequenceId,
@@ -152,24 +140,48 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
             encodedItemsBasePath,
           }) => {
             const sequenceDestPath = sequenceOutputDir(audioOutputDir, sequenceId);
-            encodedItems.forEach(({ relativePath }) => {
+            encodedItems.forEach(({
+              relativePath, relativePathSafari,
+              type,
+              duration,
+            }) => {
               const relativeSourcePath = relativePath.replace(/\/manifest.mpd/, '');
               const sourcePath = path.join(encodedItemsBasePath, relativeSourcePath);
               const destPath = path.join(sequenceDestPath, relativeSourcePath);
 
-              // the task is a function taking the async callback
-              copyTasks.push(cb => fse.copy(
+              // Copy all the files for this item
+              tasks.push(cb => fse.copy(
                 sourcePath,
                 destPath,
                 { overwrite: false, errorOnExist: false },
                 cb,
               ));
+
+              // if it is a DASH stream item, overwrite the manifests
+              const SILENCE_DURATION = 4.069; // TODO import this from encode worker?
+              if (type === 'dash') {
+                const { baseUrl } = settings;
+                const sequenceUrl = `${baseUrl}/${sequenceId}`;
+                const paddedDuration = duration + SILENCE_DURATION;
+
+                tasks.push(cb => fse.writeFile(
+                  path.join(sequenceDestPath, relativePath),
+                  headerlessDashManifest(relativeSourcePath, sequenceUrl, paddedDuration),
+                  cb,
+                ));
+
+                tasks.push(cb => fse.writeFile(
+                  path.join(sequenceDestPath, relativePathSafari),
+                  safariDashManifest(relativeSourcePath, sequenceUrl, paddedDuration),
+                  cb,
+                ));
+              }
             });
           });
 
           // do the copy operations by calling the prepared functions, and resolve or reject the
           // promise once the mapSeries callback is called.
-          mapSeries(copyTasks, (fn, cb) => fn(cb), (err, result) => {
+          mapSeries(tasks, (fn, cb) => fn(cb), (err, result) => {
             if (err) {
               reject(err);
             } else {
@@ -183,37 +195,8 @@ const audioWorker = ({ sequences, outputDir }, onProgress = () => {}) => {
       return new Promise((resolve, reject) => {
         logger.debug('generating metadata files (mapSeries)');
         mapSeries(sequences, (sequence, callback) => {
-          const {
-            sequenceId,
-            loop,
-            outPoints,
-            objects,
-            files,
-          } = sequence;
-
-          const duration = findSequenceDuration(objects, files);
-
-          const sequenceMetadata = {
-            duration,
-            loop,
-            outPoints,
-            objects: objects.map(object => ({
-              objectId: `${object.objectNumber}-${object.label}`,
-              orchestration: {
-                ...object.orchestration,
-              },
-              items: files[object.fileId].encodedItems.map(item => ({
-                start: item.start,
-                duration: item.duration,
-                source: {
-                  channelMapping: object.channelMapping,
-                  type: item.type,
-                  url: `audio/${sequenceId}/${item.relativePath}`,
-                  urlSafari: item.relativePathSafari ? `audio/${sequenceId}/${item.relativePathSafari}` : null,
-                },
-              })),
-            })),
-          };
+          const { sequenceId } = sequence;
+          const sequenceMetadata = generateSequenceMetatata(sequence, settings);
 
           fse.writeFile(
             path.join(sequenceOutputDir(audioOutputDir, sequenceId), 'sequence.json'),

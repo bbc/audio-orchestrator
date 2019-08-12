@@ -249,6 +249,8 @@ const createTaskWithProgress = (dispatch, task, taskId, argument) => {
  */
 export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
   const project = projects[projectId];
+  const { settings } = project;
+  const { baseUrl } = settings;
   const sequence = project.sequences[sequenceId];
   const { filesList, files } = sequence;
 
@@ -416,7 +418,7 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
       // Trigger encoding of all files, too, and pass on the results merged with previously encoded
       // files.
       dispatch(setEncodeTaskId(projectId, sequenceId, encodeTaskId));
-      return createTaskWithProgress(dispatch, encodeAll, encodeTaskId, filesToEncode)
+      return createTaskWithProgress(dispatch, encodeAll, encodeTaskId, { files: filesToEncode, baseUrl })
         .then(encodeResults => [
           ...previouslyEncodedFiles.map(file => ({ ...file, success: true })),
           ...encodeResults,

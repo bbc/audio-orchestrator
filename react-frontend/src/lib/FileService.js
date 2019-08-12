@@ -139,14 +139,17 @@ class FileService {
   /**
    * Encode a bunch of files using the items information.
    *
-   * @param {Array<Object>} files - files to create, each like { fileId, path, items, sequenceId }.
+   * @param {Object} options
+   * @param {Array<Object>} options.files - files to create, each like { fileId, path, items, sequenceId }.
+   * @param {string} options.baseUrl - baseUrl to prepend to DASH manifest paths, can be absolute or relative.
+   *
    */
-  encodeAll(files, callbacks = {}) {
+  encodeAll({ files, baseUrl }, callbacks = {}) {
     if (files.length === 0) {
       return shortcutSuccess(callbacks);
     }
 
-    return this.post('analyse/encode', { files })
+    return this.post('analyse/encode', { files, baseUrl })
       .then(({ success, batchId }) => {
         if (!success) throw new Error('Could not create batch for encoding');
 

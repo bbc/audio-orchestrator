@@ -1,4 +1,5 @@
 import Project from '../lib/Project';
+
 import ExportService from '../lib/ExportService';
 import LocalProjectStore from '../lib/LocalProjectStore';
 import { setFileProperties, analyseAllFiles } from './project';
@@ -117,8 +118,9 @@ export const requestExportAudio = projectId => (dispatch) => {
   ProjectStore.openProject(projectId)
     .then((store) => {
       const project = new Project(store);
+      const { settings } = project;
       const sequences = project.getSequencesToExport(project);
-      return waitForExportTask(dispatch, exportAudio, { sequences });
+      return waitForExportTask(dispatch, exportAudio, { sequences, settings });
     })
     .then(({ result }) => {
       const { outputDir } = result;

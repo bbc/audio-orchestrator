@@ -26,6 +26,7 @@ class Advanced extends React.Component {
     const {
       joiningLink,
       cloudSyncHostname,
+      baseUrl,
     } = this.props;
 
     return (
@@ -45,6 +46,13 @@ class Advanced extends React.Component {
           defaultValue={cloudSyncHostname}
           onBlur={this.handleBlur}
         />
+        <Form.Input
+          label="Audio base URL"
+          placeholder="audio/"
+          name="baseUrl"
+          defaultValue={baseUrl}
+          onBlur={this.handleBlur}
+        />
       </Form>
     );
   }
@@ -54,6 +62,7 @@ Advanced.propTypes = {
   onChangeSetting: PropTypes.func.isRequired,
   joiningLink: PropTypes.string,
   cloudSyncHostname: PropTypes.string,
+  baseUrl: PropTypes.string,
 };
 
 const mapStateToProps = (state, { projectId }) => {
@@ -62,11 +71,13 @@ const mapStateToProps = (state, { projectId }) => {
   const {
     joiningLink,
     cloudSyncHostname,
+    baseUrl,
   } = project.settings;
 
   return {
     joiningLink,
     cloudSyncHostname,
+    baseUrl,
   };
 };
 

@@ -105,8 +105,8 @@ class ExportService {
   /**
    *
    */
-  exportAudio({ sequences }, callbacks = {}) {
-    return this.post('export/audio', { sequences })
+  exportAudio({ sequences, settings }, callbacks = {}) {
+    return this.post('export/audio', { sequences, settings })
       .then(({ success, taskId }) => {
         if (!success) throw new Error('could not create task for exporting audio');
 

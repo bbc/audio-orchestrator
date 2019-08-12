@@ -1,11 +1,12 @@
 import uuidv4 from 'uuid/v4';
 import Sequence from './Sequence';
-
 import {
   PAGE_PROJECT_PRESENTATION,
   PAGE_PROJECT_ADVANCED,
   PAGE_PROJECT_SEQUENCES,
 } from '../reducers/UIReducer';
+
+const DEFAULT_BASE_URL = 'audio';
 
 /**
  * Helper for validating URL in advanced project settings
@@ -104,7 +105,14 @@ class Project {
    *
    * @returns {Object}
    */
-  get settings() { return this.data.settings; }
+  get settings() {
+    const { settings } = this.data;
+    const { baseUrl } = settings;
+    return {
+      ...settings,
+      baseUrl: baseUrl || DEFAULT_BASE_URL,
+    };
+  }
 
   /**
    * Changes the project name.

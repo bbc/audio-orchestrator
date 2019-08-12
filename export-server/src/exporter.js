@@ -104,7 +104,7 @@ class Exporter {
    *
    * @return {Promise<Object>} { taskId }
    */
-  exportAudio(sequences) {
+  exportAudio(sequences, settings) {
     const taskId = uuidv4();
 
     this.tasks[taskId] = {};
@@ -114,6 +114,7 @@ class Exporter {
       taskId,
       args: {
         sequences,
+        settings,
       },
     });
 

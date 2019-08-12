@@ -25,6 +25,7 @@ const previewWorker = ({ sequences, settings, outputDir }, onProgress = () => {}
         settings: {
           ...settings,
           joiningLink: `${url}#!/join`,
+          baseUrl: `${url}/audio`,
         },
         outputDir,
       }, onDistributionProgress)

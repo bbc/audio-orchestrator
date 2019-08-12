@@ -16,7 +16,7 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
   return fse.ensureDir(outputDir)
     .then(() => {
       const onAudioProgress = progress.advance('packaging audio');
-      return audioWorker({ sequences, outputDir }, onAudioProgress);
+      return audioWorker({ sequences, settings, outputDir }, onAudioProgress);
     })
     .then(() => {
       progress.advance('copying template source files');
@@ -88,7 +88,7 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
           }) => ({
             name, // for template code readability only
             contentId: formatContentId(sequenceId),
-            url: `audio/${sequenceId}/sequence.json`,
+            url: `${settings.baseUrl}/${sequenceId}/sequence.json`,
             hold,
             skippable,
             next: next.map(option => ({

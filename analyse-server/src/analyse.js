@@ -195,7 +195,7 @@ class Analyser {
    *
    * @returns {Promise}
    */
-  batchEncode(files) {
+  batchEncode(files, { baseUrl }) {
     // create a temporary directory first, to hold the resulting files
     return mkdtemp(path.join(os.tmpdir(), 'bbcat-orchestration-'))
       .then((encodedItemsBasePath) => {
@@ -209,7 +209,12 @@ class Analyser {
               task: tasks.ENCODE,
               fileId,
               batchId,
-              args: { items, encodedItemsBasePath, sequenceId },
+              args: {
+                items,
+                encodedItemsBasePath,
+                sequenceId,
+                baseUrl,
+              },
             },
             priorities.ENCODE,
           );

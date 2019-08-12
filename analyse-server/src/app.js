@@ -71,8 +71,8 @@ app.post('/items', (req, res, next) => {
  * Respond with a batch id that can be used to poll progress and results.
  */
 app.post('/encode', (req, res, next) => {
-  const { files } = req.body;
-  analyser.batchEncode(files)
+  const { files, baseUrl } = req.body;
+  analyser.batchEncode(files, { baseUrl })
     .then(({ batchId }) => {
       res.json({
         success: true,

@@ -18,7 +18,7 @@ app.use(bodyParser.json({ limit: '50mb' }));
  * Creates a task that can be polled for progress using /task/<taskId>.
  */
 app.post('/audio', (req, res, next) => {
-  exporter.exportAudio(req.body.sequences)
+  exporter.exportAudio(req.body.sequences, req.body.settings)
     .then(({ taskId }) => {
       res.json({
         success: true,
