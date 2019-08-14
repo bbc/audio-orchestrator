@@ -3,6 +3,13 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.9.0`
+_2019-08-14_
+
+* Improvement: The _preview_ and _distribution_ exports are now much, much faster because a pre-built version of the template is shipped with the tool.
+* New feature: A _baseUrl_ can now be set in _Advanced settings_, for hosting environments that require absolute URLs.
+* Bugfix: The project is now re-validated after an object with an error state is deleted.
+
 # `0.8.0`
 _2019-07-19_
 

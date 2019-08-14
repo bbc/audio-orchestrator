@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-export-server",
-  "version": "0.8.2",
+  "version": "0.9.0",
   "description": "Service for exporting and packaging audio files, metadata, and JavaScript code.",
   "main": "dist/index.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
@@ -8,8 +8,8 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@bbc/bbcat-orchestration-template": "^0.4.1",
-    "bbcat-orchestration-builder-logging": "^0.8.2",
+    "@bbc/bbcat-orchestration-template": "^0.6.2",
+    "bbcat-orchestration-builder-logging": "^0.9.0",
     "async": "^2.6.2",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
@@ -30,7 +30,6 @@
     "dev": "nodemon src/server.js --exec \"node -r @babel/register\"",
     "build": "npm run clean && mkdir ./dist/ && babel src -s -d dist",
     "clean": "rm -rf ./dist/",
-    "start": "dist/server.js",
-    "postinstall": "node scripts/install-template.js"
+    "start": "dist/server.js"
   }
 }
