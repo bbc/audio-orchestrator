@@ -2,19 +2,28 @@ import { exportLogger as logger } from 'bbcat-orchestration-builder-logging';
 import fse from 'fs-extra';
 import path from 'path';
 import mapSeries from 'async/mapSeries';
-import audioWorker from './audioWorker';
-import ProgressReporter from './progressReporter';
+import audioWorker from '../export-audio';
+import ProgressReporter from '../progressReporter';
+import getOutputDir from '../getOutputDir';
 import templateConfiguration from './templateConfiguration';
 
 const templateSourceDir = path.dirname(require.resolve('@bbc/bbcat-orchestration-template/package.json')).replace('app.asar', 'app.asar.unpacked');
 
-const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) => {
+const templateWorker = (
+  { sequences, settings },
+  fileStore,
+  onProgress = () => {},
+  exportOutputDir,
+) => {
   const progress = new ProgressReporter(6, onProgress);
 
-  return fse.ensureDir(outputDir)
+  let outputDir;
+  return getOutputDir(exportOutputDir)
+    .then((d) => { outputDir = d; })
+    .then(() => fse.ensureDir(outputDir))
     .then(() => {
       const onAudioProgress = progress.advance('packaging audio');
-      return audioWorker({ sequences, settings, outputDir }, onAudioProgress);
+      return audioWorker({ sequences, settings }, fileStore, onAudioProgress, outputDir);
     })
     .then(() => {
       progress.advance('copying template source files');
@@ -88,7 +97,9 @@ const templateWorker = ({ sequences, settings, outputDir }, onProgress = () => {
     })
     .then(() => {
       progress.complete();
-      return { result: true }; // TODO, have to return a { result } but there isn't really a value
+      return {
+        result: { outputDir },
+      };
     })
     .catch((err) => {
       logger.debug(`removing outputDir ${outputDir} after error in templateWorker.`);

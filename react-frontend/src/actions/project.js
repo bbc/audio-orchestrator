@@ -230,8 +230,8 @@ const createTaskWithProgress = (dispatch, task, taskId, argument) => {
       onProgress: ({ completed, total }) => {
         dispatch(setTaskProgress(taskId, completed, total));
       },
-      onComplete: ({ results }) => {
-        resolve(results);
+      onComplete: ({ result }) => {
+        resolve(result);
       },
       onError: () => {
         reject();
@@ -281,21 +281,21 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
       return { fileId, path };
     }),
   )
-    .then((results) => {
-      // update error messages based on results
+    .then((result) => {
+      // update error messages based on result
       dispatch(setFileProperties(
         projectId, sequenceId,
-        results.map(({ success, fileId }) => ({
+        result.map(({ success, fileId }) => ({
           fileId,
           error: success ? null : 'File is missing.',
         })),
       ));
 
-      // Hide loader, display file list with pending probe/items results.
+      // Hide loader, display file list with pending probe/items result.
       dispatch(setFilesLoading(projectId, sequenceId, false, createTaskId));
 
-      // Pass on a list of fileIds for the existing files (marked as successful in results).
-      return results
+      // Pass on a list of fileIds for the existing files (marked as successful in result).
+      return result
         .filter(({ success }) => success)
         .map(({ fileId }) => fileId);
     })

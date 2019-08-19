@@ -1,10 +1,9 @@
-// TODO some of these are also defined in analyse-server/src/workers/encode.js -- should only
-// be in one place. Both will need to be updated for changes.
-const SAMPLE_RATE = 48000; // TODO assuming a fixed sample rate, maybe use ffprobe output instead
-const ENCODE_BITRATE = '128k';
-const BUFFER_EXTENSION = '.m4a';
-const SEGMENT_DURATION = (192 * 1024) / SAMPLE_RATE; // 4.096 seconds at 48kHz
-const SAFARI_SEGMENT_MEDIA = `safari_$Number%05d$${BUFFER_EXTENSION}`; // different placeholder format for use in manifest
+import {
+  SAMPLE_RATE,
+  ENCODE_BITRATE,
+  SEGMENT_DURATION,
+  SAFARI_SEGMENT_MEDIA,
+} from '../encodingConfig';
 
 /**
  * Formats a time in seconds as a presentation timestamp used in DASH manifests.

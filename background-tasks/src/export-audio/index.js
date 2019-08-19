@@ -2,7 +2,8 @@ import { exportLogger as logger } from 'bbcat-orchestration-builder-logging';
 import fse from 'fs-extra';
 import path from 'path';
 import mapSeries from 'async/mapSeries';
-import ProgressReporter from './progressReporter';
+import ProgressReporter from '../progressReporter';
+import getOutputDir from '../getOutputDir';
 import generateSequenceMetatata from './generateSequenceMetadata';
 import { headerlessDashManifest, safariDashManifest } from './dashManifests';
 
@@ -15,13 +16,22 @@ class AudioWorkerValidationError extends Error {
 
 const sequenceOutputDir = (basePath, sequenceId) => path.join(basePath, `${sequenceId}`);
 
-
-const audioWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) => {
+const audioWorker = (
+  { sequences, settings },
+  fileStore,
+  onProgress = () => {},
+  exportOutputDir,
+) => {
   const progress = new ProgressReporter(6, onProgress);
 
-  const audioOutputDir = path.join(outputDir, 'audio');
-
-  return fse.ensureDir(audioOutputDir)
+  let outputDir;
+  let audioOutputDir;
+  return getOutputDir(exportOutputDir)
+    .then((d) => {
+      outputDir = d;
+      audioOutputDir = path.join(d, 'audio');
+    })
+    .then(() => fse.ensureDir(audioOutputDir))
     .then(() => {
       // Ensure each sequence has at least one object (the client decides which sequences to put
       // forward if some are optional).
@@ -89,8 +99,9 @@ const audioWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) 
 
       const missingEncodedItems = [];
 
-      return new Promise((resolve, reject) => {
-        mapSeries(encodedItemsToCheck, ({ sequenceId, fileId, encodedItemsBasePath }, callback) => {
+      return mapSeries(
+        encodedItemsToCheck,
+        ({ sequenceId, fileId, encodedItemsBasePath }, callback) => {
           fse.stat(encodedItemsBasePath)
             .then(() => {
               // baseDir exists
@@ -101,23 +112,18 @@ const audioWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) 
               missingEncodedItems.push({ sequenceId, fileId });
               callback();
             });
-        }, (err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve({ result });
+        },
+      )
+        .then(() => {
+          if (missingEncodedItems.length > 0) {
+            throw new AudioWorkerValidationError(
+              'Not all encoded audio files are available',
+              missingEncodedItems,
+            );
           }
-        });
-      }).then(() => {
-        if (missingEncodedItems.length > 0) {
-          throw new AudioWorkerValidationError(
-            'Not all encoded audio files are available',
-            missingEncodedItems,
-          );
-        }
 
-        return encodedItemsToCheck;
-      });
+          return encodedItemsToCheck;
+        });
     })
     .then((requiredEncodedItems) => {
       progress.advance('copying encoded audio files');
@@ -127,7 +133,7 @@ const audioWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) 
         logger.debug('about to create sequence output dir', audioOutputDir, sequenceId);
         return fse.emptyDir(sequenceOutputDir(audioOutputDir, sequenceId));
       }))
-        .then(() => new Promise((resolve, reject) => {
+        .then(() => {
           // copy the files (or directory) for every item into the sequence output directory
 
           // make a list of tasks to run asynchronously, each is a function taking a callback
@@ -181,40 +187,27 @@ const audioWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) 
 
           // do the copy operations by calling the prepared functions, and resolve or reject the
           // promise once the mapSeries callback is called.
-          mapSeries(tasks, (fn, cb) => fn(cb), (err, result) => {
-            if (err) {
-              reject(err);
-            } else {
-              resolve(result);
-            }
-          });
-        }));
+          return mapSeries(tasks, (fn, cb) => fn(cb));
+        });
     })
     .then(() => {
       progress.advance('generating metadata files');
-      return new Promise((resolve, reject) => {
-        logger.debug('generating metadata files (mapSeries)');
-        mapSeries(sequences, (sequence, callback) => {
-          const { sequenceId } = sequence;
-          const sequenceMetadata = generateSequenceMetatata(sequence, settings);
+      return mapSeries(sequences, (sequence, callback) => {
+        const { sequenceId } = sequence;
+        const sequenceMetadata = generateSequenceMetatata(sequence, settings);
 
-          fse.writeFile(
-            path.join(sequenceOutputDir(audioOutputDir, sequenceId), 'sequence.json'),
-            JSON.stringify(sequenceMetadata, 0, 2),
-            callback,
-          );
-        }, (err, result) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(result);
-          }
-        });
+        fse.writeFile(
+          path.join(sequenceOutputDir(audioOutputDir, sequenceId), 'sequence.json'),
+          JSON.stringify(sequenceMetadata, 0, 2),
+          callback,
+        );
       });
     })
-    .then((result) => {
+    .then(() => {
       progress.complete();
-      return { result };
+      return {
+        result: { outputDir },
+      };
     });
 };
 

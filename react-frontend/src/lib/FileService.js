@@ -1,4 +1,4 @@
-const POLL_TIMEOUT = 1000;
+import BackgroundTasks from './BackgroundTasks';
 
 /**
  * Immediately calls the progress and success callbacks, for when an empty list of tasks is used.
@@ -7,7 +7,7 @@ const POLL_TIMEOUT = 1000;
  */
 const shortcutSuccess = ({ onProgress, onComplete } = {}) => {
   if (onProgress) onProgress({ completed: 0, total: 0 });
-  if (onComplete) onComplete({ results: [] });
+  if (onComplete) onComplete({ result: [] });
 
   return Promise.resolve();
 };
@@ -17,67 +17,16 @@ const shortcutSuccess = ({ onProgress, onComplete } = {}) => {
  */
 class FileService {
   constructor(apiBase) {
-    this.get = path => fetch(`${apiBase}/${path}`)
-      .then(response => response.json())
-      .catch((e) => {
-        console.error(e);
-        throw new Error('Failed to contact FileService API.');
-      });
-    this.post = (path, data) => fetch(
-      `${apiBase}/${path}`,
-      {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      },
-    )
-      .then(response => response.json())
-      .catch((e) => {
-        console.error(e);
-        throw new Error('Failed to contact FileService API.');
-      });
+    this.runningTasks = [];
+    this.tasks = new BackgroundTasks({ apiBase });
   }
 
-  /**
-   * Polls the status of a batch and calls the lifecycle callbacks as tasks are completed.
-   *
-   * @private
-   */
-  monitorBatch(batchId, { onProgress, onComplete, onError } = {}) {
-    const poll = () => {
-      this.get(`analyse/batch/${batchId}`)
-        .then(({ success, completed, total }) => {
-          // Did not successfully poll the batch status -> give up.
-          if (!success) {
-            if (onError) onError();
-            return;
-          }
-
-          // Update progress
-          if (onProgress) onProgress({ completed, total });
-
-          // Batch is complete -> fetch results and pass them to the callback
-          if (completed === total) {
-            this.get(`analyse/batch/${batchId}/results`)
-              .then((results) => {
-                if (!results.success) {
-                  if (onError) onError();
-                  return;
-                }
-                if (onComplete) onComplete({ results: results.results });
-              });
-            return;
-          }
-
-          // Otherwise, it is not yet complete, wait a bit and try polling again.
-          setTimeout(poll, POLL_TIMEOUT);
-        });
-    };
-
-    // schedule the first poll request
-    setTimeout(poll, POLL_TIMEOUT);
+  createTask(name, args, callbacks) {
+    return this.tasks.createTask(name, args, callbacks)
+      .then((taskId) => {
+        this.runningTasks.push(taskId);
+        return taskId;
+      });
   }
 
   /**
@@ -91,12 +40,7 @@ class FileService {
       return shortcutSuccess(callbacks);
     }
 
-    return this.post('analyse/create', { files })
-      .then(({ success, batchId }) => {
-        if (!success) throw new Error('Could not create batch for creating files');
-
-        this.monitorBatch(batchId, callbacks);
-      });
+    return this.createTask('analyse/create', { files }, callbacks);
   }
 
   /**
@@ -109,12 +53,7 @@ class FileService {
       return shortcutSuccess(callbacks);
     }
 
-    return this.post('analyse/probe', { fileIds })
-      .then(({ success, batchId }) => {
-        if (!success) throw new Error('Could not create batch for probe analysis');
-
-        this.monitorBatch(batchId, callbacks);
-      });
+    return this.createTask('analyse/probe', { fileIds }, callbacks);
   }
 
   /**
@@ -128,33 +67,22 @@ class FileService {
       return shortcutSuccess(callbacks);
     }
 
-    return this.post('analyse/items', { fileIds })
-      .then(({ success, batchId }) => {
-        if (!success) throw new Error('Could not create batch for items analysis');
-
-        this.monitorBatch(batchId, callbacks);
-      });
+    return this.createTask('analyse/items', { fileIds }, callbacks);
   }
 
   /**
    * Encode a bunch of files using the items information.
    *
    * @param {Object} options
-   * @param {Array<Object>} options.files - files to create, each like { fileId, path, items, sequenceId }.
-   * @param {string} options.baseUrl - baseUrl to prepend to DASH manifest paths, can be absolute or relative.
+   * @param {Array<Object>} options.files - of shape { fileId, path, items, sequenceId }.
    *
    */
-  encodeAll({ files, baseUrl }, callbacks = {}) {
+  encodeAll({ files }, callbacks = {}) {
     if (files.length === 0) {
       return shortcutSuccess(callbacks);
     }
 
-    return this.post('analyse/encode', { files, baseUrl })
-      .then(({ success, batchId }) => {
-        if (!success) throw new Error('Could not create batch for encoding');
-
-        this.monitorBatch(batchId, callbacks);
-      });
+    return this.createTask('analyse/encode', { files }, callbacks);
   }
 }
 

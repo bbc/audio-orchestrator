@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-electron-app",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Electron desktop application for generating orchestrated audio applications.",
   "main": "dist/main.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
@@ -8,14 +8,14 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "bbcat-orchestration-builder-logging": "^0.9.0",
-    "bbcat-orchestration-builder-analyse-server": "^0.9.0",
-    "bbcat-orchestration-builder-export-server": "^0.9.0",
-    "bbcat-orchestration-builder-react-frontend": "^0.9.0",
+    "bbcat-orchestration-builder-logging": "^0.9.1",
+    "bbcat-orchestration-builder-background-tasks": "^0.9.1",
+    "bbcat-orchestration-builder-react-frontend": "^0.9.1",
     "electron": "^4.1.1",
     "electron-devtools-installer": "^2.2.4",
     "electron-store": "^3.0.0",
     "express": "^4.16.4",
+    "body-parser": "^1.18.3",
     "fs-extra": "^7.0.1"
   },
   "devDependencies": {
@@ -26,14 +26,12 @@
     "electron-packager": "^13.1.1"
   },
   "scripts": {
-    "build": "yarn build-frontend && yarn build-servers && yarn build-main && electron-packager . --overwrite --asar.unpackDir=node_modules/@bbc/bbcat-orchestration-template",
+    "build": "yarn build-frontend && yarn build-background-tasks && yarn build-main && electron-packager . --overwrite --asar.unpackDir=node_modules/@bbc/bbcat-orchestration-template",
     "build-frontend": "(cd node_modules/bbcat-orchestration-builder-react-frontend/ && yarn run webpack --mode production)",
     "build-main": "yarn clean && mkdir ./dist/ && babel src -s -d dist",
-    "build-export-server": "(cd node_modules/bbcat-orchestration-builder-export-server/ && yarn build)",
-    "build-analyse-server": "(cd node_modules/bbcat-orchestration-builder-analyse-server/ && yarn build)",
-    "build-servers": "yarn build-export-server && yarn build-analyse-server",
+    "build-background-tasks": "(cd node_modules/bbcat-orchestration-builder-background-tasks/ && yarn build)",
     "clean": "rm -rf ./dist/",
-    "dev": "concurrently \"(cd ../react-frontend && yarn dev)\" \"(yarn build-servers && yarn build-main && NODE_ENV=development electron .)\""
+    "dev": "concurrently \"(cd ../react-frontend && yarn dev)\" \"(yarn build-background-tasks && yarn build-main && NODE_ENV=development electron .)\""
   },
   "build": {}
 }

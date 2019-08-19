@@ -1,18 +1,27 @@
 import { analyseLogger as logger } from 'bbcat-orchestration-builder-logging';
 import { promisify } from 'util';
 import {
-  writeFile as writeFileCB,
-  mkdir as mkdirCB,
+  mkdir,
   mkdtempSync,
-} from 'fs';
+} from 'fs-extra';
 import os from 'os';
 import path from 'path';
 import { execFile as execFileCB } from 'child_process';
 import { path as ffmpegPath } from 'ffmpeg-static';
 import mapSeries from 'async/mapSeries';
 
-const writeFile = promisify(writeFileCB);
-const mkdir = promisify(mkdirCB);
+import {
+  ENCODE_CODEC,
+  ENCODE_BITRATE,
+  BUFFER_EXTENSION,
+  SEGMENT_DURATION,
+  SAFARI_SEGMENT_NAMES,
+  SILENCE_DURATION,
+} from '../encodingConfig';
+
+// Path
+export const SILENCE_PATH = path.join(mkdtempSync(path.join(os.tmpdir(), 'bbcat-orchestration-')), 'silence.wav');
+
 const execFile = promisify(execFileCB);
 
 /**
@@ -26,16 +35,6 @@ const zeroPad = (num, width) => {
   const str = `${parseInt(num, 10)}`;
   return `${'0'.repeat(Math.max(0, width - str.length))}${str}`;
 };
-
-// TODO some of these are also defined in export-server/src/workers/dashManifests.js -- should only be in one place.
-const SAMPLE_RATE = 48000; // TODO assuming a fixed sample rate, maybe use ffprobe output instead
-const ENCODE_CODEC = 'aac'; // TODO prefer 'libfdk_aac', but this cannot be shipped as a binary due to its license.
-const ENCODE_BITRATE = '128k';
-const BUFFER_EXTENSION = '.m4a';
-const SEGMENT_DURATION = (192 * 1024) / SAMPLE_RATE; // 4.096 seconds at 48kHz
-const SAFARI_SEGMENT_NAMES = `safari_%05d${BUFFER_EXTENSION}`; // ffmpeg format string for outputting segments
-const SILENCE_DURATION = SEGMENT_DURATION;
-const SILENCE_PATH = path.join(mkdtempSync(path.join(os.tmpdir(), 'bbcat-orchestration-')), 'silence.wav');
 
 const dashArgs = [
   '-c:a', ENCODE_CODEC,
@@ -102,8 +101,6 @@ const encodeItem = ({
   start,
   duration,
   type,
-  sequenceId,
-  baseUrl,
 }, callback) => {
   // create a result item, to be populated with relativePath (and relativePathSafari) fields below.
   const resultItem = {
@@ -192,10 +189,10 @@ const encodeItem = ({
 const processEncode = (
   filePath,
   {
-    items,
     encodedItemsBasePath,
-    sequenceId,
-    baseUrl,
+  },
+  {
+    items,
   },
 ) => new Promise((resolve, reject) => {
   // Return a promise that resolves to the encodedItemsBasePath and encodedItems with relative
@@ -206,8 +203,6 @@ const processEncode = (
       filePath,
       encodedItemsBasePath,
       index,
-      sequenceId,
-      baseUrl,
     })),
     encodeItem,
     (err, encodedItems) => {

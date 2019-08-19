@@ -1,16 +1,25 @@
 import { exportLogger as logger } from 'bbcat-orchestration-builder-logging';
 import fse from 'fs-extra';
 import path from 'path';
-import templateWorker from './templateWorker';
-import ProgressReporter from './progressReporter';
+import getOutputDir from '../getOutputDir';
+import templateWorker from '../export-template';
+import ProgressReporter from '../progressReporter';
 
-const distributionWorker = ({ sequences, settings, outputDir }, onProgress = () => {}) => {
+const distributionWorker = (
+  { sequences, settings },
+  fileStore,
+  onProgress = () => {},
+  exportOutputDir,
+) => {
   const progress = new ProgressReporter(3, onProgress);
 
-  return fse.ensureDir(outputDir)
+  let outputDir;
+  return getOutputDir(exportOutputDir)
+    .then((d) => { outputDir = d; })
+    .then(() => fse.ensureDir(outputDir))
     .then(() => {
       const onTemplateProgress = progress.advance('packaging audio and generating template source code');
-      return templateWorker({ sequences, settings, outputDir }, onTemplateProgress);
+      return templateWorker({ sequences, settings }, fileStore, onTemplateProgress, outputDir);
     })
     .then(() => {
       progress.advance('removing temporary files');
@@ -20,7 +29,9 @@ const distributionWorker = ({ sequences, settings, outputDir }, onProgress = () 
     })
     .then(() => {
       progress.complete();
-      return { result: true }; // TODO, have to return a { result } but there isn't really a value
+      return {
+        result: { outputDir },
+      };
     })
     .catch((err) => {
       logger.info(err);

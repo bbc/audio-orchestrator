@@ -1,164 +1,58 @@
-const POLL_TIMEOUT = 500;
-
-class ExportError extends Error {
-  constructor(message, missingEncodedItems = null) {
-    super(message);
-    this.missingEncodedItems = missingEncodedItems;
-  }
-}
+import BackgroundTasks from './BackgroundTasks';
 
 /**
  * ExportService class, wraps all interaction with the analyse, encode, and project build APIs.
  */
 class ExportService {
   constructor(apiBase) {
-    this.runningTasks = {};
-
-    // GET request wrapper
-    this.get = path => fetch(`${apiBase}/${path}`)
-      .then(response => response.json());
-
-    // POST request wrapper
-    this.post = (path, data) => fetch(
-      `${apiBase}/${path}`,
-      {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      },
-    )
-      .then(response => response.json());
-
-    // DELETE request wrapper
-    this.delete = path => fetch(`${apiBase}/${path}`, { method: 'delete' })
-      .then(response => response.json());
+    this.runningTasks = [];
+    this.tasks = new BackgroundTasks({ apiBase });
   }
 
   /**
-   * Polls the status of a task and calls the lifecycle callbacks as tasks are completed.
+   * Wrapper for BackgroundTasks.createTask that also stores the resulting taskId so tasks can
+   * be cancelled.
+   *
+   * @param {string} name
+   * @param {object} args
+   * @param {object} args.settings
+   * @param {object} args.sequences
+   * @param {object} callbacks
+   * @param {function} callbacks.onProgress
+   * @param {function} callbacks.onError
+   * @param {function} callbacks.onComplete
    *
    * @private
    */
-  monitorTask(taskId, { onProgress, onComplete, onError } = {}) {
-    this.runningTasks[taskId] = true;
-    const poll = () => {
-      // Don't poll if the task doesn't exist anymore.
-      if (!(taskId in this.runningTasks)) {
-        onError(new ExportError('Export cancelled by user'));
-      }
-
-      this.get(`export/task/${taskId}`)
-        .then((response) => {
-          const {
-            success,
-            error,
-            completed,
-            total,
-            currentStep,
-            result,
-          } = response;
-
-          // Did not successfully poll the task status -> give up.
-          if (!success) {
-            if (onError) onError(new Error('could not get task status'));
-            return this.deleteTask(taskId);
-          }
-
-          // Update progress
-          if (onProgress) {
-            onProgress({
-              completed,
-              total,
-              currentStep,
-              taskId,
-            });
-          }
-
-          if (error) {
-            if (onError) onError(new ExportError(error, result.missingEncodedItems));
-            return null;
-          }
-
-          // Task is already complete, no need to poll further. Call the appropriate callback.
-          if (completed === total) {
-            if (onComplete) onComplete({ result, taskId });
-            return null;
-          }
-
-          // Otherwise, it is not yet complete, wait a bit and try polling again.
-          setTimeout(poll, POLL_TIMEOUT);
-
-          return null;
-        })
-        .catch((error) => {
-          // An error occured in getting the status from the server, raise it and stop polling.
-          if (onError) onError(error);
-        });
-    };
-
-    // schedule the first poll request
-    setTimeout(poll, POLL_TIMEOUT);
-  }
-
-  /**
-   *
-   */
-  exportAudio({ sequences, settings }, callbacks = {}) {
-    return this.post('export/audio', { sequences, settings })
-      .then(({ success, taskId }) => {
-        if (!success) throw new Error('could not create task for exporting audio');
-
-        this.monitorTask(taskId, callbacks);
+  createTask(name, args, callbacks) {
+    return this.tasks.createTask(name, args, callbacks)
+      .then((taskId) => {
+        this.runningTasks.push(taskId);
+        return taskId;
       });
   }
 
-  /**
-   *
-   */
-  exportTemplate({ sequences, settings }, callbacks = {}) {
-    return this.post('export/template', { sequences, settings })
-      .then(({ success, taskId }) => {
-        if (!success) throw new Error('could not create task for exporting template');
-
-        this.monitorTask(taskId, callbacks);
-      });
+  exportAudio(args, callbacks) {
+    return this.tasks.createTask('export/audio', args, callbacks);
   }
 
-  /**
-   *
-   */
-  exportDistribution({ sequences, settings }, callbacks = {}) {
-    return this.post('export/distribution', { sequences, settings })
-      .then(({ success, taskId }) => {
-        if (!success) throw new Error('could not create task for exporting distribution');
-
-        this.monitorTask(taskId, callbacks);
-      });
+  exportTemplate(args, callbacks) {
+    return this.tasks.createTask('export/template', args, callbacks);
   }
 
-  /**
-   *
-   */
-  startPreview({ sequences, settings }, callbacks = {}) {
-    return this.post('export/preview', { sequences, settings })
-      .then(({ success, taskId }) => {
-        if (!success) throw new Error('could not create task for starting preview');
-
-        this.monitorTask(taskId, callbacks);
-      });
+  exportDistribution(args, callbacks) {
+    return this.tasks.createTask('export/distribution', args, callbacks);
   }
 
-  /**
-   *
-   */
+  startPreview(args, callbacks) {
+    return this.tasks.createTask('export/preview', args, callbacks);
+  }
+
   cancelExports() {
-    return Promise.all(Object.keys(this.runningTasks)
-      .map(taskId => this.delete(`export/task/${taskId}`)
-        .then(() => {
-          delete this.runningTasks[taskId];
-        })));
+    const tasksToCancel = this.runningTasks;
+    this.runningTasks = [];
+
+    return Promise.all(tasksToCancel.map(taskId => this.tasks.cancelTask(taskId)));
   }
 }
 

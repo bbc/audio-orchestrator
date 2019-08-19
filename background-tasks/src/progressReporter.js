@@ -1,4 +1,3 @@
-
 class ProgressReporter {
   constructor(total, onProgress = () => {}) {
     this.completed = -1; // start at -1 because first report is after advancing to first step.

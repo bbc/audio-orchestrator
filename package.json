@@ -8,8 +8,7 @@
   },
   "workspaces": {
     "packages": [
-      "analyse-server",
-      "export-server",
+      "background-tasks",
       "electron-app",
       "react-frontend",
       "logging"
