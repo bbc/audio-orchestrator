@@ -233,8 +233,8 @@ const createTaskWithProgress = (dispatch, task, taskId, argument) => {
       onComplete: ({ result }) => {
         resolve(result);
       },
-      onError: () => {
-        reject();
+      onError: (e) => {
+        reject(e);
       },
     })
       .catch((e) => {
@@ -249,8 +249,6 @@ const createTaskWithProgress = (dispatch, task, taskId, argument) => {
  */
 export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
   const project = projects[projectId];
-  const { settings } = project;
-  const { baseUrl } = settings;
   const sequence = project.sequences[sequenceId];
   const { filesList, files } = sequence;
 
@@ -266,15 +264,15 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
   dispatch(loadSequenceFiles(projectId, sequenceId));
 
   // bind file service methods to pass into task creator
-  const createAll = fileService.createAll.bind(fileService);
+  const registerAll = fileService.registerAll.bind(fileService);
   const probeAll = fileService.probeAll.bind(fileService);
   const itemsAll = fileService.itemsAll.bind(fileService);
   const encodeAll = fileService.encodeAll.bind(fileService);
 
-  // Register the fileIds and paths with the server
+  // Register the files with the server, this also checks if the file exists on the file system.
   createTaskWithProgress(
     dispatch,
-    createAll,
+    registerAll,
     createTaskId,
     filesList.map(({ fileId }) => {
       const { path } = files[fileId] || {};
@@ -297,13 +295,13 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
       // Pass on a list of fileIds for the existing files (marked as successful in result).
       return result
         .filter(({ success }) => success)
-        .map(({ fileId }) => fileId);
+        .map(({ fileId }) => ({ fileId }));
     })
-    .then((existingFileIds) => {
+    .then((existingFiles) => {
       // Trigger the probe analysis for every existing file. As this is fast, it is done even if not
       // all files were successful, so that the interface can be updated with the file stats.
       dispatch(setProbeTaskId(projectId, sequenceId, probeTaskId));
-      return createTaskWithProgress(dispatch, probeAll, probeTaskId, existingFileIds);
+      return createTaskWithProgress(dispatch, probeAll, probeTaskId, existingFiles);
     })
     .then((probeResults) => {
       // update error messages and probe information
@@ -356,29 +354,24 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
         return [];
       }
 
-      // Otherwise, start the items analysis for all files that didn't already have results.
-      // Then merge the new results with the old results to return a complete list.
-      const previousItemsResults = [];
-      const fileIdsWithoutItems = [];
-
+      // Otherwise, get the item information for files that already have it, and upload it to the
+      // server so it will be cached for use in encoding and export tasks.
+      const filesForItems = [];
       filesList.forEach(({ fileId }) => {
         if ((fileId in files) && !!files[fileId].items) {
-          previousItemsResults.push({
+          filesForItems.push({
             fileId,
-            success: true,
             items: files[fileId].items,
           });
         } else {
-          fileIdsWithoutItems.push(fileId);
+          filesForItems.push({
+            fileId,
+          });
         }
       });
 
       dispatch(setItemsTaskId(projectId, sequenceId, itemsTaskId));
-      return createTaskWithProgress(dispatch, itemsAll, itemsTaskId, fileIdsWithoutItems)
-        .then(itemsResults => [
-          ...itemsResults,
-          ...previousItemsResults,
-        ]);
+      return createTaskWithProgress(dispatch, itemsAll, itemsTaskId, filesForItems);
     })
     .then((itemsResults) => {
       // Update error messages and items information.
@@ -402,27 +395,29 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
         return [];
       }
 
+      // Get information about previously encoded files and upload it to be cached for use in
+      // export tasks.
       // Split the completeFiles list into those that do and those that do not have their
       // encodedItemsBasePath set - if they already have it, they do not need to be encoded again.
-      const previouslyEncodedFiles = completeFiles
-        .filter(({ fileId }) => !!files[fileId].encodedItemsBasePath)
-        .map(file => ({
-          ...file,
-          encodedItemsBasePath: files[file.fileId].encodedItemsBasePath,
-          encodedItems: files[file.fileId].encodedItems,
-        }));
-      const filesToEncode = completeFiles
-        .filter(({ fileId }) => !files[fileId].encodedItemsBasePath)
-        .map(file => ({ ...file, sequenceId }));
+      const filesForEncode = [];
+      filesList.forEach(({ fileId }) => {
+        if (fileId in files && files[fileId].encodedItems) {
+          const { encodedItems, encodedItemsBasePath } = files[fileId];
+          filesForEncode.push({
+            fileId,
+            encodedItems,
+            encodedItemsBasePath,
+          });
+        } else {
+          filesForEncode.push({
+            fileId,
+          });
+        }
+      });
 
-      // Trigger encoding of all files, too, and pass on the results merged with previously encoded
-      // files.
+      // Trigger encoding of all files, too, and pass on the results.
       dispatch(setEncodeTaskId(projectId, sequenceId, encodeTaskId));
-      return createTaskWithProgress(dispatch, encodeAll, encodeTaskId, { files: filesToEncode, baseUrl })
-        .then(encodeResults => [
-          ...previouslyEncodedFiles.map(file => ({ ...file, success: true })),
-          ...encodeResults,
-        ]);
+      return createTaskWithProgress(dispatch, encodeAll, encodeTaskId, filesForEncode);
     })
     .then((encodeResults) => {
       // store the results in project store

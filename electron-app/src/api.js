@@ -31,7 +31,7 @@ app.use((req, res, next) => {
  * to trigger further operations on the files, as a file must be created before it can be used.
  */
 app.post('/analyse/create', (req, res, next) => {
-  backgroundTasks.checkFilesExist({ files: req.body.files })
+  backgroundTasks.registerFiles({ files: req.body.files })
     .then(({ taskId }) => {
       res.json({
         success: true,
@@ -49,7 +49,7 @@ app.post('/analyse/create', (req, res, next) => {
  * Respond with a task id that can be used to poll progress and results.
  */
 app.post('/analyse/probe', (req, res, next) => {
-  backgroundTasks.probeFiles({ fileIds: req.body.fileIds })
+  backgroundTasks.probeFiles({ files: req.body.files })
     .then(({ taskId }) => {
       res.json({
         success: true,
@@ -67,7 +67,7 @@ app.post('/analyse/probe', (req, res, next) => {
  * Respond with a task id that can be used to poll progress and results.
  */
 app.post('/analyse/items', (req, res, next) => {
-  backgroundTasks.detectItems({ fileIds: req.body.fileIds })
+  backgroundTasks.detectItems({ files: req.body.files })
     .then(({ taskId }) => {
       res.json({
         success: true,
@@ -85,8 +85,7 @@ app.post('/analyse/items', (req, res, next) => {
  * Respond with a task id that can be used to poll progress and results.
  */
 app.post('/analyse/encode', (req, res, next) => {
-  const { files, baseUrl } = req.body;
-  backgroundTasks.encodeFiles({ files, baseUrl })
+  backgroundTasks.encodeFiles({ files: req.body.files })
     .then(({ taskId }) => {
       res.json({
         success: true,

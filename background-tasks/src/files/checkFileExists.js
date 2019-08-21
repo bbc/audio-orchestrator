@@ -5,7 +5,7 @@ import fse from 'fs-extra';
  *
  * @returns {Promise}
  */
-const processExists = filePath => fse.stat(filePath)
-  .then(() => ({ exists: true }));
+const checkFileExists = filePath => fse.stat(filePath)
+  .then(() => true);
 
-export default processExists;
+export default checkFileExists;

@@ -2,6 +2,7 @@ import { analyseLogger as logger } from 'bbcat-orchestration-builder-logging';
 import { promisify } from 'util';
 import {
   mkdir,
+  mkdtemp,
   mkdtempSync,
 } from 'fs-extra';
 import os from 'os';
@@ -19,10 +20,15 @@ import {
   SILENCE_DURATION,
 } from '../encodingConfig';
 
-// Path
+const execFile = promisify(execFileCB);
+
+const LOG_FFMPEG = false;
+
+// Path for temporary storing a silence.wav to use in all DASH stream encoding jobs
 export const SILENCE_PATH = path.join(mkdtempSync(path.join(os.tmpdir(), 'bbcat-orchestration-')), 'silence.wav');
 
-const execFile = promisify(execFileCB);
+// Path to use as base dir for encoded audio
+const OUTPUT_BASE_PATH = mkdtempSync(path.join(os.tmpdir(), 'bbcat-orchestration-encoding-'));
 
 /**
  * Pads the given integer to minimum width by adding zeroes on the left.
@@ -163,11 +169,10 @@ const encodeItem = ({
       }
     })
     .then((ffmpegArgs) => {
-      logger.silly(`encode: ${ffmpegPath} ${ffmpegArgs.join(' ')}`);
-
+      if (LOG_FFMPEG) logger.silly(`encode: ${ffmpegPath} ${ffmpegArgs.join(' ')}`);
       return execFile(ffmpegPath, ffmpegArgs)
         .catch((error) => {
-          logger.warn('ffmpeg (encode) failed.');
+          logger.error(`ffmpeg failed (${error}) arguments were: ${ffmpegArgs.join(' ')}`);
           throw error;
         });
     })
@@ -184,39 +189,45 @@ const encodeItem = ({
 /**
  * Run ffmpeg to create all the items in a temporary folder, and return their paths.
  *
- * @returns {Promise}
+ * Return a promise that resolves to the encodedItemsBasePath and encodedItems with relative
+ * paths. Encode items one-by-one in series using the mapSeries async abstraction.
+ *
+ * @param {string} filePath
+ * @param {Array<Object>} [items]
+ * @param {string} [presetBasePath] - where to store the results, if not set, a new temporary
+ *                                    directory will be created.
+ *
+ * @returns {Promise<Object>}
  */
-const processEncode = (
+const encodeItems = (
   filePath,
-  {
-    encodedItemsBasePath,
-  },
-  {
-    items,
-  },
-) => new Promise((resolve, reject) => {
-  // Return a promise that resolves to the encodedItemsBasePath and encodedItems with relative
-  // paths. Encode items one-by-one in series using the mapSeries async abstraction.
-  mapSeries(
-    items.map((item, index) => ({
-      ...item,
-      filePath,
-      encodedItemsBasePath,
-      index,
-    })),
-    encodeItem,
-    (err, encodedItems) => {
-      if (err) {
-        logger.warn('rejected in processEncode');
-        reject(err);
-      } else {
-        resolve(encodedItems);
-      }
-    },
-  );
-}).then(encodedItems => ({
-  encodedItemsBasePath,
-  encodedItems,
-}));
+  items,
+  presetBasePath,
+) => {
+  let encodedItemsBasePath = presetBasePath;
 
-export default processEncode;
+  return Promise.resolve()
+    .then(() => {
+      if (encodedItemsBasePath) {
+        return encodedItemsBasePath;
+      }
+      return mkdtemp(path.join(OUTPUT_BASE_PATH, 'encoded-items-')).then((p) => {
+        encodedItemsBasePath = p;
+      });
+    })
+    .then(() => mapSeries(
+      items.map((item, index) => ({
+        ...item,
+        filePath,
+        encodedItemsBasePath,
+        index,
+      })),
+      encodeItem,
+    ))
+    .then(encodedItems => ({
+      encodedItemsBasePath,
+      encodedItems,
+    }));
+};
+
+export default encodeItems;

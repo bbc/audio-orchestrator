@@ -44,7 +44,8 @@ const rootLogger = winston.createLogger({
 
 module.exports = {
   rootLogger,
-  analyseLogger: rootLogger.child({ component: 'analyse-server' }),
-  exportLogger: rootLogger.child({ component: 'export-server' }),
+  analyseLogger: rootLogger.child({ component: 'background-tasks' }), // TODO remove
+  exportLogger: rootLogger.child({ component: 'background-tasks' }), // TODO remove
   electronLogger: rootLogger.child({ component: 'electron-app' }),
+  getLogger: name => rootLogger.child({ component: name }),
 };

@@ -4,15 +4,9 @@ import path from 'path';
 import mapSeries from 'async/mapSeries';
 import ProgressReporter from '../progressReporter';
 import getOutputDir from '../getOutputDir';
-import generateSequenceMetatata from './generateSequenceMetadata';
+import generateSequenceMetadata from './generateSequenceMetadata';
 import { headerlessDashManifest, safariDashManifest } from './dashManifests';
-
-class AudioWorkerValidationError extends Error {
-  constructor(message, missingEncodedItems = null) {
-    super(message);
-    this.missingEncodedItems = missingEncodedItems;
-  }
-}
+import { SILENCE_DURATION } from '../encodingConfig';
 
 const sequenceOutputDir = (basePath, sequenceId) => path.join(basePath, `${sequenceId}`);
 
@@ -22,10 +16,12 @@ const audioWorker = (
   onProgress = () => {},
   exportOutputDir,
 ) => {
-  const progress = new ProgressReporter(6, onProgress);
+  const progress = new ProgressReporter(5, onProgress);
 
+  const files = {};
   let outputDir;
   let audioOutputDir;
+
   return getOutputDir(exportOutputDir)
     .then((d) => {
       outputDir = d;
@@ -39,93 +35,46 @@ const audioWorker = (
 
       sequences.forEach((sequence) => {
         if (!sequence.objects || sequence.objects.length === 0) {
-          throw new AudioWorkerValidationError('Not all sequences have objects.');
+          throw new Error('Not all sequences have objects.');
         }
       });
     })
     .then(() => {
       // Ensure all objects have an assigned fileId, by iterating over the objects in each sequence
-      progress.advance('checking that all objects are associated to a an audio file');
+      progress.advance('checking that all objects have an audio file');
 
       sequences.forEach((sequence) => {
         sequence.objects.forEach((object) => {
           if (!object.fileId) {
-            throw new AudioWorkerValidationError('Not all objects have files assigned.');
+            throw new Error('Not all objects have an audio file.');
           }
         });
       });
     })
     .then(() => {
       // Ensure each file has encodedItems set, and the encodedItems.baseDir exists.
-      progress.advance('checking that all audio files have been encoded');
+      const onEncodeProgress = progress.advance('waiting for audio analysis and encoding to finish');
 
-      const missingEncodedItems = [];
-      const encodedItemsToCheck = [];
 
-      sequences.forEach(({ objects, files, sequenceId }) => {
-        // generate a list of file objects including fileId for all files used by an object
-        const requiredFiles = objects.map(({ fileId }) => ({
-          fileId,
-          ...files[fileId],
-        }));
-
-        // Add an entry for each file into one of two lists, for those never encoded, and those
-        // where the encoded files should be checked.
-        requiredFiles.forEach(({ fileId, encodedItems, encodedItemsBasePath }) => {
-          if (!encodedItems) {
-            missingEncodedItems.push({ sequenceId, fileId });
-          } else {
-            encodedItemsToCheck.push({
-              sequenceId,
-              fileId,
-              encodedItems,
-              encodedItemsBasePath,
-            });
-          }
+      // Find the fileIds to be encoded and store a reference to their AudioFile object so we can
+      // later get their probe and encodedItems details for creating the sequence metadata.
+      const requiredFiles = [];
+      sequences.forEach(({ objects }) => {
+        objects.forEach(({ fileId }) => {
+          files[fileId] = fileStore.getFile(fileId);
+          requiredFiles.push({ fileId });
         });
       });
 
-      if (missingEncodedItems.length > 0) {
-        throw new AudioWorkerValidationError(
-          'Not all required audio files have been encoded.',
-          { missingEncodedItems },
-        );
-      }
-
-      return encodedItemsToCheck;
-    })
-    .then((encodedItemsToCheck) => {
-      progress.advance('checking that all encoded audio files are available');
-
-      const missingEncodedItems = [];
-
-      return mapSeries(
-        encodedItemsToCheck,
-        ({ sequenceId, fileId, encodedItemsBasePath }, callback) => {
-          fse.stat(encodedItemsBasePath)
-            .then(() => {
-              // baseDir exists
-              callback();
-            })
-            .catch(() => {
-              // baseDir is not accessible
-              missingEncodedItems.push({ sequenceId, fileId });
-              callback();
-            });
-        },
-      )
-        .then(() => {
-          if (missingEncodedItems.length > 0) {
-            throw new AudioWorkerValidationError(
-              'Not all encoded audio files are available',
-              missingEncodedItems,
-            );
+      return fileStore.encodeFiles(requiredFiles, onEncodeProgress)
+        .then(({ result }) => {
+          const filesWithErrors = result.filter(r => r.success === false);
+          if (filesWithErrors.length > 0) {
+            throw new Error(`${filesWithErrors.length} audio files could not be encoded. (Error on first file was: ${filesWithErrors[0].error})`);
           }
-
-          return encodedItemsToCheck;
         });
     })
-    .then((requiredEncodedItems) => {
+    .then(() => {
       progress.advance('copying encoded audio files');
 
       return Promise.all(sequences.map(({ sequenceId }) => {
@@ -140,48 +89,47 @@ const audioWorker = (
           // as its only argument.
           const tasks = [];
 
-          requiredEncodedItems.forEach(({
-            sequenceId,
-            encodedItems,
-            encodedItemsBasePath,
-          }) => {
-            const sequenceDestPath = sequenceOutputDir(audioOutputDir, sequenceId);
-            encodedItems.forEach(({
-              relativePath, relativePathSafari,
-              type,
-              duration,
-            }) => {
-              const relativeSourcePath = relativePath.replace(/\/manifest.mpd/, '');
-              const sourcePath = path.join(encodedItemsBasePath, relativeSourcePath);
-              const destPath = path.join(sequenceDestPath, relativeSourcePath);
+          sequences.forEach(({ sequenceId, objects }) => {
+            objects.forEach(({ fileId }) => {
+              const { encodedItems, encodedItemsBasePath } = files[fileId];
 
-              // Copy all the files for this item
-              tasks.push(cb => fse.copy(
-                sourcePath,
-                destPath,
-                { overwrite: false, errorOnExist: false },
-                cb,
-              ));
+              const sequenceDestPath = sequenceOutputDir(audioOutputDir, sequenceId);
+              encodedItems.forEach(({
+                relativePath, relativePathSafari,
+                type,
+                duration,
+              }) => {
+                const relativeSourcePath = relativePath.replace(/\/manifest.mpd/, '');
+                const sourcePath = path.join(encodedItemsBasePath, relativeSourcePath);
+                const destPath = path.join(sequenceDestPath, relativeSourcePath);
 
-              // if it is a DASH stream item, overwrite the manifests
-              const SILENCE_DURATION = 4.069; // TODO import this from encode worker?
-              if (type === 'dash') {
-                const { baseUrl } = settings;
-                const sequenceUrl = `${baseUrl}/${sequenceId}`;
-                const paddedDuration = duration + SILENCE_DURATION;
-
-                tasks.push(cb => fse.writeFile(
-                  path.join(sequenceDestPath, relativePath),
-                  headerlessDashManifest(relativeSourcePath, sequenceUrl, paddedDuration),
+                // Copy all the files for this item
+                tasks.push(cb => fse.copy(
+                  sourcePath,
+                  destPath,
+                  { overwrite: false, errorOnExist: false },
                   cb,
                 ));
 
-                tasks.push(cb => fse.writeFile(
-                  path.join(sequenceDestPath, relativePathSafari),
-                  safariDashManifest(relativeSourcePath, sequenceUrl, paddedDuration),
-                  cb,
-                ));
-              }
+                // if it is a DASH stream item, overwrite the manifests
+                if (type === 'dash') {
+                  const { baseUrl } = settings;
+                  const sequenceUrl = `${baseUrl}/${sequenceId}`;
+                  const paddedDuration = duration + SILENCE_DURATION;
+
+                  tasks.push(cb => fse.writeFile(
+                    path.join(sequenceDestPath, relativePath),
+                    headerlessDashManifest(relativeSourcePath, sequenceUrl, paddedDuration),
+                    cb,
+                  ));
+
+                  tasks.push(cb => fse.writeFile(
+                    path.join(sequenceDestPath, relativePathSafari),
+                    safariDashManifest(relativeSourcePath, sequenceUrl, paddedDuration),
+                    cb,
+                  ));
+                }
+              });
             });
           });
 
@@ -194,7 +142,7 @@ const audioWorker = (
       progress.advance('generating metadata files');
       return mapSeries(sequences, (sequence, callback) => {
         const { sequenceId } = sequence;
-        const sequenceMetadata = generateSequenceMetatata(sequence, settings);
+        const sequenceMetadata = generateSequenceMetadata(sequence, settings, files);
 
         fse.writeFile(
           path.join(sequenceOutputDir(audioOutputDir, sequenceId), 'sequence.json'),

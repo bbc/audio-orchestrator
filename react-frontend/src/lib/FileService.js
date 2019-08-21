@@ -35,7 +35,7 @@ class FileService {
    *
    * @param {Array<Object>} files - files to create, each a { fileId, path } object.
    */
-  createAll(files, callbacks = {}) {
+  registerAll(files, callbacks = {}) {
     if (files.length === 0) {
       return shortcutSuccess(callbacks);
     }
@@ -48,12 +48,12 @@ class FileService {
    *
    * @param {Array<String>} fileIds
    */
-  probeAll(fileIds, callbacks = {}) {
-    if (fileIds.length === 0) {
+  probeAll(files, callbacks = {}) {
+    if (files.length === 0) {
       return shortcutSuccess(callbacks);
     }
 
-    return this.createTask('analyse/probe', { fileIds }, callbacks);
+    return this.createTask('analyse/probe', { files }, callbacks);
   }
 
   /**
@@ -62,22 +62,21 @@ class FileService {
    *
    * @param {Array<Object>} fileIds - list of previously created fileIds.
    */
-  itemsAll(fileIds, callbacks = {}) {
-    if (fileIds.length === 0) {
+  itemsAll(files, callbacks = {}) {
+    if (files.length === 0) {
       return shortcutSuccess(callbacks);
     }
 
-    return this.createTask('analyse/items', { fileIds }, callbacks);
+    return this.createTask('analyse/items', { files }, callbacks);
   }
 
   /**
    * Encode a bunch of files using the items information.
    *
-   * @param {Object} options
-   * @param {Array<Object>} options.files - of shape { fileId, path, items, sequenceId }.
+   * @param {Array<Object>} files - of shape { fileId, encodedItems, encodedItemsBasePath }.
    *
    */
-  encodeAll({ files }, callbacks = {}) {
+  encodeAll(files, callbacks = {}) {
     if (files.length === 0) {
       return shortcutSuccess(callbacks);
     }

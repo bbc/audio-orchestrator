@@ -43,8 +43,7 @@ const setExportProgress = (progressPercent, stepTitle) => ({
 /* --- deferred actions and helpers --- */
 
 export const requestCancelExport = () => (dispatch) => {
-  console.log('request cancel');
-  // TODO cancel export task on server and stop polling it.
+  // cancel export task on server and stop polling it.
   // close the export status overlay
   cancelExports();
   dispatch(closeExport());
@@ -84,31 +83,6 @@ const waitForExportTask = (dispatch, task, args) => {
   });
 };
 
-const encodeMissingItems = (projectId, missingFiles) => (dispatch) => {
-  // remove encodeItems from projectStore for files affected
-  const missingBySequence = {};
-
-  missingFiles.forEach(({ sequenceId, fileId }) => {
-    if (!(sequenceId in missingBySequence)) {
-      missingBySequence[sequenceId] = [];
-    }
-    missingBySequence[sequenceId].push(fileId);
-  });
-
-  Object.keys(missingBySequence).forEach((sequenceId) => {
-    dispatch(setFileProperties(
-      projectId,
-      sequenceId,
-      missingBySequence[sequenceId].map(fileId => ({
-        fileId,
-        encodedItems: null,
-        encodedItemsBasePath: null,
-      })),
-    ));
-    dispatch(analyseAllFiles(projectId, sequenceId));
-  });
-};
-
 export const requestExportAudio = projectId => (dispatch) => {
   dispatch(startExport('audio'));
 
@@ -135,9 +109,6 @@ export const requestExportAudio = projectId => (dispatch) => {
     })
     .catch((error) => {
       dispatch(failExport(error.message));
-      if (error.missingEncodedItems) {
-        dispatch(encodeMissingItems(projectId, error.missingEncodedItems));
-      }
       console.error('EXPORT ERROR', error);
     });
 };
@@ -171,9 +142,6 @@ export const requestExportTemplate = projectId => (dispatch) => {
     })
     .catch((error) => {
       dispatch(failExport(error.message));
-      if (error.missingEncodedItems) {
-        dispatch(encodeMissingItems(projectId, error.missingEncodedItems));
-      }
       console.error('EXPORT ERROR', error);
     });
 };
@@ -207,9 +175,6 @@ export const requestExportDistribution = projectId => (dispatch) => {
     })
     .catch((error) => {
       dispatch(failExport(error.message));
-      if (error.missingEncodedItems) {
-        dispatch(encodeMissingItems(projectId, error.missingEncodedItems));
-      }
       console.error('EXPORT ERROR', error);
     });
 };
@@ -236,9 +201,6 @@ export const requestStartPreview = projectId => (dispatch) => {
     })
     .catch((error) => {
       dispatch(failExport(error.message));
-      if (error.missingEncodedItems) {
-        dispatch(encodeMissingItems(projectId, error.missingEncodedItems));
-      }
       console.error('PREVIEW ERROR', error);
     });
 };

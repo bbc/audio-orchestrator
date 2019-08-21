@@ -1,11 +1,13 @@
-import { analyseLogger as logger } from 'bbcat-orchestration-builder-logging';
+import { getLogger } from 'bbcat-orchestration-builder-logging';
 import { promisify } from 'util';
 import { execFile as execFileCB } from 'child_process';
-import { path as ffprobePath } from 'ffprobe-static';
 import { path as ffmpegPath } from 'ffmpeg-static';
-import ffprobe from 'ffprobe-client';
+
+const logger = getLogger('detect-items');
 
 const execFile = promisify(execFileCB);
+
+const LOG_FFMPEG = false;
 
 const MIN_SILENCE_DURATION = 1;
 const MAX_BUFFER_DURATION = 10;
@@ -20,9 +22,12 @@ logger.debug(`ffmpegPath: ${ffmpegPath}.`);
 /**
  * Run ffmpeg on the file with a null target to detect silent sections in the audio content.
  *
- * @returns {Promise}
+ * @param {string} filePath - absolute path to the file.
+ * @param {number} fileDuration - duration in seconds as obtained from ffprobe.
+ *
+ * @returns {Promise<Object>}
  */
-const processItems = (filePath) => {
+const detectItems = (filePath, fileDuration) => {
   // ffmpeg arguments
   const ffmpegArgs = [
     '-i', filePath, // input file path
@@ -37,14 +42,13 @@ const processItems = (filePath) => {
   // then get the duration from the probe results
   // then run the silence analysis
   // then convert the results to items format
-  return ffprobe(filePath, { path: ffprobePath })
-    .then(data => roundTime(data.streams[0].duration))
-    .then((fileDuration) => {
-      logger.silly(`items: ${ffmpegPath} ${ffmpegArgs.join(' ')}`);
+  return Promise.resolve()
+    .then(() => {
+      if (LOG_FFMPEG) logger.silly(`items: ${ffmpegPath} ${ffmpegArgs.join(' ')}`);
 
       return execFile(ffmpegPath, ffmpegArgs, { maxBuffer: 1024 * 1024 * 8 })
         .catch((error) => {
-          logger.warn('ffmpeg (items) failed.');
+          logger.error(`ffmpeg failed (${error}) arguments were: ${ffmpegArgs.join(' ')}`);
           throw error;
         })
         .then(({ stderr }) => {
@@ -62,10 +66,10 @@ const processItems = (filePath) => {
             }
           });
 
-          return { fileDuration, silence };
+          return { silence };
         });
     })
-    .then(({ fileDuration, silence }) => {
+    .then(({ silence }) => {
       const items = [];
       let nextStart = 0;
 
@@ -101,4 +105,4 @@ const processItems = (filePath) => {
     });
 };
 
-export default processItems;
+export default detectItems;

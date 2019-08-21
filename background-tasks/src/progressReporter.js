@@ -18,7 +18,7 @@ class ProgressReporter {
 
     // return a function that can report sub progress.
     // This is intended to be given to another progress reporter as its onProgress handler.
-    return ({ currentStep, total = 1, completed = 1 } = {}) => {
+    return ({ currentStep = stepName, total = 1, completed = 1 } = {}) => {
       if (this.completed > (completedInitial + 1) || completed >= total) {
         return;
       }

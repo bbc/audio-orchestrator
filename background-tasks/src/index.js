@@ -4,21 +4,26 @@
  */
 
 import TaskManager from './taskManager';
+import {
+  FileStore,
+  registerFiles,
+  probeFiles,
+  detectItems,
+  encodeFiles,
+} from './files';
 
-import checkFilesExist from './check-files-exist';
-import probeFiles from './probe-files';
-import detectItems from './detect-items';
-import encodeFiles from './encode-files';
 import exportAudio from './export-audio';
 import exportTemplate from './export-template';
 import exportPreview from './export-preview';
 import exportDistribution from './export-distribution';
 
-const manager = new TaskManager();
+const fileStore = new FileStore();
+const manager = new TaskManager(fileStore);
+
 
 export default {
   // Analyse task actions
-  checkFilesExist: args => manager.createTask(checkFilesExist, args),
+  registerFiles: args => manager.createTask(registerFiles, args),
   probeFiles: args => manager.createTask(probeFiles, args),
   detectItems: args => manager.createTask(detectItems, args),
   encodeFiles: args => manager.createTask(encodeFiles, args),

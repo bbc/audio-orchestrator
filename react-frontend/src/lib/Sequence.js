@@ -208,13 +208,11 @@ class Sequence {
       sequenceId,
       objectsList,
       objects,
-      files,
       settings,
     } = this;
 
     return {
       sequenceId,
-      files,
       objects: objectsList.map(({ objectNumber }) => objects[objectNumber]),
       ...settings.getExportData(),
     };

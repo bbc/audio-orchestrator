@@ -13,7 +13,7 @@ const roundTime = t => parseFloat(parseFloat(t).toFixed(TIME_DECIMALS));
  *
  * @returns {Promise}
  */
-const processProbe = filePath => ffprobe(filePath, { path: ffprobePath })
+const probeFile = filePath => ffprobe(filePath, { path: ffprobePath })
   .then((data) => {
     // ensure there is at least one stream detected in the file and return the first one
     if (!data.streams || data.streams.length === 0) {
@@ -38,4 +38,4 @@ const processProbe = filePath => ffprobe(filePath, { path: ffprobePath })
     return { probe };
   });
 
-export default processProbe;
+export default probeFile;

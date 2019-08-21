@@ -1,12 +1,14 @@
 import queue from 'async/queue';
 import uuidv4 from 'uuid/v4';
-import { exportLogger as logger } from 'bbcat-orchestration-builder-logging';
+import { getLogger } from 'bbcat-orchestration-builder-logging';
+
+const logger = getLogger('task-manager');
 
 /**
  * Sets the concurrency of the async queue, if greater than 1, tasks will be processed
  * concurrently.
  */
-const CONCURRENCY = 1;
+const CONCURRENCY = 4;
 
 /**
  * Returns a function that takes a { worker, args, taskId } object and a callback, runs the
@@ -25,20 +27,21 @@ const createWorker = (tasks, fileStore) => ({ worker, args, taskId }, callback) 
 
   // create an onProgress handler to pass to the worker function
   const onProgress = ({ completed, total, currentStep }) => {
-    logger.silly(`onProgress ${taskId}\t${(completed || 0).toFixed(2)} / ${total}\t(${currentStep})`);
+    logger.silly(`${taskId}:\t\t${(completed || 0).toFixed(2)} / ${total}\t(${currentStep})`);
     task.completed = completed;
     task.total = total;
     task.currentStep = currentStep;
   };
 
+  logger.debug(`Starting task ${taskId}.`);
   worker(args, fileStore, onProgress)
     .then(({ result, onCancel }) => {
-      logger.silly(`Task ${taskId} completed.`);
+      logger.debug(`Task ${taskId} completed.`);
       task.result = result;
       task.onCancel = onCancel;
     })
     .catch((err) => {
-      logger.error(`Error in worker: ${err.message}`, err);
+      logger.error('Error in worker, passing on to clients.', err);
       task.error = err.message;
     })
     .then(() => callback());
@@ -53,9 +56,9 @@ const createWorker = (tasks, fileStore) => ({ worker, args, taskId }, callback) 
  * returned when the task was created.
  */
 class TaskManager {
-  constructor() {
+  constructor(fileStore) {
     this.tasks = {};
-    this.fileStore = {};
+    this.fileStore = fileStore;
     this.taskQueue = queue(createWorker(this.tasks, this.fileStore), CONCURRENCY);
   }
 
