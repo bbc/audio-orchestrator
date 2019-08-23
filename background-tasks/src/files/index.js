@@ -1,4 +1,4 @@
-export { default as FileStore } from './fileStore';
+export { default as FileStore } from './FileStore';
 
 export const registerFiles = (
   { files }, fileStore, onProgress,

@@ -1,48 +1,12 @@
-import mapLimit from 'async/mapLimit';
 import path from 'path';
 import { getLogger } from 'bbcat-orchestration-builder-logging';
+
 import checkFileExists from './checkFileExists';
 import probeFile from './probeFile';
 import detectItems from './detectItems';
 import encodeItems from './encodeItems';
 
-const CONCURRENCY = 4;
-const logger = getLogger('file-store');
-
-/**
- * processes files in parallel calling the worker for each fileId, and returns a promise resolving
- * to an array of { fileId, success, ...result }.
- *
- * @param {function} worker
- * @param {Array<Object>} args
- * @param {function} onProgress
- *
- * @returns {Promise<Array<Object>>}
- */
-const processFiles = (worker, args, onProgress) => {
-  const total = args.length;
-  let completed = 0;
-  onProgress({ total, completed });
-
-  logger.info(`Processing ${total} files with concurrency = ${CONCURRENCY}.`);
-
-  return mapLimit(args, CONCURRENCY, (arg, cb) => {
-    worker(arg)
-      .then((result) => {
-        // Return a successful response
-        cb(null, { fileId: arg.fileId, success: true, ...result });
-      })
-      .catch((err) => {
-        // Note, a per-file error in the worker is returned in the response, thus not actually
-        // returning an error in the callback.
-        cb(null, { fileId: arg.fileId, success: false, error: err.message });
-      })
-      .finally(() => {
-        completed += 1;
-        onProgress({ total, completed });
-      });
-  }).then(result => ({ result }));
-};
+const logger = getLogger('audio-file');
 
 /**
  * @class
@@ -184,67 +148,4 @@ class AudioFile {
   }
 }
 
-/**
- * @class
- *
- * Stores information about files and their location on he file system. Does not store any file
- * contents itself.
- */
-class FileStore {
-  constructor() {
-    this.files = {};
-  }
-
-  getFile(fileId) {
-    if (!(fileId in this.files)) {
-      throw new Error(`File ${fileId} was not registered with the file store.`);
-    }
-
-    return this.files[fileId];
-  }
-
-  registerFile(fileId, filePath) {
-    // Check the file has an absolute path.
-    if (!path.isAbsolute(filePath)) {
-      throw new Error(`File ${fileId} does not have an absolute path.`);
-    }
-
-    // Create the file object.
-    // If the file was already registered, it will be replaced (and previous results discarded).
-    this.files[fileId] = new AudioFile(fileId, path.normalize(filePath));
-  }
-
-  registerFiles(files, onProgress) {
-    // 1. Register each file with the store.
-    // 2. check that all the new files actually exist.
-    return Promise.resolve()
-      .then(() => {
-        files.forEach((file) => {
-          this.registerFile(file.fileId, file.path);
-        });
-      })
-      .then(() => processFiles(({ fileId }) => this.getFile(fileId).exists(), files, onProgress));
-  }
-
-  probeFiles(files, onProgress) {
-    return processFiles(({ fileId }) => this.getFile(fileId).runProbe(), files, onProgress);
-  }
-
-  detectItems(files, onProgress) {
-    return processFiles(
-      ({ fileId, items }) => this.getFile(fileId).detectItems(items),
-      files, onProgress,
-    );
-  }
-
-  encodeFiles(files, onProgress) {
-    return processFiles(
-      ({
-        fileId, encodedItems, encodedItemsBasePath,
-      }) => this.getFile(fileId).encode(encodedItems, encodedItemsBasePath),
-      files, onProgress,
-    );
-  }
-}
-
-export default FileStore;
+export default AudioFile;
