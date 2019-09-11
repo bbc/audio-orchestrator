@@ -34,7 +34,7 @@ export default {
   exportDistribution: args => manager.createTask(exportDistribution, args),
   exportPreview: args => manager.createTask(exportPreview, args),
 
-  // meta task actions
+  // Meta task actions
   getTask: ({ taskId }) => manager.getTask(taskId),
   cancelTask: ({ taskId }) => manager.cancelTask(taskId),
 };

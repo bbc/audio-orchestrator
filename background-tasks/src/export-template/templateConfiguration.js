@@ -27,8 +27,8 @@ const templateConfiguration = (sequences, settings) => {
     DEVICE_TAGS: settings.zones,
   };
 
-  if (settings.cloudSyncEndpoint) {
-    configuration.CLOUDSYNC_ENDPOINT = { hostname: settings.cloudSyncEndpoint };
+  if (settings.cloudSyncHostname) {
+    configuration.CLOUDSYNC_ENDPOINT = { hostname: settings.cloudSyncHostname };
   } else {
     configuration.CLOUDSYNC_ENDPOINT = { hostname: 'cloudsync.virt.ch.bbc.co.uk' };
   }

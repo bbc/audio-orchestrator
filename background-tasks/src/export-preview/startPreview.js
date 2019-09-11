@@ -1,4 +1,6 @@
 import { exportLogger as logger } from 'bbcat-orchestration-builder-logging';
+import fse from 'fs-extra';
+import path from 'path';
 import os from 'os';
 import net from 'net';
 import http from 'http';
@@ -56,17 +58,27 @@ const getHandle = (host, initialPort = DEFAULT_PORT, retries = 50) => {
   });
 };
 
-const startPreview = (distDir) => {
+const startPreview = (args) => {
+  const { outputDir } = args;
+
   logger.debug('start preview');
 
-  const serve = serveStatic(distDir);
+  let distDir;
+  let serve;
+  let server;
 
-  const server = http.createServer((req, res) => {
-    serve(req, res, finalhandler(req, res));
-  });
-
-
-  return selectHost()
+  return Promise.resolve()
+    .then(() => {
+      distDir = path.join(outputDir, 'dist');
+    })
+    .then(() => fse.ensureDir(distDir))
+    .then(() => {
+      serve = serveStatic(distDir);
+      server = http.createServer((req, res) => {
+        serve(req, res, finalhandler(req, res));
+      });
+    })
+    .then(() => selectHost())
     .then(host => getHandle(host, DEFAULT_PORT))
     .then(handle => new Promise((resolve, reject) => {
       server.on('error', (e) => {
@@ -77,11 +89,12 @@ const startPreview = (distDir) => {
         const { port, address } = server.address();
         logger.info(`Preview server for ${distDir} listening on ${address}:${port}.`);
         resolve({
-          stop: () => server.close(),
-          url: `http://${address}:${port}`,
+          stopPreview: () => server.close(),
+          previewUrl: `http://${address}:${port}`,
         });
       });
-    }));
+    }))
+    .then(({ stopPreview, previewUrl }) => ({ ...args, stopPreview, previewUrl }));
 };
 
 export default startPreview;

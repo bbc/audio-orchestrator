@@ -12,7 +12,7 @@ const CONCURRENCY = 4;
 
 /**
  * Returns a function that takes a { worker, args, taskId } object and a callback, runs the
- * worker function with added fileStore and onProgress arguments, captures its progress,
+ * worker function with the args (adding fileStore) and onProgress arguments, captures its progress,
  * and waits for its completion (or error) before calling the callback.
  * This function is executed asynchronously for every object added to the taskQueue.
  */
@@ -34,7 +34,7 @@ const createWorker = (tasks, fileStore) => ({ worker, args, taskId }, callback) 
   };
 
   logger.debug(`Starting task ${taskId}.`);
-  worker(args, fileStore, onProgress)
+  worker({ ...args, fileStore }, onProgress)
     .then(({ result, onCancel }) => {
       logger.debug(`Task ${taskId} completed.`);
       task.result = result;

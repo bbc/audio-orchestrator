@@ -17,15 +17,26 @@ const findSequenceDuration = (objects, files) => {
 /**
  * Generates the JSON structure to be written to a sequence.json file for the given sequence and
  * project settings objects.
+ *
+ * @param {Object} sequence
+ * @param {String} sequence.sequenceId,
+ * @param {Boolean} [sequence.loop]
+ * @param {Array<Number>} [sequence.outPoints]
+ * @param {Array<Object>} [sequence.objects]
+ * @param {Object} settings
+ * @param {String} settings.baseUrl
+ * @param {Object} files
  */
-const generateSequenceMetatata = (sequence, settings, files) => {
-  const {
+const generateSequenceMetatata = (
+  {
     sequenceId,
-    loop,
-    outPoints,
-    objects,
-  } = sequence;
-
+    loop = false,
+    outPoints = [],
+    objects = [],
+  } = {}, // sequence
+  settings,
+  files,
+) => {
   const { baseUrl } = settings;
 
   const duration = findSequenceDuration(objects, files);

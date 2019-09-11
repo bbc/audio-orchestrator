@@ -14,19 +14,21 @@ describe('TaskManager', () => {
 
     return tm.createTask(() => Promise.resolve({}), {})
       .then(({ taskId }) => {
-        expect(typeof taskId).toBe('string');
+        expect(taskId).toEqual(expect.any(String));
       })
       .then(() => tm.taskQueue.drain());
   });
 
   it('causes the worker to be called with the right arguments', () => {
     const tm = new TaskManager(mockFileStore);
-    const mockArgs = {};
+    const mockArgs = {
+      foo: 'bar',
+    };
 
-    const mockWorker = (args, fileStore, onProgress) => {
-      expect(args).toBe(mockArgs);
-      expect(fileStore).toBe(mockFileStore);
-      expect(typeof onProgress).toBe('function');
+    const mockWorker = (args, onProgress) => {
+      expect(args.foo).toEqual('bar');
+      expect(args.fileStore).toBe(mockFileStore);
+      expect(onProgress).toEqual(expect.any(Function));
       return Promise.resolve({ result: {} });
     };
 
@@ -39,7 +41,7 @@ describe('TaskManager', () => {
     const mockArgs = {};
     const mockResult = {};
 
-    const mockWorker = (args, fileStore, onProgress) => {
+    const mockWorker = (args, onProgress) => {
       onProgress({ completed: 1, total: 1, currentStep: 'foo' });
       return Promise.resolve({ result: mockResult });
     };

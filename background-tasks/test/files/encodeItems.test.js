@@ -14,7 +14,7 @@ jest.mock('child_process', () => ({
   },
 }));
 
-jest.mock('async/mapSeries', () => (args, fn) => Promise.resolve(args.map(arg => fn(arg))));
+jest.mock('async/mapSeries', () => (args, fn) => Promise.resolve(args.map(arg => fn(arg, () => {}))));
 
 jest.mock('fs-extra', () => ({
   mkdir: jest.fn(() => Promise.resolve()),

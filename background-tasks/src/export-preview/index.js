@@ -1,70 +1,41 @@
-import { exportLogger as logger } from 'bbcat-orchestration-builder-logging';
+import { getLogger } from 'bbcat-orchestration-builder-logging';
 import fse from 'fs-extra';
-import path from 'path';
-import startPreview from './previewServer';
-import distributionWorker from '../export-distribution';
-import ProgressReporter from '../progressReporter';
-import getOutputDir from '../getOutputDir';
+import runExportSteps from '../runExportSteps';
+import exportDistribution from '../export-distribution';
+
+import startPreview from './startPreview';
+
+const logger = getLogger('export-preview');
 
 const previewWorker = (
-  { sequences, settings },
-  fileStore,
+  args,
   onProgress = () => {},
-  exportOutputDir,
 ) => {
-  const progress = new ProgressReporter(2, onProgress);
+  const steps = [
+    {
+      name: 'initialising preview server',
+      fn: startPreview,
+    },
+    {
+      name: 'creating distribution',
+      fn: exportDistribution,
+    },
+  ];
 
-  logger.debug('previewWorker');
+  return Promise.resolve()
+    .then(() => runExportSteps(steps, args, onProgress))
+    .then((finalArgs) => {
+      const { stopPreview, previewUrl, outputDir } = finalArgs;
 
-  let distDir;
-  let outputDir;
-  return getOutputDir(exportOutputDir)
-    .then((d) => {
-      logger.debug(`exportPreview outputDir = ${d}`);
-      outputDir = d;
-      distDir = path.join(d, 'dist');
-    })
-    .then(() => fse.ensureDir(distDir))
-    .then(() => {
-      progress.advance('initialising preview server'); // 0
-
-      // start the server first because its chosen port number is needed to for the joiningLink.
-      return startPreview(distDir);
-    })
-    .then(({ stop, url }) => {
-      const onDistributionProgress = progress.advance('building application'); // 1
-
-      return distributionWorker(
-        {
-          sequences,
-          settings: {
-            ...settings,
-            joiningLink: `${url}#!/join`,
-            baseUrl: `${url}/audio`,
-          },
-        },
-        fileStore,
-        onDistributionProgress,
-        outputDir,
-      ).then(() => ({ stop, url }));
-    })
-    .then(({ stop, url }) => {
-      progress.complete();
       return {
-        result: { url },
+        ...finalArgs,
+        result: { url: previewUrl },
         onCancel: () => {
-          logger.info(`Stopping server at ${url} and removing ${outputDir}.`);
-          stop();
+          logger.info(`Stopping server at ${previewUrl} and removing ${outputDir}.`);
+          stopPreview();
           fse.remove(outputDir);
         },
       };
-    })
-    .catch((err) => {
-      logger.warn(err);
-
-      return fse.remove(outputDir).finally(() => {
-        throw err;
-      });
     });
 };
 
