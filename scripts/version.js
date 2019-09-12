@@ -3,12 +3,12 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 
-const topPackage = require(path.join(__dirname, '../package.json'));
+const topLerna = require(path.join(__dirname, '../lerna.json'));
 const getPackagePath = folder => path.join(__dirname, '../', folder, 'package.json');
 
 console.log('Current versions:');
 
-const packages = topPackage.workspaces.packages.map((folder) => {
+const packages = topLerna.packages.map((folder) => {
   const packagePath = getPackagePath(folder);
   const packageJson = require(packagePath);
   return {

@@ -50,27 +50,25 @@ The app supports three different export options, which can be selected after cli
 
 # Development
 
-We use `yarn` as our package manager ([configure it for artifactory access](https://confluence.dev.bbc.co.uk/display/audioteam/bbcat-orchestration+libraries+and+tools) to get our private packages).
+We use `yarn` as our package manager ([configure it for artifactory access](https://confluence.dev.bbc.co.uk/display/audioteam/bbcat-orchestration+libraries+and+tools) to get our private packages) and `lerna` workspaces to manage the monorepo structure. To install the dependencies, run the following commands:
 
-We use yarn workspaces to manage the mono-repo structure. The packages are designed to be used together to build the Electron app. The current structure looks like this:
+```
+yarn install
+yarn lerna bootstrap --npm-client=yarn
+```
+
+This installs dependencies in all the packages and creates symlinks to local dependencies where required.
+
+The packages are designed to be used together to build the Electron app. The current structure looks like this:
 
   * `react-frontend/`: The user interface, written with _React_ and _Redux_, interacting with electron APIs through globals set in a preload script.
-  * `analyse-server/`: An _express_ app to be mounted at `analyse/`, handling audio files and encoding through _ffmpeg_.
-  * `export-server/`: An _express_ app to be mounted at `export/`, handling file copying and `webpack` packaging for exporting.
+  * `background-tasks/`: Tasks interacting with subprocesses and the file system, used by the `electron-app` to provide a REST API to the `react-frontend`.
   * `electron-app/`: The `electron-app` bundling and configuring all the other components to create a standalone desktop application.
+  * `logging/`: A common logging module for server-side packages based on `winston`.
 
-Due to a [bug](https://github.com/yarnpkg/yarn/issues/2629) in yarn, the installation requires running it twice in the top level of this repository. We also have to install development dependencies for the template manually to make local development work; the dependencies are downloaded automatically for packaging the electron app.
 
-This sequence should be sufficient to install the dependencies (the first `yarn install` may error, but the second one should succeed).
+To start a development version of the app, run `yarn dev`. This rebuilds the `background-tasks`, starts a development server with hot-reloading for the `react-frontend`, and runs the `electron-app`.
 
-```
-yarn install
-yarn install
-(cd node_modules/@bbc/bbcat-orchestration-template && yarn install)
-```
+To build the app for the current platform, run `yarn build`. This creates a self-contained electron app.
 
-To start a development version of the app, run `yarn dev`. This rebuilds the `analyse-server` and `export-server`, starts a development server with hot-reloading for the `react-frontend`, and runs the `electron-app`.
-
-To build the app for the current platform, run `yarn build`. This rebuilds the `analyse-server` and `export-server`, and creates a production package for the `react-frontend`. All of these and the required dependencies are then included in the bundled `electron-app` package.
-
-The versions of all packages in this repo are kept in sync by using `yarn bump` to apply the same version bumps across all packages.
+The versions of all packages in this repo are kept in sync by running the `yarn bump` script at the top level to apply the same version bumps across all packages.

@@ -3,6 +3,14 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.10.0`
+_2019-09-12_
+
+* Improvement: Default keyboard shortcuts are now available in system dialogues and text input fields (Select All, Copy, Paste, etc.).
+* Improvement: Export tasks will now wait for file analysis and encoding to finish, instead of failing.
+* For developers: Refactored the background tasks to re-use more functionality between similar tasks and added unit tests.
+* For developers: Upgraded to electron 6 and changed the build and monorepo management tools.
+
 # `0.9.0`
 _2019-08-14_
 

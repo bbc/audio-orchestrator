@@ -1,21 +1,20 @@
 {
   "name": "bbcat-orchestration-builder-electron-app",
-  "version": "0.9.4",
+  "version": "0.10.0",
   "description": "Electron desktop application for generating orchestrated audio applications.",
-  "main": "dist/main.js",
+  "main": "bin/main.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
   "author": "Kristian Hentschel <Kristian.Hentschel@bbc.co.uk>",
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "bbcat-orchestration-builder-logging": "^0.9.4",
-    "bbcat-orchestration-builder-background-tasks": "^0.9.4",
-    "bbcat-orchestration-builder-react-frontend": "^0.9.4",
-    "electron": "^4.1.1",
+    "bbcat-orchestration-builder-background-tasks": "^0.10.0",
+    "bbcat-orchestration-builder-logging": "^0.10.0",
+    "bbcat-orchestration-builder-react-frontend": "^0.10.0",
+    "body-parser": "^1.18.3",
     "electron-devtools-installer": "^2.2.4",
     "electron-store": "^3.0.0",
     "express": "^4.16.4",
-    "body-parser": "^1.18.3",
     "fs-extra": "^7.0.1"
   },
   "devDependencies": {
@@ -23,15 +22,28 @@
     "@babel/core": "^7.4.0",
     "@babel/preset-env": "^7.4.2",
     "concurrently": "^4.1.0",
-    "electron-packager": "^13.1.1"
+    "electron": "^6.0.8",
+    "electron-builder": "^21.2.0"
   },
   "scripts": {
-    "build": "yarn build-frontend && yarn build-background-tasks && yarn build-main && electron-packager . --overwrite --asar.unpackDir=node_modules/@bbc/bbcat-orchestration-template",
-    "build-frontend": "(cd node_modules/bbcat-orchestration-builder-react-frontend/ && yarn run webpack --mode production)",
-    "build-main": "yarn clean && mkdir ./dist/ && babel src -s -d dist",
-    "build-background-tasks": "(cd node_modules/bbcat-orchestration-builder-background-tasks/ && yarn build)",
-    "clean": "rm -rf ./dist/",
+    "build": "yarn build-frontend && yarn build-background-tasks && yarn build-main && electron-builder --dir",
+    "dist": "yarn build && electron-builder --mac dmg",
+    "build-frontend": "(cd ../react-frontend/ && yarn run webpack --mode production)",
+    "build-main": "yarn clean && mkdir ./bin/ && babel src -s -d bin",
+    "build-background-tasks": "(cd ../background-tasks/ && yarn build)",
+    "clean": "rm -rf ./dist/ ./bin/",
     "dev": "concurrently \"(cd ../react-frontend && yarn dev)\" \"(yarn build-background-tasks && yarn build-main && NODE_ENV=development electron .)\""
   },
-  "build": {}
+  "build": {
+    "appId": "uk.co.bbc.rd.bbcat-orchestration-builder",
+    "files": [
+      "./bin/**/*"
+    ],
+    "asar": {
+      "smartUnpack": false
+    },
+    "asarUnpack": [
+      "**/node_modules/@bbc/bbcat-orchestration-template/**/*"
+    ]
+  }
 }

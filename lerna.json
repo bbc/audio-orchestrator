@@ -1,0 +1,10 @@
+{
+  "npmClient": "yarn",
+  "packages": [
+    "background-tasks",
+    "electron-app",
+    "react-frontend",
+    "logging"
+  ],
+  "version": "0.0.0"
+}

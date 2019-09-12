@@ -4,18 +4,11 @@
   "scripts": {
     "dev": "(cd electron-app && yarn dev)",
     "build": "(cd electron-app && yarn build)",
+    "dist": "(cd electron-app && yarn dist)",
     "bump": "node scripts/version.js"
   },
-  "workspaces": {
-    "packages": [
-      "background-tasks",
-      "electron-app",
-      "react-frontend",
-      "logging"
-    ],
-    "nohoist": [
-      "bbcat-orchestration-builder-electron-app/**"
-    ]
-  },
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "devDependencies": {
+    "lerna": "^3.16.4"
+  }
 }
