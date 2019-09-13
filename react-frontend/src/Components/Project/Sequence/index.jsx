@@ -22,19 +22,23 @@ const Sequence = ({
   onSetName,
   onCloseSequence,
 }) => (
-  <Container>
-    <Menu inverted color="green">
-      <EditableMenuHeader value={name} onChange={onSetName} />
-      <Menu.Item position="right" icon="close" content="close" onClick={onCloseSequence} />
-    </Menu>
-    <Header content="Objects" subheader="Add audio files and specify metadata that determine if and on which devices the objects are rendered." />
-    <SequenceHeader {...{ sequenceId, projectId }} />
+  <div>
+    <Container>
+      <Menu inverted color="green">
+        <EditableMenuHeader value={name} onChange={onSetName} />
+        <Menu.Item position="right" icon="close" content="close" onClick={onCloseSequence} />
+      </Menu>
+      <Header content="Objects" subheader="Add audio files and specify metadata that determine if and on which devices the objects are rendered." />
+      <SequenceHeader {...{ sequenceId, projectId }} />
+    </Container>
     <SequenceObjectTable {...{ sequenceId, projectId }} />
-    <Header content="Behaviour" subheader="Specify whether the sequence is looped, and when the choices will be displayed." />
-    <SequenceSettings {...{ sequenceId, projectId }} />
-    <Header content="Choices" subheader="Specify choices for the user to move to another sequence." />
-    <SequenceChoices {...{ sequenceId, projectId }} />
-  </Container>
+    <Container>
+      <Header content="Behaviour" subheader="Specify whether the sequence is looped, and when the choices will be displayed." />
+      <SequenceSettings {...{ sequenceId, projectId }} />
+      <Header content="Choices" subheader="Specify choices for the user to move to another sequence." />
+      <SequenceChoices {...{ sequenceId, projectId }} />
+    </Container>
+  </div>
 );
 
 Sequence.propTypes = {

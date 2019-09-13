@@ -81,8 +81,13 @@ class SequenceObjectTable extends React.Component {
       channelMapping: objects[objectNumber].channelMapping,
     }));
 
+    const expandedStyle = {
+      padding: expanded ? '0 1em' : 0,
+      width: '100%',
+    };
+
     return (
-      <Container>
+      <div>
         <Dimmer active={filesLoading} inverted verticalAlign="top">
           { !filesLoadingTotal
             ? <Loader indeterminate inline="centered" content="Checking Audio Files" />
@@ -109,7 +114,7 @@ class SequenceObjectTable extends React.Component {
           : null
         }
 
-        <Container style={{ overflowX: 'auto', margin: '1em 0' }}>
+        <Container style={{ margin: '1em 0', ...(expanded ? expandedStyle : {}) }}>
           <Table singleLine celled={expanded} verticalAlign="top">
             <ObjectHeader {...{ expanded, zones }} onEditTags={this.handleOpenTagEditor} />
             <Table.Body>
@@ -138,7 +143,7 @@ class SequenceObjectTable extends React.Component {
           zones={zones}
           {...{ onDeleteZone, onAddZone, onRenameZone }}
         />
-      </Container>
+      </div>
     );
   }
 }

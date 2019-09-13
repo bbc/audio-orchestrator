@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import {
   Form,
   Message,
+  Container,
 } from 'semantic-ui-react';
 
 import {
@@ -30,30 +31,32 @@ class Advanced extends React.Component {
     } = this.props;
 
     return (
-      <Form>
+      <Container>
         <Message icon="lightbulb outline" header="Advanced settings" content="These settings can usually be left at their default values. They may be needed for hosting the exported application on a public server." />
-        <Form.Input
-          label="Short joining link"
-          placeholder="https://example.com/#!/join"
-          name="joiningLink"
-          defaultValue={joiningLink}
-          onBlur={this.handleBlur}
-        />
-        <Form.Input
-          label="Cloud-Sync Service Hostname"
-          placeholder="cloudsync.virt.ch.bbc.co.uk"
-          name="cloudSyncHostname"
-          defaultValue={cloudSyncHostname}
-          onBlur={this.handleBlur}
-        />
-        <Form.Input
-          label="Audio base URL"
-          placeholder="audio/"
-          name="baseUrl"
-          defaultValue={baseUrl}
-          onBlur={this.handleBlur}
-        />
-      </Form>
+        <Form>
+          <Form.Input
+            label="Short joining link"
+            placeholder="https://example.com/#!/join"
+            name="joiningLink"
+            defaultValue={joiningLink}
+            onBlur={this.handleBlur}
+          />
+          <Form.Input
+            label="Cloud-Sync Service Hostname"
+            placeholder="cloudsync.virt.ch.bbc.co.uk"
+            name="cloudSyncHostname"
+            defaultValue={cloudSyncHostname}
+            onBlur={this.handleBlur}
+          />
+          <Form.Input
+            label="Audio base URL"
+            placeholder="audio/"
+            name="baseUrl"
+            defaultValue={baseUrl}
+            onBlur={this.handleBlur}
+          />
+        </Form>
+      </Container>
     );
   }
 }

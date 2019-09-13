@@ -2,6 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
+  Segment,
   Container,
   Menu,
   Tab,
@@ -59,18 +60,27 @@ const Project = ({
   ];
 
   return (
-    <Container>
-      <Menu inverted color="orange" attached="bottom">
-        <EditableMenuHeader value={name} onChange={onSetName} />
-        <Menu.Item position="right" icon="close" content="close" onClick={onClose} />
-      </Menu>
-      <Tab
-        activeIndex={tabPanes.findIndex(({ page }) => page === currentProjectPage) || 0}
-        panes={tabPanes}
-        menu={{ secondary: false, pointing: true, color: 'orange' }}
-        onTabChange={(e, { activeIndex }) => onOpenProjectPage(tabPanes[activeIndex].page)}
-      />
-    </Container>
+    <div>
+      <Container>
+        <Menu inverted color="orange" attached="bottom">
+          <EditableMenuHeader value={name} onChange={onSetName} />
+          <Menu.Item position="right" icon="close" content="close" onClick={onClose} />
+        </Menu>
+        <Menu pointing color="orange">
+          { tabPanes.map(({ page, menuItem }) => (
+            <Menu.Item
+              key={page}
+              active={page === currentProjectPage}
+              content={menuItem}
+              onClick={() => onOpenProjectPage(page)}
+            />
+          ))}
+        </Menu>
+      </Container>
+      <div style={{ marginTop: '1em' }}>
+        { tabPanes.find(({ page }) => page === currentProjectPage).render() }
+      </div>
+    </div>
   );
 };
 
