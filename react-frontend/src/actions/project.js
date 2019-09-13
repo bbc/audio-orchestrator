@@ -158,7 +158,10 @@ export const setFileProperties = (projectId, sequenceId, files) => (dispatch) =>
 
   // update the project store
   const project = projects[projectId];
+  if (project === undefined) return;
+
   const sequence = project.sequences[sequenceId];
+  if (sequence === undefined) return;
 
   const updatedFiles = {
     ...sequence.files,
