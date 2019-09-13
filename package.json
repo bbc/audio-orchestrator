@@ -5,9 +5,9 @@
     "dev": "(cd electron-app && yarn dev)",
     "build": "(cd electron-app && yarn build)",
     "dist": "(cd electron-app && yarn dist)",
+    "bootstrap": "lerna --npm-client=yarn bootstrap",
     "bump": "node scripts/version.js"
   },
-  "version": "0.0.0",
   "devDependencies": {
     "lerna": "^3.16.4"
   }
