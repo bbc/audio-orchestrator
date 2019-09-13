@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-electron-app",
-  "version": "0.10.4",
+  "version": "0.10.5",
   "description": "Electron desktop application for generating orchestrated audio applications.",
   "main": "bin/main.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
@@ -8,9 +8,9 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "bbcat-orchestration-builder-background-tasks": "^0.10.4",
-    "bbcat-orchestration-builder-logging": "^0.10.4",
-    "bbcat-orchestration-builder-react-frontend": "^0.10.4",
+    "bbcat-orchestration-builder-background-tasks": "^0.10.5",
+    "bbcat-orchestration-builder-logging": "^0.10.5",
+    "bbcat-orchestration-builder-react-frontend": "^0.10.5",
     "body-parser": "^1.18.3",
     "electron-devtools-installer": "^2.2.4",
     "electron-store": "^3.0.0",
@@ -44,6 +44,16 @@
     },
     "asarUnpack": [
       "**/node_modules/@bbc/bbcat-orchestration-template/**/*"
-    ]
+    ],
+    "mac": {
+      "files": [
+        "!**/ffprobe-static/bin/win32/**/*",
+        "!**/ffprobe-static/bin/linux/**/*",
+        "!**/ffprobe-static/bin/linux/**/*",
+        "!**/ffmpeg-static/bin/win32/**/*",
+        "!**/ffmpeg-static/bin/linux/**/*",
+        "!**/ffmpeg-static/bin/linux/**/*"
+      ]
+    }
   }
 }
