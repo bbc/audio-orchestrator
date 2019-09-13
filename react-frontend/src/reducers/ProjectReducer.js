@@ -153,6 +153,15 @@ const ProjectReducer = (state = initialState, action) => {
           next: action.next,
         },
       );
+    case 'CLEAR_PROJECT_SEQUENCE_TASKS':
+      return updateSequence(
+        state, action.projectId, action.sequenceId,
+        {
+          probeTaskId: null,
+          itemsTaskId: null,
+          encodeTaskId: null,
+        },
+      );
     case 'SET_PROJECT_SEQUENCE_FILES_LOADING':
       return updateSequence(
         state, action.projectId, action.sequenceId,

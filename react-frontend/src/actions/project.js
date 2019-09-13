@@ -183,6 +183,12 @@ export const setFileProperties = (projectId, sequenceId, files) => (dispatch) =>
   dispatch(validateProject(projectId));
 };
 
+const clearSequenceTasks = (projectId, sequenceId) => ({
+  type: 'CLEAR_PROJECT_SEQUENCE_TASKS',
+  projectId,
+  sequenceId,
+});
+
 const setFilesLoading = (projectId, sequenceId, loading, taskId) => ({
   type: 'SET_PROJECT_SEQUENCE_FILES_LOADING',
   projectId,
@@ -259,6 +265,8 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
   const probeTaskId = uuidv4();
   const itemsTaskId = uuidv4();
   const encodeTaskId = uuidv4();
+
+  dispatch(clearSequenceTasks(projectId, sequenceId));
 
   dispatch(setTaskProgress(createTaskId, 0, 0));
   dispatch(setFilesLoading(projectId, sequenceId, true, createTaskId));
