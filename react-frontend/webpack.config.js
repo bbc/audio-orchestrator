@@ -22,6 +22,14 @@ module.exports = (env, { mode = 'development' }) => ({
         use: [
           mode === 'development' ? 'style-loader' : MiniCssExtractPlugin.loader,
           'css-loader',
+          {
+            loader: 'string-replace-loader',
+            options: {
+              search: '@import url\(.*fonts\.googleapis\.com.*\);',
+              replace: '',
+              flags: 'g',
+            },
+          },
         ],
       },
       {

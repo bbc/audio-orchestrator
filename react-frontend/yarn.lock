@@ -6221,6 +6221,14 @@ stream-shift@^1.0.0:
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/stream-shift/-/stream-shift-1.0.0.tgz#d5c752825e5367e786f78e18e445ea223a155952"
   integrity sha1-1cdSgl5TZ+eG944Y5EXqIjoVWVI=
 
+string-replace-loader@^2.2.0:
+  version "2.2.0"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/string-replace-loader/-/string-replace-loader-2.2.0.tgz#0a0e6543fcec783d85c353a3e96a23872d45a94f"
+  integrity sha1-Cg5lQ/zseD2Fw1Oj6Wojhy1FqU8=
+  dependencies:
+    loader-utils "^1.2.3"
+    schema-utils "^1.0.0"
+
 string-width@^1.0.1:
   version "1.0.2"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/string-width/-/string-width-1.0.2.tgz#118bdf5b8cdc51a2a7e70d211e07e2b0b9b107d3"
