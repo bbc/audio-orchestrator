@@ -327,8 +327,6 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
         if (success && !error && firstProbe) {
           if (probe.duration !== firstProbe.duration) {
             error = 'All audio files must have the same duration.';
-          } else if (probe.sampleRate !== 48000) {
-            error = 'All audio files must have the project sample rate (48000 Hz).';
           }
         }
 

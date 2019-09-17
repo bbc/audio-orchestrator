@@ -1,8 +1,7 @@
 import {
-  SAMPLE_RATE,
   ENCODE_BITRATE,
-  SEGMENT_DURATION,
   SAFARI_SEGMENT_MEDIA,
+  segmentDuration,
 } from '../encodingConfig';
 
 /**
@@ -25,16 +24,16 @@ function formatPT(seconds) {
  *
  * @returns {string} the content of the compiled manifest
  */
-export const dashManifest = (outputName, baseUrl, duration, segmentTemplateAttributes) => {
-  const minBufferTime = formatPT(2 * SEGMENT_DURATION);
+export const dashManifest = (outputName, baseUrl, duration, sampleRate, segmentTemplateAttributes) => {
+  const minBufferTime = formatPT(2 * segmentDuration(sampleRate));
   const durationPT = formatPT(duration);
-  const segmentDurationPT = formatPT(SEGMENT_DURATION);
+  const segmentDurationPT = formatPT(segmentDuration(sampleRate));
   const periodStartPT = formatPT(0);
   const adaptationSetId = '0'; // TODO hard-coded '0' in library should be taken from sequence.json.
-  const representationAudioSamplingRate = SAMPLE_RATE;
+  const representationAudioSamplingRate = sampleRate;
   const representationBandwidth = ENCODE_BITRATE;
-  const timescale = SAMPLE_RATE;
-  const segmentDuration = timescale * SEGMENT_DURATION;
+  const timescale = sampleRate;
+  const dashSegmentDuration = timescale * segmentDuration(sampleRate);
 
   return [
     '<?xml version="1.0" encoding="utf-8"?>',
@@ -49,7 +48,7 @@ export const dashManifest = (outputName, baseUrl, duration, segmentTemplateAttri
     `    <AdaptationSet id="${adaptationSetId}" contentType="audio" segmentAlignment="true" mimeType="audio/mp4">`,
     `      <Representation id="0" mimeType="audio/mp4" codecs="mp4a.40.2" bandwidth="${representationBandwidth}" audioSamplingRate="${representationAudioSamplingRate}" />`,
     '      <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="1" />',
-    `      <SegmentTemplate timescale="${timescale}" duration="${segmentDuration}" ${segmentTemplateAttributes} />`,
+    `      <SegmentTemplate timescale="${timescale}" duration="${dashSegmentDuration}" ${segmentTemplateAttributes} />`,
     '    </AdaptationSet>',
     '  </Period>',
     '</MPD>',
@@ -57,16 +56,18 @@ export const dashManifest = (outputName, baseUrl, duration, segmentTemplateAttri
 };
 
 
-export const safariDashManifest = (outputName, baseUrl, duration) => dashManifest(
+export const safariDashManifest = (outputName, baseUrl, duration, sampleRate) => dashManifest(
   outputName,
   baseUrl,
   duration,
+  sampleRate,
   `media="${SAFARI_SEGMENT_MEDIA}" startNumber="0"`,
 );
 
-export const headerlessDashManifest = (outputName, baseUrl, duration) => dashManifest(
+export const headerlessDashManifest = (outputName, baseUrl, duration, sampleRate) => dashManifest(
   outputName,
   baseUrl,
   duration,
+  sampleRate,
   'initialization="init-stream$RepresentationID$.m4s" media="chunk-stream$RepresentationID$-$Number%05d$.m4s" startNumber="1"',
 );

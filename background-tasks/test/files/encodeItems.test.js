@@ -49,12 +49,12 @@ describe('encodeItems', () => {
       });
   });
 
-  it('creates a temporary directory if none is given', () => encodeItems('', [])
+  it('creates a temporary directory if none is given', () => encodeItems('', [], 48000)
     .then(() => {
       expect(mkdtemp).toHaveBeenCalled();
     }));
 
-  it('does not create a temporary directory if one was given', () => encodeItems('', [], '/dev/null')
+  it('does not create a temporary directory if one was given', () => encodeItems('', [], 48000, '/dev/null')
     .then(() => {
       expect(mkdtemp).not.toHaveBeenCalled();
     }));

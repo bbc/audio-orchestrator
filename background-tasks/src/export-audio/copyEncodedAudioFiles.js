@@ -12,7 +12,7 @@ const sequenceOutputDir = (basePath, sequenceId) => path.join(basePath, `${seque
 
 const copyEncodedAudioFiles = (args) => {
   const {
-    sequences, settings, files, outputDir,
+    sequences, settings, files, outputDir, fileStore,
   } = args;
 
   const audioOutputDir = path.join(outputDir, 'audio');
@@ -39,6 +39,8 @@ const copyEncodedAudioFiles = (args) => {
 
         // for each object, copy the audio files and generate DASH manifests where needed.
         objects.forEach(({ fileId }) => {
+          const { probe } = fileStore.getFile(fileId);
+          const { sampleRate } = probe;
           const { encodedItems, encodedItemsBasePath } = files[fileId];
 
           const sequenceDestPath = sequenceOutputDir(audioOutputDir, sequenceId);
@@ -67,13 +69,13 @@ const copyEncodedAudioFiles = (args) => {
 
               tasks.push(cb => fse.writeFile(
                 path.join(sequenceDestPath, relativePath),
-                headerlessDashManifest(relativeSourcePath, sequenceUrl, paddedDuration),
+                headerlessDashManifest(relativeSourcePath, sequenceUrl, paddedDuration, sampleRate),
                 cb,
               ));
 
               tasks.push(cb => fse.writeFile(
                 path.join(sequenceDestPath, relativePathSafari),
-                safariDashManifest(relativeSourcePath, sequenceUrl, paddedDuration),
+                safariDashManifest(relativeSourcePath, sequenceUrl, paddedDuration, sampleRate),
                 cb,
               ));
             }

@@ -31,6 +31,10 @@ const sequences = [
   },
 ];
 
+const fileStore = ({
+  getFile: () => ({ probe: { sampleRate: 44100 } }),
+})
+
 const settings = {};
 
 const files = {
@@ -57,13 +61,13 @@ const outputDir = '/dev/null';
 describe('copyEncodedAudioFiles', () => {
   it('returns a promise', () => expect(
     copyEncodedAudioFiles({
-      sequences, settings, files, outputDir,
+      sequences, settings, files, outputDir, fileStore,
     }),
   ).resolves.toEqual(expect.anything()));
 
   it('generates dash and safari manifests', () => {
     return copyEncodedAudioFiles({
-      sequences, settings, files, outputDir,
+      sequences, settings, files, outputDir, fileStore,
     })
       .then(() => {
         expect(headerlessDashManifest).toHaveBeenCalledTimes(1);
@@ -73,7 +77,7 @@ describe('copyEncodedAudioFiles', () => {
 
   it('calls copy once per item', () => {
     return copyEncodedAudioFiles({
-      sequences, settings, files, outputDir,
+      sequences, settings, files, outputDir, fileStore,
     })
       .then(() => {
         expect(fse.copy).toHaveBeenCalledTimes(2);
@@ -82,7 +86,7 @@ describe('copyEncodedAudioFiles', () => {
 
   it('generates a seqeunce metadata file', () => {
     return copyEncodedAudioFiles({
-      sequences, settings, files, outputDir,
+      sequences, settings, files, outputDir, fileStore,
     })
       .then(() => {
         expect(generateSequenceMetadata).toHaveBeenCalledTimes(1);

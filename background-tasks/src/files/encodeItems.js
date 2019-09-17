@@ -15,8 +15,9 @@ import {
   ENCODE_CODEC,
   ENCODE_BITRATE,
   BUFFER_EXTENSION,
-  SEGMENT_DURATION,
   SAFARI_SEGMENT_NAMES,
+  segmentDuration,
+  SILENCE_SAMPLE_RATE,
   SILENCE_DURATION,
 } from '../encodingConfig';
 
@@ -42,20 +43,20 @@ const zeroPad = (num, width) => {
   return `${'0'.repeat(Math.max(0, width - str.length))}${str}`;
 };
 
-const dashArgs = [
+const dashArgs = (sampleRate) => [
   '-c:a', ENCODE_CODEC,
   '-use_template', 1,
   '-use_timeline', 0,
-  '-seg_duration', SEGMENT_DURATION,
+  '-seg_duration', segmentDuration(sampleRate),
   '-f', 'dash',
 ];
 
-const sarafiDashArgs = [
+const sarafiDashArgs = (sampleRate) => [
   '-c:a', ENCODE_CODEC,
   '-frame_size', 1024,
   '-b:a', ENCODE_BITRATE,
   '-f', 'segment',
-  '-segment_time', SEGMENT_DURATION,
+  '-segment_time', segmentDuration(sampleRate),
 ];
 
 const silenceArgs = [
@@ -79,8 +80,8 @@ const ensureSilence = () => {
   silencePromise = execFile(ffmpegPath, [
     '-y',
     '-f', 'lavfi',
-    '-i', 'anullsrc=r=48000:cl=mono',
-    '-t', SILENCE_DURATION,
+    '-i', `anullsrc=r=${SILENCE_SAMPLE_RATE}:cl=mono`,
+    '-t', segmentDuration(SILENCE_SAMPLE_RATE),
     SILENCE_PATH,
   ])
     .then(() => {
@@ -107,6 +108,7 @@ const encodeItem = ({
   start,
   duration,
   type,
+  sampleRate,
 }, callback) => {
   // create a result item, to be populated with relativePath (and relativePathSafari) fields below.
   const resultItem = {
@@ -157,10 +159,10 @@ const encodeItem = ({
           return ensureSilence().then(() => [
             ...inputArgs,
             ...silenceArgs,
-            ...dashArgs,
+            ...dashArgs(sampleRate),
             '-t', duration + SILENCE_DURATION,
             path.join(encodedItemsBasePath, resultItem.relativePath),
-            ...sarafiDashArgs,
+            ...sarafiDashArgs(sampleRate),
             '-t', duration + SILENCE_DURATION,
             path.join(encodedItemsBasePath, outputName, SAFARI_SEGMENT_NAMES),
           ]);
@@ -202,6 +204,7 @@ const encodeItem = ({
 const encodeItems = (
   filePath,
   items,
+  sampleRate,
   presetBasePath,
 ) => {
   let encodedItemsBasePath = presetBasePath;
@@ -220,6 +223,7 @@ const encodeItems = (
         ...item,
         filePath,
         encodedItemsBasePath,
+        sampleRate,
         index,
       })),
       encodeItem,

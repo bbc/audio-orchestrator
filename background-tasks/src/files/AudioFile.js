@@ -121,7 +121,7 @@ class AudioFile {
     this.encodePromise = Promise.resolve()
       .then(() => this.exists())
       .then(() => this.detectItems())
-      .then(({ items }) => encodeItems(this.filePath, items))
+      .then(({ items }) => encodeItems(this.filePath, items, this.data.probe.sampleRate))
       .then(({ encodedItems, encodedItemsBasePath }) => {
         this.data.encodedItems = encodedItems;
         this.data.encodedItemsBasePath = encodedItemsBasePath;
