@@ -5,11 +5,14 @@
     "dev": "(cd electron-app && yarn dev)",
     "build": "(cd electron-app && yarn build)",
     "dist": "(cd electron-app && yarn dist)",
-    "bootstrap": "lerna --npm-client=yarn bootstrap",
-    "bump": "node scripts/version.js"
+    "bump": "node scripts/bump.js",
+    "postinstall": "(cd background-tasks && yarn install) && (cd electron-app && yarn install) && (cd react-frontend && yarn install) && (cd logging && yarn install)"
   },
-  "devDependencies": {
-    "lerna": "^3.16.4"
-  },
+  "packages": [
+    "background-tasks",
+    "electron-app",
+    "react-frontend",
+    "logging"
+  ],
   "version": "0.0.0"
 }
