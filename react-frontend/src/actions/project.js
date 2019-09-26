@@ -1007,7 +1007,7 @@ export const setObjectPanning = (
   const object = sequence.objects[objectNumber];
   const newObject = {
     ...object,
-    channelMapping: channelMapping,
+    channelMapping,
     panning: channelMappingToPanning[channelMapping],
   };
 

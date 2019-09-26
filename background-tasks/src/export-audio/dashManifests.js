@@ -24,7 +24,9 @@ function formatPT(seconds) {
  *
  * @returns {string} the content of the compiled manifest
  */
-export const dashManifest = (outputName, baseUrl, duration, sampleRate, segmentTemplateAttributes) => {
+export const dashManifest = (
+  outputName, baseUrl, duration, sampleRate, segmentTemplateAttributes,
+) => {
   const minBufferTime = formatPT(2 * segmentDuration(sampleRate));
   const durationPT = formatPT(duration);
   const segmentDurationPT = formatPT(segmentDuration(sampleRate));

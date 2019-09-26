@@ -244,7 +244,8 @@ class Sequence {
 
     const numFilesAdded = filesList.length;
     const numObjectsAdded = objectsList.length || 0;
-    const allObjectsHaveFiles = objectsList.every(({ objectNumber }) => !!objects[objectNumber].fileId);
+    const allObjectsHaveFiles = objectsList
+      .every(({ objectNumber }) => !!objects[objectNumber].fileId);
     const allFilesAreGood = filesList.every(({ fileId }) => !files[fileId].error);
     const choicesAreGood = next.every(choice => !!choice.label && !!choice.sequenceId);
 

@@ -1,6 +1,7 @@
 {
-  "extends": "eslint-config-airbnb",
+  "extends": "eslint-config-airbnb-base",
   "rules": {
+    "arrow-parens": [2, "as-needed", { "requireForBlockBody": true }]
   },
   "env": {
     "browser": true

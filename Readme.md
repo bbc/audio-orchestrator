@@ -8,14 +8,13 @@ See the [workflow overview](workflow.md) for end-user instructions. Builds are a
 
 # Development
 
-We use `yarn` as our package manager ([configure it for artifactory access](https://confluence.dev.bbc.co.uk/display/audioteam/bbcat-orchestration+libraries+and+tools) to get our private packages) and `lerna` workspaces to manage the monorepo structure. To install the dependencies, run the following commands at the top level:
+We use `yarn` as our package manager ([configure it for artifactory access](https://confluence.dev.bbc.co.uk/display/audioteam/bbcat-orchestration+libraries+and+tools) to get our private packages). To install the dependencies, run the following command at the top level:
 
 ```
-yarn install
-yarn bootstrap # runs lerna bootstrap
+yarn install # runs yarn install in each package directory
 ```
 
-This installs dependencies in all the packages and creates symlinks to local dependencies where required.
+This installs dependencies in all the packages and creates symlinks to local dependencies where required. Local dependencies also contained in this repository are referenced using the `link:../foo-bar` syntax in `package.json` files, instead of specifying a version number.
 
 The packages are designed to be used together to build the Electron app. The current structure looks like this:
 
@@ -24,9 +23,10 @@ The packages are designed to be used together to build the Electron app. The cur
   * `electron-app/`: The `electron-app` bundling and configuring all the other components to create a standalone desktop application.
   * `logging/`: A common logging module for server-side packages based on `winston`.
 
-
 To start a development version of the app, run `yarn dev`. This rebuilds the `background-tasks`, starts a development server with hot-reloading for the `react-frontend`, and runs the `electron-app`.
 
-To build the app for the current platform, run `yarn build`. This creates a self-contained electron app. `yarn dist` creates a `.dmg` macOS installer image for distribution.
+To build the app for the current platform, run `yarn build`. This creates a self-contained electron app. `yarn dist` creates a `.dmg` macOS installer image for distribution - stored in `electron-app/dist/mac`.
 
-The versions of all packages in this repo are kept in sync by running the `yarn bump` script at the top level to apply the same version bumps across all packages.
+The versions of all packages in this repo are kept in sync by running the `yarn bump` script at the top level to apply the same version change across all packages.
+
+We currently track development tasks and feature requests as issues in this repository (best viewed in the [Github Project](https://github.com/bbc/bbcat-orchestration-builder/projects/3)).

@@ -2,7 +2,6 @@ import Project from '../lib/Project';
 
 import ExportService from '../lib/ExportService';
 import LocalProjectStore from '../lib/LocalProjectStore';
-import { setFileProperties, analyseAllFiles } from './project';
 
 const ProjectStore = window.ProjectStore || LocalProjectStore;
 const exportService = new ExportService(window.API_URL || 'http://localhost:8000');

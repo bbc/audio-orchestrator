@@ -3,6 +3,16 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.11.0`
+_2019-09-26_
+
+* New feature: Can now specify port number for a custom cloud-sync service, to allow using a locally running version.
+* Improvement: Reduced size of the installed application (by only shipping relevant ffmpeg and ffprobe binaries for the current platform).
+* Improvement: Detect sample rate for each imported file, rather than requiring all files to use 48KHz.
+* Improvement: Allow the expanded metadata table to take up the entire width of the window.
+* Improvement: Removed external web font dependency, allowing the app to work offline (a system font is used instead).
+* Change: Simplified dependency management; referring to unpublished packages maintained in this repository by a relative path instead of a version number, so that yarn can be used to manage each individual package.
+
 # `0.10.0`
 _2019-09-12_
 

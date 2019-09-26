@@ -43,7 +43,7 @@ const zeroPad = (num, width) => {
   return `${'0'.repeat(Math.max(0, width - str.length))}${str}`;
 };
 
-const dashArgs = (sampleRate) => [
+const dashArgs = sampleRate => [
   '-c:a', ENCODE_CODEC,
   '-use_template', 1,
   '-use_timeline', 0,
@@ -51,7 +51,7 @@ const dashArgs = (sampleRate) => [
   '-f', 'dash',
 ];
 
-const sarafiDashArgs = (sampleRate) => [
+const sarafiDashArgs = sampleRate => [
   '-c:a', ENCODE_CODEC,
   '-frame_size', 1024,
   '-b:a', ENCODE_BITRATE,

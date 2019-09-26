@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const readline = require('readline');
 
-const topPackage = require(path.join(__dirname, '../lerna.json'));
+const topPackage = require(path.join(__dirname, '../package.json'));
 const getPackagePath = folder => path.join(__dirname, '../', folder, 'package.json');
 
 console.log('Current versions:');

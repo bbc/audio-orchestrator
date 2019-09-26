@@ -6,7 +6,9 @@
     "build": "(cd electron-app && yarn build)",
     "dist": "(cd electron-app && yarn dist)",
     "bump": "node scripts/bump.js",
-    "postinstall": "(cd background-tasks && yarn install) && (cd electron-app && yarn install) && (cd react-frontend && yarn install) && (cd logging && yarn install)"
+    "postinstall": "(cd background-tasks && yarn install) && (cd electron-app && yarn install) && (cd react-frontend && yarn install) && (cd logging && yarn install)",
+    "lint": "(cd background-tasks && yarn lint) && (cd electron-app && yarn lint) && (cd react-frontend && yarn lint) && (cd logging && yarn lint)",
+    "test": "(cd background-tasks && yarn test) && (cd electron-app && yarn test) && (cd react-frontend && yarn test) && (cd logging && yarn test)"
   },
   "packages": [
     "background-tasks",
@@ -14,5 +16,12 @@
     "react-frontend",
     "logging"
   ],
-  "version": "0.0.0"
+  "version": "0.0.0",
+  "devDependencies": {
+    "pre-commit": "^1.2.2"
+  },
+  "pre-commit": [
+    "lint",
+    "test"
+  ]
 }
