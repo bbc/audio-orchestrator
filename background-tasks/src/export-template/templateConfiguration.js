@@ -29,6 +29,9 @@ const templateConfiguration = (sequences, settings) => {
 
   if (settings.cloudSyncHostname) {
     configuration.CLOUDSYNC_ENDPOINT = { hostname: settings.cloudSyncHostname };
+    if (!isNaN(parseInt(settings.cloudSyncPort))) {
+      configuration.CLOUDSYNC_ENDPOINT.port = parseInt(settings.cloudSyncPort);
+    }
   } else {
     configuration.CLOUDSYNC_ENDPOINT = { hostname: 'cloudsync.virt.ch.bbc.co.uk' };
   }

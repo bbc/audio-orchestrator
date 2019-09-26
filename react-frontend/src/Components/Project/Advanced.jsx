@@ -27,6 +27,7 @@ class Advanced extends React.Component {
     const {
       joiningLink,
       cloudSyncHostname,
+      cloudSyncPort,
       baseUrl,
     } = this.props;
 
@@ -42,11 +43,19 @@ class Advanced extends React.Component {
             onBlur={this.handleBlur}
           />
           <Form.Input
-            label="Cloud-Sync Service Hostname"
+            label="Custom cloud-sync service hostname"
             placeholder="cloudsync.virt.ch.bbc.co.uk"
             name="cloudSyncHostname"
             defaultValue={cloudSyncHostname}
             onBlur={this.handleBlur}
+          />
+          <Form.Input
+            label="Port number (for custom cloud-sync endpoint, leave empty to use the default wss:// connection)"
+            placeholder="default"
+            name="cloudSyncPort"
+            defaultValue={cloudSyncPort}
+            onBlur={this.handleBlur}
+            disabled={!cloudSyncHostname}
           />
           <Form.Input
             label="Audio base URL"
@@ -66,6 +75,7 @@ Advanced.propTypes = {
   joiningLink: PropTypes.string,
   cloudSyncHostname: PropTypes.string,
   baseUrl: PropTypes.string,
+  cloudSyncPort: PropTypes.string,
 };
 
 const mapStateToProps = (state, { projectId }) => {
@@ -74,12 +84,14 @@ const mapStateToProps = (state, { projectId }) => {
   const {
     joiningLink,
     cloudSyncHostname,
+    cloudSyncPort,
     baseUrl,
   } = project.settings;
 
   return {
     joiningLink,
     cloudSyncHostname,
+    cloudSyncPort,
     baseUrl,
   };
 };
