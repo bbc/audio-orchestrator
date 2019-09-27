@@ -33,19 +33,19 @@ class ExportService {
   }
 
   exportAudio(args, callbacks) {
-    return this.tasks.createTask('export/audio', args, callbacks);
+    return this.createTask('export/audio', args, callbacks);
   }
 
   exportTemplate(args, callbacks) {
-    return this.tasks.createTask('export/template', args, callbacks);
+    return this.createTask('export/template', args, callbacks);
   }
 
   exportDistribution(args, callbacks) {
-    return this.tasks.createTask('export/distribution', args, callbacks);
+    return this.createTask('export/distribution', args, callbacks);
   }
 
   startPreview(args, callbacks) {
-    return this.tasks.createTask('export/preview', args, callbacks);
+    return this.createTask('export/preview', args, callbacks);
   }
 
   cancelExports() {

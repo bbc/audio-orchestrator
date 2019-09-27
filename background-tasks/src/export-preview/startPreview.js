@@ -89,7 +89,10 @@ const startPreview = (args) => {
         const { port, address } = server.address();
         logger.info(`Preview server for ${distDir} listening on ${address}:${port}.`);
         resolve({
-          stopPreview: () => server.close(),
+          stopPreview: () => {
+            logger.info(`Stopping preview server on ${address}:${port}.`);
+            server.close();
+          },
           previewUrl: `http://${address}:${port}`,
         });
       });

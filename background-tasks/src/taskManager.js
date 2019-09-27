@@ -131,6 +131,8 @@ class TaskManager {
       return Promise.resolve();
     }
 
+    logger.debug(`Cancelling task ${taskId}.`);
+
     // If a cancel callback is set, call it.
     const { onCancel } = task;
     if (onCancel) {

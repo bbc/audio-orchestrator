@@ -22,9 +22,9 @@ const ExportModal = ({
   progressPercent,
   closed,
   outputPath,
-  requestCancelExport,
-  requestOpenInFolder,
-  requestOpenUrl,
+  cancelExport,
+  openInFolder,
+  openUrl,
 }) => {
   let progressDescription = stepTitle;
   const preview = (title === 'preview');
@@ -59,23 +59,23 @@ const ExportModal = ({
         ) : null }
       <Modal.Actions>
         { complete && preview
-          ? <Button icon="external" content="Open in browser" onClick={() => requestOpenUrl(outputPath)} />
+          ? <Button icon="external" content="Open in browser" onClick={() => openUrl(outputPath)} />
           : null
         }
         { complete && preview
-          ? <Button icon="stop" negative content="Stop preview" onClick={requestCancelExport} />
+          ? <Button icon="stop" negative content="Stop preview" onClick={cancelExport} />
           : null
         }
         { complete && !preview
-          ? <Button icon="external" content="Show in folder" onClick={() => requestOpenInFolder(outputPath)} />
+          ? <Button icon="external" content="Show in folder" onClick={() => openInFolder(outputPath)} />
           : null
         }
         { running
-          ? <Button negative primary content="Cancel" onClick={requestCancelExport} />
+          ? <Button negative primary content="Cancel" onClick={cancelExport} />
           : null
         }
         { (!running && !preview) || error
-          ? <Button primary content="Close" onClick={requestCancelExport} />
+          ? <Button primary content="Close" onClick={cancelExport} />
           : null
         }
       </Modal.Actions>
@@ -88,9 +88,9 @@ const mapStateToProps = ({ Export }) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  requestCancelExport: () => dispatch(requestCancelExport()),
-  requestOpenInFolder: path => dispatch(requestOpenInFolder(path)),
-  requestOpenUrl: url => dispatch(requestOpenUrl(url)),
+  cancelExport: () => { console.log('cancelExport'); dispatch(requestCancelExport()); },
+  openInFolder: path => dispatch(requestOpenInFolder(path)),
+  openUrl: url => dispatch(requestOpenUrl(url)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExportModal);
