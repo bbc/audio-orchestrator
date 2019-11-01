@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-electron-app",
-  "version": "0.11.2",
+  "version": "0.11.3",
   "description": "Electron desktop application for generating orchestrated audio applications.",
   "main": "bin/main.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
@@ -56,6 +56,7 @@
         "!**/ffmpeg-static/bin/linux/**/*",
         "!**/ffmpeg-static/bin/linux/**/*"
       ]
-    }
+    },
+    "removePackageScripts": false
   }
 }
