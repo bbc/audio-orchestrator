@@ -45,6 +45,7 @@ const zeroPad = (num, width) => {
 
 const dashArgs = sampleRate => [
   '-c:a', ENCODE_CODEC,
+  '-b:a', ENCODE_BITRATE,
   '-use_template', 1,
   '-use_timeline', 0,
   '-seg_duration', segmentDuration(sampleRate),
@@ -53,10 +54,15 @@ const dashArgs = sampleRate => [
 
 const sarafiDashArgs = sampleRate => [
   '-c:a', ENCODE_CODEC,
-  '-frame_size', 1024,
   '-b:a', ENCODE_BITRATE,
+  '-frame_size', 1024,
   '-f', 'segment',
   '-segment_time', segmentDuration(sampleRate),
+];
+
+const bufferArgs = [
+  '-c:a', ENCODE_CODEC,
+  '-b:a', ENCODE_BITRATE,
 ];
 
 const silenceArgs = [
@@ -147,6 +153,7 @@ const encodeItem = ({
 
           return [
             ...inputArgs,
+            ...bufferArgs,
             '-t', duration,
             path.join(encodedItemsBasePath, resultItem.relativePath),
           ];
