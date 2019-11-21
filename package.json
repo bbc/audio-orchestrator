@@ -8,7 +8,8 @@
     "bump": "node scripts/bump.js",
     "postinstall": "(cd background-tasks && yarn install) && (cd electron-app && yarn install) && (cd react-frontend && yarn install) && (cd logging && yarn install)",
     "lint": "(cd background-tasks && yarn lint) && (cd electron-app && yarn lint) && (cd react-frontend && yarn lint) && (cd logging && yarn lint)",
-    "test": "(cd background-tasks && yarn test) && (cd electron-app && yarn test) && (cd react-frontend && yarn test) && (cd logging && yarn test)"
+    "test": "(cd background-tasks && yarn test) && (cd electron-app && yarn test) && (cd react-frontend && yarn test) && (cd logging && yarn test)",
+    "credits": "(cd electron-app && yarn credits)"
   },
   "packages": [
     "background-tasks",

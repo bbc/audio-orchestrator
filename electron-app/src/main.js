@@ -1,8 +1,7 @@
 import { electronLogger as logger } from 'bbcat-orchestration-builder-logging';
 import path from 'path';
-import { app, BrowserWindow, ipcMain } from 'electron';
+import { app, BrowserWindow, ipcMain, Menu } from 'electron';
 import { fork } from 'child_process';
-import installExtension, { REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } from 'electron-devtools-installer';
 
 // Start the server process
 let apiUrl;
@@ -25,6 +24,7 @@ process.on('exit', apiProcess.kill);
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
+let creditsWin;
 
 // expose the API URL to the preload script as a synchronous ipc response
 ipcMain.on('GET_API_URL', (event) => {
@@ -32,14 +32,19 @@ ipcMain.on('GET_API_URL', (event) => {
   event.returnValue = apiUrl;
 });
 
-// Allow the web page to trigger the developer tools (hack, because app menu is broken in
-// production build)
+// Allow the web page to trigger the developer tools
 ipcMain.on('OPEN_DEV_TOOLS', () => {
   if (win) {
     win.webContents.openDevTools();
   }
 });
 
+// Allow the web page to open the credits window
+ipcMain.on('OPEN_CREDITS', () => {
+  if (!creditsWin) {
+    createCreditsWindow();
+  }
+});
 
 function createWindow() {
   // Create the browser window.
@@ -56,6 +61,7 @@ function createWindow() {
 
   // install devTools
   if (process.env.NODE_ENV === 'development') {
+    const { default: installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = require('electron-devtools-installer');
     installExtension(REACT_DEVELOPER_TOOLS)
       .then(name => logger.info(`Added Extension:  ${name}`))
       .catch(err => logger.warn('An error occurred: ', err));
@@ -110,3 +116,18 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+function createCreditsWindow() {
+  if (creditsWin || !win) return;
+
+  creditsWin = new BrowserWindow({
+    width: 800,
+    height: 600,
+    parent: win,
+  });
+
+  creditsWin.loadFile('credits.html');
+
+  creditsWin.on('closed', () => {
+    creditsWin = null;
+  });
+}

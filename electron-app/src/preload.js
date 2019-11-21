@@ -23,3 +23,4 @@ window.saveExportAs = saveExportAs;
 window.saveExportToDownloads = saveExportToDownloads;
 
 window.openDevTools = () => { ipcRenderer.send('OPEN_DEV_TOOLS'); };
+window.openCredits = () => { ipcRenderer.send('OPEN_CREDITS'); };
