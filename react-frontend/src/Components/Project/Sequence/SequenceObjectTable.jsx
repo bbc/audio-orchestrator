@@ -82,8 +82,9 @@ class SequenceObjectTable extends React.Component {
     }));
 
     const expandedStyle = {
-      padding: expanded ? '0 1em' : 0,
+      padding: '0 1em',
       width: '100%',
+      textAlign: 'center',
     };
 
     return (
@@ -94,28 +95,38 @@ class SequenceObjectTable extends React.Component {
             : <Loader inline="centered" content={`Checking Audio Files (${filesLoadingCompleted}/${filesLoadingTotal})`} />
           }
         </Dimmer>
-        { !objectsWithFiles.every(({ file }) => !!file)
-          ? (
-            <Message negative>
-              <Icon name="exclamation" />
-              {'Not all objects have an associated audio file. Check that all audio files have been added and are named starting with their object number.'}
-            </Message>
-          )
-          : null
-        }
-        { (!zones || zones.length === 0)
-          ? (
-            <Message warning>
-              <Icon name="exclamation" />
-              {'No tags have been defined for the project. These are needed for the object placement algorithm and must match the metadata files for all sequences.'}
-              <p><Button content="Edit device tags" onClick={this.handleOpenTagEditor} /></p>
-            </Message>
-          )
-          : null
-        }
+
+        <Container style={{ margin: '1em 0' }}>
+          { !objectsWithFiles.every(({ file }) => !!file)
+            ? (
+              <Message negative>
+                <Icon name="exclamation" />
+                {'Not all objects have an associated audio file. Check that all audio files have been added and are named starting with their object number.'}
+              </Message>
+            )
+            : null
+          }
+          { (!zones || zones.length === 0)
+            ? (
+              <Message warning>
+                <Icon name="exclamation" />
+                {'No tags have been defined for the project. These are needed for the object placement algorithm and must match the metadata files for all sequences.'}
+                <p><Button content="Edit device tags" onClick={this.handleOpenTagEditor} /></p>
+              </Message>
+            )
+            : null
+          }
+        </Container>
 
         <Container style={{ margin: '1em 0', ...(expanded ? expandedStyle : {}) }}>
-          <Table singleLine celled={expanded} verticalAlign="top">
+          <Table
+            singleLine
+            unstackable
+            collapsing={expanded}
+            celled={expanded}
+            verticalAlign="top"
+            style={expanded ? { display: 'inline-table', minWidth: '1127px' } : null}
+          >
             <ObjectHeader {...{ expanded, zones }} onEditTags={this.handleOpenTagEditor} />
             <Table.Body>
               { (tagEditorOpen ? [] : objectsWithFiles).map(object => (
