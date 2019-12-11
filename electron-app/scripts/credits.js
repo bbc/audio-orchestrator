@@ -16,16 +16,19 @@ const getCreditInfo = () => new Promise((resolve, reject) => {
   });
 });
 
-const formatCredits = ({ name, licenses, publisher, licenseText }) => {
+const formatCredits = ({ name, repository, licenses, publisher, licenseText }) => {
   const frags = [
     '<li tabindex="1">',
     `<h2>${sanitize(name)}</h2>`,
   ];
   frags.push('<pre>');
+  if (repository) {
+    frags.push(`Website: ${sanitize(repository)}\n\n`);
+  }
   if (licenseText) {
     frags.push(sanitize(licenseText));
   } else {
-    if (licenses) frags.push(`License: ${sanitize(licenses)}`);
+    if (licenses && !/^Custom/.test(licenses)) frags.push(`License: ${sanitize(licenses)}`);
     if (publisher) frags.push(`Published by: ${sanitize(publisher)}`);
   }
   frags.push('</pre>');
@@ -36,18 +39,24 @@ const formatCredits = ({ name, licenses, publisher, licenseText }) => {
 
 // update the list of credits used in the frontend.
 const writeCreditsFile = (info) => {
-  const credits = Object.entries(info).map(([name, { licenses, publisher, licenseFile }]) => {
-    let licenseText;
-    if (licenseFile && !/readme/i.test(licenseFile) && fs.existsSync(licenseFile)) {
-      licenseText = fs.readFileSync(licenseFile, 'utf8').toString();
-    }
+  const hiddenDepPrefixes = [
+    '@bbc/bbcat-orchestration',
+    'bbcat-orchestration-builder',
+  ];
+  const credits = Object.entries(info)
+    .filter(([name]) => !hiddenDepPrefixes.some(s => name.startsWith(s)))
+    .map(([name, { repository, licenses, publisher, licenseFile }]) => {
+      let licenseText;
+      if (licenseFile && !/readme/i.test(licenseFile) && fs.existsSync(licenseFile)) {
+        licenseText = fs.readFileSync(licenseFile, 'utf8').toString();
+      }
 
-    if (!licenseText && !licenses) {
-      console.log(`${name} (${licenses}): ${licenseFile}`);
-    }
+      if (!licenseText && !licenses) {
+        console.warn(`${name} (${licenses}): ${licenseFile}`);
+      }
 
-    return formatCredits({ name, licenses, publisher, licenseText });
-  }).join('\n');
+      return formatCredits({ name, repository, licenses, publisher, licenseText });
+    }).join('\n');
 
   const creditsPage = `<DOCTYPE html>
   <html>
@@ -55,7 +64,7 @@ const writeCreditsFile = (info) => {
     <style type="text/css">
       body { font-family: sans-serif; }
       ul { list-style: none; padding: 0; }
-      pre { display: none; white-space: break-spaces; }
+      li pre { display: none; white-space: break-spaces; }
       li:focus pre { display: block; }
       h2 { cursor: pointer; }
     </style>
