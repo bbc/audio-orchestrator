@@ -811,6 +811,11 @@ export const requestReplaceAllAudioFiles = (projectId, sequenceId) => (dispatch)
 
     return files;
   }).then((files) => {
+    if (files.some(({ name }) => !parseInt(name, 10))) {
+      dispatch(setAppWarning('All imported audio files must start with a non-zero number, e.g. 01_foo.wav. The numbers are used to link audio files to object IDs.'));
+      throw new Error('Audio file names must start with a non-zero number');
+    }
+
     dispatch(initialiseSequenceFiles(projectId, sequenceId, files));
     dispatch(confirmSequenceAudioReplaced('New audio files linked.'));
     dispatch(validateProject(projectId));
