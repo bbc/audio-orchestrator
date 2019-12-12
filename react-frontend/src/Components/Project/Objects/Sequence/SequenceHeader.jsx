@@ -13,11 +13,11 @@ import {
 import {
   requestReplaceMetadata,
   requestReplaceAllAudioFiles,
-} from '../../../actions/project';
+} from '../../../../actions/project';
 
 import {
   setTableExpanded,
-} from '../../../actions/ui';
+} from '../../../../actions/ui';
 
 const SequenceHeader = ({
   haveMetadata,

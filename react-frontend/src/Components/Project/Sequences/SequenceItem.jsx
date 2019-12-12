@@ -4,7 +4,7 @@ import {
   Card,
   Button,
 } from 'semantic-ui-react';
-import ConfirmDeleteButton from '../ConfirmDeleteButton';
+import ConfirmDeleteButton from '../../ConfirmDeleteButton';
 
 const SequenceItem = ({
   name,

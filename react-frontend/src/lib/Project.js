@@ -2,8 +2,8 @@ import uuidv4 from 'uuid/v4';
 import Sequence from './Sequence';
 import {
   PAGE_PROJECT_PRESENTATION,
-  PAGE_PROJECT_ADVANCED,
-  PAGE_PROJECT_SEQUENCES,
+  PAGE_PROJECT_EXPORT,
+  PAGE_PROJECT_CONTROLS,
 } from '../reducers/UIReducer';
 
 const DEFAULT_BASE_URL = 'audio';
@@ -305,7 +305,7 @@ class Project {
       message,
       warning: false,
       error: !valid,
-      projectPage: PAGE_PROJECT_ADVANCED,
+      projectPage: PAGE_PROJECT_EXPORT,
     };
   }
 
@@ -339,7 +339,7 @@ class Project {
       message,
       warning,
       error,
-      projectPage: PAGE_PROJECT_SEQUENCES,
+      projectPage: PAGE_PROJECT_CONTROLS,
     };
   }
 

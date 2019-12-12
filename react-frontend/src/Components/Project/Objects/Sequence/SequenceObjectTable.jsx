@@ -21,7 +21,7 @@ import {
   deleteZone,
   renameZone,
   addZone,
-} from '../../../actions/project';
+} from '../../../../actions/project';
 
 class SequenceObjectTable extends React.Component {
   constructor(props) {

@@ -7,8 +7,8 @@ import {
   Table,
   Form,
 } from 'semantic-ui-react';
-import RequiredTextInput from '../../RequiredTextInput';
-import ConfirmDeleteButton from '../../ConfirmDeleteButton';
+import RequiredTextInput from '../../../RequiredTextInput';
+import ConfirmDeleteButton from '../../../ConfirmDeleteButton';
 
 class ZonesModal extends React.Component {
   constructor(props) {

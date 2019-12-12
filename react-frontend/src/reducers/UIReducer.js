@@ -1,12 +1,13 @@
-// Top level, can be home (list of projects) or an open project):
+// Top level, can be home (list of projects) or project (an open project):
 export const PAGE_HOME = 'home';
 export const PAGE_PROJECT = 'project';
 
 // Second level, one of the pages within the PAGE_PROJECT (requires a currentProjectId to be set):
 export const PAGE_PROJECT_SEQUENCES = 'sequences';
+export const PAGE_PROJECT_CONTROLS = 'controls';
+export const PAGE_PROJECT_OBJECTS = 'objects';
 export const PAGE_PROJECT_PRESENTATION = 'presentation';
-export const PAGE_PROJECT_ADVANCED = 'advanced';
-export const PAGE_PROJECT_REVIEW = 'review';
+export const PAGE_PROJECT_EXPORT = 'export';
 
 // Initial state, home page without an open project or sequence opened.
 const initialState = {
@@ -44,7 +45,7 @@ const UIReducer = (state = initialState, action) => {
       return {
         ...state,
         currentPage: PAGE_PROJECT,
-        currentProjectPage: PAGE_PROJECT_SEQUENCES,
+        currentProjectPage: PAGE_PROJECT_OBJECTS,
         currentProjectId: action.projectId,
         currentSequenceId: action.sequenceId,
         sequenceAudioConfirmation: null,

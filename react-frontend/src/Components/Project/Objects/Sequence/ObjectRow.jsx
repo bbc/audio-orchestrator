@@ -14,7 +14,7 @@ import SpreadFlag from './SpreadFlag';
 import ExclusivityFlag from './ExclusivityFlag';
 import MuteIfFlag from './MuteIfFlag';
 import MetadataZoneFlag from './MetadataZoneFlag';
-import ConfirmDeleteButton from '../../ConfirmDeleteButton';
+import ConfirmDeleteButton from '../../../ConfirmDeleteButton';
 
 class ObjectRow extends React.PureComponent {
   render() {

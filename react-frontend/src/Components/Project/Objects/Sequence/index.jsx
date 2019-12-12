@@ -11,9 +11,9 @@ import SequenceHeader from './SequenceHeader';
 import SequenceObjectTable from './SequenceObjectTable';
 import SequenceSettings from './SequenceSettings';
 import SequenceChoices from './SequenceChoices';
-import EditableMenuHeader from '../EditableMenuHeader';
-import { setSequenceSetting } from '../../../actions/project';
-import { closeSequencePage } from '../../../actions/ui';
+import EditableMenuHeader from '../../EditableMenuHeader';
+import { setSequenceSetting } from '../../../../actions/project';
+import { closeSequencePage } from '../../../../actions/ui';
 
 const Sequence = ({
   sequenceId,

@@ -8,11 +8,11 @@ import SequenceItem from './SequenceItem';
 
 import {
   openSequencePage,
-} from '../../actions/ui';
+} from '../../../actions/ui';
 
 import {
   requestDeleteSequence,
-} from '../../actions/project';
+} from '../../../actions/project';
 
 const SequencesList = ({
   sequencesList,
