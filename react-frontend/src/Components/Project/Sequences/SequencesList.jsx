@@ -18,8 +18,9 @@ const SequencesList = ({
   sequencesList,
   onOpenSequence,
   onDeleteSequence,
+  projectId,
 }) => (
-  <Card.Group stackable itemsPerRow={3}>
+  <Card.Group stackable itemsPerRow={1}>
     {sequencesList.map(({
       sequenceId,
       name,
@@ -28,6 +29,7 @@ const SequencesList = ({
       <SequenceItem
         key={sequenceId}
         sequenceId={sequenceId}
+        projectId={projectId}
         name={name}
         onOpen={onOpenSequence}
         onDelete={onDeleteSequence}
@@ -41,6 +43,7 @@ SequencesList.propTypes = {
   sequencesList: PropTypes.arrayOf(PropTypes.object).isRequired,
   onOpenSequence: PropTypes.func.isRequired,
   onDeleteSequence: PropTypes.func.isRequired,
+  projectId: PropTypes.string.isRequired,
 };
 
 const mapStateToProps = (state, { projectId }) => {

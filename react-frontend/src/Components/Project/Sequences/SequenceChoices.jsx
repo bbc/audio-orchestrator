@@ -9,9 +9,9 @@ import {
   Dropdown,
   Table,
 } from 'semantic-ui-react';
-import ConfirmDeleteButton from '../../../ConfirmDeleteButton';
-import RequiredTextInput from '../../../RequiredTextInput';
-import { setSequenceSetting } from '../../../../actions/project';
+import ConfirmDeleteButton from '../../ConfirmDeleteButton';
+import RequiredTextInput from '../../RequiredTextInput';
+import { setSequenceSetting } from '../../../actions/project';
 
 class SequenceChoices extends React.Component {
   constructor(props) {

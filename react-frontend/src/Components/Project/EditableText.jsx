@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import {
   Icon,
   Input,
-  Menu,
 } from 'semantic-ui-react';
 
-class EditableMenuHeader extends React.Component {
+class EditableText extends React.Component {
   constructor(props) {
     super(props);
 
@@ -36,6 +35,12 @@ class EditableMenuHeader extends React.Component {
         this.handleChange(e);
       }
     };
+
+    this.handlePlaceholderKeyPress = (e) => {
+      if (e.key === 'Enter') {
+        this.handleClick();
+      }
+    };
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -49,34 +54,35 @@ class EditableMenuHeader extends React.Component {
     const { value } = this.props;
     const { open } = this.state;
 
-    return (
-      <Menu.Item header onClick={this.handleClick}>
-        { open
-          ? (
-            <Input
-              icon="edit"
-              defaultValue={value}
-              onBlur={this.handleBlur}
-              onKeyPress={this.handleKeyPress}
-              ref={this.inputRef}
-            />
-          )
-          : (
-            <span>
-              <Icon name="edit" />
-              {' '}
-              {value}
-            </span>
-          )
-        }
-      </Menu.Item>
-    );
+    return open
+      ? (
+        <Input
+          icon="edit"
+          defaultValue={value}
+          onBlur={this.handleBlur}
+          onKeyPress={this.handleKeyPress}
+          ref={this.inputRef}
+        />
+      )
+      : (
+        <span
+          role="button"
+          tabIndex="0"
+          onClick={this.handleClick}
+          onKeyPress={this.handlePlaceholderKeyPress}
+          style={{ cursor: 'pointer' }}
+        >
+          {value}
+          {' '}
+          <Icon name="edit" />
+        </span>
+      );
   }
 }
 
-EditableMenuHeader.propTypes = {
+EditableText.propTypes = {
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
 };
 
-export default EditableMenuHeader;
+export default EditableText;

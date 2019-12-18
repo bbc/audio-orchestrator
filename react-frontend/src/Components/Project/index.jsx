@@ -12,7 +12,7 @@ import Objects from './Objects';
 import Presentation from './Presentation';
 import Export from './Export';
 import ProjectStepBar from './ProjectStepBar';
-import EditableMenuHeader from './EditableMenuHeader';
+import EditableText from './EditableText';
 import {
   closeProject,
   setProjectName,
@@ -59,7 +59,7 @@ const Project = ({
     <div style={containerStyle}>
       <Container>
         <Menu inverted color="orange" attached="bottom">
-          <EditableMenuHeader value={name} onChange={onSetName} />
+          <Menu.Item header content={<EditableText value={name} onChange={onSetName} />} />
           <Menu.Item position="right" icon="close" content="close" onClick={onClose} />
         </Menu>
       </Container>

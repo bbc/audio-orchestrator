@@ -6,7 +6,7 @@ import {
   Form,
   List,
 } from 'semantic-ui-react';
-import { setSequenceSetting } from '../../../../actions/project';
+import { setSequenceSetting } from '../../../actions/project';
 
 class Settings extends React.Component {
   constructor(props) {
