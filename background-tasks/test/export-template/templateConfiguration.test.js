@@ -29,7 +29,7 @@ describe('templateConfiguration', () => {
       LOCAL_SESSION_ID_PREFIX: expect.any(String),
       INITIAL_CONTENT_ID: expect.any(String),
       SEQUENCE_URLS: expect.any(Array),
-      DEVICE_TAGS: expect.any(Array),
+      CONTROLS: expect.any(Array),
       CLOUDSYNC_ENDPOINT: expect.any(Object),
     }));
   });

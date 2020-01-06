@@ -505,9 +505,10 @@
     "@babel/helper-regex" "^7.4.4"
     regexpu-core "^4.6.0"
 
-"@babel/polyfill@^7.0.0":
+"@babel/polyfill@^7.7.0":
   version "7.7.0"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@babel/polyfill/-/polyfill-7.7.0.tgz#e1066e251e17606ec7908b05617f9b7f8180d8f3"
+  integrity sha1-4QZuJR4XYG7HkIsFYX+bf4GA2PM=
   dependencies:
     core-js "^2.6.5"
     regenerator-runtime "^0.13.2"
@@ -622,15 +623,14 @@
     weak-map "^1.0.5"
     winston "^2.4.0"
 
-"@bbc/bbcat-orchestration-template@^0.6.8":
-  version "0.6.8"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.6.8.tgz#de098afc2c46858733f418ae8319a525fca386f0"
+"@bbc/bbcat-orchestration-template@^0.10.1":
+  version "0.10.1"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.10.1.tgz#307f5b1486f8cabc1811c26352b95b6e8df996c9"
+  integrity sha1-MH9bFIb4yrwYEcJjUrlbbo35lsk=
   dependencies:
-    "@babel/polyfill" "^7.0.0"
-    "@bbc/bbcat-orchestration" "^0.3.5"
+    "@babel/polyfill" "^7.7.0"
+    "@bbc/bbcat-orchestration" "^0.7.4"
     bowser "^2.0.0-beta.1"
-    gel-grid "^4.0.0"
-    gel-typography "^2.0.5"
     prop-types "^15.6.2"
     qrcodejs "^1.0.0"
     react "^16.4.1"
@@ -639,12 +639,12 @@
     react-redux "^5.0.7"
     redux "^4.0.0"
     redux-saga "^0.16.0"
-    regenerator-runtime "^0.12.1"
-    whatwg-fetch "^2.0.4"
+    whatwg-fetch "^3.0.0"
 
-"@bbc/bbcat-orchestration@^0.3.5":
-  version "0.3.5"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration/-/@bbc/bbcat-orchestration-0.3.5.tgz#4766ad2b96e4cdd611cc15710af952ad84203c0d"
+"@bbc/bbcat-orchestration@^0.7.4":
+  version "0.7.4"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration/-/@bbc/bbcat-orchestration-0.7.4.tgz#f1616ea3d060b866e4cf2bbc5ed9d24e4ca9a6a3"
+  integrity sha1-8WFuo9BguGbkzyu8XtnSTkyppqM=
   dependencies:
     "@bbc/bbcat-orchestration-bbcat" "^0.2.0"
     "@bbc/bbcat-orchestration-cloud-sync-client" "^2.2.0"
@@ -2107,24 +2107,6 @@ gauge@~2.7.3:
     string-width "^1.0.1"
     strip-ansi "^3.0.1"
     wide-align "^1.1.0"
-
-gel-grid@^4.0.0:
-  version "4.0.0"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/gel-grid/-/gel-grid-4.0.0.tgz#3ee013e5920b431e9fd37858a0060fa6e39f6334"
-  dependencies:
-    gel-sass-tools "^1.0.0"
-
-gel-sass-tools@^1.0.0, gel-sass-tools@^1.1.0:
-  version "1.2.1"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/gel-sass-tools/-/gel-sass-tools-1.2.1.tgz#bb54277bd49a09da04673107fdd2ad9c0dcfeaa5"
-  dependencies:
-    sass-mq "^3.2.3"
-
-gel-typography@^2.0.5:
-  version "2.0.5"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/gel-typography/-/gel-typography-2.0.5.tgz#c5553b1954206dcbfecd839793da49a995da775d"
-  dependencies:
-    gel-sass-tools "^1.1.0"
 
 get-caller-file@^1.0.1:
   version "1.0.3"
@@ -3883,10 +3865,6 @@ regenerate@^1.4.0:
   version "1.4.0"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/regenerate/-/regenerate-1.4.0.tgz#4a856ec4b56e4077c557589cae85e7a4c8869a11"
 
-regenerator-runtime@^0.12.1:
-  version "0.12.1"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/regenerator-runtime/-/regenerator-runtime-0.12.1.tgz#fa1a71544764c036f8c49b13a08b2594c9f8a0de"
-
 regenerator-runtime@^0.13.2:
   version "0.13.3"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/regenerator-runtime/-/regenerator-runtime-0.13.3.tgz#7cf6a77d8f5c6f60eb73c5fc1955b2ceb01e6bf5"
@@ -4060,10 +4038,6 @@ sanitize-filename@^1.6.2:
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/sanitize-filename/-/sanitize-filename-1.6.3.tgz#755ebd752045931977e30b2025d340d7c9090378"
   dependencies:
     truncate-utf8-bytes "^1.0.0"
-
-sass-mq@^3.2.3:
-  version "3.3.2"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/sass-mq/-/sass-mq-3.3.2.tgz#3472e04c31a432bcd55b3b604edc72ae9a4def1a"
 
 sax@^1.2.4:
   version "1.2.4"
@@ -4849,9 +4823,10 @@ websocket-stream@^5.1.2:
     ws "^3.2.0"
     xtend "^4.0.0"
 
-whatwg-fetch@^2.0.4:
-  version "2.0.4"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/whatwg-fetch/-/whatwg-fetch-2.0.4.tgz#dde6a5df315f9d39991aa17621853d720b85566f"
+whatwg-fetch@^3.0.0:
+  version "3.0.0"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/whatwg-fetch/-/whatwg-fetch-3.0.0.tgz#fc804e458cc460009b1a2b966bc8817d2578aefb"
+  integrity sha1-/IBORYzEYACbGiuWa8iBfSV4rvs=
 
 which-module@^2.0.0:
   version "2.0.0"

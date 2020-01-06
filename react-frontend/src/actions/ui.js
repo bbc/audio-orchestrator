@@ -34,18 +34,8 @@ export const confirmSequenceAudioReplaced = confirmation => ({
   confirmation,
 });
 
-export const confirmSequenceMetadataReplaced = confirmation => ({
-  type: 'UI_CONFIRM_SEQUENCE_METADATA_REPLACED',
-  confirmation,
-});
-
 export const setSequenceAudioError = error => ({
   type: 'UI_SEQUENCE_AUDIO_ERROR',
-  error,
-});
-
-export const setSequenceMetadataError = error => ({
-  type: 'UI_SEQUENCE_METADATA_ERROR',
   error,
 });
 

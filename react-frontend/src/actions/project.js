@@ -7,9 +7,7 @@ import {
   openProjectPage,
   closeProjectPage,
   confirmSequenceAudioReplaced,
-  confirmSequenceMetadataReplaced,
   setSequenceAudioError,
-  setSequenceMetadataError,
   setAppWarning,
   setAppError,
 } from './ui';
@@ -618,7 +616,6 @@ const fileNameToObjectNumber = name => parseInt(name, 10) || null;
 const matchObjectsToFiles = (projectId, sequenceId) => {
   // load required data from project store
   const project = projects[projectId];
-  const { zones } = project.settings;
   const sequence = project.sequences[sequenceId];
 
   const suffixToChannelMapping = {
@@ -634,22 +631,6 @@ const matchObjectsToFiles = (projectId, sequenceId) => {
     _M: 0,
     _C: 0,
   };
-
-  // The default orchestration metadata for a new object
-  const defaultOrchestration = {
-    mdoOnly: 0,
-    mdoSpread: 0,
-    exclusivity: 0,
-    mdoThreshold: 0,
-    muteIfObject: 0,
-    onDropin: 0,
-    onDropout: 0,
-    image: null,
-  };
-
-  (zones || []).forEach(({ name }) => {
-    defaultOrchestration[name] = 1;
-  });
 
   const newObjects = { ...sequence.objects };
 
@@ -672,8 +653,8 @@ const matchObjectsToFiles = (projectId, sequenceId) => {
       // Create an object with the default metadata
       newObjects[objectNumber] = {
         objectNumber,
+        objectBehaviours: [],
         label,
-        orchestration: { ...defaultOrchestration },
         fileId,
         panning: suffixToPanning[suffix] || 0,
         channelMapping: suffixToChannelMapping[suffix] || 'mono',
@@ -683,12 +664,11 @@ const matchObjectsToFiles = (projectId, sequenceId) => {
       // overwrite the label and fileId because these are always based on the file.
       newObjects[objectNumber] = {
         ...newObjects[objectNumber],
+        objectBehaviours: [
+          ...(newObjects[objectNumber].objectBehaviours || []),
+        ],
         label,
         fileId,
-        orchestration: {
-          ...defaultOrchestration,
-          ...newObjects[objectNumber].orchestration,
-        },
       };
     }
   });
@@ -712,10 +692,6 @@ const matchObjectsToFiles = (projectId, sequenceId) => {
         panning: 0,
         channelMapping: 'mono',
         ...object,
-        orchestration: {
-          ...defaultOrchestration,
-          ...object.orchestration,
-        },
         fileId: (fileId in sequence.files) ? fileId : null,
       },
     };
@@ -825,113 +801,6 @@ export const requestReplaceAllAudioFiles = (projectId, sequenceId) => (dispatch)
   });
 };
 
-const parseCsvMetadata = (contents) => {
-  const [keys, ...objectRows] = contents.split('\n').map(line => line.split(',').map(cell => cell.trim()));
-
-  const mdoObjects = objectRows.map((row) => {
-    const obj = {};
-    keys.forEach((key, i) => {
-      obj[key] = row[i];
-    });
-    return obj;
-  });
-
-  return { mdoObjects };
-};
-
-/**
- * Utility; parse a file contents string or buffer as a JSON object and extract the metadata
- * objects list.
- *
- * @returns {Promise<Array<Object>>>}
- */
-const parseMetadataFile = file => new Promise((resolve, reject) => {
-  // create a file reader to get the contents of the selected file, and register events on it.
-  const reader = new FileReader();
-  reader.addEventListener('error', () => {
-    reject(new Error('Could not read metadata file.'));
-  });
-  reader.addEventListener('loadend', () => {
-    let metadata;
-    if (reader.result.startsWith('{')) {
-      metadata = JSON.parse(reader.result);
-    } else {
-      metadata = parseCsvMetadata(reader.result);
-    }
-    const objects = metadata.mdoObjects || [];
-    resolve(objects.map(object => ({
-      // backwards compatibility, CSV format specified in bbcat-orchestration used mdoObjectLabel
-      ...object,
-      label: object.label || object.mdoObjectLabel,
-    })));
-  });
-
-  // start reading the file, will trigger the error or loadend event when finished.
-  reader.readAsText(file);
-}).then((objects) => {
-  // ensure objects is valid
-  if (!Array.isArray(objects) || objects.length === 0) {
-    throw new Error('Could not parse metadata file, format may be invalid or it may not contain any objects.');
-  }
-  if (!objects.every(object => ('objectNumber' in object && 'label' in object))) {
-    throw new Error('Not every object has a number and label.');
-  }
-
-  // parse all orchestration metadata fields as integers (except the label and image column)
-  return objects.map((object) => {
-    const parsedObject = { ...object };
-
-    Object.keys(object).forEach((key) => {
-      if (key !== 'label' && key !== 'image') { // TODO better sanitization of metadata object
-        parsedObject[key] = parseInt(object[key], 10) || 0;
-      }
-    });
-    return parsedObject;
-  });
-});
-
-/**
- * Action; replaces the objects associated with the given sequence, updates the project store, and
- * dispatches an update to the UI state.
- *
- * @param {Array<Object>} rawObjects - containing the objects parsed from JSON only.
- */
-const initialiseSequenceObjects = (projectId, sequenceId, rawObjects) => (dispatch) => {
-  const project = projects[projectId];
-  const sequence = project.sequences[sequenceId];
-
-  const newObjects = {};
-  const newObjectsList = rawObjects.map(({ objectNumber, label }) => ({
-    objectNumber: parseInt(objectNumber, 10),
-    label,
-  }));
-
-  rawObjects.forEach((data) => {
-    const objectNumber = parseInt(data.objectNumber, 10);
-
-    newObjects[objectNumber] = ({
-      objectNumber,
-      label: '',
-      fileId: null,
-      orchestration: {
-        ...data, // TODO: filter to required columns only?
-        image: data.image || null,
-      },
-    });
-  });
-
-  // store results in project store
-  sequence.objectsList = newObjectsList;
-  sequence.objects = newObjects;
-
-  // Update store with new object-file mappings
-  matchObjectsToFiles(projectId, sequenceId);
-
-  // load objects into state.
-  dispatch(loadSequenceObjects(projectId, sequenceId));
-  dispatch(validateProject(projectId));
-};
-
 export const resetObjectMetadata = (projectId, sequenceId, objectNumber) => (dispatch) => {
   const project = projects[projectId];
   const sequence = project.sequences[sequenceId];
@@ -974,29 +843,6 @@ export const deleteObject = (projectId, sequenceId, objectNumber) => (dispatch) 
   dispatch(validateProject(projectId));
 };
 
-export const setObjectOrchestrationFields = (
-  projectId, sequenceId, objectNumber, fields,
-) => (dispatch) => {
-  const project = projects[projectId];
-  const sequence = project.sequences[sequenceId];
-
-  const object = sequence.objects[objectNumber];
-  const newObject = {
-    ...object,
-    orchestration: {
-      ...object.orchestration,
-      ...fields,
-    },
-  };
-
-  sequence.objects = {
-    ...sequence.objects,
-    [objectNumber]: newObject,
-  };
-
-  dispatch(loadSequenceObjects(projectId, sequenceId));
-};
-
 export const setObjectPanning = (
   projectId, sequenceId, objectNumber, channelMapping,
 ) => (dispatch) => {
@@ -1023,50 +869,99 @@ export const setObjectPanning = (
 
   dispatch(loadSequenceObjects(projectId, sequenceId));
 };
-/**
- * Replace metadata file, open a file-open dialogue and replace the object metadata if a valid file
- * is selected.
- */
-export const requestReplaceMetadata = (projectId, sequenceId) => (dispatch) => {
-  new Promise((resolve, reject) => {
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = '.json, .txt, .csv';
-    input.multiple = false;
-    input.style.display = 'none';
 
-    const onChange = () => {
-      const { files } = input;
-      input.removeEventListener('change', onChange);
-      document.body.removeChild(input);
-      if (files.length > 0) {
-        resolve(files);
-      } else {
-        reject(new Error('No file selected'));
-      }
-    };
+export const addObjectBehaviour = (
+  projectId, sequenceId, objectNumber, behaviourType,
+) => (dispatch) => {
+  // get the original sequence and object
+  const project = projects[projectId];
+  const sequence = project.sequences[sequenceId];
+  const object = sequence.objects[objectNumber];
 
-    input.addEventListener('change', onChange);
+  // create a new (empty) behaviour of the given type
+  const newBehaviour = {
+    behaviourId: uuidv4(),
+    behaviourType,
+  };
 
-    document.body.appendChild(input);
-    input.click();
-  }).then((fileList) => {
-    const file = fileList[0];
-    return parseMetadataFile(file);
-  }).then((objects) => {
-    dispatch(initialiseSequenceObjects(projectId, sequenceId, objects));
-    dispatch(confirmSequenceMetadataReplaced('New metadata loaded.'));
-    dispatch(validateProject(projectId));
-  }).catch((e) => {
-    dispatch(setSequenceMetadataError('No file selected or invalid format.'));
-    dispatch(validateProject(projectId));
-    console.error(e);
-  });
+  // create a new object, adding the new behaviour into the object's list of behaviours
+  const newObject = {
+    ...object,
+    objectBehaviours: [
+      ...object.objectBehaviours,
+      newBehaviour,
+    ],
+  };
+
+  // replace the object in the sequence
+  sequence.objects = {
+    ...sequence.objects,
+    [objectNumber]: newObject,
+  };
+
+  // reload the sequence objects to update the UI
+  dispatch(loadSequenceObjects(projectId, sequenceId));
+};
+
+export const deleteObjectBehaviour = (
+  projectId, sequenceId, objectNumber, deleteBehaviourId,
+) => (dispatch) => {
+  // get the original sequence and object
+  const project = projects[projectId];
+  const sequence = project.sequences[sequenceId];
+  const object = sequence.objects[objectNumber];
+
+  // create a new object, removing the behaviour from its list of behaviours
+  const newObject = {
+    ...object,
+    objectBehaviours: object.objectBehaviours
+      .filter(({ behaviourId }) => behaviourId !== deleteBehaviourId),
+  };
+
+  // replace the object in the sequence
+  sequence.objects = {
+    ...sequence.objects,
+    [objectNumber]: newObject,
+  };
+
+  // reload the sequence objects to update the UI
+  dispatch(loadSequenceObjects(projectId, sequenceId));
+};
+
+export const replaceObjectBehaviourParameters = (
+  projectId, sequenceId, objectNumber, behaviourId, behaviourParameters,
+) => (dispatch) => {
+  // get the original sequence and object
+  const project = projects[projectId];
+  const sequence = project.sequences[sequenceId];
+  const object = sequence.objects[objectNumber];
+
+  // create a new object, with the behaviour parameters replaced
+  const newObject = {
+    ...object,
+    objectBehaviours: object.objectBehaviours.map((behaviour) => {
+      if (behaviour.behaviourId !== behaviourId) return behaviour;
+
+      return {
+        ...behaviour,
+        behaviourParameters,
+      };
+    }),
+  };
+
+  // replace the object in the sequence
+  sequence.objects = {
+    ...sequence.objects,
+    [objectNumber]: newObject,
+  };
+
+  // reload the sequence objects to update the UI
+  dispatch(loadSequenceObjects(projectId, sequenceId));
 };
 
 export const addZone = (projectId, name) => (dispatch) => {
   const project = projects[projectId];
-  const { sequencesList, sequences, settings } = project;
+  const { settings } = project;
   const zones = settings.zones || [];
 
   if (!name) {
@@ -1091,29 +986,6 @@ export const addZone = (projectId, name) => (dispatch) => {
       },
     ],
   ));
-
-  // For all objects in all sequences, if they hadn't had the zone set already, set it to 'never'.
-  sequencesList.forEach(({ sequenceId }) => {
-    const sequence = sequences[sequenceId];
-
-    const { objectsList, objects } = sequence;
-    const newObjects = {};
-
-    objectsList.forEach(({ objectNumber }) => {
-      const { orchestration, ...rest } = objects[objectNumber];
-
-      newObjects[objectNumber] = {
-        orchestration: {
-          ...orchestration,
-          [name]: orchestration[name] || 1,
-        },
-        ...rest,
-      };
-    });
-
-    sequence.objects = newObjects;
-    dispatch(loadSequenceObjects(projectId, sequenceId));
-  });
 };
 
 export const renameZone = (projectId, renameZoneId, friendlyName) => (dispatch) => {

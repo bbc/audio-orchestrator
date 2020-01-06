@@ -47,9 +47,7 @@ const generateSequenceMetatata = (
     outPoints,
     objects: objects.map(object => ({
       objectId: `${object.objectNumber}-${object.label}`,
-      orchestration: {
-        ...object.orchestration,
-      },
+      objectBehaviours: object.objectBehaviours || [],
       items: files[object.fileId].encodedItems.map(item => ({
         start: item.start,
         duration: item.duration,

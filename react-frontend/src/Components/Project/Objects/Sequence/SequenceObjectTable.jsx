@@ -2,7 +2,6 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Button,
   Table,
   Icon,
   Dimmer,
@@ -12,35 +11,32 @@ import {
 } from 'semantic-ui-react';
 import ObjectHeader from './ObjectHeader';
 import ObjectRow from './ObjectRow';
-import ZonesModal from './ZonesModal';
 import {
-  setObjectOrchestrationFields,
   setObjectPanning,
   resetObjectMetadata,
   deleteObject,
-  deleteZone,
-  renameZone,
-  addZone,
+  addObjectBehaviour,
+  deleteObjectBehaviour,
+  replaceObjectBehaviourParameters,
 } from '../../../../actions/project';
+import {
+  PAGE_PROJECT_CONTROLS,
+} from '../../../../reducers/UIReducer';
+import {
+  openProjectPage,
+} from '../../../../actions/ui';
 
 class SequenceObjectTable extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      tagEditorOpen: false,
-    };
-
-    this.handleCloseTagEditor = this.handleCloseTagEditor.bind(this);
     this.handleOpenTagEditor = this.handleOpenTagEditor.bind(this);
   }
 
-  handleCloseTagEditor() {
-    this.setState(state => ({ ...state, tagEditorOpen: false }));
-  }
-
   handleOpenTagEditor() {
-    this.setState(state => ({ ...state, tagEditorOpen: true }));
+    const { onOpenProjectPage } = this.props;
+
+    onOpenProjectPage(PAGE_PROJECT_CONTROLS);
   }
 
   render() {
@@ -52,13 +48,10 @@ class SequenceObjectTable extends React.Component {
       filesLoadingTotal,
       objectsList,
       objects,
-      zones,
-      expanded,
-      onChangeField,
       onChangePanning,
-      onDeleteZone,
-      onAddZone,
-      onRenameZone,
+      onAddObjectBehaviour,
+      onDeleteObjectBehaviour,
+      onReplaceObjectBehaviourParameters,
       onResetObject,
       onDeleteObject,
     } = this.props;
@@ -68,24 +61,14 @@ class SequenceObjectTable extends React.Component {
       return null;
     }
 
-    const {
-      tagEditorOpen,
-    } = this.state;
-
     const objectsWithFiles = objectsList.map(({ objectNumber, label }) => ({
       objectNumber,
+      objectBehaviours: objects[objectNumber].objectBehaviours,
       label,
-      orchestration: objects[objectNumber].orchestration,
       fileId: objects[objectNumber].fileId,
       file: files[objects[objectNumber].fileId],
       channelMapping: objects[objectNumber].channelMapping,
     }));
-
-    const expandedStyle = {
-      padding: '0 1em',
-      width: '100%',
-      textAlign: 'center',
-    };
 
     return (
       <div>
@@ -106,40 +89,26 @@ class SequenceObjectTable extends React.Component {
             )
             : null
           }
-          { (!zones || zones.length === 0)
-            ? (
-              <Message warning>
-                <Icon name="exclamation" />
-                {'No tags have been defined for the project. These are needed for the object placement algorithm and must match the metadata files for all sequences.'}
-                <p><Button content="Edit device tags" onClick={this.handleOpenTagEditor} /></p>
-              </Message>
-            )
-            : null
-          }
         </Container>
 
-        <Container style={{ margin: '1em 0', ...(expanded ? expandedStyle : {}) }}>
+        <Container>
           <Table
-            singleLine
             unstackable
-            collapsing={expanded}
-            celled={expanded}
+            definition
             verticalAlign="top"
-            style={expanded ? { display: 'inline-table', minWidth: '1127px' } : null}
           >
-            <ObjectHeader {...{ expanded, zones }} onEditTags={this.handleOpenTagEditor} />
+            <ObjectHeader />
             <Table.Body>
-              { (tagEditorOpen ? [] : objectsWithFiles).map(object => (
+              { objectsWithFiles.map(object => (
                 <ObjectRow
                   key={object.objectNumber}
                   {...{
-                    zones,
-                    expanded,
-                    objectsList,
-                    onChangeField,
                     onChangePanning,
                     onResetObject,
                     onDeleteObject,
+                    onAddObjectBehaviour,
+                    onReplaceObjectBehaviourParameters,
+                    onDeleteObjectBehaviour,
                   }}
                   {...object}
                 />
@@ -147,13 +116,6 @@ class SequenceObjectTable extends React.Component {
             </Table.Body>
           </Table>
         </Container>
-
-        <ZonesModal
-          open={tagEditorOpen}
-          onClose={this.handleCloseTagEditor}
-          zones={zones}
-          {...{ onDeleteZone, onAddZone, onRenameZone }}
-        />
       </div>
     );
   }
@@ -171,23 +133,23 @@ SequenceObjectTable.propTypes = {
   objects: PropTypes.shape({
     fileId: PropTypes.string,
   }).isRequired,
-  zones: PropTypes.arrayOf(PropTypes.shape({
-    zoneId: PropTypes.string,
-    name: PropTypes.string,
-    label: PropTypes.string,
-  })),
-  onChangeField: PropTypes.func.isRequired,
+  onOpenProjectPage: PropTypes.func.isRequired,
+  onChangePanning: PropTypes.func.isRequired,
+  onAddObjectBehaviour: PropTypes.func.isRequired,
+  onDeleteObjectBehaviour: PropTypes.func.isRequired,
+  onReplaceObjectBehaviourParameters: PropTypes.func.isRequired,
+  onResetObject: PropTypes.func.isRequired,
+  onDeleteObject: PropTypes.func.isRequired,
 };
 
 SequenceObjectTable.defaultProps = {
   filesLoadingCompleted: 0,
   filesLoadingTotal: 0,
-  zones: [],
 };
 
 const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
   const project = Project.projects[projectId];
-  const { settings, sequences } = project;
+  const { sequences } = project;
   const {
     filesList,
     files,
@@ -197,10 +159,6 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
     filesTaskId,
   } = sequences[sequenceId];
 
-  const { zones } = settings;
-
-  const { expandTable } = UI;
-
   const { total, completed } = UI.tasks[filesTaskId] || {};
 
   return {
@@ -208,26 +166,39 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
     files,
     objectsList,
     objects,
-    zones,
     filesLoading,
     filesLoadingTotal: total,
     filesLoadingCompleted: completed,
-    expanded: expandTable,
   };
 };
 
 const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
-  onChangeField: (objectNumber, fields) => dispatch(setObjectOrchestrationFields(
-    projectId,
-    sequenceId,
-    objectNumber,
-    fields,
-  )),
   onChangePanning: (objectNumber, channelMapping) => dispatch(setObjectPanning(
     projectId,
     sequenceId,
     objectNumber,
     channelMapping,
+  )),
+  onAddObjectBehaviour: (objectNumber, behaviourType) => dispatch(addObjectBehaviour(
+    projectId,
+    sequenceId,
+    objectNumber,
+    behaviourType,
+  )),
+  onDeleteObjectBehaviour: (objectNumber, behaviourId) => dispatch(deleteObjectBehaviour(
+    projectId,
+    sequenceId,
+    objectNumber,
+    behaviourId,
+  )),
+  onReplaceObjectBehaviourParameters: (
+    objectNumber, behaviourId, behaviourParameters,
+  ) => dispatch(replaceObjectBehaviourParameters(
+    projectId,
+    sequenceId,
+    objectNumber,
+    behaviourId,
+    behaviourParameters,
   )),
   onResetObject: objectNumber => dispatch(resetObjectMetadata(
     projectId,
@@ -239,9 +210,7 @@ const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
     sequenceId,
     objectNumber,
   )),
-  onAddZone: name => dispatch(addZone(projectId, name)),
-  onRenameZone: (zoneId, friendlyName) => dispatch(renameZone(projectId, zoneId, friendlyName)),
-  onDeleteZone: zoneId => dispatch(deleteZone(projectId, zoneId)),
+  onOpenProjectPage: page => dispatch(openProjectPage(projectId, page)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SequenceObjectTable);

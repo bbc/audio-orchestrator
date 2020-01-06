@@ -18,8 +18,6 @@ const initialState = {
   tasks: {},
   sequenceAudioConfirmation: null,
   sequenceAudioError: null,
-  sequenceMetadataConfirmation: null,
-  sequenceMetadataError: null,
   error: null,
   warning: null,
   expandTable: true,
@@ -50,8 +48,6 @@ const UIReducer = (state = initialState, action) => {
         currentSequenceId: action.sequenceId,
         sequenceAudioConfirmation: null,
         sequenceAudioError: null,
-        sequenceMetadataConfirmation: null,
-        sequenceMetadataError: null,
       };
     case 'UI_CONFIRM_SEQUENCE_AUDIO_REPLACED':
       return {
@@ -64,18 +60,6 @@ const UIReducer = (state = initialState, action) => {
         ...state,
         sequenceAudioError: action.error,
         sequenceAudioConfirmation: null,
-      };
-    case 'UI_CONFIRM_SEQUENCE_METADATA_REPLACED':
-      return {
-        ...state,
-        sequenceMetadataError: null,
-        sequenceMetadataConfirmation: action.confirmation,
-      };
-    case 'UI_SEQUENCE_METADATA_ERROR':
-      return {
-        ...state,
-        sequenceMetadataError: action.error,
-        sequenceMetadataConfirmation: null,
       };
     case 'UI_CLOSE_SEQUENCE_PAGE':
       return {

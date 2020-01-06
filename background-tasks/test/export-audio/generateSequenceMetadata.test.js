@@ -36,7 +36,7 @@ describe('generateSequenceMetadata', () => {
           objectNumber: 1,
           label: 'mock-object',
           fileId,
-          orchestration: {},
+          objectBehaviours: [],
           channelMapping: 'center',
         },
       ],
@@ -81,7 +81,7 @@ describe('generateSequenceMetadata', () => {
       objects: expect.arrayContaining([
         {
           objectId: '1-mock-object',
-          orchestration: expect.any(Object),
+          objectBehaviours: expect.any(Array),
           items: expect.arrayContaining([
             {
               start: 1.5,

@@ -8,76 +8,28 @@ import {
 } from 'semantic-ui-react';
 
 import PanningFlag from './PanningFlag';
-import MdoOnlyFlag from './MdoOnlyFlag';
-import SpreadFlag from './SpreadFlag';
-// import ThresholdFlag from './ThresholdFlag';
-import ExclusivityFlag from './ExclusivityFlag';
-import MuteIfFlag from './MuteIfFlag';
-import MetadataZoneFlag from './MetadataZoneFlag';
 import ConfirmDeleteButton from '../../../ConfirmDeleteButton';
+import Behaviour from './Behaviour';
+import AddBehaviourButton from './AddBehaviourButton';
 
 class ObjectRow extends React.PureComponent {
   render() {
     const {
       objectNumber,
+      objectBehaviours,
       channelMapping,
       label,
       file,
-      orchestration,
-      zones,
-      expanded,
-      onChangeField,
-      objectsList,
       onChangePanning,
       onResetObject,
       onDeleteObject,
+      onAddObjectBehaviour,
+      onDeleteObjectBehaviour,
+      onReplaceObjectBehaviourParameters,
     } = this.props;
 
-    const {
-      mdoOnly,
-      mdoSpread,
-      exclusivity,
-      // mdoThreshold,
-      muteIfObject,
-      // onDropin,
-      // onDropout,
-      // image,
-    } = orchestration;
-
-    const flagProps = {
-      onChangeField,
-      objectNumber,
-      expanded: false, // TODO: expanded is not actually used inside these at the moment
-    };
-    const metadataFlags = [
-      <MdoOnlyFlag mdoOnly={mdoOnly} {...flagProps} key="mdoOnly" />,
-      <SpreadFlag mdoSpread={mdoSpread} {...flagProps} key="mdoSpread" />,
-      <ExclusivityFlag exclusivity={exclusivity} {...flagProps} key="exclusivity" />,
-      // <ThresholdFlag mdoThreshold={mdoThreshold} {...flagProps} key="mdoThreshold" />,
-      <MuteIfFlag muteIfObject={muteIfObject} objectsList={objectsList} {...flagProps} key="muteIf" />,
-    ];
-
-    const zoneFlags = (zones && zones.length > 0) ? zones.map(zone => (
-      <MetadataZoneFlag
-        expanded={expanded}
-        value={orchestration[zone.name]}
-        name={zone.name}
-        key={zone.zoneId}
-        onClick={() => onChangeField(
-          objectNumber,
-          {
-            [zone.name]: (orchestration[zone.name] - 1) || 3,
-          },
-        )}
-      />
-    )) : [(
-      <span key="no-tags">
-        N/A
-      </span>
-    )];
-
     return (
-      <Table.Row negative={!file || !!file.error}>
+      <Table.Row negative={!file || !!file.error} verticalAlign="top">
         <Table.Cell>{objectNumber}</Table.Cell>
 
         { file
@@ -107,7 +59,7 @@ class ObjectRow extends React.PureComponent {
           )
         }
 
-        <Table.Cell>
+        <Table.Cell singleLine>
           <PanningFlag
             channelMapping={channelMapping}
             onChange={onChangePanning}
@@ -115,27 +67,26 @@ class ObjectRow extends React.PureComponent {
           />
         </Table.Cell>
 
-        { expanded
-          ? (
-            metadataFlags.map(f => (
-              <Table.Cell textAlign="center" key={f.key} content={f} />
-            ))
-          )
-          : (
-            <Table.Cell content={metadataFlags} />
-          )
-        }
-
-        { expanded
-          ? zoneFlags.map(f => (
-            <Table.Cell textAlign="center" key={f.key} content={f} />
-          ))
-          : (
-            <Table.Cell content={zoneFlags} />
-          )
-        }
-
         <Table.Cell>
+          {objectBehaviours.map(behaviour => (
+            <Behaviour
+              key={behaviour.behaviourId}
+              {...behaviour}
+              {...{
+                onDelete: () => onDeleteObjectBehaviour(objectNumber, behaviour.behaviourId),
+                onReplaceParameters: parameters => onReplaceObjectBehaviourParameters(
+                  objectNumber, behaviour.behaviourId, parameters,
+                ),
+              }}
+            />
+          ))}
+          <AddBehaviourButton
+            onAddBehaviour={behaviourType => onAddObjectBehaviour(objectNumber, behaviourType)}
+            usedBehaviourTypes={objectBehaviours.map(({ behaviourType }) => behaviourType)}
+          />
+        </Table.Cell>
+
+        <Table.Cell singleLine>
           <Button icon="undo" onClick={() => onResetObject(objectNumber)} />
           <ConfirmDeleteButton
             header="Delete Object"
@@ -156,35 +107,20 @@ ObjectRow.propTypes = {
     name: PropTypes.string,
     error: PropTypes.string,
   }),
-  orchestration: PropTypes.shape({
-    exclusivity: PropTypes.number,
-    mdoOnly: PropTypes.number,
-    mdoSpread: PropTypes.number,
-    // mdoThreshold: PropTypes.number,
-    muteIfObject: PropTypes.number,
-    // onDropin: PropTypes.number,
-    // onDropout: PropTypes.number,
-    // image: PropTypes.string,
-  }).isRequired,
-  zones: PropTypes.arrayOf(PropTypes.shape({
-    zoneId: PropTypes.string,
-    name: PropTypes.string,
-    label: PropTypes.string,
-  })),
-  expanded: PropTypes.bool.isRequired,
-  onChangeField: PropTypes.func.isRequired,
+  objectBehaviours: PropTypes.arrayOf(PropTypes.shape({
+    behaviourType: PropTypes.string.isRequired,
+    behaviourParameters: PropTypes.shape({}),
+  })).isRequired,
   onChangePanning: PropTypes.func.isRequired,
   onResetObject: PropTypes.func.isRequired,
   onDeleteObject: PropTypes.func.isRequired,
-  objectsList: PropTypes.arrayOf(PropTypes.shape({
-    objectNumber: PropTypes.number,
-    label: PropTypes.string,
-  })).isRequired,
+  onAddObjectBehaviour: PropTypes.func.isRequired,
+  onDeleteObjectBehaviour: PropTypes.func.isRequired,
+  onReplaceObjectBehaviourParameters: PropTypes.func.isRequired,
 };
 
 ObjectRow.defaultProps = {
   file: null,
-  zones: [],
 };
 
 export default ObjectRow;
