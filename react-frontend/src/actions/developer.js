@@ -28,11 +28,11 @@ export const requestImportProject = () => (dispatch) => {
   input.type = 'file';
   input.accept = '.json';
   input.multiple = false;
+  input.style.display = 'none';
 
   const onChange = () => {
     const { files } = input;
     input.removeEventListener('change', onChange);
-    document.body.removeChild(input);
 
     if (files.length === 1) {
       const reader = new FileReader();
@@ -49,4 +49,5 @@ export const requestImportProject = () => (dispatch) => {
   document.body.appendChild(input);
 
   input.click();
+  document.body.removeChild(input);
 };
