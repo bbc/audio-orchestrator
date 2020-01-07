@@ -2,6 +2,9 @@ import LocalProjectStore from '../lib/LocalProjectStore';
 import {
   requestListProjects,
 } from './project';
+import {
+  setAppWarning,
+} from './ui';
 
 const ProjectStore = window.ProjectStore || LocalProjectStore;
 
@@ -37,9 +40,13 @@ export const requestImportProject = () => (dispatch) => {
     if (files.length === 1) {
       const reader = new FileReader();
       reader.addEventListener('loadend', () => {
-        const projectData = JSON.parse(reader.result);
-        ProjectStore.importProjectData(projectData);
-        dispatch(requestListProjects());
+        try {
+          const projectData = JSON.parse(reader.result);
+          ProjectStore.importProjectData(projectData);
+          dispatch(requestListProjects());
+        } catch (e) {
+          dispatch(setAppWarning('Couldn\'t import project from files.'));
+        }
       });
       reader.readAsText(files[0]);
     }
