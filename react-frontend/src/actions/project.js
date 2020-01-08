@@ -871,7 +871,11 @@ export const setObjectPanning = (
 };
 
 export const addObjectBehaviour = (
-  projectId, sequenceId, objectNumber, behaviourType,
+  projectId,
+  sequenceId,
+  objectNumber,
+  behaviourType,
+  behaviourParameters,
 ) => (dispatch) => {
   // get the original sequence and object
   const project = projects[projectId];
@@ -882,6 +886,7 @@ export const addObjectBehaviour = (
   const newBehaviour = {
     behaviourId: uuidv4(),
     behaviourType,
+    behaviourParameters,
   };
 
   // create a new object, adding the new behaviour into the object's list of behaviours

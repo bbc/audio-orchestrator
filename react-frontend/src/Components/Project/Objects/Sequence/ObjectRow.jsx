@@ -81,7 +81,9 @@ class ObjectRow extends React.PureComponent {
             />
           ))}
           <AddBehaviourButton
-            onAddBehaviour={behaviourType => onAddObjectBehaviour(objectNumber, behaviourType)}
+            onAddBehaviour={(behaviourType, behaviourParameters) => {
+              onAddObjectBehaviour(objectNumber, behaviourType, behaviourParameters);
+            }}
             usedBehaviourTypes={objectBehaviours.map(({ behaviourType }) => behaviourType)}
           />
         </Table.Cell>

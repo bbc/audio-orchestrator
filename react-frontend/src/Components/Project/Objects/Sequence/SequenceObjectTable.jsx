@@ -179,11 +179,16 @@ const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
     objectNumber,
     channelMapping,
   )),
-  onAddObjectBehaviour: (objectNumber, behaviourType) => dispatch(addObjectBehaviour(
+  onAddObjectBehaviour: (
+    objectNumber,
+    behaviourType,
+    behaviourParameters,
+  ) => dispatch(addObjectBehaviour(
     projectId,
     sequenceId,
     objectNumber,
     behaviourType,
+    behaviourParameters,
   )),
   onDeleteObjectBehaviour: (objectNumber, behaviourId) => dispatch(deleteObjectBehaviour(
     projectId,

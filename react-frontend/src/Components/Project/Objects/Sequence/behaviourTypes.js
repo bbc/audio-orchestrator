@@ -30,8 +30,7 @@ const behaviourTypes = [
       {
         name: 'perDeviceGainAdjust',
         description: 'When the object is in multiple devices, multiply its gain by this value for each additional device it is in beyond the first one; applies the same adjustment to every device.',
-        required: false,
-        type: 'number',
+        type: 'gain',
         defaultValue: 1.0,
       },
     ],
@@ -46,7 +45,6 @@ const behaviourTypes = [
       {
         name: 'conditions',
         description: 'The conditions to be met by the session or device.',
-        required: true,
         type: 'conditionsList',
         defaultValue: [],
       },
@@ -62,7 +60,6 @@ const behaviourTypes = [
       {
         name: 'conditions',
         description: 'The conditions to be met by the session or device.',
-        required: true,
         type: 'conditionsList',
         defaultValue: [],
       },
@@ -78,7 +75,6 @@ const behaviourTypes = [
       {
         name: 'conditions',
         description: 'The conditions to be met by the session or device.',
-        required: true,
         type: 'conditionsList',
         defaultValue: [],
       },
@@ -93,7 +89,7 @@ const behaviourTypes = [
   },
   {
     name: 'onChange',
-    displayName: 'onChange',
+    displayName: 'on change',
     description: 'Determines when the object can start playing, and if it can or should move between devices when devices join or leave, or when a control value changes.',
     multiple: false,
     color: 'violet',

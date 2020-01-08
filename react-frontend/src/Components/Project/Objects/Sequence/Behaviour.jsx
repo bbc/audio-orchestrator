@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 import {
   Button,
   Popup,
-  Table,
   Divider,
 } from 'semantic-ui-react';
-import BehaviourParameter from './BehaviourParameter';
+import BehaviourParameters from './BehaviourParameters';
 import behaviourTypes from './behaviourTypes';
 
 class Behaviour extends React.PureComponent {
@@ -15,6 +14,8 @@ class Behaviour extends React.PureComponent {
     this.replaceParameter = this.replaceParameter.bind(this);
   }
 
+  // TODO: This might introduce a race condition; should instead send a redux action to guarantee
+  // ordering of single parameter updates (instead of sending a whole new parameters object).
   replaceParameter({ name, value }) {
     const {
       onReplaceParameters,
@@ -34,12 +35,16 @@ class Behaviour extends React.PureComponent {
       onDelete,
     } = this.props;
 
+    // TODO: Refactor behaviourTypes into an object and a separate ordered list of behaviour names
+    // to avoid using find to look up a type by name.
     const {
       displayName,
       description,
       parameters,
       color,
     } = behaviourTypes.find(({ name }) => name === behaviourType);
+
+    const haveParameters = parameters && parameters.length > 0;
 
     return (
       <Popup
@@ -51,6 +56,7 @@ class Behaviour extends React.PureComponent {
             compact
             color={color}
             style={{ marginBottom: '2px' }}
+            icon={haveParameters ? 'ellipsis horizontal' : undefined}
           />
         )}
         wide="very"
@@ -62,24 +68,20 @@ class Behaviour extends React.PureComponent {
         </Popup.Header>
         <Popup.Content>
           {description}
-          {parameters ? <Divider /> : null }
-          {parameters
+          {haveParameters
+            ? <Divider />
+            : null
+          }
+          {haveParameters
             ? (
-              <Table definition>
-                <Table.Body>
-                  {parameters.map(parameter => (
-                    <BehaviourParameter
-                      key={parameter.name}
-                      {...parameter}
-                      value={behaviourParameters[parameter.name]}
-                      onChange={(e, data) => this.replaceParameter({
-                        name: parameter.name,
-                        value: data.value,
-                      })}
-                    />
-                  ))}
-                </Table.Body>
-              </Table>
+              <BehaviourParameters
+                parameters={parameters}
+                values={behaviourParameters}
+                onChange={(e, data) => this.replaceParameter({
+                  name: data.name,
+                  value: data.value,
+                })}
+              />
             )
             : null
           }

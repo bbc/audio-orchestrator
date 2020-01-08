@@ -5,31 +5,37 @@ import {
 } from 'semantic-ui-react';
 import behaviourTypes from './behaviourTypes';
 
-const behaviourOptions = behaviourTypes.map(({ name, displayName, multiple }) => ({
-  key: name,
-  value: name,
-  text: displayName,
-  multiple,
-}));
 
-const AddBehaviourButton = ({
+// TODO: Using the click handler instead of onChange does not allow adding a behaviour using the
+// keyboard, but fixes a bug where behaviours were added when the dropdown lost focus.
+const AddBehaviourButton = React.memo(({
   onAddBehaviour,
   usedBehaviourTypes,
 }) => {
-  const options = behaviourOptions.map((option) => {
-    const { multiple } = option;
-    const disabled = !multiple && usedBehaviourTypes.includes(option.value);
+  const options = behaviourTypes.map(({
+    name,
+    displayName,
+    multiple,
+    parameters,
+  }) => {
+    const disabled = !multiple && usedBehaviourTypes.includes(name);
 
     return {
-      ...option,
+      key: name,
+      value: name,
+      text: displayName || name,
       disabled,
       icon: disabled ? 'checkmark' : 'plus',
+      onClick: disabled ? null : () => {
+        const defaultParameters = {};
+        (parameters || []).forEach(({ name: parameterName, defaultValue }) => {
+          defaultParameters[parameterName] = defaultValue;
+        });
+        onAddBehaviour(name, defaultParameters);
+      },
     };
   });
 
-  // TODO: Using the subcomponent API for the Dropdown breaks keyboard navigation, but it is needed
-  // to avoid activating an item when the menu is closed or the up/down keys are moved (as with
-  // previous onChange handler)
   return (
     <Dropdown
       floating
@@ -37,18 +43,10 @@ const AddBehaviourButton = ({
       text="Add behaviour"
       className="small compact primary"
       value=""
-    >
-      <Dropdown.Menu>
-        {options.map(option => (
-          <Dropdown.Item
-            {...option}
-            onClick={() => onAddBehaviour(option.value)}
-          />
-        ))}
-      </Dropdown.Menu>
-    </Dropdown>
+      options={options}
+    />
   );
-};
+});
 
 AddBehaviourButton.propTypes = {
   onAddBehaviour: PropTypes.func.isRequired,
