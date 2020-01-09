@@ -33,6 +33,7 @@ class Behaviour extends React.PureComponent {
       behaviourType,
       behaviourParameters,
       onDelete,
+      sequencesList,
     } = this.props;
 
     // TODO: Refactor behaviourTypes into an object and a separate ordered list of behaviour names
@@ -81,6 +82,7 @@ class Behaviour extends React.PureComponent {
                   name: data.name,
                   value: data.value,
                 })}
+                sequencesList={sequencesList}
               />
             )
             : null
@@ -96,6 +98,10 @@ Behaviour.propTypes = {
   behaviourParameters: PropTypes.shape({}),
   onDelete: PropTypes.func.isRequired,
   onReplaceParameters: PropTypes.func.isRequired,
+  sequencesList: PropTypes.arrayOf(PropTypes.shape({
+    sequenceId: PropTypes.String,
+    name: PropTypes.String,
+  })).isRequired,
 };
 
 Behaviour.defaultProps = {

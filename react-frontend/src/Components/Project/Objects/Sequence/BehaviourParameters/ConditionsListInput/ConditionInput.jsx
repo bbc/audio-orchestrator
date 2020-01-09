@@ -1,3 +1,6 @@
+// TODO: This file needs refactoring.
+// TODO: Check current operator is allowed by condition property
+// TODO: Rework the allowedoperator DOM property
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -11,6 +14,8 @@ import {
 import operators from './operators';
 import deviceProperties from './deviceProperties';
 import sessionProperties from './sessionProperties';
+import EnumInput from '../EnumInput';
+import ListOfEnumInput from '../ListOfEnumInput';
 
 const operatorOptions = operators.map(({ name, displayName }) => ({
   key: name,
@@ -83,6 +88,7 @@ class ConditionInput extends React.PureComponent {
       value,
       onDelete,
       controls,
+      sequencesList,
     } = this.props;
 
     const {
@@ -97,7 +103,7 @@ class ConditionInput extends React.PureComponent {
     } = this.state;
 
     const propertyOptions = [
-      ...controls.map(({ controlId, controlName }) => ({
+      ...controls.map(({ controlId, controlName, allowedOperators }) => ({
         key: `deviceControls.${controlId}`,
         value: `deviceControls.${controlId}`,
         text: controlName,
@@ -108,8 +114,10 @@ class ConditionInput extends React.PureComponent {
           empty: true,
           circular: true,
         },
+        allowedoperators: allowedOperators,
+        type: 'string',
       })),
-      ...deviceProperties.map(({ name, displayName }) => ({
+      ...deviceProperties.map(({ name, displayName, type, allowedOperators }) => ({
         key: `device.${name}`,
         value: `device.${name}`,
         text: displayName || name,
@@ -120,8 +128,10 @@ class ConditionInput extends React.PureComponent {
           empty: true,
           circular: true,
         },
+        allowedoperators: allowedOperators,
+        type,
       })),
-      ...sessionProperties.map(({ name, displayName }) => ({
+      ...sessionProperties.map(({ name, displayName, type, allowedOperators }) => ({
         key: `session.${name}`,
         value: `session.${name}`,
         text: displayName || name,
@@ -132,10 +142,27 @@ class ConditionInput extends React.PureComponent {
           empty: true,
           circular: true,
         },
+        allowedoperators: allowedOperators,
+        type,
       })),
     ];
 
     const { valueIsArray } = operators.find(o => o.name === operator) || {};
+
+    const sequences = sequencesList.map(({ sequenceId, name }) => ({
+      value: sequenceId,
+      displayName: name,
+    }));
+
+    const { type, allowedoperators } = propertyOptions.find(p => p.value === property) || {};
+
+    const valueIsSequence = type === 'sequenceId';
+
+    let filteredOperatorOptions = operatorOptions;
+
+    if (allowedoperators) {
+      filteredOperatorOptions = operatorOptions.filter(o => allowedoperators.includes(o.value));
+    }
 
     const customValueOptions = valueIsArray ? [
       ...new Set([
@@ -147,6 +174,54 @@ class ConditionInput extends React.PureComponent {
       value: v,
       text: v,
     })) : [];
+
+    let valueInputComponent = (
+      <Input
+        disabled={operator === undefined}
+        fluid
+        placeholder="Value"
+        value={conditionValue || ''}
+        name="value"
+        onChange={this.handleChange}
+      />
+    );
+    if (valueIsSequence) {
+      if (valueIsArray) {
+        valueInputComponent = (
+          <ListOfEnumInput
+            allowedValues={sequences}
+            value={conditionValue || []}
+            onChange={this.handleChange}
+            name="value"
+          />
+        );
+      } else {
+        valueInputComponent = (
+          <EnumInput
+            allowedValues={sequences}
+            value={conditionValue || ''}
+            onChange={this.handleChange}
+            name="value"
+          />
+        );
+      }
+    } else if (valueIsArray) {
+      valueInputComponent = (
+        <Dropdown
+          fluid
+          multiple
+          selection
+          search
+          allowAdditions
+          placeholder="Value"
+          value={conditionValue || []}
+          name="value"
+          options={customValueOptions}
+          onAddItem={this.handleCustomValueAddition}
+          onChange={this.handleChange}
+        />
+      );
+    }
 
     return (
       <Segment>
@@ -171,39 +246,14 @@ class ConditionInput extends React.PureComponent {
               fluid
               selection
               placeholder="Operator"
-              options={operatorOptions}
+              options={filteredOperatorOptions}
               value={operator}
               name="operator"
               onChange={this.handleChange}
             />
           </List.Item>
           <List.Item>
-            { valueIsArray
-              ? (
-                <Dropdown
-                  fluid
-                  multiple
-                  selection
-                  search
-                  allowAdditions
-                  placeholder="Value"
-                  value={conditionValue || []}
-                  name="value"
-                  options={customValueOptions}
-                  onAddItem={this.handleCustomValueAddition}
-                  onChange={this.handleChange}
-                />
-              )
-              : (
-                <Input
-                  disabled={operator === undefined}
-                  fluid
-                  placeholder="Value"
-                  value={conditionValue || ''}
-                  name="value"
-                  onChange={this.handleChange}
-                />
-              )}
+            { valueInputComponent }
           </List.Item>
         </List>
         <Checkbox
@@ -233,6 +283,10 @@ ConditionInput.propTypes = {
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   controls: PropTypes.arrayOf(PropTypes.shape({})),
+  sequencesList: PropTypes.arrayOf(PropTypes.shape({
+    sequenceId: PropTypes.String,
+    name: PropTypes.String,
+  })).isRequired,
 };
 
 // TODO dummy control data, because builder does not store controls in the new format yet.

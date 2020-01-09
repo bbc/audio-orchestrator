@@ -8,6 +8,7 @@ const EnumInput = React.memo(({
   allowedValues,
   value,
   onChange,
+  name,
 }) => {
   const options = allowedValues.map(v => ({
     key: v.value,
@@ -21,6 +22,7 @@ const EnumInput = React.memo(({
       value={value}
       onChange={onChange}
       options={options}
+      name={name}
     />
   );
 });
@@ -32,6 +34,11 @@ EnumInput.propTypes = {
   })).isRequired,
   value: PropTypes.string.isRequired,
   onChange: PropTypes.func.isRequired,
+  name: PropTypes.string,
+};
+
+EnumInput.defaultProps = {
+  name: undefined,
 };
 
 export default EnumInput;

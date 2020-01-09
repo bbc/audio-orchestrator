@@ -8,6 +8,7 @@ const ListOfEnumInput = React.memo(({
   allowedValues,
   value,
   onChange,
+  name,
 }) => {
   const options = allowedValues.map(v => ({
     key: v.value,
@@ -22,6 +23,7 @@ const ListOfEnumInput = React.memo(({
       value={value}
       onChange={onChange}
       options={options}
+      name={name}
     />
   );
 });
@@ -33,6 +35,11 @@ ListOfEnumInput.propTypes = {
   })).isRequired,
   value: PropTypes.arrayOf(PropTypes.string).isRequired,
   onChange: PropTypes.func.isRequired,
+  name: PropTypes.string,
+};
+
+ListOfEnumInput.defaultProps = {
+  name: undefined,
 };
 
 export default ListOfEnumInput;

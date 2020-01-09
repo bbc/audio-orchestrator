@@ -4,7 +4,8 @@ const sessionProperties = [
   {
     name: 'currentContentId',
     displayName: 'Current sequence',
-    type: 'string', // TODO: actually represents a sequence id
+    type: 'sequenceId',
+    allowedOperators: ['equals', 'anyOf'],
   },
   {
     name: 'numDevices',
