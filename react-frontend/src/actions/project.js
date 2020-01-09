@@ -109,6 +109,30 @@ const loadSequences = projectId => (dispatch) => {
   dispatch({ type: 'SET_PROJECT_SEQUENCES_LIST', projectId, sequencesList });
 };
 
+export const loadControl = (projectId, controlId) => (dispatch) => {
+  const { controls } = projects[projectId];
+  const control = controls[controlId];
+
+  dispatch({
+    type: 'SET_PROJECT_CONTROL',
+    projectId,
+    controlId,
+    ...control.getExportData(),
+  });
+};
+
+export const loadControls = projectId => (dispatch) => {
+  const { controlsList } = projects[projectId];
+
+  controlsList.forEach(({
+    controlId,
+  }) => {
+    dispatch(loadControl(projectId, controlId));
+  });
+
+  dispatch({ type: 'SET_PROJECT_CONTROLS_LIST', projectId, controlsList });
+};
+
 export const validateProject = projectId => ({
   type: 'SET_PROJECT_REVIEW_ITEMS',
   projectId,
@@ -131,6 +155,9 @@ const openedProject = projectId => (dispatch) => {
 
   // Get the sequences for the UI
   dispatch(loadSequences(projectId));
+
+  // Get the controls for the UI
+  dispatch(loadControls(projectId));
 
   // Move onto the project page
   dispatch(openProjectPage(projectId));
@@ -964,6 +991,38 @@ export const replaceObjectBehaviourParameters = (
   dispatch(loadSequenceObjects(projectId, sequenceId));
 };
 
+export const addControl = (projectId, controlType, controlName) => (dispatch) => {
+  const project = projects[projectId];
+  project.addControl({ controlType, controlName });
+
+  // reload the controls to update the UI
+  dispatch(loadControls(projectId));
+};
+
+export const deleteControl = (projectId, controlId) => (dispatch) => {
+  const project = projects[projectId];
+  project.deleteControl(controlId);
+
+  // reload the controls to update the UI
+  dispatch(loadControls(projectId));
+};
+
+// TODO should probably be separate actions to prevent overwriting private properties of control
+export const replaceControlProperty = (projectId, controlId, name, value) => (dispatch) => {
+  const project = projects[projectId];
+  const control = project.controls[controlId];
+
+  // Update the named cntrol value
+  control[name] = value;
+
+  // Update the controls list because the control name or type might have changed
+  project.updateControlsList();
+
+  // reload the controls to update the UI
+  dispatch(loadControls(projectId));
+};
+
+// TODO remove
 export const addZone = (projectId, name) => (dispatch) => {
   const project = projects[projectId];
   const { settings } = project;
@@ -993,6 +1052,7 @@ export const addZone = (projectId, name) => (dispatch) => {
   ));
 };
 
+// TODO remove
 export const renameZone = (projectId, renameZoneId, friendlyName) => (dispatch) => {
   const project = projects[projectId];
   const { zones } = project.settings;
@@ -1012,6 +1072,7 @@ export const renameZone = (projectId, renameZoneId, friendlyName) => (dispatch) 
   ));
 };
 
+// TODO remove
 export const deleteZone = (projectId, deleteZoneId) => (dispatch) => {
   const project = projects[projectId];
   const { zones } = project.settings;

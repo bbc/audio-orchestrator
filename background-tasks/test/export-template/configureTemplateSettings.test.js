@@ -30,6 +30,7 @@ describe('configureTemplateSettings', () => {
   it('writes the return value of templateConfiguration to the two config files', () => {
     const outputDir = '/dev/null';
     const sequences = [];
+    const controls = [];
     const settings = {};
 
     fse.readFile.mockResolvedValueOnce([
@@ -43,9 +44,11 @@ describe('configureTemplateSettings', () => {
     const mockConfig = '{ answer: 42 }';
     templateConfiguration.mockReturnValueOnce(mockConfig);
 
-    return configureTemplateSettings({ outputDir, sequences, settings })
+    return configureTemplateSettings({
+      outputDir, sequences, controls, settings,
+    })
       .then(() => {
-        expect(templateConfiguration).toHaveBeenCalledWith(sequences, settings);
+        expect(templateConfiguration).toHaveBeenCalledWith(sequences, controls, settings);
         expect(fse.readFile).toHaveBeenCalledTimes(2);
         expect(fse.writeFile).toHaveBeenCalledTimes(2);
 

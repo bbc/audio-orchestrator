@@ -92,7 +92,7 @@ export const requestExportAudio = projectId => (dispatch) => {
     .then((store) => {
       const project = new Project(store);
       const { settings } = project;
-      const sequences = project.getSequencesToExport(project);
+      const sequences = project.getSequencesToExport();
       return waitForExportTask(dispatch, exportAudio, { sequences, settings });
     })
     .then(({ result }) => {
@@ -118,15 +118,16 @@ export const requestExportTemplate = projectId => (dispatch) => {
   ProjectStore.openProject(projectId)
     .then((store) => {
       const project = new Project(store);
-      const sequences = project.getSequencesToExport(project);
+      const sequences = project.getSequencesToExport();
+      const controls = project.getControlsToExport();
       const { settings } = project;
 
-      return { sequences, settings };
+      return { sequences, controls, settings };
     })
-    .then(({ sequences, settings }) => waitForExportTask(
+    .then(({ sequences, controls, settings }) => waitForExportTask(
       dispatch,
       exportTemplate,
-      { sequences, settings },
+      { sequences, controls, settings },
     ))
     .then(({ result }) => {
       const { outputDir } = result;
@@ -151,15 +152,16 @@ export const requestExportDistribution = projectId => (dispatch) => {
   ProjectStore.openProject(projectId)
     .then((store) => {
       const project = new Project(store);
-      const sequences = project.getSequencesToExport(project);
+      const sequences = project.getSequencesToExport();
+      const controls = project.getControlsToExport();
       const { settings } = project;
 
-      return { sequences, settings };
+      return { sequences, controls, settings };
     })
-    .then(({ sequences, settings }) => waitForExportTask(
+    .then(({ sequences, controls, settings }) => waitForExportTask(
       dispatch,
       exportDistribution,
-      { sequences, settings },
+      { sequences, controls, settings },
     ))
     .then(({ result }) => {
       const { outputDir } = result;
@@ -184,15 +186,16 @@ export const requestStartPreview = projectId => (dispatch) => {
   ProjectStore.openProject(projectId)
     .then((store) => {
       const project = new Project(store);
-      const sequences = project.getSequencesToExport(project);
+      const sequences = project.getSequencesToExport();
+      const controls = project.getControlsToExport();
       const { settings } = project;
 
-      return { sequences, settings };
+      return { sequences, controls, settings };
     })
-    .then(({ sequences, settings }) => waitForExportTask(
+    .then(({ sequences, controls, settings }) => waitForExportTask(
       dispatch,
       startPreview,
-      { sequences, settings },
+      { sequences, controls, settings },
     ))
     .then(({ result }) => {
       // TODO preview-specific handling

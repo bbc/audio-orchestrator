@@ -17,6 +17,7 @@ class ExportService {
    * @param {object} args
    * @param {object} args.settings
    * @param {object} args.sequences
+   * @param {object} args.controls
    * @param {object} callbacks
    * @param {function} callbacks.onProgress
    * @param {function} callbacks.onError

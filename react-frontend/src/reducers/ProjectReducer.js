@@ -11,6 +11,8 @@ const projectDefaults = {
   sequencesList: [],
   sequencesListLoading: false,
   sequences: {},
+  controls: {},
+  controlsList: [],
   reviewItems: [],
 };
 
@@ -29,6 +31,15 @@ const sequenceDefaults = {
   probeTaskId: null,
   itemsTaskId: null,
   encodeTaskId: null,
+};
+
+const controlDefaults = {
+  controlId: '',
+  controlName: '',
+  controlType: 'text',
+  controlDefaultValues: [],
+  controlParameters: {},
+  controlBehaviours: [],
 };
 
 const fileDefaults = {
@@ -91,6 +102,27 @@ const updateFiles = (state, projectId, sequenceId, updates) => {
 
   // replace the files object in the state
   return updateSequence(state, projectId, sequenceId, { files: updatedFiles });
+};
+
+// Convenience method for updating nested properties in a specific control in a specific project.
+const updateControl = (state, projectId, controlId, update) => {
+  const project = state.projects[projectId] || projectDefaults;
+  return {
+    ...state,
+    projects: {
+      ...state.projects,
+      [projectId]: {
+        ...project,
+        controls: {
+          ...(project.controls || {}),
+          [controlId]: {
+            ...(project.controls[controlId] || controlDefaults),
+            ...update,
+          },
+        },
+      },
+    },
+  };
 };
 
 
@@ -203,6 +235,19 @@ const ProjectReducer = (state = initialState, action) => {
       );
     case 'SET_PROJECT_SEQUENCE_FILE_PROPERTIES':
       return updateFiles(state, action.projectId, action.sequenceId, action.files);
+    case 'SET_PROJECT_CONTROLS_LIST':
+      return updateProject(state, action.projectId, {
+        controlsList: action.controlsList,
+      });
+    case 'SET_PROJECT_CONTROL':
+      return updateControl(state, action.projectId, action.controlId, {
+        controlId: action.controlId,
+        controlName: action.controlName,
+        controlType: action.controlType,
+        controlDefaultValues: action.controlDefaultValues,
+        controlParameters: action.controlParameters,
+        controlBehaviours: action.controlBehaviours,
+      });
     case 'DELETE_PROJECT':
       return {
         ...state,

@@ -1,9 +1,9 @@
 import uuidv4 from 'uuid/v4';
 import Sequence from './Sequence';
+import Control from './Control';
 import {
   PAGE_PROJECT_PRESENTATION,
   PAGE_PROJECT_EXPORT,
-  PAGE_PROJECT_CONTROLS,
 } from '../reducers/UIReducer';
 
 const DEFAULT_BASE_URL = 'audio';
@@ -46,9 +46,18 @@ class Project {
    */
   loadFromStore() {
     const { store, data } = this;
+    // Get simple top level properties
     data.name = store.get('name', '');
     data.lastOpened = store.get('lastOpened', '');
     data.settings = store.get('settings', {});
+
+    // get controls listed in controlIds
+    data.controls = {};
+    store.get('controlIds', []).forEach((controlId) => {
+      data.controls[controlId] = new Control(store, controlId);
+    });
+
+    // get sequences listed in sequenceIds
     data.sequences = {};
     store.get('sequenceIds', []).forEach((sequenceId) => {
       data.sequences[sequenceId] = new Sequence(store, sequenceId);
@@ -63,6 +72,16 @@ class Project {
   updateSequencesList() {
     const { store, sequencesList } = this;
     store.set('sequenceIds', sequencesList.map(({ sequenceId }) => sequenceId));
+  }
+
+  /**
+   * Updates the stored list of controlIds.
+   *
+   * @private
+   */
+  updateControlsList() {
+    const { store, controlsList } = this;
+    store.set('controlIds', controlsList.map(({ controlId }) => controlId));
   }
 
   /**
@@ -94,11 +113,36 @@ class Project {
   }
 
   /**
+   * Gets a controls list, enumerating all controlIds and some basic sequence settings.
+   *
+   * @returns {Array<Object>}
+   */
+  // TODO how to store ordering of controls if controlsList is generated from object keys?
+  get controlsList() {
+    return Object.keys(this.controls).map((controlId) => {
+      const { controlType, controlName } = this.controls[controlId];
+
+      return {
+        controlId,
+        controlName,
+        controlType,
+      };
+    });
+  }
+
+  /**
    * Gets the sequences object, individual sequences are accessed using the sequenceId as the key.
    *
    * @returns {Object}
    */
   get sequences() { return this.data.sequences; }
+
+  /**
+   * Gets the controls object, individual controls are accessed using the controlId as the key.
+   *
+   * @returns {Object}
+   */
+  get controls() { return this.data.controls; }
 
   /**
    * Gets the project settings.
@@ -211,20 +255,71 @@ class Project {
   }
 
   /**
-   * Deletes the entire project and all sequences within it
+   * Adds a control
+   *
+   * @param {string} controlName
+   * @param {string} controlType
+   */
+  addControl({ controlType, controlName }) {
+    const { store, data } = this;
+    const { controls } = data;
+
+    // Generate a random UUID for the new sequence
+    const newControlId = uuidv4();
+
+    // Create the control object
+    const control = new Control(store, newControlId);
+
+    // Populate the new control with the given initial properties
+    control.controlType = controlType;
+    control.controlName = controlName;
+
+    // Save the control object
+    controls[newControlId] = control;
+
+    this.updateControlsList();
+
+    return control;
+  }
+
+  /**
+   * Deletes a control
+   *
+   * @param {string} controlId
+   */
+  deleteControl(controlId) {
+    const { data } = this;
+    const { controls } = data;
+
+    // if the control doesn't exist, silently move on.
+    if (!(controlId in controls)) {
+      return;
+    }
+
+    const control = controls[controlId];
+    control.delete();
+    delete controls[controlId];
+
+    this.updateControlsList();
+  }
+
+  /**
+   * Deletes the entire project and all sequences and controls within it
    */
   delete() {
     const { data, store } = this;
-    const { sequences } = data;
+    const { sequences, controls } = data;
 
     // delete all sequences
     Object.keys(sequences).forEach(sequenceId => this.deleteSequence(sequenceId));
+    Object.keys(controls).forEach(controlId => this.deleteControl(controlId));
 
     // delete project keys from the store
     store.delete('name');
     store.delete('lastOpened');
     store.delete('settings');
     store.delete('sequenceIds');
+    store.delete('controlIds');
 
     // NOTE: to fully delete a project it needs to be removed from the ProjectStore and state, too.
   }
@@ -246,6 +341,22 @@ class Project {
       .map(({ sequenceId }) => {
         const sequence = this.sequences[sequenceId];
         return sequence.getExportData();
+      });
+  }
+
+  /**
+   * Selects which controls to include in an export and returns them in the export format as a list
+   * of plain objects.
+   *
+   * @return {Array<Object>}
+   */
+  getControlsToExport() {
+    const { controlsList, controls } = this;
+
+    return controlsList
+      .map(({ controlId }) => {
+        const control = controls[controlId];
+        return control.getExportData();
       });
   }
 
@@ -310,40 +421,6 @@ class Project {
   }
 
   /**
-   * Validates the project's orchestration rules settings
-   */
-  validateRulesSettings() {
-    const { data } = this;
-    const { settings } = data;
-    const { zones } = settings;
-
-    const haveZones = (zones && zones.length > 0);
-    const zonesValid = (zones || []).every(({ name, friendlyName }) => !!name && !!friendlyName);
-
-    const warning = false;
-    const error = !haveZones || !zonesValid;
-
-    let message = null;
-
-    if (!haveZones) {
-      message = 'No device tags have been defined.';
-    }
-
-    if (!zonesValid && haveZones) {
-      message = 'Not all tag definitions are valid.';
-    }
-
-    return {
-      key: 'rules',
-      title: 'Device Tags',
-      message,
-      warning,
-      error,
-      projectPage: PAGE_PROJECT_CONTROLS,
-    };
-  }
-
-  /**
    * Validates the entire project, including settings and sequences. Returns a list of report items
    * for groups of settings and each sequence.
    *
@@ -354,11 +431,11 @@ class Project {
     const { sequences } = data;
 
     return [
-      this.validateRulesSettings(),
       this.validatePresentationSettings(),
       this.validateAdvancedSettings(),
       ...Object.keys(sequences).map(sequenceId => sequences[sequenceId].validate()),
     ];
+    // TODO: Validate controls and object behaviours
   }
 }
 

@@ -3,10 +3,15 @@ import path from 'path';
 import templateConfiguration from './templateConfiguration';
 
 const configureTemplateSettings = (args) => {
-  const { sequences, settings, outputDir } = args;
+  const {
+    sequences,
+    controls,
+    settings,
+    outputDir,
+  } = args;
 
   // Generate the configuration JSON string to put in
-  const configuration = templateConfiguration(sequences, settings);
+  const configuration = templateConfiguration(sequences, controls, settings);
 
   // There are two versions of index.html, currently both are the same. Both contain a script
   // tag that sets the configuration and initialises the template.

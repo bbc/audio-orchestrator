@@ -5,133 +5,95 @@ import {
   Container,
   Message,
   Table,
-  Form,
+  Segment,
+  Header,
+  Icon,
 } from 'semantic-ui-react';
-import RequiredTextInput from '../../RequiredTextInput';
-import ConfirmDeleteButton from '../../ConfirmDeleteButton';
+import AddControlButton from './AddControlButton';
+import ControlRow from './ControlRow';
 import {
-  deleteZone,
-  renameZone,
-  addZone,
+  addControl,
+  deleteControl,
+  replaceControlProperty,
 } from '../../../actions/project';
 
-class Controls extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.handleBlur = this.handleBlur.bind(this);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-
-    this.state = { newZoneName: '' };
-  }
-
-  handleBlur(e, zoneId) {
-    const { onRenameZone } = this.props;
-    onRenameZone(zoneId, e.target.value);
-  }
-
-  handleChange(e, { name, value }) {
-    this.setState({ [name]: value });
-  }
-
-  handleSubmit() {
-    const { onAddZone } = this.props;
-    const { newZoneName } = this.state;
-    this.setState({ newZoneName: '' });
-    onAddZone(newZoneName);
-  }
-
-  render() {
-    const {
-      onDeleteZone,
-      zones,
-    } = this.props;
-
-    const { newZoneName } = this.state;
-
-    return (
-      <Container>
-        <Message icon="lightbulb outline" header="Controls" content="The same device tags are used by all sequences in the project. Tag names cannot be changed, but the display name used in the user interface can." />
-        { (zones && zones.length > 0)
-          ? (
-            <Table collapsing relaxed="very">
-              <Table.Header>
-                <Table.Row>
-                  <Table.HeaderCell content="Tag" />
-                  <Table.HeaderCell collapsing content="Display name" />
-                  <Table.HeaderCell collapsing />
-                </Table.Row>
-              </Table.Header>
-              <Table.Body>
-                { zones.map(({ zoneId, name, friendlyName }) => (
-                  <Table.Row key={zoneId}>
-                    <Table.Cell content={<strong>{name}</strong>} />
-                    <Table.Cell>
-                      <RequiredTextInput
-                        defaultValue={friendlyName}
-                        onBlur={e => this.handleBlur(e, zoneId)}
-                      />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <ConfirmDeleteButton
-                        header="Delete tag"
-                        name={name}
-                        onDelete={() => onDeleteZone(zoneId)}
-                      />
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table>
-          )
-          : <Message content="No tags are defined for this project yet." />
-        }
-        <Form onSubmit={this.handleSubmit}>
-          <Form.Input
-            name="newZoneName"
-            onChange={this.handleChange}
-            placeholder="New tag name..."
-            icon="plus"
-            iconPosition="left"
-            value={newZoneName}
-            action={{ content: 'Add tag', primary: true }}
-          />
-        </Form>
-      </Container>
-    );
-  }
-}
+const Controls = ({
+  controlsList,
+  controls,
+  onAddControl,
+  onChangeControl,
+  onDeleteControl,
+}) => (
+  <Container>
+    <Message icon="lightbulb outline" header="Controls" content="Controls are displayed on the listeners' devices so they can make choices that affect object rendering." />
+    { (controlsList.length > 0)
+      ? (
+        <div>
+          <Table relaxed="very">
+            <Table.Header>
+              <Table.Row>
+                <Table.HeaderCell content="Control" />
+                <Table.HeaderCell content="Parameters" />
+                <Table.HeaderCell content="Behaviours" />
+                <Table.HeaderCell collapsing />
+              </Table.Row>
+            </Table.Header>
+            <Table.Body>
+              { controlsList.map(({ controlId, controlName, controlType }) => (
+                <ControlRow
+                  key={controlId}
+                  onDelete={() => onDeleteControl(controlId)}
+                  onChange={(name, value) => onChangeControl(controlId, name, value)}
+                  controlName={controlName}
+                  controlType={controlType}
+                />
+              ))}
+            </Table.Body>
+          </Table>
+          <AddControlButton onAddControl={onAddControl} />
+        </div>
+      )
+      : (
+        <Segment placeholder textAlign="center">
+          <Header icon>
+            <Icon name="tasks" />
+            Add a control to get started.
+          </Header>
+          <AddControlButton onAddControl={onAddControl} />
+        </Segment>
+      )
+    }
+  </Container>
+);
 
 Controls.propTypes = {
-  zones: PropTypes.arrayOf(PropTypes.shape({
-    zoneId: PropTypes.string,
-    name: PropTypes.string,
-    label: PropTypes.string,
-  })),
-  onDeleteZone: PropTypes.func.isRequired,
-  onAddZone: PropTypes.func.isRequired,
-  onRenameZone: PropTypes.func.isRequired,
-};
-
-Controls.defaultProps = {
-  zones: [],
+  controlsList: PropTypes.arrayOf(PropTypes.shape({
+    controlId: PropTypes.string,
+    controlName: PropTypes.string,
+    controlType: PropTypes.string,
+  })).isRequired,
+  controls: PropTypes.shape({}).isRequired,
+  onAddControl: PropTypes.func.isRequired,
+  onChangeControl: PropTypes.func.isRequired,
+  onDeleteControl: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ Project }, { projectId }) => {
   const project = Project.projects[projectId];
-  const { settings } = project;
-  const { zones } = settings;
+  const { controlsList, controls } = project;
 
   return {
-    zones,
+    controlsList,
+    controls,
   };
 };
 
 const mapDispatchToProps = (dispatch, { projectId }) => ({
-  onAddZone: name => dispatch(addZone(projectId, name)),
-  onRenameZone: (zoneId, friendlyName) => dispatch(renameZone(projectId, zoneId, friendlyName)),
-  onDeleteZone: zoneId => dispatch(deleteZone(projectId, zoneId)),
+  onAddControl: (type, name) => dispatch(addControl(projectId, type, name)),
+  onChangeControl: (controlId, name, value) => dispatch(replaceControlProperty(
+    projectId, controlId, name, value,
+  )),
+  onDeleteControl: controlId => dispatch(deleteControl(projectId, controlId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Controls);

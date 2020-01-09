@@ -1,11 +1,13 @@
 import templateConfiguration from '../../src/export-template/templateConfiguration';
 
 describe('templateConfiguration', () => {
+  const controls = [];
+
   it('returns a valid JSON string', () => {
     const sequences = [];
     const settings = {};
 
-    const result = templateConfiguration(sequences, settings);
+    const result = templateConfiguration(sequences, controls, settings);
 
     expect(() => JSON.parse(result)).not.toThrow();
     expect(JSON.parse(result)).toEqual(expect.any(Object));
@@ -19,10 +21,9 @@ describe('templateConfiguration', () => {
 
     const settings = {
       joiningLink: 'http://example.com',
-      zones: [],
     };
 
-    const result = JSON.parse(templateConfiguration(sequences, settings));
+    const result = JSON.parse(templateConfiguration(sequences, controls, settings));
 
     expect(result).toEqual(expect.objectContaining({
       JOIN_URL: settings.joiningLink,
@@ -36,15 +37,12 @@ describe('templateConfiguration', () => {
 
   it('sets the cloudsync endpoint if set', () => {
     const sequences = [];
-    const baseSettings = {
-      zones: [],
-    };
 
-    const result1 = JSON.parse(templateConfiguration(sequences, baseSettings));
+    const result1 = JSON.parse(templateConfiguration(sequences, controls, {}));
     const result2 = JSON.parse(templateConfiguration(
       sequences,
+      controls,
       {
-        ...baseSettings,
         cloudSyncHostname: 'localhost',
       },
     ));
@@ -78,7 +76,7 @@ describe('templateConfiguration', () => {
       accentColour: '#ffcc33',
     };
 
-    const result = JSON.parse(templateConfiguration(sequences, settings));
+    const result = JSON.parse(templateConfiguration(sequences, controls, settings));
 
     expect(result).toEqual(expect.objectContaining({
       TEXT_TITLE: expect.any(String),

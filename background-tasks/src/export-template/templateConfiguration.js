@@ -1,14 +1,7 @@
 const formatContentId = sequenceId => `bbcat-orchestration:${sequenceId}`;
 
-const templateConfiguration = (sequences, settings) => {
+const templateConfiguration = (sequences, controls, settings) => {
   const introSequence = sequences.find(({ isIntro }) => isIntro) || sequences[0] || {};
-
-  // TODO: get actual control metadata from the settings and create it in the frontend
-  // Translate tag (here still called zone) metadata to a single control
-  const tagControlOptions = (settings.zones || []).map(({ name, friendlyName }) => ({
-    value: name,
-    label: friendlyName,
-  }));
 
   const configuration = {
     JOIN_URL: settings.joiningLink,
@@ -31,22 +24,21 @@ const templateConfiguration = (sequences, settings) => {
         label: option.label,
       })),
     })),
-    CONTROLS: [
-      {
-        controlId: 'tag',
-        controlName: 'Tag',
-        controlType: 'radio',
-        controlDefaultValues: ['none'],
-        controlParameters: {
-          options: tagControlOptions,
-        },
-        controlBehaviours: [
-          { behaviourType: 'spread' },
-          { behaviourType: 'auxDevicesOnly' },
-          { behaviourType: 'allowedEverywhere' },
-        ],
-      },
-    ],
+    CONTROLS: controls.map(({
+      controlId,
+      controlName,
+      controlType,
+      controlDefaultValues,
+      controlParameters,
+      controlBehaviours,
+    }) => ({
+      controlId,
+      controlName,
+      controlType,
+      controlDefaultValues,
+      controlParameters,
+      controlBehaviours,
+    })),
   };
 
   if (settings.cloudSyncHostname) {
