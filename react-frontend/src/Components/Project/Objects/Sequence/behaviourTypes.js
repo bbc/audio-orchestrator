@@ -90,21 +90,32 @@ const behaviourTypes = [
   {
     name: 'onChange',
     displayName: 'on change',
-    description: 'Determines when the object can start playing, and if it can or should move between devices when devices join or leave, or when a control value changes.',
+    description: 'Determines what happens to the object when devices join or leave, or when a control value changes.',
     multiple: false,
     color: 'violet',
     parameters: [
       {
         name: 'start',
-        type: 'onChangeStart',
-        description: 'One of canAlwaysStart, canNeverRestart, canOnlyStartOnFirstRun.',
+        type: 'enum',
+        description: 'Determines when the object can start playing.',
         defaultValue: 'canAlwaysStart',
+        allowedValues: [
+          { value: 'canAlwaysStart', displayName: 'Can always start' },
+          { value: 'canNeverStart', displayName: 'Can never start' },
+          { value: 'canOnlyStartOnFirstRun', displayName: 'Can only start on first run' },
+        ],
       },
       {
         name: 'allocate',
-        type: 'onChangeAllocate',
-        description: 'A list of all enabled allocate options, from: moveToPreferred, stayInPrevious, moveToAllowedNotPrevious, moveToAllowed.',
+        type: 'listOfEnum',
+        description: 'Determines when the object can or should move to another device.',
         defaultValue: ['moveToPreferred', 'stayInPrevious', 'moveToAllowedNotPrevious', 'moveToAllowed'],
+        allowedValues: [
+          { value: 'moveToPreferred', displayName: 'Move to preferred' },
+          { value: 'stayInPrevious', displayName: 'Stay in previous' },
+          { value: 'moveToAllowedNotPrevious', displayName: 'Move to allowed - not previous' },
+          { value: 'moveToAllowed', displayName: 'Move to allowed' },
+        ],
       },
     ],
   },

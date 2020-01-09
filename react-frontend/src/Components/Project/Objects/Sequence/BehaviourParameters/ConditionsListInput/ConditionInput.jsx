@@ -8,102 +8,13 @@ import {
   List,
   Input,
 } from 'semantic-ui-react';
-
-// TODO sessionProperties don't yet have a schema; implementation is here:
-// bbcat-orchestration/blob/master/src/mdo-allocation/mdo-allocator.js
-const sessionProperties = [
-  {
-    name: 'currentContentId',
-    type: 'string', // TODO: actually represents a sequence id
-  },
-  {
-    name: 'numDevices',
-    type: 'integer',
-  },
-];
-
-// TODO define deviceProperties in a separate file, and automatically generate it from the schema
-// As specified in bbcat-orchestration/schemas/device.json
-const deviceProperties = [
-  {
-    name: 'deviceId',
-    displayName: 'deviceId',
-    description: 'Unique identifier for this device, automatically generated',
-    type: 'string',
-  },
-  {
-    name: 'deviceIsMain',
-    displayName: 'deviceIsMain',
-    description: 'True if this device is the main device (the device that manages playback and allocations)',
-    type: 'boolean',
-  },
-  {
-    name: 'deviceType',
-    displayName: 'deviceType',
-    description: 'Device type as detected by the application',
-    type: 'string',
-  },
-  {
-    name: 'deviceJoiningNumber',
-    displayName: 'deviceJoiningNumber',
-    description: 'Original position in the joining order, 1-based',
-    type: 'integer',
-  },
-  {
-    name: 'deviceCurrentNumber',
-    displayName: 'deviceCurrentNumber',
-    description: 'Current position in the joining order, 1-based',
-    type: 'integer',
-  },
-  {
-    name: 'deviceLatency',
-    displayName: 'deviceLatency',
-    description: 'Emission delay, in milliseconds, if known',
-    type: 'integer',
-  },
-  {
-    name: 'deviceGain',
-    displayName: 'deviceGain',
-    description: 'Calibration gain multiplier to be applied to the output from the device, if known',
-    type: 'number',
-  },
-];
-
-// Based on bbcat-orchestration/src/allocation-algorithm/behaviours/conditionals.js
-const operators = [
-  {
-    name: 'equals',
-    valueIsArray: false,
-  },
-  {
-    name: 'lessThan',
-    valueIsArray: false,
-  },
-  {
-    name: 'lessThanOrEqual',
-    valueIsArray: false,
-  },
-  {
-    name: 'greaterThan',
-    valueIsArray: false,
-  },
-  {
-    name: 'greaterThanOrEqual',
-    valueIsArray: false,
-  },
-  {
-    name: 'anyOf',
-    valueIsArray: true,
-  },
-  {
-    name: 'moduloIsZero',
-    valueIsArray: false,
-  },
-];
+import operators from './operators';
+import deviceProperties from './deviceProperties';
+import sessionProperties from './sessionProperties';
 
 const operatorOptions = operators.map(({ name, displayName }) => ({
   key: name,
-  text: displayName || name,
+  text: displayName,
   value: name,
 }));
 
@@ -153,7 +64,7 @@ class ConditionInput extends React.PureComponent {
     // by taking the first element of an array or creating a 1-element array.
     if (fieldName === 'operator') {
       const { valueIsArray } = operators.find(o => o.name === fieldValue) || {};
-      const v = fieldValue;
+      const v = newValue.value;
       if (valueIsArray) {
         newValue.value = Array.isArray(v) ? v : [v];
       } else {

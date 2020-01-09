@@ -7,20 +7,21 @@ import {
 } from 'semantic-ui-react';
 import GainInput from './GainInput';
 import ConditionsListInput from './ConditionsListInput';
-import OnChangeStartInput from './OnChangeStartInput';
-import OnChangeAllocateInput from './OnChangeAllocateInput';
+import EnumInput from './EnumInput';
+import ListOfEnumInput from './ListOfEnumInput';
 
 const inputComponents = {
   gain: GainInput,
   conditionsList: ConditionsListInput,
-  onChangeStart: OnChangeStartInput,
-  onChangeAllocate: OnChangeAllocateInput,
+  enum: EnumInput,
+  listOfEnum: ListOfEnumInput,
 };
 
 const BehaviourParameter = React.memo(({
   name,
   description,
   type,
+  allowedValues,
   value,
   onChange,
 }) => {
@@ -32,6 +33,7 @@ const BehaviourParameter = React.memo(({
       <Table.Cell content={name} />
       <Table.Cell>
         <InputComponent
+          allowedValues={allowedValues}
           value={value}
           onChange={onChange}
         />
@@ -47,12 +49,17 @@ BehaviourParameter.propTypes = {
   name: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,
   type: PropTypes.string.isRequired,
+  allowedValues: PropTypes.arrayOf(PropTypes.shape({})),
   value: PropTypes.oneOfType([
     PropTypes.number,
     PropTypes.string,
     PropTypes.arrayOf(PropTypes.shape({})),
     PropTypes.arrayOf(PropTypes.string),
   ]).isRequired,
+};
+
+BehaviourParameter.defaultProps = {
+  allowedValues: [],
 };
 
 export default BehaviourParameter;
