@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-background-tasks",
-  "version": "2.0.0-dev.8",
+  "version": "2.0.0-dev.9",
   "description": "Methods for analysing, encoding, and packaging files to create orchestrated experiences.",
   "main": "dist/index.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
@@ -33,7 +33,7 @@
     "build": "npm run clean && mkdir ./dist/ && babel src -s -d dist",
     "clean": "rm -rf ./dist/",
     "test": "jest --coverage",
-    "lint": "eslint src/ --fix",
+    "lint": "eslint src/",
     "watch": "jest --watch"
   },
   "jest": {
