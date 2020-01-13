@@ -23,8 +23,8 @@ const SequenceHeader = ({
   onReplaceAudioFiles,
   sequenceAudioError,
   sequenceAudioConfirmation,
-  expandTable,
-  onSetExpanded,
+  // expandTable,
+  // onSetExpanded,
 }) => {
   if (!haveFiles) {
     return (
@@ -80,8 +80,8 @@ SequenceHeader.propTypes = {
   sequenceAudioError: PropTypes.string,
   sequenceAudioConfirmation: PropTypes.string,
   onReplaceAudioFiles: PropTypes.func.isRequired,
-  expandTable: PropTypes.bool.isRequired,
-  onSetExpanded: PropTypes.func.isRequired,
+  // expandTable: PropTypes.bool.isRequired,
+  // onSetExpanded: PropTypes.func.isRequired,
 };
 
 SequenceHeader.defaultProps = {
@@ -99,14 +99,14 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
   const {
     sequenceAudioError,
     sequenceAudioConfirmation,
-    expandTable,
+    // expandTable,
   } = UI;
 
   return {
     haveFiles: (filesList && filesList.length > 0),
     sequenceAudioConfirmation,
     sequenceAudioError,
-    expandTable,
+    // expandTable,
   };
 };
 

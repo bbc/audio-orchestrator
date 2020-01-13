@@ -1,5 +1,5 @@
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Card,
@@ -12,7 +12,6 @@ import {
 } from '../../../actions/project';
 
 const ProjectItem = ({
-  projectId,
   name,
   onOpen,
   onDelete,
@@ -28,11 +27,12 @@ const ProjectItem = ({
   </Card>
 );
 
-//    <Card.Content extra>
-//      <Icon loading name="spinner" />
-//      Encoding audio segments&hellip;
-//    </Card.Content>
-//    <Progress percent={74} attached="bottom" color="green" />
+ProjectItem.propTypes = {
+  name: PropTypes.string.isRequired,
+  onOpen: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+};
+
 const mapDispatchToProps = (dispatch, { projectId }) => ({
   onOpen: () => dispatch(requestOpenProject(projectId)),
   onDelete: () => dispatch(requestDeleteProject(projectId)),

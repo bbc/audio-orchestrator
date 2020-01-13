@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Modal,
@@ -83,12 +84,32 @@ const ExportModal = ({
   );
 };
 
+ExportModal.propTypes = {
+  title: PropTypes.string.isRequired,
+  stepTitle: PropTypes.string.isRequired,
+  error: PropTypes.string,
+  running: PropTypes.bool.isRequired,
+  complete: PropTypes.bool.isRequired,
+  failed: PropTypes.bool.isRequired,
+  progressPercent: PropTypes.number.isRequired,
+  closed: PropTypes.bool.isRequired,
+  outputPath: PropTypes.string,
+  cancelExport: PropTypes.func.isRequired,
+  openInFolder: PropTypes.func.isRequired,
+  openUrl: PropTypes.func.isRequired,
+};
+
+ExportModal.defaultProps = {
+  error: null,
+  outputPath: null,
+};
+
 const mapStateToProps = ({ Export }) => ({
   ...Export,
 });
 
 const mapDispatchToProps = dispatch => ({
-  cancelExport: () => { console.log('cancelExport'); dispatch(requestCancelExport()); },
+  cancelExport: () => dispatch(requestCancelExport()),
   openInFolder: path => dispatch(requestOpenInFolder(path)),
   openUrl: url => dispatch(requestOpenUrl(url)),
 });

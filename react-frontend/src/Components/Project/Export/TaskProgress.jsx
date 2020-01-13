@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
 import {
@@ -39,6 +40,13 @@ const TaskProgress = ({
       <Table.Cell />
     </Table.Row>
   );
+};
+
+TaskProgress.propTypes = {
+  name: PropTypes.string.isRequired,
+  started: PropTypes.bool.isRequired,
+  completed: PropTypes.number.isRequired,
+  total: PropTypes.number.isRequired,
 };
 
 const mapStateToProps = ({ UI }, { taskIds }) => {

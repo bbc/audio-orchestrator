@@ -117,7 +117,9 @@ class ConditionInput extends React.PureComponent {
         allowedoperators: allowedOperators,
         type: 'string',
       })),
-      ...deviceProperties.map(({ name, displayName, type, allowedOperators }) => ({
+      ...deviceProperties.map(({
+        name, displayName, type, allowedOperators,
+      }) => ({
         key: `device.${name}`,
         value: `device.${name}`,
         text: displayName || name,
@@ -131,7 +133,9 @@ class ConditionInput extends React.PureComponent {
         allowedoperators: allowedOperators,
         type,
       })),
-      ...sessionProperties.map(({ name, displayName, type, allowedOperators }) => ({
+      ...sessionProperties.map(({
+        name, displayName, type, allowedOperators,
+      }) => ({
         key: `session.${name}`,
         value: `session.${name}`,
         text: displayName || name,

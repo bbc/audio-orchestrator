@@ -1,6 +1,6 @@
 /* global VERSION */
 import React from 'react';
-// import PropTypes from 'prop-types';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Container,
@@ -11,8 +11,6 @@ import {
   Header,
   Icon,
   Button,
-  Dimmer,
-  Loader,
 } from 'semantic-ui-react';
 import ProjectsList from './ProjectsList';
 import DeveloperMenu from './DeveloperMenu';
@@ -25,6 +23,7 @@ import {
 } from '../../actions/project';
 
 class Home extends React.Component {
+  // TODO Do we need to request loading things from within the component?
   componentDidMount() {
     const {
       onRequestListProjects,
@@ -41,15 +40,10 @@ class Home extends React.Component {
       allowFileOpen,
       projectsList,
       projectsListLoading,
-      projectLoading,
     } = this.props;
 
     return (
       <Container>
-        <Dimmer inverted active={projectLoading}>
-          <Loader />
-        </Dimmer>
-
         <Menu inverted color="blue" attached="bottom">
           <Menu.Item header>Home</Menu.Item>
           <Menu.Menu position="right">
@@ -95,16 +89,26 @@ class Home extends React.Component {
   }
 }
 
+Home.propTypes = {
+  onRequestListProjects: PropTypes.func.isRequired,
+  onCheckFileOpen: PropTypes.func.isRequired,
+  onOpenProject: PropTypes.func.isRequired,
+  onCreateProject: PropTypes.func.isRequired,
+  allowFileOpen: PropTypes.bool.isRequired,
+  projectsList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  projectsListLoading: PropTypes.bool.isRequired,
+};
+
 const mapStateToProps = state => ({
   allowFileOpen: state.Project.allowFileOpen,
   projectsListLoading: state.Project.projectsListLoading,
   projectsList: state.Project.projectsList,
-  projectLoading: state.Project.loading,
 });
 
 const mapDispatchToProps = dispatch => ({
   onOpenProject: () => dispatch(requestOpenProject()),
-  onCreateProject: () => dispatch(requestCreateProject()), // TODO actually, open a modal to enter a name first?
+  // TODO actually, open a modal to enter a name first?
+  onCreateProject: () => dispatch(requestCreateProject()),
   onRequestListProjects: () => dispatch(requestListProjects()),
   onCheckFileOpen: () => dispatch(checkFileOpen()),
 });

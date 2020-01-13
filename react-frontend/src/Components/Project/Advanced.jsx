@@ -78,6 +78,14 @@ Advanced.propTypes = {
   cloudSyncPort: PropTypes.string,
 };
 
+// TODO determine if these are sensible defaults, or if they could be made required.
+Advanced.defaultProps = {
+  joiningLink: undefined,
+  cloudSyncHostname: undefined,
+  baseUrl: undefined,
+  cloudSyncPort: undefined,
+};
+
 const mapStateToProps = (state, { projectId }) => {
   const project = state.Project.projects[projectId];
 
