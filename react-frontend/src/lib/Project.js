@@ -274,6 +274,33 @@ class Project {
     control.controlType = controlType;
     control.controlName = controlName;
 
+    // By default, the control is allowed on all sequences and all deviceTypes
+    // Use an inverted condition to prohibit some sequences, so we don't need to list all sequences
+    // here, and so that any new sequence is automatically allowed unless manually removed.
+    control.controlBehaviours = [
+      {
+        behaviourId: uuidv4(),
+        behaviourType: 'allowedIf',
+        behaviourParameters: {
+          conditions: [
+            {
+              conditionId: uuidv4(),
+              property: 'device.deviceIsMain',
+              operator: 'oneOf',
+              value: [true, false],
+            },
+            {
+              conditionId: uuidv4(),
+              property: 'session.currentContentId',
+              operator: 'oneOf',
+              value: [],
+              invertCondition: true,
+            },
+          ],
+        },
+      },
+    ];
+
     // Save the control object
     controls[newControlId] = control;
 

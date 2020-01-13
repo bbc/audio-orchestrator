@@ -20,6 +20,7 @@ import {
 const Controls = ({
   controlsList,
   controls,
+  sequencesList,
   onAddControl,
   onChangeControl,
   onDeleteControl,
@@ -34,18 +35,19 @@ const Controls = ({
               <Table.Row>
                 <Table.HeaderCell content="Control" />
                 <Table.HeaderCell content="Parameters" />
-                <Table.HeaderCell content="Behaviours" />
+                <Table.HeaderCell content="Devices" />
+                <Table.HeaderCell content="Sequences" />
                 <Table.HeaderCell collapsing />
               </Table.Row>
             </Table.Header>
             <Table.Body>
-              { controlsList.map(({ controlId, controlName, controlType }) => (
+              { controlsList.map(({ controlId }) => (
                 <ControlRow
                   key={controlId}
                   onDelete={() => onDeleteControl(controlId)}
                   onChange={(name, value) => onChangeControl(controlId, name, value)}
-                  controlName={controlName}
-                  controlType={controlType}
+                  {...controls[controlId]}
+                  sequencesList={sequencesList}
                 />
               ))}
             </Table.Body>
@@ -73,6 +75,10 @@ Controls.propTypes = {
     controlType: PropTypes.string,
   })).isRequired,
   controls: PropTypes.shape({}).isRequired,
+  sequencesList: PropTypes.arrayOf(PropTypes.shape({
+    sequenceId: PropTypes.string,
+    name: PropTypes.string,
+  })).isRequired,
   onAddControl: PropTypes.func.isRequired,
   onChangeControl: PropTypes.func.isRequired,
   onDeleteControl: PropTypes.func.isRequired,
@@ -80,11 +86,12 @@ Controls.propTypes = {
 
 const mapStateToProps = ({ Project }, { projectId }) => {
   const project = Project.projects[projectId];
-  const { controlsList, controls } = project;
+  const { controlsList, controls, sequencesList } = project;
 
   return {
     controlsList,
     controls,
+    sequencesList,
   };
 };
 
