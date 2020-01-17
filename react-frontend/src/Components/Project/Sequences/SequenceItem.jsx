@@ -4,6 +4,8 @@ import PropTypes from 'prop-types';
 import {
   Card,
   Button,
+  Grid,
+  Header,
 } from 'semantic-ui-react';
 import EditableText from '../EditableText';
 import ConfirmDeleteButton from '../../ConfirmDeleteButton';
@@ -11,7 +13,7 @@ import SequenceSettings from './SequenceSettings';
 import SequenceChoices from './SequenceChoices';
 import { setSequenceSetting } from '../../../actions/project';
 
-
+// TODO: The EditableText is very large when it's clicked
 const SequenceItem = ({
   name,
   onOpen,
@@ -22,16 +24,26 @@ const SequenceItem = ({
   onSetName,
 }) => (
   <Card color="green">
-    <Card.Content>
-      <Card.Header content={<EditableText value={name} onChange={onSetName} />} />
-      { isIntro ? <Card.Meta content="Initial sequence, the story begins here." /> : null }
+    <Card.Content style={{ flexGrow: 0 }}>
+      <Grid columns="equal">
+        <Grid.Column key={1} width={10}>
+          <Header>
+            {<EditableText value={name} onChange={onSetName} />}
+            <Header.Subheader>
+              { isIntro ? <Card.Meta content="Initial sequence, the story begins here." /> : null }
+            </Header.Subheader>
+          </Header>
+        </Grid.Column>
+
+        <Grid.Column key={2} textAlign="right">
+          <SequenceSettings sequenceId={sequenceId} projectId={projectId} />
+        </Grid.Column>
+      </Grid>
+
     </Card.Content>
 
     <Card.Content>
-      <SequenceSettings sequenceId={sequenceId} projectId={projectId} />
-    </Card.Content>
-
-    <Card.Content>
+      <Header size="small" content="Set sequence choices" />
       <SequenceChoices sequenceId={sequenceId} projectId={projectId} />
     </Card.Content>
 

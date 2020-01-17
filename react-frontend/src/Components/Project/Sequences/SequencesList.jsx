@@ -20,7 +20,7 @@ const SequencesList = ({
   onDeleteSequence,
   projectId,
 }) => (
-  <Card.Group stackable itemsPerRow={1}>
+  <Card.Group stackable doubling itemsPerRow={2}>
     {sequencesList.map(({
       sequenceId,
       name,

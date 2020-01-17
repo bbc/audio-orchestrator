@@ -129,7 +129,7 @@ class SequenceChoices extends React.Component {
 
     return (
       <Container>
-        <Table collapsing>
+        <Table collapsing size="small">
           <Table.Header>
             <Table.Row>
               <Table.HeaderCell content="Choice Label" />
