@@ -99,8 +99,8 @@ class Control {
       controlName,
       controlType,
       controlDefaultValues,
-      controlParameters, // TODO: remove parameterId?
-      controlBehaviours, // TODO: remove behaviourId?
+      controlParameters,
+      controlBehaviours,
     };
   }
 

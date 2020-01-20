@@ -991,9 +991,20 @@ export const replaceObjectBehaviourParameters = (
   dispatch(loadSequenceObjects(projectId, sequenceId));
 };
 
-export const addControl = (projectId, controlType, controlName) => (dispatch) => {
+export const addControl = (
+  projectId,
+  controlType,
+  controlName,
+  controlParameters,
+  controlDefaultValues,
+) => (dispatch) => {
   const project = projects[projectId];
-  project.addControl({ controlType, controlName });
+  project.addControl({
+    controlType,
+    controlName,
+    controlParameters,
+    controlDefaultValues,
+  });
 
   // reload the controls to update the UI
   dispatch(loadControls(projectId));

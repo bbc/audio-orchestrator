@@ -4,13 +4,13 @@ import PropTypes from 'prop-types';
 import {
   Container,
   Message,
-  Table,
+  Card,
   Segment,
   Header,
   Icon,
 } from 'semantic-ui-react';
 import AddControlButton from './AddControlButton';
-import ControlRow from './ControlRow';
+import ControlCard from './ControlCard';
 import {
   addControl,
   deleteControl,
@@ -29,31 +29,25 @@ const Controls = ({
     <Message icon="lightbulb outline" header="Controls" content="Controls are displayed on the listeners' devices so they can make choices that affect object rendering." />
     { (controlsList.length > 0)
       ? (
-        <div>
-          <Table relaxed="very">
-            <Table.Header>
-              <Table.Row>
-                <Table.HeaderCell content="Control" />
-                <Table.HeaderCell content="Parameters" />
-                <Table.HeaderCell content="Devices" />
-                <Table.HeaderCell content="Sequences" />
-                <Table.HeaderCell collapsing />
-              </Table.Row>
-            </Table.Header>
-            <Table.Body>
-              { controlsList.map(({ controlId }) => (
-                <ControlRow
-                  key={controlId}
-                  onDelete={() => onDeleteControl(controlId)}
-                  onChange={(name, value) => onChangeControl(controlId, name, value)}
-                  {...controls[controlId]}
-                  sequencesList={sequencesList}
-                />
-              ))}
-            </Table.Body>
-          </Table>
-          <AddControlButton onAddControl={onAddControl} />
-        </div>
+        <Card.Group stackable doubling itemsPerRow={2}>
+          { controlsList.map(({ controlId }) => (
+            <ControlCard
+              key={controlId}
+              onDelete={() => onDeleteControl(controlId)}
+              onChange={(name, value) => onChangeControl(controlId, name, value)}
+              {...controls[controlId]}
+              sequencesList={sequencesList}
+            />
+          ))}
+          <Card key="add-control">
+            <Card.Content>
+              <Segment placeholder textAlign="center">
+                <Header content="More controls" subheader="You can add as many controls as you like..." />
+                <AddControlButton onAddControl={onAddControl} />
+              </Segment>
+            </Card.Content>
+          </Card>
+        </Card.Group>
       )
       : (
         <Segment placeholder textAlign="center">
@@ -96,7 +90,9 @@ const mapStateToProps = ({ Project }, { projectId }) => {
 };
 
 const mapDispatchToProps = (dispatch, { projectId }) => ({
-  onAddControl: (type, name) => dispatch(addControl(projectId, type, name)),
+  onAddControl: (type, name, parameters, defaultValues) => dispatch(
+    addControl(projectId, type, name, parameters, defaultValues),
+  ),
   onChangeControl: (controlId, name, value) => dispatch(replaceControlProperty(
     projectId, controlId, name, value,
   )),

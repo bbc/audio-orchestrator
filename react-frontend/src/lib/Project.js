@@ -260,7 +260,12 @@ class Project {
    * @param {string} controlName
    * @param {string} controlType
    */
-  addControl({ controlType, controlName }) {
+  addControl({
+    controlType,
+    controlName,
+    controlParameters,
+    controlDefaultValues,
+  }) {
     const { store, data } = this;
     const { controls } = data;
 
@@ -273,11 +278,20 @@ class Project {
     // Populate the new control with the given initial properties
     control.controlType = controlType;
     control.controlName = controlName;
+    control.controlParameters = controlParameters;
+    control.controlDefaultValues = controlDefaultValues;
 
     // By default, the control is allowed on all sequences and all deviceTypes
     // Use an inverted condition to prohibit some sequences, so we don't need to list all sequences
     // here, and so that any new sequence is automatically allowed unless manually removed.
     control.controlBehaviours = [
+      {
+        behaviourId: uuidv4(),
+        behaviourType: 'spread',
+        behaviourParameters: {
+          perDeviceGainAdjust: 1.0, // this has no effect for controls
+        },
+      },
       {
         behaviourId: uuidv4(),
         behaviourType: 'allowedIf',

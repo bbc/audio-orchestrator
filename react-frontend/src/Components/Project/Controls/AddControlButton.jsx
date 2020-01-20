@@ -10,16 +10,27 @@ const AddControlButton = React.memo(({
   onAddControl,
 }) => {
   const options = controlTypes.map(({
-    name,
+    name: controlType,
     displayName,
     icon,
+    parameters = [],
   }) => ({
-    key: name,
-    value: name,
-    text: displayName || name,
+    key: controlType,
+    value: controlType,
+    text: displayName || controlType,
     icon: icon || null,
     onClick: () => {
-      onAddControl(name, `New ${displayName || name} control`);
+      const controlParameters = {};
+      parameters.forEach(({ name: parameterName, defaultValue }) => {
+        controlParameters[parameterName] = defaultValue;
+      });
+
+      onAddControl(
+        controlType,
+        `New ${displayName || controlType} control`,
+        controlParameters,
+        [],
+      );
     },
   }));
 

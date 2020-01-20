@@ -29,7 +29,7 @@ const EnumInput = React.memo(({
 
 EnumInput.propTypes = {
   allowedValues: PropTypes.arrayOf(PropTypes.shape({
-    name: PropTypes.string,
+    value: PropTypes.string,
     displayName: PropTypes.string,
   })).isRequired,
   value: PropTypes.string.isRequired,
