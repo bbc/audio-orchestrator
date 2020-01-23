@@ -15,52 +15,85 @@ import {
   addControl,
   deleteControl,
   replaceControlProperty,
+  swapControlOrder,
 } from '../../../actions/project';
 
-const Controls = ({
-  controlsList,
-  controls,
-  sequencesList,
-  onAddControl,
-  onChangeControl,
-  onDeleteControl,
-}) => (
-  <Container>
-    <Message icon="lightbulb outline" header="Controls" content="Controls are displayed on the listeners' devices so they can make choices that affect object rendering." />
-    { (controlsList.length > 0)
-      ? (
-        <Card.Group stackable doubling itemsPerRow={2}>
-          { controlsList.map(({ controlId }) => (
-            <ControlCard
-              key={controlId}
-              onDelete={() => onDeleteControl(controlId)}
-              onChange={(name, value) => onChangeControl(controlId, name, value)}
-              {...controls[controlId]}
-              sequencesList={sequencesList}
-            />
-          ))}
-          <Card key="add-control">
-            <Card.Content>
-              <Segment placeholder textAlign="center">
-                <Header content="More controls" subheader="You can add as many controls as you like..." />
-                <AddControlButton onAddControl={onAddControl} />
-              </Segment>
-            </Card.Content>
-          </Card>
-        </Card.Group>
-      )
-      : (
-        <Segment placeholder textAlign="center">
-          <Header icon>
-            <Icon name="tasks" />
-            Add a control to get started.
-          </Header>
-          <AddControlButton onAddControl={onAddControl} />
-        </Segment>
-      )
+class Controls extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.handleMoveControl = this.handleMoveControl.bind(this);
+  }
+
+  handleMoveControl(i, direction) {
+    const {
+      controlsList,
+      onSwapControlOrder,
+    } = this.props;
+
+    const {
+      controlId,
+    } = controlsList[i];
+
+    const {
+      controlId: otherControlId,
+    } = controlsList[Math.max(0, Math.min(i + direction, controlsList.length - 1))];
+
+    if (controlId !== otherControlId) {
+      onSwapControlOrder(controlId, otherControlId);
     }
-  </Container>
-);
+  }
+
+  render() {
+    const {
+      controlsList,
+      controls,
+      sequencesList,
+      onAddControl,
+      onChangeControl,
+      onDeleteControl,
+    } = this.props;
+
+    return (
+      <Container>
+        <Message icon="lightbulb outline" header="Controls" content="Controls are displayed on the listeners' devices so they can make choices that affect object rendering." />
+        { (controlsList.length > 0)
+          ? (
+            <Card.Group stackable doubling itemsPerRow={2}>
+              { controlsList.map(({ controlId }, i) => (
+                <ControlCard
+                  key={controlId}
+                  onDelete={() => onDeleteControl(controlId)}
+                  onChange={(name, value) => onChangeControl(controlId, name, value)}
+                  {...controls[controlId]}
+                  sequencesList={sequencesList}
+                  onMove={direction => this.handleMoveControl(i, direction)}
+                />
+              ))}
+              <Card key="add-control">
+                <Card.Content>
+                  <Segment placeholder textAlign="center">
+                    <Header content="More controls" subheader="You can add as many controls as you like..." />
+                    <AddControlButton onAddControl={onAddControl} />
+                  </Segment>
+                </Card.Content>
+              </Card>
+            </Card.Group>
+          )
+          : (
+            <Segment placeholder textAlign="center">
+              <Header icon>
+                <Icon name="tasks" />
+                Add a control to get started.
+              </Header>
+              <AddControlButton onAddControl={onAddControl} />
+            </Segment>
+          )
+        }
+      </Container>
+    );
+  }
+}
 
 Controls.propTypes = {
   controlsList: PropTypes.arrayOf(PropTypes.shape({
@@ -76,6 +109,7 @@ Controls.propTypes = {
   onAddControl: PropTypes.func.isRequired,
   onChangeControl: PropTypes.func.isRequired,
   onDeleteControl: PropTypes.func.isRequired,
+  onSwapControlOrder: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = ({ Project }, { projectId }) => {
@@ -90,11 +124,14 @@ const mapStateToProps = ({ Project }, { projectId }) => {
 };
 
 const mapDispatchToProps = (dispatch, { projectId }) => ({
-  onAddControl: (type, name, parameters, defaultValues) => dispatch(
-    addControl(projectId, type, name, parameters, defaultValues),
-  ),
+  onAddControl: (type, name, parameters, defaultValues) => dispatch(addControl(
+    projectId, type, name, parameters, defaultValues,
+  )),
   onChangeControl: (controlId, name, value) => dispatch(replaceControlProperty(
     projectId, controlId, name, value,
+  )),
+  onSwapControlOrder: (controlId, otherControlId) => dispatch(swapControlOrder(
+    projectId, controlId, otherControlId,
   )),
   onDeleteControl: controlId => dispatch(deleteControl(projectId, controlId)),
 });

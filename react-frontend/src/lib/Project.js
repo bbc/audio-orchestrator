@@ -53,7 +53,8 @@ class Project {
 
     // get controls listed in controlIds
     data.controls = {};
-    store.get('controlIds', []).forEach((controlId) => {
+    data.controlIds = store.get('controlIds', []);
+    data.controlIds.forEach((controlId) => {
       data.controls[controlId] = new Control(store, controlId);
     });
 
@@ -80,8 +81,10 @@ class Project {
    * @private
    */
   updateControlsList() {
-    const { store, controlsList } = this;
-    store.set('controlIds', controlsList.map(({ controlId }) => controlId));
+    const { data, store, controlsList } = this;
+
+    data.controlIds = controlsList.map(({ controlId }) => controlId);
+    store.set('controlIds', data.controlIds);
   }
 
   /**
@@ -117,17 +120,43 @@ class Project {
    *
    * @returns {Array<Object>}
    */
-  // TODO how to store ordering of controls if controlsList is generated from object keys?
   get controlsList() {
-    return Object.keys(this.controls).map((controlId) => {
-      const { controlType, controlName } = this.controls[controlId];
+    const { controlIds, controls } = this.data;
 
-      return {
-        controlId,
-        controlName,
-        controlType,
-      };
-    });
+    // Remove any controls that have been deleted
+    // Then get the extra data for the remaining controlIds
+    return controlIds
+      .filter(controlId => controlId in controls)
+      .map((controlId) => {
+        const { controlType, controlName } = this.controls[controlId];
+
+        return {
+          controlId,
+          controlName,
+          controlType,
+        };
+      });
+  }
+
+  /**
+   * Swaps the position of the given controlIds in the list of controls
+   *
+   * @param {string} controlId
+   * @param {string} otherControlId
+   */
+  swapControlOrder(controlId, otherControlId) {
+    const { controlIds } = this.data;
+
+    const index = controlIds.indexOf(controlId);
+    const otherIndex = controlIds.indexOf(otherControlId);
+
+    // Only update if both controlIds are found
+    if (index > -1 && otherIndex > -1) {
+      controlIds[index] = otherControlId;
+      controlIds[otherIndex] = controlId;
+
+      this.updateControlsList();
+    }
   }
 
   /**

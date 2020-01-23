@@ -1033,64 +1033,10 @@ export const replaceControlProperty = (projectId, controlId, name, value) => (di
   dispatch(loadControls(projectId));
 };
 
-// TODO remove
-export const addZone = (projectId, name) => (dispatch) => {
+export const swapControlOrder = (projectId, controlId, otherControlId) => (dispatch) => {
   const project = projects[projectId];
-  const { settings } = project;
-  const zones = settings.zones || [];
 
-  if (!name) {
-    dispatch(setAppWarning('The tag name cannot be empty. Please enter a name.'));
-    return;
-  }
+  project.swapControlOrder(controlId, otherControlId);
 
-  if (zones.some(z => z.name === name)) {
-    dispatch(setAppWarning(`The tag '${name}' already exists. Tag names have to be unique.`));
-    return;
-  }
-
-  dispatch(setProjectSetting(
-    projectId,
-    'zones',
-    [
-      ...zones,
-      {
-        zoneId: uuidv4(),
-        name,
-        friendlyName: name,
-      },
-    ],
-  ));
-};
-
-// TODO remove
-export const renameZone = (projectId, renameZoneId, friendlyName) => (dispatch) => {
-  const project = projects[projectId];
-  const { zones } = project.settings;
-
-  dispatch(setProjectSetting(
-    projectId,
-    'zones',
-    zones.map((z) => {
-      if (z.zoneId === renameZoneId) {
-        return {
-          ...z,
-          friendlyName,
-        };
-      }
-      return z;
-    }),
-  ));
-};
-
-// TODO remove
-export const deleteZone = (projectId, deleteZoneId) => (dispatch) => {
-  const project = projects[projectId];
-  const { zones } = project.settings;
-
-  dispatch(setProjectSetting(
-    projectId,
-    'zones',
-    zones.filter(({ zoneId }) => zoneId !== deleteZoneId),
-  ));
+  dispatch(loadControls(projectId));
 };

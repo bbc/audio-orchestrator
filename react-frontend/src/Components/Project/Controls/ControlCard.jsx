@@ -20,6 +20,7 @@ class ControlCard extends React.PureComponent {
       controlDefaultValues,
       onDelete,
       onChange,
+      onMove,
       sequencesList,
     } = this.props;
 
@@ -38,6 +39,8 @@ class ControlCard extends React.PureComponent {
       <Card>
         <Card.Content style={{ flexGrow: 0 }}>
           <Button icon="trash" floated="right" basic size="tiny" compact onClick={onDelete} />
+          <Button icon="right arrow" floated="right" basic size="tiny" compact onClick={() => onMove(1)} />
+          <Button icon="left arrow" floated="right" basic size="tiny" compact onClick={() => onMove(-1)} />
           <Card.Header>
             <EditableText
               value={controlName}
@@ -91,6 +94,7 @@ ControlCard.propTypes = {
     behaviourType: PropTypes.string,
     behaviourParameters: PropTypes.shape({}),
   })).isRequired,
+  onMove: PropTypes.func.isRequired,
 };
 
 export default ControlCard;
