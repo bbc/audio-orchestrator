@@ -94,6 +94,10 @@ const controlTypes = [
     icon: 'plus square',
     parameters: [
       {
+        name: 'label',
+        defaultValue: 'Click me',
+      },
+      {
         name: 'step',
         defaultValue: 1,
       },
