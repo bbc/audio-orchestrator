@@ -296,7 +296,7 @@ class Project {
     controlDefaultValues,
   }) {
     const { store, data } = this;
-    const { controls } = data;
+    const { controlIds, controls } = data;
 
     // Generate a random UUID for the new sequence
     const newControlId = uuidv4();
@@ -344,9 +344,9 @@ class Project {
       },
     ];
 
-    // Save the control object
+    // Save the control object and add it to the list of controls
     controls[newControlId] = control;
-
+    controlIds.push(newControlId);
     this.updateControlsList();
 
     return control;

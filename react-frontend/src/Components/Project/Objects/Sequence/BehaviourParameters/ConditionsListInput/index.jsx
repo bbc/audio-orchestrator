@@ -63,6 +63,7 @@ class ConditionsListInput extends React.PureComponent {
     const {
       value,
       sequencesList,
+      controls,
     } = this.props;
 
     return (
@@ -85,6 +86,7 @@ class ConditionsListInput extends React.PureComponent {
             onDelete={e => this.handleDelete(e, conditionId)}
             onChange={(e, data) => this.handleConditionChange(e, { ...data, conditionId })}
             sequencesList={sequencesList}
+            controls={controls}
           />
         ))}
         <Button size="small" icon="plus" content="Add condition" primary onClick={this.handleAdd} />
@@ -100,6 +102,7 @@ ConditionsListInput.propTypes = {
     sequenceId: PropTypes.String,
     name: PropTypes.String,
   })).isRequired,
+  controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 export default ConditionsListInput;

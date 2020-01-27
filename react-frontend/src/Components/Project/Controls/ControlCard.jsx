@@ -81,8 +81,10 @@ ControlCard.propTypes = {
   controlName: PropTypes.string.isRequired,
   controlType: PropTypes.string.isRequired,
   controlParameters: PropTypes.shape({}).isRequired,
-  // TODO may be arrayOf(number) for some control types?
-  controlDefaultValues: PropTypes.arrayOf(PropTypes.string).isRequired,
+  controlDefaultValues: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.string),
+    PropTypes.arrayOf(PropTypes.number),
+  ]).isRequired,
   onDelete: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
   sequencesList: PropTypes.arrayOf(PropTypes.shape({

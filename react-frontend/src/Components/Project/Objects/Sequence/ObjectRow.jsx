@@ -27,6 +27,7 @@ class ObjectRow extends React.PureComponent {
       onDeleteObjectBehaviour,
       onReplaceObjectBehaviourParameters,
       sequencesList,
+      controls,
     } = this.props;
 
     return (
@@ -79,6 +80,7 @@ class ObjectRow extends React.PureComponent {
                   objectNumber, behaviour.behaviourId, parameters,
                 ),
                 sequencesList,
+                controls,
               }}
             />
           ))}
@@ -125,6 +127,7 @@ ObjectRow.propTypes = {
     sequenceId: PropTypes.String,
     name: PropTypes.String,
   })).isRequired,
+  controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 ObjectRow.defaultProps = {

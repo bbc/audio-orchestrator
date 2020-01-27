@@ -1,6 +1,5 @@
-// TODO: This file needs refactoring.
-// TODO: Check current operator is allowed by condition property
-// TODO: Rework the allowedoperator DOM property
+// TODO anyOf does not allow inputting numbers as not-strings (but that should be fine because they
+// are compared with ==)
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -16,6 +15,7 @@ import deviceProperties from './deviceProperties';
 import sessionProperties from './sessionProperties';
 import EnumInput from '../EnumInput';
 import ListOfEnumInput from '../ListOfEnumInput';
+import ListOfEnumWithAdditionInput from '../ListOfEnumWithAdditionInput';
 
 const operatorOptions = operators.map(({ name, displayName }) => ({
   key: name,
@@ -23,30 +23,121 @@ const operatorOptions = operators.map(({ name, displayName }) => ({
   value: name,
 }));
 
+const propertyGroupColors = {
+  deviceControls: 'violet',
+  device: 'purple',
+  session: 'teal',
+};
+
+const makePropertyOption = (group, value, displayName) => ({
+  key: `${group}.${value}`,
+  value: `${group}.${value}`,
+  text: displayName || value,
+  description: group,
+  label: {
+    color: propertyGroupColors[group],
+    size: 'tiny',
+    empty: true,
+    circular: true,
+  },
+});
+
+const devicePropertyOptions = deviceProperties.map(({
+  name, displayName,
+}) => makePropertyOption('device', name, displayName));
+
+const sessionPropertyOptions = sessionProperties.map(({
+  name, displayName,
+}) => makePropertyOption('session', name, displayName));
+
+const getPropertyOptions = controls => [
+  ...controls.map(({
+    controlId, controlName,
+  }) => makePropertyOption('deviceControls', controlId, controlName)),
+  ...devicePropertyOptions,
+  ...sessionPropertyOptions,
+];
+
+const getPropertyTypeAndOperators = (property, { controls = [], sequencesList = [] }) => {
+  const [group, name] = property.split('.');
+  const propertyLists = {
+    device: deviceProperties,
+    session: sessionProperties,
+    deviceControls: controls,
+  };
+
+  const {
+    type,
+    controlType,
+    controlParameters,
+  } = propertyLists[group].find(p => p.name === name || p.controlId === name) || {};
+  // TODO adding the || {} avoids a crash if the required control does not exist, but still
+  // displays bogus empty data.
+
+  let result = {
+    type,
+    allowedValues: [],
+    allowedOperators: [],
+  };
+
+  // Controls don't have type or allowedOperator values, so generate those per controlType:
+  if (group === 'deviceControls') {
+    switch (controlType) {
+      case 'radio':
+      case 'checkbox':
+        result = {
+          type: 'enum',
+          allowedValues: controlParameters.options.map(o => ({
+            value: o.value,
+            displayName: o.label,
+          })),
+        };
+        break;
+      case 'range':
+      case 'counter':
+        result = {
+          type: 'number',
+        };
+        break;
+      default:
+        console.log(`treating unhandled controlType ${controlType} as having a simple string value.`);
+        result = {
+          type: 'string',
+        };
+        break;
+    }
+  }
+
+  if (result.type === 'sequence') {
+    // If the type is 'sequence', generate allowedValues from the given sequencesList, and reset
+    // type to 'enum'.
+    result.type = 'enum';
+    result.allowedValues = sequencesList.map(({ sequenceId, name: sequenceName }) => ({
+      value: sequenceId,
+      displayName: sequenceName,
+    }));
+  } else if (result.type === 'bool') {
+    // Do the same for 'bool', for now use an enum input with values for true and false
+    result.type = 'enum';
+    result.allowedValues = [
+      { value: true, displayName: 'True' },
+      { value: false, displayName: 'False' },
+    ];
+  }
+
+  // Set allowedOperators based on the allowed types defined in operators.js
+  result.allowedOperators = operators
+    .filter(o => o.allowedTypes.includes(result.type))
+    .map(o => o.name);
+
+  return result;
+};
+
 class ConditionInput extends React.PureComponent {
   constructor(props) {
     super(props);
 
-    this.state = {
-      customValues: [],
-    };
-
-    this.handleCustomValueAddition = this.handleCustomValueAddition.bind(this);
     this.handleChange = this.handleChange.bind(this);
-  }
-
-  handleCustomValueAddition(e, data) {
-    const { customValues } = this.state;
-    const { value } = data;
-
-    if (!customValues.includes(value)) {
-      this.setState({
-        customValues: [
-          ...customValues,
-          value,
-        ],
-      });
-    }
   }
 
   handleChange(e, data) {
@@ -55,6 +146,7 @@ class ConditionInput extends React.PureComponent {
 
     // extract name of input field and its current value - or checked property
     const {
+      type: fieldType,
       name: fieldName,
       value: fieldValue,
       checked,
@@ -62,22 +154,28 @@ class ConditionInput extends React.PureComponent {
 
     const newValue = {
       ...value,
-      [fieldName]: fieldName === 'invertCondition' ? checked : fieldValue,
+      [fieldName]: fieldValue,
     };
 
-    // if the operator was changed and the value should now be an array (or not anymore), convert
-    // by taking the first element of an array or creating a 1-element array.
-    if (fieldName === 'operator') {
-      const { valueIsArray } = operators.find(o => o.name === fieldValue) || {};
-      const v = newValue.value;
-      if (valueIsArray) {
-        newValue.value = Array.isArray(v) ? v : [v];
-      } else {
-        newValue.value = Array.isArray(v) ? v[0] : v;
-      }
+    // convert value type based on input element type
+    if (fieldType === 'checkbox') {
+      newValue[fieldName] = checked;
+    } else if (fieldType === 'number') {
+      newValue[fieldName] = parseFloat(fieldValue);
     }
 
-    // pass the new value up to the parent component through the onChange handler
+    // if the property was changed, reset the operator and value
+    if (fieldName === 'property' && newValue.property !== value.property) {
+      newValue.operator = undefined;
+      newValue.value = undefined;
+    }
+
+    // if the property was changed, reset the operator and value
+    if (fieldName === 'operator' && newValue.operator !== value.operator) {
+      newValue.value = undefined;
+    }
+
+    // pass the new value for the entire condition up through the onChange handler
     onChange(e, {
       value: newValue,
     });
@@ -98,133 +196,79 @@ class ConditionInput extends React.PureComponent {
       value: conditionValue,
     } = value;
 
-    const {
-      customValues,
-    } = this.state;
+    // 1. Select a property
+    // 2. Once a property is selected, the operator selection is enabled.
+    // 3. Once an operator is selected, the value input is enabled.
 
-    const propertyOptions = [
-      ...controls.map(({ controlId, controlName, allowedOperators }) => ({
-        key: `deviceControls.${controlId}`,
-        value: `deviceControls.${controlId}`,
-        text: controlName,
-        description: 'control',
-        label: {
-          color: 'violet',
-          size: 'tiny',
-          empty: true,
-          circular: true,
-        },
-        allowedoperators: allowedOperators,
-        type: 'string',
-      })),
-      ...deviceProperties.map(({
-        name, displayName, type, allowedOperators,
-      }) => ({
-        key: `device.${name}`,
-        value: `device.${name}`,
-        text: displayName || name,
-        description: 'device',
-        label: {
-          color: 'purple',
-          size: 'tiny',
-          empty: true,
-          circular: true,
-        },
-        allowedoperators: allowedOperators,
+    // Get the list of property options.
+    const propertyOptions = getPropertyOptions(controls);
+
+    // If the property is set, get the filtered list of applicable operators.
+    let operatorInputEnabled = false;
+    let filteredOperatorOptions = [];
+    let valueType = 'string';
+    let valueAllowedValues = [];
+
+    if (property) {
+      const {
         type,
-      })),
-      ...sessionProperties.map(({
-        name, displayName, type, allowedOperators,
-      }) => ({
-        key: `session.${name}`,
-        value: `session.${name}`,
-        text: displayName || name,
-        description: 'session',
-        label: {
-          color: 'teal',
-          size: 'tiny',
-          empty: true,
-          circular: true,
-        },
-        allowedoperators: allowedOperators,
-        type,
-      })),
-    ];
+        allowedOperators,
+        allowedValues,
+      } = getPropertyTypeAndOperators(property, { controls, sequencesList });
 
-    const { valueIsArray } = operators.find(o => o.name === operator) || {};
+      // Save expected type of value for selecting the right input component once an operator has
+      // also been chosen.
+      valueType = type;
+      valueAllowedValues = allowedValues;
 
-    const sequences = sequencesList.map(({ sequenceId, name }) => ({
-      value: sequenceId,
-      displayName: name,
-    }));
-
-    const { type, allowedoperators } = propertyOptions.find(p => p.value === property) || {};
-
-    const valueIsSequence = type === 'sequenceId';
-
-    let filteredOperatorOptions = operatorOptions;
-
-    if (allowedoperators) {
-      filteredOperatorOptions = operatorOptions.filter(o => allowedoperators.includes(o.value));
+      filteredOperatorOptions = operatorOptions.filter(o => allowedOperators.includes(o.value));
+      operatorInputEnabled = true;
     }
 
-    const customValueOptions = valueIsArray ? [
-      ...new Set([
-        ...customValues,
-        ...(Array.isArray(conditionValue) ? conditionValue : [conditionValue]),
-      ]),
-    ].map(v => ({
-      key: v,
-      value: v,
-      text: v,
-    })) : [];
+    // If an operator is set, select the input component for the value.
+    // By default, display a disabled, empty, text field regardless of value type, because the
+    // value is reset anyway when a new property or operator is chosen.
+    let ValueInputComponent = Input;
+    const valueInputProps = {
+      disabled: true,
+      value: '',
+      placeholder: 'Value',
+    };
 
-    let valueInputComponent = (
-      <Input
-        disabled={operator === undefined}
-        fluid
-        placeholder="Value"
-        value={conditionValue || ''}
-        name="value"
-        onChange={this.handleChange}
-      />
-    );
-    if (valueIsSequence) {
+    if (property && operator) {
+      valueInputProps.disabled = false;
+      const { valueIsArray } = operators.find(o => o.name === operator) || {};
+
       if (valueIsArray) {
-        valueInputComponent = (
-          <ListOfEnumInput
-            allowedValues={sequences}
-            value={conditionValue || []}
-            onChange={this.handleChange}
-            name="value"
-          />
-        );
+        valueInputProps.value = conditionValue !== undefined ? conditionValue : [];
+        switch (valueType) {
+          case 'enum':
+            ValueInputComponent = ListOfEnumInput;
+            valueInputProps.allowedValues = valueAllowedValues;
+            break;
+          case 'number':
+          case 'string':
+          default:
+            ValueInputComponent = ListOfEnumWithAdditionInput;
+            valueInputProps.allowedValues = [];
+            break;
+        }
       } else {
-        valueInputComponent = (
-          <EnumInput
-            allowedValues={sequences}
-            value={conditionValue || ''}
-            onChange={this.handleChange}
-            name="value"
-          />
-        );
+        valueInputProps.value = conditionValue !== undefined ? conditionValue : '';
+        switch (valueType) {
+          case 'enum':
+            ValueInputComponent = EnumInput;
+            valueInputProps.allowedValues = valueAllowedValues;
+            break;
+          case 'number':
+            valueInputProps.type = 'number';
+            break;
+          case 'string':
+          default:
+            valueInputProps.type = 'text';
+            break;
+        }
       }
-    } else if (valueIsArray) {
-      valueInputComponent = (
-        <Dropdown
-          fluid
-          multiple
-          selection
-          search
-          allowAdditions
-          placeholder="Value"
-          value={conditionValue || []}
-          name="value"
-          options={customValueOptions}
-          onAddItem={this.handleCustomValueAddition}
-          onChange={this.handleChange}
-        />
-      );
     }
 
     return (
@@ -251,13 +295,19 @@ class ConditionInput extends React.PureComponent {
               selection
               placeholder="Operator"
               options={filteredOperatorOptions}
-              value={operator}
+              value={operator || ''}
               name="operator"
               onChange={this.handleChange}
+              disabled={!operatorInputEnabled}
             />
           </List.Item>
           <List.Item>
-            { valueInputComponent }
+            <ValueInputComponent
+              {...valueInputProps}
+              fluid
+              name="value"
+              onChange={this.handleChange}
+            />
           </List.Item>
         </List>
         <Checkbox
@@ -275,30 +325,30 @@ ConditionInput.propTypes = {
   value: PropTypes.shape({
     property: PropTypes.string,
     invertCondition: PropTypes.bool,
-    operator: PropTypes.string.isRequired,
+    operator: PropTypes.string,
     value: PropTypes.oneOfType([
+      PropTypes.shape({}),
       PropTypes.string,
       PropTypes.number,
+      PropTypes.bool,
       PropTypes.arrayOf(PropTypes.shape({})),
       PropTypes.arrayOf(PropTypes.string),
       PropTypes.arrayOf(PropTypes.number),
+      PropTypes.arrayOf(PropTypes.bool),
     ]),
   }).isRequired,
   onChange: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
-  controls: PropTypes.arrayOf(PropTypes.shape({})),
+  controls: PropTypes.arrayOf(PropTypes.shape({
+    controlId: PropTypes.string,
+    controlName: PropTypes.string,
+    controlType: PropTypes.string,
+    controlParameters: PropTypes.shape({}),
+  })).isRequired,
   sequencesList: PropTypes.arrayOf(PropTypes.shape({
     sequenceId: PropTypes.String,
     name: PropTypes.String,
   })).isRequired,
-};
-
-// TODO dummy control data, because builder does not store controls in the new format yet.
-ConditionInput.defaultProps = {
-  controls: [
-    { controlId: 'control-1', controlName: 'Control 1' },
-    { controlId: 'control-2', controlName: 'Control 2' },
-  ],
 };
 
 export default ConditionInput;

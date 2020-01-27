@@ -4,13 +4,12 @@ const sessionProperties = [
   {
     name: 'currentContentId',
     displayName: 'Current sequence',
-    type: 'sequenceId',
-    allowedOperators: ['equals', 'anyOf'],
+    type: 'sequence',
   },
   {
     name: 'numDevices',
     displayName: 'Number of devices',
-    type: 'integer',
+    type: 'number',
   },
 ];
 

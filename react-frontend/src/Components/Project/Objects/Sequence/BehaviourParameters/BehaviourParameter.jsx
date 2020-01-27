@@ -25,6 +25,7 @@ const BehaviourParameter = React.memo(({
   value,
   onChange,
   sequencesList,
+  controls,
 }) => {
   // If the type is not registered, use a standard text input
   const InputComponent = inputComponents[type] || Input;
@@ -38,6 +39,7 @@ const BehaviourParameter = React.memo(({
           value={value}
           onChange={onChange}
           sequencesList={sequencesList}
+          controls={controls}
         />
         <Divider hidden />
         {description}
@@ -62,6 +64,7 @@ BehaviourParameter.propTypes = {
     sequenceId: PropTypes.String,
     name: PropTypes.String,
   })).isRequired,
+  controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 BehaviourParameter.defaultProps = {

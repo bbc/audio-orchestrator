@@ -11,7 +11,7 @@ const deviceProperties = [
     name: 'deviceIsMain',
     displayName: 'Main Device',
     description: 'True if this device is the main device (the device that manages playback and allocations)',
-    type: 'boolean',
+    type: 'bool',
   },
   {
     name: 'deviceType',
@@ -23,19 +23,19 @@ const deviceProperties = [
     name: 'deviceJoiningNumber',
     displayName: 'Joining number',
     description: 'Original position in the joining order, 1-based',
-    type: 'integer',
+    type: 'number',
   },
   {
     name: 'deviceCurrentNumber',
     displayName: 'Current Number',
     description: 'Current position in the joining order, 1-based',
-    type: 'integer',
+    type: 'number',
   },
   {
     name: 'deviceLatency',
     displayName: 'Latency',
     description: 'Emission delay, in milliseconds, if known',
-    type: 'integer',
+    type: 'number',
   },
   {
     name: 'deviceGain',

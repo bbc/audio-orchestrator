@@ -10,6 +10,7 @@ const BehaviourParameters = React.memo(({
   values,
   onChange,
   sequencesList,
+  controls,
 }) => (
   <Table definition>
     <Table.Body>
@@ -23,6 +24,7 @@ const BehaviourParameters = React.memo(({
             value: data.value,
           })}
           sequencesList={sequencesList}
+          controls={controls}
         />
       ))}
     </Table.Body>
@@ -37,6 +39,7 @@ BehaviourParameters.propTypes = {
     sequenceId: PropTypes.String,
     name: PropTypes.String,
   })).isRequired,
+  controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 export default BehaviourParameters;

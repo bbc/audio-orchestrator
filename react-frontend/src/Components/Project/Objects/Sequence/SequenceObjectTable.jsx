@@ -55,6 +55,7 @@ class SequenceObjectTable extends React.Component {
       onResetObject,
       onDeleteObject,
       sequencesList,
+      controls,
     } = this.props;
 
     // do not render the table if no files are available.
@@ -111,6 +112,7 @@ class SequenceObjectTable extends React.Component {
                     onReplaceObjectBehaviourParameters,
                     onDeleteObjectBehaviour,
                     sequencesList,
+                    controls,
                   }}
                   {...object}
                 />
@@ -146,6 +148,7 @@ SequenceObjectTable.propTypes = {
     sequenceId: PropTypes.String,
     name: PropTypes.String,
   })).isRequired,
+  controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };
 
 SequenceObjectTable.defaultProps = {
@@ -155,7 +158,12 @@ SequenceObjectTable.defaultProps = {
 
 const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
   const project = Project.projects[projectId];
-  const { sequences, sequencesList } = project;
+  const {
+    sequences,
+    sequencesList,
+    controls,
+    controlsList,
+  } = project;
   const {
     filesList,
     files,
@@ -176,6 +184,7 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
     filesLoadingTotal: total,
     filesLoadingCompleted: completed,
     sequencesList,
+    controls: controlsList.map(({ controlId }) => controls[controlId]),
   };
 };
 

@@ -23,16 +23,25 @@ const EnumInput = React.memo(({
       onChange={onChange}
       options={options}
       name={name}
+      fluid
     />
   );
 });
 
 EnumInput.propTypes = {
   allowedValues: PropTypes.arrayOf(PropTypes.shape({
-    value: PropTypes.string,
+    value: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.bool,
+      PropTypes.number,
+    ]),
     displayName: PropTypes.string,
   })).isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+    PropTypes.bool,
+  ]).isRequired,
   onChange: PropTypes.func.isRequired,
   name: PropTypes.string,
 };

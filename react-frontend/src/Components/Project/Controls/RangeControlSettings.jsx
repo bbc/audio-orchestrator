@@ -18,6 +18,7 @@ class RangeControlSettings extends React.PureComponent {
     const {
       onChange,
       parameters,
+      defaultValues,
     } = this.props;
 
     const {
@@ -26,7 +27,7 @@ class RangeControlSettings extends React.PureComponent {
       type: inputType,
     } = data;
 
-    const value = inputType === 'number' ? parseFloat(inputValue) : inputValue;
+    const value = ['number', 'range'].includes(inputType) ? parseFloat(inputValue) : inputValue;
 
     if (inputName === 'defaultValue') {
       onChange('controlDefaultValues', [value]);
@@ -35,6 +36,21 @@ class RangeControlSettings extends React.PureComponent {
         ...parameters,
         [inputName]: value,
       });
+
+      // enforce default value to be within min/max bounds
+      if (inputName === 'min' && !Number.isNaN(value)) {
+        const { max } = parameters;
+        const min = value;
+        onChange('controlDefaultValues', [
+          Math.min(max, Math.max(defaultValues[0], min)),
+        ]);
+      } else if (inputName === 'max' && !Number.isNaN(value)) {
+        const { min } = parameters;
+        const max = value;
+        onChange('controlDefaultValues', [
+          Math.min(max, Math.max(defaultValues[0], min)),
+        ]);
+      }
     }
   }
 
@@ -59,7 +75,7 @@ class RangeControlSettings extends React.PureComponent {
           placeholder="Minimum"
           name="min"
           value={min}
-          error={Number.isNaN(min)}
+          error={Number.isNaN(min) || min > max}
           onChange={this.handleChange}
         />
         {' '}
@@ -68,7 +84,7 @@ class RangeControlSettings extends React.PureComponent {
           placeholder="Maximum"
           name="max"
           value={max}
-          error={Number.isNaN(max)}
+          error={Number.isNaN(max) || min > max}
           onChange={this.handleChange}
         />
 
@@ -76,9 +92,10 @@ class RangeControlSettings extends React.PureComponent {
         <Input
           type="number"
           placeholder="Step size"
+          min="0"
           name="step"
           value={step}
-          error={Number.isNaN(step)}
+          error={Number.isNaN(step) || step <= 0}
           onChange={this.handleChange}
         />
 
