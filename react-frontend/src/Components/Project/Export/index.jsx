@@ -13,6 +13,7 @@ import SettingsCheck from './SettingsCheck';
 import TaskProgress from './TaskProgress';
 import ExportTypeSelection from './ExportTypeSelection';
 import ExportModal from './ExportModal';
+import AdvancedSettings from './AdvancedSettings';
 import {
   requestStartPreview,
 } from '../../../actions/export';
@@ -32,11 +33,12 @@ const Review = ({
   canExport,
 }) => (
   <Container>
-    <Message icon="lightbulb outline" header="Preview and export" content="The prototype can be previewed directly on this computer and devices on the same network once all content and settings are filled in." />
+    <Message icon="lightbulb outline" header="Preview and export" content="The experience can be previewed directly on this computer and devices on the same network once all content and settings are filled in." />
 
+    <Header content="Validation" />
     <Grid columns={3} stackable doubling>
       <Grid.Column>
-        <Header content="Settings" />
+        <Header size="small" content="Settings" />
         <Table basic verticalAlign="top">
           <Table.Body>
             { reviewItems
@@ -53,7 +55,7 @@ const Review = ({
         </Table>
       </Grid.Column>
       <Grid.Column>
-        <Header content="Sequences" />
+        <Header size="small" content="Sequences" />
         <Table basic verticalAlign="top">
           <Table.Body>
             { reviewItems
@@ -70,7 +72,7 @@ const Review = ({
         </Table>
       </Grid.Column>
       <Grid.Column>
-        <Header content="Background tasks" />
+        <Header size="small" content="Background tasks" />
         <Table basic>
           <Table.Body>
             <TaskProgress name="Audio analysis" taskIds={itemsTaskIds} />
@@ -79,6 +81,12 @@ const Review = ({
         </Table>
       </Grid.Column>
     </Grid>
+
+    <Header
+      content="Export settings"
+      subheader="The advanced settings can usually be left at their default values. They may be needed for publishing the exported application more widely."
+    />
+    <AdvancedSettings projectId={projectId} />
 
     <Header content="Export" />
     { !canExport
