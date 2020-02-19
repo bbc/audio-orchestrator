@@ -3,9 +3,9 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Container,
-  Message,
   Form,
 } from 'semantic-ui-react';
+import PageTitleBar from '../PageTitleBar';
 
 import {
   setProjectSetting,
@@ -43,7 +43,11 @@ class Presentation extends React.Component {
 
     return (
       <Container>
-        <Message icon="lightbulb outline" header="Presentation settings" content="The presentation settings customise the look and feel of the preview and exported prototype application." />
+        <PageTitleBar
+          title="Presentation settings"
+          shortDescription="The presentation settings customise the look and feel of the preview and exported prototype application."
+          helpId="presentation"
+        />
         <Form>
           <Form.Input
             label="Title"

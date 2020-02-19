@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import {
   Container,
-  Message,
   Card,
   Segment,
   Header,
@@ -17,6 +16,7 @@ import {
   replaceControlProperty,
   swapControlOrder,
 } from '../../../actions/project';
+import PageTitleBar from '../../PageTitleBar';
 
 class Controls extends React.PureComponent {
   constructor(props) {
@@ -56,7 +56,11 @@ class Controls extends React.PureComponent {
 
     return (
       <Container>
-        <Message icon="lightbulb outline" header="Controls" content="Controls are displayed on the listeners' devices so they can make choices that affect object rendering." />
+        <PageTitleBar
+          title="Controls"
+          shortDescription="Controls are displayed on the listeners' devices so they can make choices that affect object rendering."
+          helpId="controls"
+        />
         { (controlsList.length > 0)
           ? (
             <Card.Group stackable doubling itemsPerRow={2}>

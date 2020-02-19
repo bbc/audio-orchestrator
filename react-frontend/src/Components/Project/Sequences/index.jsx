@@ -3,11 +3,12 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
   Container,
-  Message,
   Button,
   Divider,
 } from 'semantic-ui-react';
 import SequencesList from './SequencesList';
+import PageTitleBar from '../../PageTitleBar';
+
 
 import {
   requestAddSequence,
@@ -18,7 +19,11 @@ const Sequences = ({
   onAddSequence,
 }) => (
   <Container>
-    <Message icon="lightbulb outline" header="Sequence audio and metadata" content="Each sequence is an independent section of content. Add metadata and audio files, and define links to other sequences." />
+    <PageTitleBar
+      title="Sequence audio and metadata"
+      shortDescription="Each sequence is an independent section of content. Add metadata and audio files, and define links to other sequences."
+      helpId="sequences"
+    />
     <SequencesList projectId={projectId} />
     <Divider hidden />
     <Button primary icon="plus" content="Add Sequence" onClick={onAddSequence} labelPosition="left" />

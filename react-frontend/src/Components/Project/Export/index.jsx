@@ -21,6 +21,7 @@ import {
   openSequencePage,
   openProjectPage,
 } from '../../../actions/ui';
+import PageTitleBar from '../../PageTitleBar';
 
 const Review = ({
   projectId,
@@ -33,8 +34,11 @@ const Review = ({
   canExport,
 }) => (
   <Container>
-    <Message icon="lightbulb outline" header="Preview and export" content="The experience can be previewed directly on this computer and devices on the same network once all content and settings are filled in." />
-
+    <PageTitleBar
+      title="Preview and export"
+      shortDescription="The experience can be previewed directly on this computer and devices on the same network once all content and settings are filled in."
+      helpId="export"
+    />
     <Header content="Validation" />
     <Grid columns={3} stackable doubling>
       <Grid.Column>

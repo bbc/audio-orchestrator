@@ -6,6 +6,7 @@ import {
   Message,
   Tab,
 } from 'semantic-ui-react';
+import PageTitleBar from '../../PageTitleBar';
 
 import Sequence from './Sequence';
 import {
@@ -39,7 +40,11 @@ const Objects = ({
 
   return (
     <Container>
-      <Message icon="lightbulb outline" header="Audio objects" content="Import audio files and add object metadata for each sequence to define how each object should be rendered." />
+      <PageTitleBar
+        title="Audio objects"
+        shortDescription="Import audio files and add object metadata for each sequence to define how each object should be rendered."
+        helpId="objects"
+      />
       <Tab
         panes={tabPanes}
         activeIndex={defaultIndex}
