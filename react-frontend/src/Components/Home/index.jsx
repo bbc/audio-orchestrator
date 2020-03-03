@@ -53,7 +53,7 @@ class Home extends React.Component {
         <Menu inverted color="blue" attached="bottom">
           <Menu.Item header>Home</Menu.Item>
           <Menu.Menu position="right">
-            <Menu.Item content={`Orchestration Builder ${VERSION}`} />
+            <Menu.Item content={`Orchestrator ${VERSION}`} />
             <Menu.Item icon="info" onClick={window.openCredits} />
             <DeveloperMenu />
           </Menu.Menu>

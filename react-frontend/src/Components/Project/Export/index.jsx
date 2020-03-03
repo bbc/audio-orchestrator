@@ -23,6 +23,11 @@ import {
 } from '../../../actions/ui';
 import PageTitleBar from '../../PageTitleBar';
 
+// TODO remove RESTRICTED setting.
+// RESTRICTED is set in the webpack config based on an environment variable
+/* eslint-disable-next-line no-undef */
+const hideFileExport = RESTRICTED;
+
 const Review = ({
   projectId,
   itemsTaskIds,
@@ -105,10 +110,14 @@ const Review = ({
       onClick={() => onStartPreview(projectId)}
     />
 
-    <ExportTypeSelection
-      disabled={!canExport}
-      projectId={projectId}
-    />
+    { hideFileExport
+      ? null
+      : (
+        <ExportTypeSelection
+          disabled={!canExport}
+          projectId={projectId}
+        />
+      )}
 
     <ExportModal />
   </Container>

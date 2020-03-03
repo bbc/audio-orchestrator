@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-electron-app",
-  "version": "2.0.0-dev.20",
+  "version": "2.0.0-dev.21",
   "description": "Electron desktop application for generating orchestrated audio applications.",
   "main": "bin/main.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
@@ -28,8 +28,9 @@
     "license-to-fail": "^3.0.0"
   },
   "scripts": {
-    "build": "yarn build-frontend && yarn build-background-tasks && yarn build-main && yarn credits && electron-builder --dir",
-    "dist": "yarn build && electron-builder --mac dmg",
+    "build": "yarn build-frontend && yarn build-background-tasks && yarn build-main && yarn credits",
+    "dist": "yarn build && electron-builder --mac dmg --config electron-builder.json",
+    "dist:restricted": "BBCAT_ORCHESTRATION_BUILDER_VERSION_SUFFIX=restricted yarn build && electron-builder --mac dmg --config electron-builder-restricted.json",
     "build-frontend": "(cd ../react-frontend/ && yarn run webpack --mode production)",
     "build-main": "yarn clean && mkdir ./bin/ && babel src -s -d bin",
     "build-background-tasks": "(cd ../background-tasks/ && yarn build)",
@@ -38,19 +39,6 @@
     "test": "echo no tests defined.",
     "lint": "echo no linting defined.",
     "credits": "license-to-fail && node ./scripts/credits.js"
-  },
-  "build": {
-    "appId": "uk.co.bbc.rd.bbcat-orchestration-builder",
-    "files": [
-      "./bin/**/*"
-    ],
-    "asar": {
-      "smartUnpack": false
-    },
-    "asarUnpack": [
-      "**/node_modules/@bbc/bbcat-orchestration-template/**/*"
-    ],
-    "removePackageScripts": false
   },
   "license-to-fail": {
     "allowedLicenses": [

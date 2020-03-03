@@ -5,6 +5,7 @@
     "dev": "(cd electron-app && yarn dev)",
     "build": "(cd electron-app && yarn build)",
     "dist": "(cd electron-app && yarn dist)",
+    "dist:restricted": "(cd electron-app && yarn dist:restricted)",
     "bump": "node scripts/bump.js",
     "postinstall": "(cd background-tasks && yarn install) && (cd electron-app && yarn install) && (cd react-frontend && yarn install) && (cd logging && yarn install)",
     "lint": "(cd background-tasks && yarn lint) && (cd electron-app && yarn lint) && (cd react-frontend && yarn lint) && (cd logging && yarn lint)",

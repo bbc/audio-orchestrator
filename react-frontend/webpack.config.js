@@ -5,6 +5,9 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const { version } = require('./package.json');
+
+const versionSuffix = process.env.BBCAT_ORCHESTRATION_BUILDER_VERSION_SUFFIX;
 
 module.exports = (env, { mode = 'development' }) => ({
   devtool: 'source-map',
@@ -56,7 +59,8 @@ module.exports = (env, { mode = 'development' }) => ({
   },
   plugins: [
     new webpack.DefinePlugin({
-      VERSION: JSON.stringify(`${require('./package.json').version}-${mode}`),
+      VERSION: JSON.stringify(`${version}-${mode}${versionSuffix ? `-${versionSuffix}` : ''}`),
+      RESTRICTED: versionSuffix === 'restricted',
       DEVELOPMENT: (mode === 'development'),
     }),
     new CleanWebpackPlugin(),
