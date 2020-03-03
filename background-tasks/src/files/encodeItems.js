@@ -8,8 +8,8 @@ import {
 import os from 'os';
 import path from 'path';
 import { execFile as execFileCB } from 'child_process';
-import { path as ffmpegPath } from 'ffmpeg-static';
 import mapSeries from 'async/mapSeries';
+import which from '../which';
 
 import {
   ENCODE_CODEC,
@@ -83,13 +83,14 @@ const ensureSilence = () => {
     return silencePromise;
   }
 
-  silencePromise = execFile(ffmpegPath, [
-    '-y',
-    '-f', 'lavfi',
-    '-i', `anullsrc=r=${SILENCE_SAMPLE_RATE}:cl=mono`,
-    '-t', segmentDuration(SILENCE_SAMPLE_RATE),
-    SILENCE_PATH,
-  ])
+  silencePromise = which('ffmpeg')
+    .then(ffmpegPath => execFile(ffmpegPath, [
+      '-y',
+      '-f', 'lavfi',
+      '-i', `anullsrc=r=${SILENCE_SAMPLE_RATE}:cl=mono`,
+      '-t', segmentDuration(SILENCE_SAMPLE_RATE),
+      SILENCE_PATH,
+    ]))
     .then(() => {
       logger.info(`generated silence file at ${SILENCE_PATH}`);
     });
@@ -177,14 +178,14 @@ const encodeItem = ({
           throw new Error(`Unknown item type ${type}`);
       }
     })
-    .then((ffmpegArgs) => {
+    .then(ffmpegArgs => which('ffmpeg').then((ffmpegPath) => {
       if (LOG_FFMPEG) logger.silly(`encode: ${ffmpegPath} ${ffmpegArgs.join(' ')}`);
       return execFile(ffmpegPath, ffmpegArgs)
         .catch((error) => {
           logger.error(`ffmpeg failed (${error}) arguments were: ${ffmpegArgs.join(' ')}`);
           throw error;
         });
-    })
+    }))
     .then(() => {
       // call the callback with a null error to indicate successful completion
       callback(null, resultItem);

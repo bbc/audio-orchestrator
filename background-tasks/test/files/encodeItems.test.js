@@ -5,6 +5,8 @@ import mapSeries from 'async/mapSeries';
 // mockExecFile as a jest mock function to easily change resolved values for
 const mockExecFile = jest.fn(() => Promise.resolve({ stdout: '', stderr: '' }));
 
+jest.mock('../../src/which', () => jest.fn(name => Promise.resolve(name)));
+
 // child_process.execFile as a CPS function wrapping the promise based mockExecFile.
 jest.mock('child_process', () => ({
   execFile: (file, args, cb) => { // TODO - different from definition used in detectItems tests!
@@ -14,7 +16,15 @@ jest.mock('child_process', () => ({
   },
 }));
 
-jest.mock('async/mapSeries', () => (args, fn) => Promise.resolve(args.map(arg => fn(arg, () => {}))));
+jest.mock('async/mapSeries', () => (args, fn) => Promise.all(args.map(arg => new Promise((resolve, reject) => {
+  fn(arg, (err, result) => {
+    if (err) {
+      reject(err);
+    } else {
+      resolve(result);
+    }
+  });
+}))));
 
 jest.mock('fs-extra', () => ({
   mkdir: jest.fn(() => Promise.resolve()),
@@ -35,6 +45,7 @@ describe('encodeItems', () => {
       { start: 0, duration: 2, type: 'buffer' },
       { start: 4, duration: 2, type: 'buffer' },
       { start: 6, duration: 20, type: 'dash' },
+      { start: 29, duration: 4, type: 'dash' },
     ];
 
     return encodeItems(mockFilePath, mockItems)
@@ -43,7 +54,8 @@ describe('encodeItems', () => {
           expect.any(String),
           expect.arrayContaining([mockFilePath]),
         );
-        expect(mockExecFile).toHaveBeenCalledTimes(mockItems.length);
+        // +1 because silence also calls ffmpeg once
+        expect(mockExecFile).toHaveBeenCalledTimes(mockItems.length + 1);
         expect(encodedItems).toEqual(expect.any(Array));
         expect(encodedItemsBasePath).toEqual(expect.any(String));
       });

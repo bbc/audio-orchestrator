@@ -4,7 +4,9 @@ Prototype an orchestrated audio experience that works with mobile devices from p
 
 This graphical tool replaces the packaging scripts and build process from the [bbcat-orchestration library](https://github.com/bbc/bbcat-orchestration) and the associated [user interface template](https://github.com/bbc/bbcat-orchestration-template), making it more accessible for prototyping with a graphical user interface.
 
-See the [workflow overview](workflow.md) for end-user instructions. Builds are available from `/audioteam/2-inprogress-projects/MDO-Builder-Tool/builds`.
+Builds are available from `/audioteam/2-inprogress-projects/MDO-Builder-Tool/builds`.
+
+The tool requires `ffmpeg` and `ffprobe` to be available in the system path. Both are most easily installed with [homebrew](https://brew.sh) by running `brew install ffmpeg`. If installing them manually, ensure that links to the binaries are created in `/usr/bin` or `/usr/local/bin`.
 
 # Development
 

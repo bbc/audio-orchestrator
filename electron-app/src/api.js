@@ -20,6 +20,16 @@ app.use((req, res, next) => {
   next();
 });
 
+app.post('/check-requirements', (req, res, next) => {
+  backgroundTasks.checkRequirements()
+    .then(({ taskId }) => {
+      res.json({
+        success: true,
+        taskId,
+      });
+    })
+    .catch(err => next(err));
+});
 
 // Analyser routes ----------------------------------------
 /**

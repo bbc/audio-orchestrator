@@ -2320,20 +2320,10 @@ fecha@^2.3.3:
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/fecha/-/fecha-2.3.3.tgz#948e74157df1a32fd1b12c3a3c3cdcb6ec9d96cd"
   integrity sha1-lI50FX3xoy/RsSw6PDzctuydls0=
 
-ffmpeg-static@^2.4.0:
-  version "2.6.0"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/ffmpeg-static/-/ffmpeg-static-2.6.0.tgz#6815df9c0220a8ade6636839a5444a5dbaaa3251"
-  integrity sha1-aBXfnAIgqK3mY2g5pURKXbqqMlE=
-
 ffprobe-client@^1.1.2:
   version "1.1.5"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/ffprobe-client/-/ffprobe-client-1.1.5.tgz#521c422bb207f52eb38f74b9408fb78af7261675"
   integrity sha1-UhxCK7IH9S6zj3S5QI+3ivcmFnU=
-
-ffprobe-static@^3.0.0:
-  version "3.0.0"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/ffprobe-static/-/ffprobe-static-3.0.0.tgz#479689c8a237987beca5627968f3d87429bf569d"
-  integrity sha1-R5aJyKI3mHvspWJ5aPPYdCm/Vp0=
 
 figures@^2.0.0:
   version "2.0.0"

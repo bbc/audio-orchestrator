@@ -4,6 +4,7 @@
  */
 
 import TaskManager from './taskManager';
+import checkRequirements from './check-requirements';
 import {
   FileStore,
   registerFiles,
@@ -22,6 +23,9 @@ const manager = new TaskManager(fileStore);
 
 
 export default {
+  // General actions
+  checkRequirements: args => manager.createTask(checkRequirements, args),
+
   // Analyse task actions
   registerFiles: args => manager.createTask(registerFiles, args),
   probeFiles: args => manager.createTask(probeFiles, args),

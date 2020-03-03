@@ -1,7 +1,7 @@
 import { getLogger } from 'bbcat-orchestration-builder-logging';
 import { promisify } from 'util';
 import { execFile as execFileCB } from 'child_process';
-import { path as ffmpegPath } from 'ffmpeg-static';
+import which from '../which';
 
 const logger = getLogger('detect-items');
 
@@ -16,8 +16,6 @@ const SILENCE_NOISE_FLOOR = '-80dB';
 
 const TIME_DECIMALS = 2;
 const roundTime = t => parseFloat(parseFloat(t).toFixed(TIME_DECIMALS));
-
-logger.debug(`ffmpegPath: ${ffmpegPath}.`);
 
 /**
  * Run ffmpeg on the file with a null target to detect silent sections in the audio content.
@@ -42,8 +40,8 @@ const detectItems = (filePath, fileDuration) => {
   // then get the duration from the probe results
   // then run the silence analysis
   // then convert the results to items format
-  return Promise.resolve()
-    .then(() => {
+  return which('ffmpeg')
+    .then((ffmpegPath) => {
       if (LOG_FFMPEG) logger.silly(`items: ${ffmpegPath} ${ffmpegArgs.join(' ')}`);
 
       return execFile(ffmpegPath, ffmpegArgs, { maxBuffer: 1024 * 1024 * 8 })

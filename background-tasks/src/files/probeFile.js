@@ -1,9 +1,6 @@
-import { analyseLogger as logger } from 'bbcat-orchestration-builder-logging';
-import { path as ffprobePath } from 'ffprobe-static';
+// import { analyseLogger as logger } from 'bbcat-orchestration-builder-logging';
 import ffprobe from 'ffprobe-client';
-
-// configure the ffprobe module with the path to the bundled ffprobe
-logger.debug(`ffprobePath: ${ffprobePath}, cwd: ${process.cwd()}`);
+import which from '../which';
 
 const TIME_DECIMALS = 2;
 const roundTime = t => parseFloat(parseFloat(t).toFixed(TIME_DECIMALS));
@@ -13,7 +10,8 @@ const roundTime = t => parseFloat(parseFloat(t).toFixed(TIME_DECIMALS));
  *
  * @returns {Promise}
  */
-const probeFile = filePath => ffprobe(filePath, { path: ffprobePath })
+const probeFile = filePath => which('ffprobe')
+  .then(path => ffprobe(filePath, { path }))
   .then((data) => {
     // ensure there is at least one stream detected in the file and return the first one
     if (!data.streams || data.streams.length === 0) {

@@ -1,6 +1,8 @@
 import ffprobe from 'ffprobe-client';
 import probeFile from '../../src/files/probeFile';
 
+jest.mock('../../src/which', () => jest.fn(name => Promise.resolve(name)));
+
 const mockProbeResults = {
   streams: [{
     codec_type: 'audio',
@@ -20,7 +22,7 @@ beforeEach(() => {
 describe('probeFile', () => {
   it('calls ffprobe and returns results from it', () => probeFile('/dev/null')
     .then(({ probe }) => {
-      expect(ffprobe).toHaveBeenCalledWith('/dev/null', expect.any(Object));
+      expect(ffprobe).toHaveBeenCalledWith('/dev/null', expect.anything());
       expect(probe).toEqual({
         sampleRate: 12300,
         numChannels: 42,

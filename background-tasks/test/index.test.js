@@ -3,6 +3,7 @@ import backgroundTasks from '../src';
 describe('background-tasks', () => {
   it('exists', () => {
     expect(backgroundTasks).toEqual({
+      checkRequirements: expect.any(Function),
       registerFiles: expect.any(Function),
       probeFiles: expect.any(Function),
       detectItems: expect.any(Function),

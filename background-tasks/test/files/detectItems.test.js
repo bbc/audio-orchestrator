@@ -12,6 +12,8 @@ jest.mock('child_process', () => ({
   },
 }));
 
+jest.mock('../../src/which', () => jest.fn(name => Promise.resolve(name)));
+
 beforeEach(() => {
   jest.clearAllMocks();
   jest.restoreAllMocks();

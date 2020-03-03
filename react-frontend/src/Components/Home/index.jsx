@@ -16,19 +16,25 @@ import ProjectsList from './ProjectsList';
 import DeveloperMenu from './DeveloperMenu';
 
 import {
-  requestCreateProject,
-  requestOpenProject,
   requestListProjects,
   checkFileOpen,
+  requestCreateProject,
+  requestOpenProject,
 } from '../../actions/project';
+
+import {
+  requestCheckRequirements,
+} from '../../actions/requirements';
 
 class Home extends React.Component {
   // TODO Do we need to request loading things from within the component?
   componentDidMount() {
     const {
+      onRequestCheckRequirements,
       onRequestListProjects,
       onCheckFileOpen,
     } = this.props;
+    onRequestCheckRequirements();
     onRequestListProjects();
     onCheckFileOpen();
   }
@@ -90,6 +96,7 @@ class Home extends React.Component {
 }
 
 Home.propTypes = {
+  onRequestCheckRequirements: PropTypes.func.isRequired,
   onRequestListProjects: PropTypes.func.isRequired,
   onCheckFileOpen: PropTypes.func.isRequired,
   onOpenProject: PropTypes.func.isRequired,
@@ -111,6 +118,7 @@ const mapDispatchToProps = dispatch => ({
   onCreateProject: () => dispatch(requestCreateProject()),
   onRequestListProjects: () => dispatch(requestListProjects()),
   onCheckFileOpen: () => dispatch(checkFileOpen()),
+  onRequestCheckRequirements: () => dispatch(requestCheckRequirements()),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
