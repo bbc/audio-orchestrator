@@ -49,7 +49,10 @@ class Project {
     // Get simple top level properties
     data.name = store.get('name', '');
     data.lastOpened = store.get('lastOpened', '');
-    data.settings = store.get('settings', {});
+    data.settings = store.get('settings', {
+      compressorThreshold: 0,
+      accentColour: '#666666',
+    });
     data.images = store.get('images', {});
 
     // get controls listed in controlIds

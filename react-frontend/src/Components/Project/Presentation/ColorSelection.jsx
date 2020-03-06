@@ -37,8 +37,6 @@ const ColorSelection = ({
     }
   }, [setCustomColor, setCustomColorError, onChange]);
 
-  console.log(customColor, customColorError);
-
   return (
     <Segment>
       {colors.map(color => (
