@@ -1,16 +1,32 @@
 import { promisify } from 'util';
 import { execFile as execFileCB } from 'child_process';
+import semverCompare from 'semver-compare';
 
 import which from '../which';
+
+const MIN_FFMPEG_VERSION = '4.1.0';
 
 const execFile = promisify(execFileCB);
 
 const checkFfmpeg = () => which('ffmpeg')
   .then(path => execFile(path, ['-version']))
   .then(({ stdout }) => {
-    if (!stdout.includes('ffmpeg version')) {
+    const matches = stdout.match(/ffmpeg version ([0-9.]*)/);
+
+    if (!matches || matches.length < 2) {
       throw new Error('ffmpeg was found but does not appear to work (ffmpeg -version does not output in expected format).');
     }
+
+    const version = matches[1];
+
+    if (semverCompare(MIN_FFMPEG_VERSION, version) > 0) {
+      return {
+        success: false,
+        name: 'ffmpeg',
+        error: `ffmpeg version must be at least ${MIN_FFMPEG_VERSION}.`,
+      };
+    }
+
     return {
       success: true,
       name: 'ffmpeg',

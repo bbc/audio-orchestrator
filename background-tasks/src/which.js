@@ -17,7 +17,7 @@ const which = (name) => {
   return exec(`which ${name}`, {
     env: {
       ...process.env,
-      PATH: `${process.env.PATH}:/usr/local/bin`, // TODO macOS/Linux specific
+      PATH: `${process.env.PATH}:/usr/bin:/usr/local/bin`, // TODO macOS/Linux specific
     },
   })
     .then(({ stdout }) => {

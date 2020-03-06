@@ -6,11 +6,11 @@
     "build": "(cd electron-app && yarn build)",
     "dist": "(cd electron-app && yarn dist)",
     "dist:restricted": "(cd electron-app && yarn dist:restricted)",
-    "bump": "node scripts/bump.js",
+    "bump": "node scripts/bump.js && git add */package.json",
     "postinstall": "(cd background-tasks && yarn install) && (cd electron-app && yarn install) && (cd react-frontend && yarn install) && (cd logging && yarn install)",
     "lint": "(cd background-tasks && yarn lint) && (cd electron-app && yarn lint) && (cd react-frontend && yarn lint) && (cd logging && yarn lint)",
     "test": "(cd background-tasks && yarn test) && (cd electron-app && yarn test) && (cd react-frontend && yarn test) && (cd logging && yarn test)",
-    "credits": "(cd electron-app && yarn credits)"
+    "credits": "(cd electron-app && yarn credits) && git add electron-app/credits.html"
   },
   "packages": [
     "background-tasks",
@@ -23,6 +23,7 @@
     "pre-commit": "^1.2.2"
   },
   "pre-commit": [
-    "lint"
+    "lint",
+    "credits"
   ]
 }

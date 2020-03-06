@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-background-tasks",
-  "version": "2.0.0-dev.22",
+  "version": "2.0.0-dev.23",
   "description": "Methods for analysing, encoding, and packaging files to create orchestrated experiences.",
   "main": "dist/index.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
@@ -14,6 +14,7 @@
     "ffprobe-client": "^1.1.2",
     "finalhandler": "^1.1.2",
     "fs-extra": "^7.0.1",
+    "semver-compare": "^1.0.0",
     "serve-static": "^1.14.1",
     "uuid": "^3.3.2"
   },
