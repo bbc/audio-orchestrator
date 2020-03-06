@@ -4,6 +4,7 @@ import runExportSteps from '../runExportSteps';
 
 import copyTemplateSources from './copyTemplateSources';
 import copyAudioFiles from './copyAudioFiles';
+import copyImageFiles from './copyImageFiles';
 import configureTemplateSettings from './configureTemplateSettings';
 
 // const logger = getLogger('export-template');
@@ -24,6 +25,10 @@ const exportTemplate = (
     {
       name: 'copying audio files',
       fn: copyAudioFiles,
+    },
+    {
+      name: 'copying image files',
+      fn: copyImageFiles,
     },
     {
       name: 'configuring template settings',

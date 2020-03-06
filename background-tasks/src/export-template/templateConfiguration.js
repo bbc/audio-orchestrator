@@ -3,7 +3,7 @@
 // const formatContentId = sequenceId => `bbcat-orchestration:${sequenceId}`;
 const formatContentId = sequenceId => sequenceId;
 
-const templateConfiguration = (sequences, controls, settings) => {
+const templateConfiguration = (sequences, controls, settings, imageUrls) => {
   const introSequence = sequences.find(({ isIntro }) => isIntro) || sequences[0] || {};
 
   const configuration = {
@@ -59,6 +59,10 @@ const templateConfiguration = (sequences, controls, settings) => {
     configuration.TEXT_TITLE = settings.title;
   }
 
+  if (settings.subtitle) {
+    configuration.TEXT_SUBTITLE = settings.subtitle;
+  }
+
   if (settings.introduction) {
     configuration.TEXT_INTRODUCTION = settings.introduction;
   }
@@ -73,6 +77,30 @@ const templateConfiguration = (sequences, controls, settings) => {
 
   if (settings.accentColour) {
     configuration.ACCENT_COLOUR = settings.accentColour;
+  }
+
+  if (settings.enableDebugUI !== undefined) {
+    configuration.DEBUG_UI = settings.enableDebugUI;
+  }
+
+  if (settings.enableTutorial !== undefined) {
+    configuration.ENABLE_TUTORIAL = settings.enableTutorial;
+  }
+
+  if (settings.compressorRatio !== undefined && !Number.isNaN(settings.compressorRatio)) {
+    configuration.MDO_COMPRESSOR_RATIO = settings.compressorRatio;
+  }
+
+  if (settings.compressorThreshold !== undefined && !Number.isNaN(settings.compressorThreshold)) {
+    configuration.MDO_COMPRESSOR_THRESHOLD = settings.compressorThreshold;
+  }
+
+  if (settings.enableTutorial !== undefined) {
+    configuration.ENABLE_TUTORIAL = settings.enableTutorial;
+  }
+
+  if (settings.playerImageId) {
+    configuration.PLAYER_IMAGE_URL = imageUrls[settings.playerImageId];
   }
 
   return JSON.stringify(configuration, null, 2);

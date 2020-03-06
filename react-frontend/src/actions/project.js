@@ -133,6 +133,16 @@ export const loadControls = projectId => (dispatch) => {
   dispatch({ type: 'SET_PROJECT_CONTROLS_LIST', projectId, controlsList });
 };
 
+export const loadImages = projectId => (dispatch) => {
+  const { images } = projects[projectId];
+
+  dispatch({
+    type: 'SET_PROJECT_IMAGES',
+    projectId,
+    images,
+  });
+};
+
 export const validateProject = projectId => ({
   type: 'SET_PROJECT_REVIEW_ITEMS',
   projectId,
@@ -205,6 +215,17 @@ export const setFileProperties = (projectId, sequenceId, files) => (dispatch) =>
 
   sequence.files = updatedFiles;
 
+  dispatch(validateProject(projectId));
+};
+
+/**
+ * Replaces the entire images object in the project and also updates the state.
+ */
+const replaceProjectImages = (projectId, images) => (dispatch) => {
+  const project = projects[projectId];
+  project.images = images;
+
+  dispatch(loadImages(projectId));
   dispatch(validateProject(projectId));
 };
 
@@ -477,6 +498,54 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
     });
 };
 
+
+const checkImageFiles = projectId => (dispatch) => {
+  const project = projects[projectId];
+  const { images } = project;
+
+  // TODO may not need a task for this as progress is not shown anywhere yet.
+  const createTaskId = uuidv4();
+
+  dispatch(setTaskProgress(createTaskId, 0, 0));
+
+  // bind file service methods to pass into task creator
+  const registerAll = fileService.registerAll.bind(fileService);
+
+  // Register the files with the server, this also checks if the file exists on the file system.
+  createTaskWithProgress(
+    dispatch,
+    registerAll,
+    createTaskId,
+    Object.keys(images).map((imageId) => {
+      const { imagePath } = images[imageId] || {};
+      return {
+        fileId: imageId,
+        path: imagePath,
+      };
+    }),
+  )
+    .then((result) => {
+      // Create updated images object
+      // TODO this re-creates each image object (analyseAllFiles only updates changed properties).
+      const updatedImages = {};
+      result.forEach(({ success, fileId }) => {
+        const imageId = fileId;
+
+        updatedImages[imageId] = {
+          imageId,
+          imagePath: images[imageId].imagePath,
+          error: success ? null : 'Image file is missing.',
+        };
+      });
+
+      // update error messages etc based on result
+      dispatch(replaceProjectImages(
+        projectId,
+        updatedImages,
+      ));
+    });
+};
+
 /**
  * Action creator, opens a specified project from the store (or triggers a file-open dialogue).
  */
@@ -495,6 +564,8 @@ export const requestOpenProject = (projectId = null) => (dispatch) => {
         // load the object metadata
         dispatch(loadSequenceObjects(projectId, sequenceId));
       });
+      dispatch(checkImageFiles(projectId));
+      dispatch(loadImages(projectId));
     })
     .then(() => {
       dispatch(openedProject(projectId));
@@ -1039,4 +1110,79 @@ export const swapControlOrder = (projectId, controlId, otherControlId) => (dispa
   project.swapControlOrder(controlId, otherControlId);
 
   dispatch(loadControls(projectId));
+};
+
+/**
+ * opens a file-open dialogue and if an image is selected, replaces the project's player image;
+ * deleting the link to the previous image as well.
+ */
+export const requestReplaceProjectPlayerImage = projectId => (dispatch) => {
+  const project = projects[projectId];
+
+  // TODO mostly copied from replaceAllAudioFiles, refactor? esp. for using images elsewhere.
+  new Promise((resolve, reject) => {
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*';
+    input.multiple = false;
+    input.style.display = 'none';
+
+    const onChange = () => {
+      const { files } = input;
+      input.removeEventListener('change', onChange);
+      document.body.removeChild(input);
+      if (files.length > 0) {
+        resolve(files);
+      } else {
+        reject(new Error('No files selected'));
+      }
+    };
+
+    input.addEventListener('change', onChange);
+
+    document.body.appendChild(input);
+    input.click();
+  }).then((fileList) => {
+    const files = [];
+
+    // Take the FileList and reduce it to a plain array of file names and paths only.
+    // In electron, the path is populated with the absolute path to the file. In the browser, path
+    // will be undefined. In that case, a file upload to a server may need to be triggered.
+    for (let i = 0; i < fileList.length; i += 1) {
+      const file = fileList[i];
+      files.push({
+        name: file.name,
+        path: file.path,
+      });
+    }
+
+    return files;
+  }).then((files) => {
+    const { images, settings } = project;
+    const { playerImageId } = settings;
+
+    const newImageId = uuidv4();
+
+    const { path } = files[0];
+
+    const updatedImages = {
+      ...images,
+      [newImageId]: {
+        imageId: newImageId,
+        imagePath: path,
+      },
+    };
+
+    if (playerImageId in updatedImages) {
+      delete updatedImages[playerImageId];
+    }
+    project.images = updatedImages;
+
+    dispatch(loadImages(projectId));
+    dispatch(checkImageFiles(projectId));
+    dispatch(setProjectSetting(projectId, 'playerImageId', newImageId));
+  }).catch((e) => {
+    console.warn(e);
+    setAppWarning('No image file selected, please try again.');
+  });
 };

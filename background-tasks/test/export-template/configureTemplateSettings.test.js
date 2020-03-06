@@ -19,6 +19,7 @@ describe('configureTemplateSettings', () => {
     const args = {
       foo: 'bar',
       outputDir: '/dev/null',
+      settings: {}, // required in test because its properties are accessed
     };
 
     return configureTemplateSettings(args)
@@ -32,6 +33,7 @@ describe('configureTemplateSettings', () => {
     const sequences = [];
     const controls = [];
     const settings = {};
+    const imageUrls = {};
 
     fse.readFile.mockResolvedValueOnce([
       '<script>',
@@ -45,10 +47,12 @@ describe('configureTemplateSettings', () => {
     templateConfiguration.mockReturnValueOnce(mockConfig);
 
     return configureTemplateSettings({
-      outputDir, sequences, controls, settings,
+      outputDir, sequences, controls, settings, imageUrls,
     })
       .then(() => {
-        expect(templateConfiguration).toHaveBeenCalledWith(sequences, controls, settings);
+        expect(templateConfiguration).toHaveBeenCalledWith(
+          sequences, controls, settings, imageUrls,
+        );
         expect(fse.readFile).toHaveBeenCalledTimes(2);
         expect(fse.writeFile).toHaveBeenCalledTimes(2);
 

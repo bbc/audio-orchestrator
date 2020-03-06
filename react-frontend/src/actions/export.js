@@ -120,14 +120,19 @@ export const requestExportTemplate = projectId => (dispatch) => {
       const project = new Project(store);
       const sequences = project.getSequencesToExport();
       const controls = project.getControlsToExport();
-      const { settings } = project;
+      const { settings, images } = project;
 
-      return { sequences, controls, settings };
+      return {
+        sequences,
+        controls,
+        settings,
+        images,
+      };
     })
-    .then(({ sequences, controls, settings }) => waitForExportTask(
+    .then(args => waitForExportTask(
       dispatch,
       exportTemplate,
-      { sequences, controls, settings },
+      args,
     ))
     .then(({ result }) => {
       const { outputDir } = result;
@@ -154,14 +159,19 @@ export const requestExportDistribution = projectId => (dispatch) => {
       const project = new Project(store);
       const sequences = project.getSequencesToExport();
       const controls = project.getControlsToExport();
-      const { settings } = project;
+      const { settings, images } = project;
 
-      return { sequences, controls, settings };
+      return {
+        sequences,
+        controls,
+        settings,
+        images,
+      };
     })
-    .then(({ sequences, controls, settings }) => waitForExportTask(
+    .then(args => waitForExportTask(
       dispatch,
       exportDistribution,
-      { sequences, controls, settings },
+      args,
     ))
     .then(({ result }) => {
       const { outputDir } = result;
@@ -188,14 +198,19 @@ export const requestStartPreview = projectId => (dispatch) => {
       const project = new Project(store);
       const sequences = project.getSequencesToExport();
       const controls = project.getControlsToExport();
-      const { settings } = project;
+      const { settings, images } = project;
 
-      return { sequences, controls, settings };
+      return {
+        sequences,
+        controls,
+        settings,
+        images,
+      };
     })
-    .then(({ sequences, controls, settings }) => waitForExportTask(
+    .then(args => waitForExportTask(
       dispatch,
       startPreview,
-      { sequences, controls, settings },
+      args,
     ))
     .then(({ result }) => {
       // TODO preview-specific handling

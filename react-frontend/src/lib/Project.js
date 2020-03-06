@@ -50,6 +50,7 @@ class Project {
     data.name = store.get('name', '');
     data.lastOpened = store.get('lastOpened', '');
     data.settings = store.get('settings', {});
+    data.images = store.get('images', {});
 
     // get controls listed in controlIds
     data.controls = {};
@@ -188,6 +189,18 @@ class Project {
   }
 
   /**
+   * Gets the project images as an object indexed by imageId.
+   *
+   * @returns {Object}
+   */
+  get images() {
+    const { images } = this.data;
+    return {
+      ...images,
+    };
+  }
+
+  /**
    * Changes the project name.
    *
    * @param {string} name
@@ -206,6 +219,15 @@ class Project {
     const { store, data } = this;
     data.settings = settings;
     store.set('settings', settings);
+  }
+
+  /**
+   * Replaces the project images object
+   */
+  set images(images) {
+    const { store, data } = this;
+    data.images = images;
+    store.set('images', images);
   }
 
   /**
@@ -374,7 +396,7 @@ class Project {
   }
 
   /**
-   * Deletes the entire project and all sequences and controls within it
+   * Deletes the entire project and all sequences, controls, and images within it
    */
   delete() {
     const { data, store } = this;
@@ -388,6 +410,7 @@ class Project {
     store.delete('name');
     store.delete('lastOpened');
     store.delete('settings');
+    store.delete('images');
     store.delete('sequenceIds');
     store.delete('controlIds');
 
@@ -491,6 +514,25 @@ class Project {
   }
 
   /**
+   * Validates images by checking if any of them have error flags set
+   */
+  validateImages() {
+    const { images } = this.data;
+    const valid = Object.values(images).every(({ error }) => !error);
+
+    const message = valid ? null : 'Some image files may be missing; defaults will be used.';
+
+    return {
+      key: 'images',
+      title: 'Image files',
+      message,
+      warning: !valid,
+      error: false,
+      projectPage: PAGE_PROJECT_PRESENTATION,
+    };
+  }
+
+  /**
    * Validates the entire project, including settings and sequences. Returns a list of report items
    * for groups of settings and each sequence.
    *
@@ -503,6 +545,7 @@ class Project {
     return [
       this.validatePresentationSettings(),
       this.validateAdvancedSettings(),
+      this.validateImages(),
       ...Object.keys(sequences).map(sequenceId => sequences[sequenceId].validate()),
     ];
     // TODO: Validate controls and object behaviours

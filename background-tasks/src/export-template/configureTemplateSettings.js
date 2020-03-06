@@ -8,15 +8,16 @@ const configureTemplateSettings = (args) => {
     controls,
     settings,
     outputDir,
+    imageUrls,
   } = args;
 
   // Generate the configuration JSON string to put in
-  const configuration = templateConfiguration(sequences, controls, settings);
+  const configuration = templateConfiguration(sequences, controls, settings, imageUrls);
 
   // There are two versions of index.html, currently both are the same. Both contain a script
   // tag that sets the configuration and initialises the template.
   const configPaths = [
-    path.join(outputDir, 'src', 'presentation', 'index.html'),
+    path.join(outputDir, 'src', 'index.html'),
     path.join(outputDir, 'dist', 'index.html'),
   ];
 
@@ -34,6 +35,9 @@ const configureTemplateSettings = (args) => {
         /const [A-Z_]+ = '.*';/g,
         '',
       ))
+      // Replace page title
+      .then(contents => contents.replace(/<title>(.*)<\/title>/, `<title>${settings.title}</title>`))
+      // Write updated config file
       .then(updatedContents => fse.writeFile(configPath, updatedContents))),
   ).then(() => args);
 };

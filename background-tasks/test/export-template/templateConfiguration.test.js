@@ -68,8 +68,8 @@ describe('templateConfiguration', () => {
 
     const settings = {
       joiningLink: 'http://example.com',
-      zones: [],
       title: 'foo',
+      subtitle: 'something',
       introduction: 'bar',
       startLabel: 'go',
       joinLabel: 'join',
@@ -79,11 +79,44 @@ describe('templateConfiguration', () => {
     const result = JSON.parse(templateConfiguration(sequences, controls, settings));
 
     expect(result).toEqual(expect.objectContaining({
-      TEXT_TITLE: expect.any(String),
-      TEXT_INTRODUCTION: expect.any(String),
-      TEXT_START_LABEL: expect.any(String),
-      TEXT_JOIN_LABEL: expect.any(String),
-      ACCENT_COLOUR: expect.any(String),
+      TEXT_TITLE: settings.title,
+      TEXT_SUBTITLE: settings.subtitle,
+      TEXT_INTRODUCTION: settings.introduction,
+      TEXT_START_LABEL: settings.startLabel,
+      TEXT_JOIN_LABEL: settings.joinLabel,
+      ACCENT_COLOUR: settings.accentColour,
+    }));
+  });
+
+  it('sets compressor settings', () => {
+    const sequences = [];
+
+    const settings = {
+      compressorRatio: 12,
+      compressorThreshold: -20,
+    };
+
+    const result = JSON.parse(templateConfiguration(sequences, controls, settings));
+
+    expect(result).toEqual(expect.objectContaining({
+      MDO_COMPRESSOR_RATIO: settings.compressorRatio,
+      MDO_COMPRESSOR_THRESHOLD: settings.compressorThreshold,
+    }));
+  });
+
+  it('sets UI flags', () => {
+    const sequences = [];
+
+    const settings = {
+      enableTutorial: true,
+      enableDebugUI: true,
+    };
+
+    const result = JSON.parse(templateConfiguration(sequences, controls, settings));
+
+    expect(result).toEqual(expect.objectContaining({
+      ENABLE_TUTORIAL: settings.enableTutorial,
+      DEBUG_UI: settings.enableDebugUI,
     }));
   });
 });

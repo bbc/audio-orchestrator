@@ -156,6 +156,11 @@ const ProjectReducer = (state = initialState, action) => {
         state, action.projectId,
         { settings: action.settings },
       );
+    case 'SET_PROJECT_IMAGES':
+      return updateProject(
+        state, action.projectId,
+        { images: action.images },
+      );
     case 'SET_PROJECT_REVIEW_ITEMS':
       return updateProject(state, action.projectId, { reviewItems: action.reviewItems });
     case 'SET_PROJECT_SEQUENCES_LIST_LOADING':
