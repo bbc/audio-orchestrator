@@ -85,12 +85,12 @@ class Presentation extends React.Component {
 
     return (
       <Container>
-        <PageTitleBar
-          title="Look & Feel"
-          shortDescription="The presentation settings customise the look and feel of the preview and exported prototype application."
-          helpId="presentation"
-        />
         <Form>
+          <PageTitleBar
+            title="Look & Feel"
+            shortDescription="The presentation settings customise the look and feel of the preview and exported prototype application."
+            helpId="presentation"
+          />
           <Header content="Title text" subheader="This text will appear on the front page of the experience." />
           <Form.Group widths="equal">
             <Form.Input

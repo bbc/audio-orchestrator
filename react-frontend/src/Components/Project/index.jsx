@@ -5,6 +5,7 @@ import {
   Container,
   Menu,
   Message,
+  Divider,
 } from 'semantic-ui-react';
 import Sequences from './Sequences';
 import Controls from './Controls';
@@ -25,19 +26,6 @@ import {
   PAGE_PROJECT_EXPORT,
 } from '../../reducers/UIReducer';
 
-const containerStyle = {
-  position: 'absolute',
-  display: 'flex',
-  height: '100%',
-  width: '100%',
-  flexDirection: 'column',
-};
-
-const contentContainerStyle = {
-  margin: '1em 0',
-  flexGrow: 1,
-};
-
 // Define the mapping from the currentProjectPage strings to the react components to render
 const projectPageComponents = {
   [PAGE_PROJECT_SEQUENCES]: Sequences,
@@ -56,26 +44,23 @@ const Project = ({
 }) => {
   const ProjectPage = projectPageComponents[currentProjectPage];
   return (
-    <div style={containerStyle}>
-      <Container>
-        <Menu inverted color="orange" attached="bottom">
-          <Menu.Item header content={<EditableText value={name} onChange={onSetName} />} />
-          <Menu.Item position="right" icon="close" content="close" onClick={onClose} />
-        </Menu>
-      </Container>
-      <div style={contentContainerStyle}>
-        { ProjectPage
-          ? <ProjectPage projectId={projectId} />
-          : (
-            <Container>
-              <Message error content="Project page not found" />
-            </Container>
-          )}
-      </div>
-      <Container>
-        <ProjectStepBar projectId={projectId} />
-      </Container>
-    </div>
+    <Container>
+      <Menu inverted color="orange" attached>
+        <Menu.Item header content={<EditableText value={name} onChange={onSetName} />} />
+        <Menu.Item position="right" icon="close" content="close" onClick={onClose} />
+      </Menu>
+      <ProjectStepBar projectId={projectId} />
+
+      <Divider hidden />
+
+      { ProjectPage
+        ? <ProjectPage projectId={projectId} />
+        : (
+          <Container>
+            <Message error content="Project page not found" />
+          </Container>
+        )}
+    </Container>
   );
 };
 

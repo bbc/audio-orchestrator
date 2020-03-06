@@ -57,7 +57,8 @@ const ProjectStepBar = ({
 }) => (
   <Step.Group
     fluid
-    attached="top"
+    attached="bottom"
+    widths={steps.length}
     items={steps.map(s => ({
       ...s,
       onClick: () => setCurrentPage(projectId, s.key),

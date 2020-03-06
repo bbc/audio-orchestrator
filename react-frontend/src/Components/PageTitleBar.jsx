@@ -1,8 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Icon,
-  Message,
+  Header,
 } from 'semantic-ui-react';
 import HelpModal from './HelpModal';
 
@@ -11,21 +10,21 @@ const PageTitleBar = ({
   shortDescription,
   helpId,
 }) => (
-  <Message icon>
-    <Icon name="lightbulb outline" />
-    <Message.Content>
-      <Message.Header>
+  <Header
+    size="large"
+    content={(
+      <span>
         {title}
-        {helpId ? ' ' : null}
+        {' '}
         {helpId
           ? (
             <HelpModal helpId={helpId} />
           )
           : null}
-      </Message.Header>
-      {shortDescription}
-    </Message.Content>
-  </Message>
+      </span>
+    )}
+    subheader={shortDescription}
+  />
 );
 
 PageTitleBar.propTypes = {
