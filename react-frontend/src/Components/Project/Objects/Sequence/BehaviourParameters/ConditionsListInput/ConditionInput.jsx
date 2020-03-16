@@ -4,12 +4,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Dropdown,
-  Button,
   Segment,
   Checkbox,
   List,
   Input,
 } from 'semantic-ui-react';
+import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
 import operators from './operators';
 import deviceProperties from './deviceProperties';
 import sessionProperties from './sessionProperties';
@@ -274,7 +274,8 @@ class ConditionInput extends React.PureComponent {
     return (
       <Segment>
         Condition
-        <Button icon="trash" floated="right" basic size="tiny" compact onClick={onDelete} />
+        {' '}
+        <ConfirmDeleteButton type="condition" small onDelete={onDelete} />
         <List>
           <List.Item>
             <Dropdown

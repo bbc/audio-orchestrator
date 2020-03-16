@@ -1,80 +1,75 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
-  Modal,
+  Popup,
 } from 'semantic-ui-react';
 
-class ConfirmDeleteButton extends React.Component {
-  constructor(props) {
-    super(props);
+const ConfirmDeleteButton = ({
+  onDelete,
+  type,
+  name,
+  disabled,
+  small,
+}) => {
+  const [open, setOpen] = useState(false);
 
-    this.state = { open: false };
+  const handleOpen = () => setOpen(!disabled);
+
+  const handleClose = () => setOpen(false);
+
+  const handleDelete = () => {
+    setOpen(false);
+    onDelete();
+  };
+
+  const trigger = (
+    <Button
+      disabled={disabled}
+      size={small ? 'tiny' : undefined}
+      basic={small}
+      compact={small}
+      negative={!small}
+      icon="trash"
+    />
+  );
+
+  if (disabled) {
+    return trigger;
   }
 
-  handleOpen() {
-    this.setState({ open: true });
-  }
-
-  handleClose() {
-    this.setState({ open: false });
-  }
-
-  render() {
-    const {
-      header,
-      name,
-      content,
-      onDelete,
-    } = this.props;
-
-    const { open } = this.state;
-
-    return (
-      <Modal
-        closeIcon
-        trigger={<Button type="button" negative icon="trash" content={content} />}
-        open={open}
-        onOpen={() => this.handleOpen()}
-        onClose={() => this.handleClose()}
-      >
-        <Modal.Header content={header} />
-        <Modal.Content>
-          {'You are about to delete '}
-          <b>{name}</b>
-          {'. Are you sure?'}
-        </Modal.Content>
-        <Modal.Actions>
-          <Button
-            content="Keep it"
-            onClick={() => this.handleClose()}
-          />
-          <Button
-            negative
-            content="Delete it"
-            icon="trash"
-            labelPosition="left"
-            onClick={() => {
-              onDelete();
-              this.handleClose();
-            }}
-          />
-        </Modal.Actions>
-      </Modal>
-    );
-  }
-}
+  return (
+    <Popup
+      open={open}
+      onOpen={handleOpen}
+      onClose={handleClose}
+      trigger={trigger}
+      on="click"
+      wide
+    >
+      <Popup.Header content={`Delete ${type}${name ? ` "${name}"` : ''}?`} />
+      <Popup.Content>
+        <Button.Group>
+          <Button negative content="Delete" onClick={handleDelete} />
+          <Button content="Keep" onClick={handleClose} />
+        </Button.Group>
+      </Popup.Content>
+    </Popup>
+  );
+};
 
 ConfirmDeleteButton.propTypes = {
-  header: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
   name: PropTypes.string,
   onDelete: PropTypes.func.isRequired,
-  content: PropTypes.string,
+  disabled: PropTypes.bool,
+  small: PropTypes.bool,
 };
 
 ConfirmDeleteButton.defaultProps = {
-  content: null,
-  name: 'untitled',
+  name: undefined,
+  disabled: false,
+  small: false,
 };
 
 export default ConfirmDeleteButton;

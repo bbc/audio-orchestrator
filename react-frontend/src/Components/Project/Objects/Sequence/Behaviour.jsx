@@ -5,6 +5,7 @@ import {
   Popup,
   Divider,
 } from 'semantic-ui-react';
+import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
 import BehaviourParameters from './BehaviourParameters';
 import behaviourTypes from './behaviourTypes';
 
@@ -66,7 +67,8 @@ class Behaviour extends React.PureComponent {
       >
         <Popup.Header>
           {displayName}
-          <Button icon="trash" floated="right" basic size="tiny" compact onClick={onDelete} />
+          {' '}
+          <ConfirmDeleteButton type="behaviour" name={displayName} small onDelete={onDelete} />
         </Popup.Header>
         <Popup.Content>
           {description}

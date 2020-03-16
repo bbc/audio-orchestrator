@@ -7,8 +7,8 @@ import {
   Button,
 } from 'semantic-ui-react';
 
+import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
 import PanningFlag from './PanningFlag';
-import ConfirmDeleteButton from '../../../ConfirmDeleteButton';
 import Behaviour from './Behaviour';
 import AddBehaviourButton from './AddBehaviourButton';
 
@@ -18,7 +18,7 @@ class ObjectRow extends React.PureComponent {
       objectNumber,
       objectBehaviours,
       channelMapping,
-      label,
+      // label,
       file,
       onChangePanning,
       onResetObject,
@@ -95,8 +95,8 @@ class ObjectRow extends React.PureComponent {
         <Table.Cell singleLine>
           <Button icon="undo" onClick={() => onResetObject(objectNumber)} />
           <ConfirmDeleteButton
-            header="Delete Object"
-            name={`${label} (object number ${objectNumber})`}
+            type="object"
+            name={`${objectNumber}`}
             onDelete={() => onDeleteObject(objectNumber)}
           />
         </Table.Cell>
@@ -108,7 +108,7 @@ class ObjectRow extends React.PureComponent {
 ObjectRow.propTypes = {
   objectNumber: PropTypes.number.isRequired,
   channelMapping: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
+  // label: PropTypes.string.isRequired,
   file: PropTypes.shape({
     name: PropTypes.string,
     error: PropTypes.string,

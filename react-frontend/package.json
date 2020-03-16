@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-react-frontend",
-  "version": "2.0.0-dev.24",
+  "version": "2.0.0-dev.25",
   "description": "Graphical user interface for generating orchestrated audio applications.",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
   "author": "Kristian Hentschel <Kristian.Hentschel@bbc.co.uk>",
@@ -29,6 +29,7 @@
     "css-loader": "^2.1.1",
     "eslint": "^5.15.3",
     "eslint-config-airbnb": "^17.1.0",
+    "eslint-import-resolver-webpack": "^0.12.1",
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-jsx-a11y": "^6.2.1",
     "eslint-plugin-react": "^7.12.4",

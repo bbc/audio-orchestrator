@@ -56,6 +56,9 @@ module.exports = (env, { mode = 'development' }) => ({
   resolve: {
     symlinks: false,
     extensions: ['.js', '.jsx'],
+    alias: {
+      Components: path.resolve(__dirname, 'src/Components'),
+    },
   },
   plugins: [
     new webpack.DefinePlugin({

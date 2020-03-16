@@ -9,6 +9,7 @@ import {
   Table,
   Header,
 } from 'semantic-ui-react';
+import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
 
 class CheckboxControlSettings extends React.PureComponent {
   constructor(props) {
@@ -170,13 +171,7 @@ class CheckboxControlSettings extends React.PureComponent {
                       />
                     </Table.Cell>
                     <Table.Cell collapsing>
-                      <Button
-                        name={value}
-                        onClick={this.handleDelete}
-                        size="tiny"
-                        icon="trash"
-                        basic
-                      />
+                      <ConfirmDeleteButton type="option" onDelete={(e) => { this.handleDelete(e, { name: value }); }} />
                     </Table.Cell>
                   </Table.Row>
                 ))}

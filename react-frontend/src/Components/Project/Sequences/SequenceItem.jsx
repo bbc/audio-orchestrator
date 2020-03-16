@@ -7,8 +7,8 @@ import {
   Grid,
   Header,
 } from 'semantic-ui-react';
+import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
 import EditableText from '../EditableText';
-import ConfirmDeleteButton from '../../ConfirmDeleteButton';
 import SequenceSettings from './SequenceSettings';
 import SequenceChoices from './SequenceChoices';
 import { setSequenceSetting } from '../../../actions/project';
@@ -48,16 +48,7 @@ const SequenceItem = ({
     </Card.Content>
 
     <Card.Content extra textAlign="right">
-      { isIntro
-        ? <Button disabled icon="trash" />
-        : (
-          <ConfirmDeleteButton
-            header="Delete Sequence"
-            name={name}
-            onDelete={() => onDelete(sequenceId)}
-          />
-        )
-      }
+      <ConfirmDeleteButton disabled={isIntro} type="sequence" name={name} onDelete={() => onDelete(sequenceId)} />
       <Button
         icon="edit"
         labelPosition="left"

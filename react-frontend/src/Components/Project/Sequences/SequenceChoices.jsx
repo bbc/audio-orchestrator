@@ -163,7 +163,7 @@ class SequenceChoices extends React.Component {
                 </Table.Cell>
                 <Table.Cell>
                   <ConfirmDeleteButton
-                    header="Delete Choice"
+                    type="choice"
                     name={label}
                     onDelete={() => this.handleDeleteChoice(choiceId)}
                   />

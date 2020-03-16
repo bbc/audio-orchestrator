@@ -5,7 +5,7 @@ import {
   Card,
   Button,
 } from 'semantic-ui-react';
-import ConfirmDeleteButton from '../../ConfirmDeleteButton';
+import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
 import {
   requestOpenProject,
   requestDeleteProject,
@@ -21,7 +21,7 @@ const ProjectItem = ({
       <Card.Header content={name} />
     </Card.Content>
     <Card.Content extra textAlign="right">
-      <ConfirmDeleteButton header="Delete Project" name={name} onDelete={onDelete} />
+      <ConfirmDeleteButton type="project" name={name} onDelete={onDelete} />
       <Button icon="edit" labelPosition="left" content="Open" onClick={onOpen} color="orange" />
     </Card.Content>
   </Card>

@@ -4,6 +4,7 @@ import {
   Card,
   Button,
 } from 'semantic-ui-react';
+import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
 import EditableText from '../EditableText';
 import ControlBehavioursDevices from './ControlBehavioursDevices';
 import ControlBehavioursSequences from './ControlBehavioursSequences';
@@ -38,9 +39,11 @@ class ControlCard extends React.PureComponent {
     return (
       <Card>
         <Card.Content style={{ flexGrow: 0 }}>
-          <Button icon="trash" floated="right" basic size="tiny" compact onClick={onDelete} />
-          <Button icon="right arrow" floated="right" basic size="tiny" compact onClick={() => onMove(1)} />
-          <Button icon="left arrow" floated="right" basic size="tiny" compact onClick={() => onMove(-1)} />
+          <Button.Group floated="right" basic size="tiny">
+            <ConfirmDeleteButton type="control" small onDelete={onDelete} />
+            <Button icon="left arrow" compact onClick={() => onMove(-1)} />
+            <Button icon="right arrow" compact onClick={() => onMove(1)} />
+          </Button.Group>
           <Card.Header>
             <EditableText
               value={controlName}
