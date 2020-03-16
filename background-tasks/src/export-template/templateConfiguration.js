@@ -55,51 +55,25 @@ const templateConfiguration = (sequences, controls, settings, imageUrls) => {
     configuration.CLOUDSYNC_ENDPOINT = { hostname: 'cloudsync.virt.ch.bbc.co.uk' };
   }
 
-  if (settings.title) {
-    configuration.TEXT_TITLE = settings.title;
-  }
+  configuration.TEXT_TITLE = settings.title;
+  configuration.TEXT_SUBTITLE = settings.subtitle;
+  configuration.TEXT_INTRODUCTION = settings.introduction;
+  configuration.TEXT_START_LABEL = settings.startLabel;
+  configuration.TEXT_JOIN_LABEL = settings.joinLabel;
+  configuration.ACCENT_COLOUR = settings.accentColour;
 
-  if (settings.subtitle) {
-    configuration.TEXT_SUBTITLE = settings.subtitle;
-  }
+  configuration.DEBUG_UI = settings.enableDebugUI;
+  configuration.ENABLE_TUTORIAL = settings.enableTutorial;
 
-  if (settings.introduction) {
-    configuration.TEXT_INTRODUCTION = settings.introduction;
-  }
-
-  if (settings.startLabel) {
-    configuration.TEXT_START_LABEL = settings.startLabel;
-  }
-
-  if (settings.joinLabel) {
-    configuration.TEXT_JOIN_LABEL = settings.joinLabel;
-  }
-
-  if (settings.accentColour) {
-    configuration.ACCENT_COLOUR = settings.accentColour;
-  }
-
-  if (settings.enableDebugUI !== undefined) {
-    configuration.DEBUG_UI = settings.enableDebugUI;
-  }
-
-  if (settings.enableTutorial !== undefined) {
-    configuration.ENABLE_TUTORIAL = settings.enableTutorial;
-  }
-
-  if (settings.compressorRatio !== undefined && !Number.isNaN(settings.compressorRatio)) {
+  if (!Number.isNaN(settings.compressorRatio)) {
     configuration.MDO_COMPRESSOR_RATIO = settings.compressorRatio;
   }
 
-  if (settings.compressorThreshold !== undefined && !Number.isNaN(settings.compressorThreshold)) {
+  if (!Number.isNaN(settings.compressorThreshold)) {
     configuration.MDO_COMPRESSOR_THRESHOLD = settings.compressorThreshold;
   }
 
-  if (settings.enableTutorial !== undefined) {
-    configuration.ENABLE_TUTORIAL = settings.enableTutorial;
-  }
-
-  if (settings.playerImageId) {
+  if (settings.playerImageId && settings.playerImageId in imageUrls) {
     configuration.PLAYER_IMAGE_URL = imageUrls[settings.playerImageId];
   }
 

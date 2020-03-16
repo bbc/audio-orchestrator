@@ -18,6 +18,7 @@ import {
 } from '../../../actions/project';
 
 const colors = [
+  '#006def',
   '#450073',
   '#ff4855',
   '#d64bce',
@@ -95,21 +96,21 @@ class Presentation extends React.Component {
           <Form.Group widths="equal">
             <Form.Input
               label="Title"
-              placeholder="Main title"
+              placeholder=""
               name="title"
               defaultValue={title}
               onBlur={this.handleBlur}
             />
             <Form.Input
               label="Subtitle"
-              placeholder="Secondary title"
+              placeholder=""
               name="subtitle"
               defaultValue={subtitle}
               onBlur={this.handleBlur}
             />
             <Form.Input
               label="Introduction"
-              placeholder="Introduction"
+              placeholder=""
               name="introduction"
               defaultValue={introduction}
               onBlur={this.handleBlur}
@@ -120,14 +121,14 @@ class Presentation extends React.Component {
           <Form.Group widths="equal">
             <Form.Input
               label="Start button"
-              placeholder="Start"
+              placeholder=""
               name="startLabel"
               defaultValue={startLabel}
               onBlur={this.handleBlur}
             />
             <Form.Input
               label="Join button"
-              placeholder="Join"
+              placeholder=""
               name="joinLabel"
               defaultValue={joinLabel}
               onBlur={this.handleBlur}
@@ -174,7 +175,7 @@ class Presentation extends React.Component {
           <Form.Group widths="equal">
             <Form.Input
               label="Compressor ratio"
-              placeholder="Ratio (between 1 and 20)"
+              placeholder="Set the ratio (between 1 and 20)"
               type="number"
               min="1"
               max="20"
@@ -184,7 +185,7 @@ class Presentation extends React.Component {
             />
             <Form.Input
               label="Compressor threshold in dB"
-              placeholder="Threshold (between -100 and 0)"
+              placeholder="Set the threshold in dB (between -100 and 0)"
               type="number"
               min="-100"
               max="0"

@@ -8,6 +8,19 @@ import {
 
 const DEFAULT_BASE_URL = 'audio';
 
+const DEFAULT_SETTINGS = {
+  title: 'Title',
+  subtitle: 'Secondary title',
+  introduction: 'Introduction',
+  startLabel: 'Start session',
+  joinLabel: 'Join existing session',
+  compressorRatio: 4,
+  compressorThreshold: -40,
+  accentColour: '#006def',
+  enableDebugUI: true,
+  enableTutorial: false,
+};
+
 /**
  * Helper for validating URL in advanced project settings
  */
@@ -49,10 +62,7 @@ class Project {
     // Get simple top level properties
     data.name = store.get('name', '');
     data.lastOpened = store.get('lastOpened', '');
-    data.settings = store.get('settings', {
-      compressorThreshold: 0,
-      accentColour: '#666666',
-    });
+    data.settings = store.get('settings', DEFAULT_SETTINGS);
     data.images = store.get('images', {});
 
     // get controls listed in controlIds
