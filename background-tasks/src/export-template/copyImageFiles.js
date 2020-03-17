@@ -14,7 +14,7 @@ const copyImageFiles = (args) => {
   // Promise that resolves once all files have been copied
   return Promise.all(
     Object.values(images || {}).map(({ imageId, imagePath }) => {
-      const imageUrl = path.join('images', `${imageId}.${path.extname(imagePath)}`);
+      const imageUrl = path.join('images', `${imageId}${path.extname(imagePath)}`);
       const imageOutputPath = path.join(outputDir, imageUrl);
       const imageDistOutputPath = path.join(outputDir, 'dist', imageUrl);
 
