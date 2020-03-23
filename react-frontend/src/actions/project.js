@@ -899,22 +899,6 @@ export const requestReplaceAllAudioFiles = (projectId, sequenceId) => (dispatch)
   });
 };
 
-export const resetObjectMetadata = (projectId, sequenceId, objectNumber) => (dispatch) => {
-  const project = projects[projectId];
-  const sequence = project.sequences[sequenceId];
-
-  // replace the object with an empty object, so it can be filled in based on the file name.
-  sequence.objects = {
-    ...sequence.objects,
-    [objectNumber]: { objectNumber },
-  };
-
-  matchObjectsToFiles(projectId, sequenceId);
-
-  dispatch(loadSequenceObjects(projectId, sequenceId));
-  dispatch(validateProject(projectId));
-};
-
 export const deleteObject = (projectId, sequenceId, objectNumber) => (dispatch) => {
   const project = projects[projectId];
   const sequence = project.sequences[sequenceId];

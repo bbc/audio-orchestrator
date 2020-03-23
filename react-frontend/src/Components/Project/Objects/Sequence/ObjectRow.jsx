@@ -4,10 +4,9 @@ import {
   Table,
   Icon,
   Popup,
-  Button,
+  Checkbox,
 } from 'semantic-ui-react';
 
-import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
 import PanningFlag from './PanningFlag';
 import Behaviour from './Behaviour';
 import AddBehaviourButton from './AddBehaviourButton';
@@ -21,18 +20,20 @@ class ObjectRow extends React.PureComponent {
       // label,
       file,
       onChangePanning,
-      onResetObject,
-      onDeleteObject,
       onAddObjectBehaviour,
       onDeleteObjectBehaviour,
       onReplaceObjectBehaviourParameters,
       sequencesList,
       controls,
+      highlighted,
+      onToggleHighlight,
     } = this.props;
 
     return (
-      <Table.Row negative={!file || !!file.error} verticalAlign="top">
-        <Table.Cell>{objectNumber}</Table.Cell>
+      <Table.Row negative={!file || !!file.error} verticalAlign="top" active={highlighted}>
+        <Table.Cell onClick={onToggleHighlight} singleLine>
+          <Checkbox checked={highlighted} label={objectNumber} />
+        </Table.Cell>
 
         { file
           ? (
@@ -91,15 +92,6 @@ class ObjectRow extends React.PureComponent {
             usedBehaviourTypes={objectBehaviours.map(({ behaviourType }) => behaviourType)}
           />
         </Table.Cell>
-
-        <Table.Cell singleLine>
-          <Button icon="undo" onClick={() => onResetObject(objectNumber)} />
-          <ConfirmDeleteButton
-            type="object"
-            name={`${objectNumber}`}
-            onDelete={() => onDeleteObject(objectNumber)}
-          />
-        </Table.Cell>
       </Table.Row>
     );
   }
@@ -118,8 +110,6 @@ ObjectRow.propTypes = {
     behaviourParameters: PropTypes.shape({}),
   })).isRequired,
   onChangePanning: PropTypes.func.isRequired,
-  onResetObject: PropTypes.func.isRequired,
-  onDeleteObject: PropTypes.func.isRequired,
   onAddObjectBehaviour: PropTypes.func.isRequired,
   onDeleteObjectBehaviour: PropTypes.func.isRequired,
   onReplaceObjectBehaviourParameters: PropTypes.func.isRequired,
@@ -128,10 +118,13 @@ ObjectRow.propTypes = {
     name: PropTypes.String,
   })).isRequired,
   controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  highlighted: PropTypes.bool,
+  onToggleHighlight: PropTypes.func.isRequired,
 };
 
 ObjectRow.defaultProps = {
   file: null,
+  highlighted: false,
 };
 
 export default ObjectRow;
