@@ -505,14 +505,6 @@
     "@babel/helper-regex" "^7.4.4"
     regexpu-core "^4.6.0"
 
-"@babel/polyfill@^7.7.0":
-  version "7.7.0"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@babel/polyfill/-/polyfill-7.7.0.tgz#e1066e251e17606ec7908b05617f9b7f8180d8f3"
-  integrity sha1-4QZuJR4XYG7HkIsFYX+bf4GA2PM=
-  dependencies:
-    core-js "^2.6.5"
-    regenerator-runtime "^0.13.2"
-
 "@babel/preset-env@^7.4.2":
   version "7.6.2"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@babel/preset-env/-/preset-env-7.6.2.tgz#abbb3ed785c7fe4220d4c82a53621d71fc0c75d3"
@@ -574,6 +566,13 @@
   dependencies:
     regenerator-runtime "^0.13.2"
 
+"@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3":
+  version "7.9.2"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@babel/runtime/-/runtime-7.9.2.tgz#d90df0583a3a252f09aaa619665367bae518db06"
+  integrity sha1-2Q3wWDo6JS8JqqYZZlNnuuUY2wY=
+  dependencies:
+    regenerator-runtime "^0.13.4"
+
 "@babel/template@^7.1.0", "@babel/template@^7.4.4", "@babel/template@^7.6.0":
   version "7.6.0"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@babel/template/-/template-7.6.0.tgz#7f0159c7f5012230dad64cca42ec9bdb5c9536e6"
@@ -623,28 +622,33 @@
     weak-map "^1.0.5"
     winston "^2.4.0"
 
-"@bbc/bbcat-orchestration-template@^0.10.1":
-  version "0.10.1"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.10.1.tgz#307f5b1486f8cabc1811c26352b95b6e8df996c9"
-  integrity sha1-MH9bFIb4yrwYEcJjUrlbbo35lsk=
+"@bbc/bbcat-orchestration-template@^0.11.2":
+  version "0.11.2"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.11.2.tgz#28c17bb8151ee2090792574cb74d990d2d6c64ed"
+  integrity sha1-KMF7uBUe4gkHkldMt02ZDS1sZO0=
   dependencies:
-    "@babel/polyfill" "^7.7.0"
-    "@bbc/bbcat-orchestration" "^0.7.4"
-    bowser "^2.0.0-beta.1"
-    prop-types "^15.6.2"
+    "@bbc/bbcat-orchestration" "^0.7.5"
+    "@hot-loader/react-dom" "^16.11.0"
+    bowser "^2.9.0"
+    classnames "^2.2.6"
+    core-js "^3.6.4"
+    pepjs "^0.5.2"
+    prop-types "^15.7.2"
     qrcodejs "^1.0.0"
-    react "^16.4.1"
-    react-dom "^16.4.1"
-    react-hot-loader "^4.3.3"
-    react-redux "^5.0.7"
-    redux "^4.0.0"
-    redux-saga "^0.16.0"
+    react "^16.12.0"
+    react-dom "^16.12.0"
+    react-hot-loader "^4.12.19"
+    react-redux "^7.1.3"
+    redux "^4.0.5"
+    redux-saga "^1.1.3"
+    regenerator-runtime "^0.13.3"
+    uuid "^3.3.2"
     whatwg-fetch "^3.0.0"
 
-"@bbc/bbcat-orchestration@^0.7.4":
-  version "0.7.4"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration/-/@bbc/bbcat-orchestration-0.7.4.tgz#f1616ea3d060b866e4cf2bbc5ed9d24e4ca9a6a3"
-  integrity sha1-8WFuo9BguGbkzyu8XtnSTkyppqM=
+"@bbc/bbcat-orchestration@^0.7.5":
+  version "0.7.7"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration/-/@bbc/bbcat-orchestration-0.7.7.tgz#dffa9a8d74df7ff8619df3c8489b6153ef014909"
+  integrity sha1-3/qajXTff/hhnfPISJthU+8BSQk=
   dependencies:
     "@bbc/bbcat-orchestration-bbcat" "^0.2.0"
     "@bbc/bbcat-orchestration-cloud-sync-client" "^2.2.0"
@@ -659,6 +663,60 @@
   dependencies:
     ajv "^6.1.0"
     ajv-keywords "^3.1.0"
+
+"@hot-loader/react-dom@^16.11.0":
+  version "16.13.0"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@hot-loader/react-dom/-/react-dom-16.13.0.tgz#de245b42358110baf80aaf47a0592153d4047997"
+  integrity sha1-3iRbQjWBELr4Cq9HoFkhU9QEeZc=
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
+    prop-types "^15.6.2"
+    scheduler "^0.19.0"
+
+"@redux-saga/core@^1.1.3":
+  version "1.1.3"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@redux-saga/core/-/core-1.1.3.tgz#3085097b57a4ea8db5528d58673f20ce0950f6a4"
+  integrity sha1-MIUJe1ek6o21Uo1YZz8gzglQ9qQ=
+  dependencies:
+    "@babel/runtime" "^7.6.3"
+    "@redux-saga/deferred" "^1.1.2"
+    "@redux-saga/delay-p" "^1.1.2"
+    "@redux-saga/is" "^1.1.2"
+    "@redux-saga/symbols" "^1.1.2"
+    "@redux-saga/types" "^1.1.0"
+    redux "^4.0.4"
+    typescript-tuple "^2.2.1"
+
+"@redux-saga/deferred@^1.1.2":
+  version "1.1.2"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@redux-saga/deferred/-/deferred-1.1.2.tgz#59937a0eba71fff289f1310233bc518117a71888"
+  integrity sha1-WZN6Drpx//KJ8TECM7xRgRenGIg=
+
+"@redux-saga/delay-p@^1.1.2":
+  version "1.1.2"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@redux-saga/delay-p/-/delay-p-1.1.2.tgz#8f515f4b009b05b02a37a7c3d0ca9ddc157bb355"
+  integrity sha1-j1FfSwCbBbAqN6fD0Mqd3BV7s1U=
+  dependencies:
+    "@redux-saga/symbols" "^1.1.2"
+
+"@redux-saga/is@^1.1.2":
+  version "1.1.2"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@redux-saga/is/-/is-1.1.2.tgz#ae6c8421f58fcba80faf7cadb7d65b303b97e58e"
+  integrity sha1-rmyEIfWPy6gPr3ytt9ZbMDuX5Y4=
+  dependencies:
+    "@redux-saga/symbols" "^1.1.2"
+    "@redux-saga/types" "^1.1.0"
+
+"@redux-saga/symbols@^1.1.2":
+  version "1.1.2"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@redux-saga/symbols/-/symbols-1.1.2.tgz#216a672a487fc256872b8034835afc22a2d0595d"
+  integrity sha1-IWpnKkh/wlaHK4A0g1r8IqLQWV0=
+
+"@redux-saga/types@^1.1.0":
+  version "1.1.0"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@redux-saga/types/-/types-1.1.0.tgz#0e81ce56b4883b4b2a3001ebe1ab298b84237204"
+  integrity sha1-DoHOVrSIO0sqMAHr4aspi4QjcgQ=
 
 "@semantic-ui-react/event-stack@^3.1.0":
   version "3.1.0"
@@ -977,9 +1035,10 @@ body-parser@1.19.0, body-parser@^1.18.3:
     raw-body "2.4.0"
     type-is "~1.6.17"
 
-bowser@^2.0.0-beta.1:
-  version "2.7.0"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/bowser/-/bowser-2.7.0.tgz#96eab1fa07fab08c1ec4c75977a7c8ddf8e0fe1f"
+bowser@^2.9.0:
+  version "2.9.0"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/bowser/-/bowser-2.9.0.tgz#3bed854233b419b9a7422d9ee3e85504373821c9"
+  integrity sha1-O+2FQjO0GbmnQi2e4+hVBDc4Ick=
 
 boxen@^3.0.0:
   version "3.2.0"
@@ -1368,9 +1427,10 @@ core-js-compat@^3.1.1:
     browserslist "^4.6.6"
     semver "^6.3.0"
 
-core-js@^2.6.5:
-  version "2.6.10"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/core-js/-/core-js-2.6.10.tgz#8a5b8391f8cc7013da703411ce5b585706300d7f"
+core-js@^3.6.4:
+  version "3.6.4"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/core-js/-/core-js-3.6.4.tgz#440a83536b458114b9cb2ac1580ba377dc470647"
+  integrity sha1-RAqDU2tFgRS5yyrBWAujd9xHBkc=
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -3555,6 +3615,11 @@ pend@~1.2.0:
   version "1.2.0"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/pend/-/pend-1.2.0.tgz#7a57eb550a6783f9115331fcf4663d5c8e007a50"
 
+pepjs@^0.5.2:
+  version "0.5.2"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/pepjs/-/pepjs-0.5.2.tgz#f0d10bb160bcbf4b72d2069d931170661491a05c"
+  integrity sha1-8NELsWC8v0ty0gadkxFwZhSRoFw=
+
 performance-now@^2.1.0:
   version "2.1.0"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
@@ -3721,14 +3786,15 @@ rc@^1.2.1, rc@^1.2.7, rc@^1.2.8:
     minimist "^1.2.0"
     strip-json-comments "~2.0.1"
 
-react-dom@^16.4.1:
-  version "16.12.0"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/react-dom/-/react-dom-16.12.0.tgz#0da4b714b8d13c2038c9396b54a92baea633fe11"
+react-dom@^16.12.0:
+  version "16.13.1"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/react-dom/-/react-dom-16.13.1.tgz#c1bd37331a0486c078ee54c4740720993b2e0e7f"
+  integrity sha1-wb03MxoEhsB47lTEdAcgmTsuDn8=
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
     prop-types "^15.6.2"
-    scheduler "^0.18.0"
+    scheduler "^0.19.1"
 
 react-dom@^16.8.4:
   version "16.9.0"
@@ -3739,9 +3805,10 @@ react-dom@^16.8.4:
     prop-types "^15.6.2"
     scheduler "^0.15.0"
 
-react-hot-loader@^4.3.3:
-  version "4.12.18"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/react-hot-loader/-/react-hot-loader-4.12.18.tgz#a9029e34af2690d76208f9a35189d73c2dfea6a7"
+react-hot-loader@^4.12.19:
+  version "4.12.20"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/react-hot-loader/-/react-hot-loader-4.12.20.tgz#c2c42362a7578e5c30357a5ff7afa680aa0bef8a"
+  integrity sha1-wsQjYqdXjlwwNXpf96+mgKoL74o=
   dependencies:
     fast-levenshtein "^2.0.6"
     global "^4.3.0"
@@ -3765,7 +3832,7 @@ react-hot-loader@^4.8.0:
     shallowequal "^1.1.0"
     source-map "^0.7.3"
 
-react-is@^16.6.0, react-is@^16.6.3, react-is@^16.8.6:
+react-is@^16.6.3, react-is@^16.8.6:
   version "16.12.0"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/react-is/-/react-is-16.12.0.tgz#2cc0fe0fba742d97fd527c42a13bec4eeb06241c"
 
@@ -3773,7 +3840,12 @@ react-is@^16.7.0, react-is@^16.8.1, react-is@^16.8.2:
   version "16.9.0"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/react-is/-/react-is-16.9.0.tgz#21ca9561399aad0ff1a7701c01683e8ca981edcb"
 
-react-lifecycles-compat@^3.0.0, react-lifecycles-compat@^3.0.4:
+react-is@^16.9.0:
+  version "16.13.1"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/react-is/-/react-is-16.13.1.tgz#789729a4dc36de2999dc156dd6c1d9c18cea56a4"
+  integrity sha1-eJcppNw23imZ3BVt1sHZwYzqVqQ=
+
+react-lifecycles-compat@^3.0.4:
   version "3.0.4"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz#4f1a273afdfc8f3488a8c516bfda78f872352362"
 
@@ -3790,18 +3862,6 @@ react-popper@^1.3.4:
     typed-styles "^0.0.7"
     warning "^4.0.2"
 
-react-redux@^5.0.7:
-  version "5.1.2"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/react-redux/-/react-redux-5.1.2.tgz#b19cf9e21d694422727bf798e934a916c4080f57"
-  dependencies:
-    "@babel/runtime" "^7.1.2"
-    hoist-non-react-statics "^3.3.0"
-    invariant "^2.2.4"
-    loose-envify "^1.1.0"
-    prop-types "^15.6.1"
-    react-is "^16.6.0"
-    react-lifecycles-compat "^3.0.0"
-
 react-redux@^6.0.1:
   version "6.0.1"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/react-redux/-/react-redux-6.0.1.tgz#0d423e2c1cb10ada87293d47e7de7c329623ba4d"
@@ -3813,9 +3873,21 @@ react-redux@^6.0.1:
     prop-types "^15.7.2"
     react-is "^16.8.2"
 
-react@^16.4.1:
-  version "16.12.0"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/react/-/react-16.12.0.tgz#0c0a9c6a142429e3614834d5a778e18aa78a0b83"
+react-redux@^7.1.3:
+  version "7.2.0"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/react-redux/-/react-redux-7.2.0.tgz#f970f62192b3981642fec46fd0db18a074fe879d"
+  integrity sha1-+XD2IZKzmBZC/sRv0NsYoHT+h50=
+  dependencies:
+    "@babel/runtime" "^7.5.5"
+    hoist-non-react-statics "^3.3.0"
+    loose-envify "^1.4.0"
+    prop-types "^15.7.2"
+    react-is "^16.9.0"
+
+react@^16.12.0:
+  version "16.13.1"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
+  integrity sha1-LoGIIvGpdDEiwGPWQQ2FweOv5I4=
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
@@ -3955,9 +4027,12 @@ redux-immutable-state-invariant@^2.1.0:
     invariant "^2.1.0"
     json-stringify-safe "^5.0.1"
 
-redux-saga@^0.16.0:
-  version "0.16.2"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/redux-saga/-/redux-saga-0.16.2.tgz#993662e86bc945d8509ac2b8daba3a8c615cc971"
+redux-saga@^1.1.3:
+  version "1.1.3"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/redux-saga/-/redux-saga-1.1.3.tgz#9f3e6aebd3c994bbc0f6901a625f9a42b51d1112"
+  integrity sha1-nz5q69PJlLvA9pAaYl+aQrUdERI=
+  dependencies:
+    "@redux-saga/core" "^1.1.3"
 
 redux-starter-kit@^0.4.3:
   version "0.4.3"
@@ -3981,6 +4056,14 @@ redux@^4.0.0, redux@^4.0.1:
     loose-envify "^1.4.0"
     symbol-observable "^1.2.0"
 
+redux@^4.0.4, redux@^4.0.5:
+  version "4.0.5"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/redux/-/redux-4.0.5.tgz#4db5de5816e17891de8a80c424232d06f051d93f"
+  integrity sha1-TbXeWBbheJHeioDEJCMtBvBR2T8=
+  dependencies:
+    loose-envify "^1.4.0"
+    symbol-observable "^1.2.0"
+
 regenerate-unicode-properties@^8.1.0:
   version "8.1.0"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/regenerate-unicode-properties/-/regenerate-unicode-properties-8.1.0.tgz#ef51e0f0ea4ad424b77bf7cb41f3e015c70a3f0e"
@@ -3994,6 +4077,11 @@ regenerate@^1.4.0:
 regenerator-runtime@^0.13.2:
   version "0.13.3"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/regenerator-runtime/-/regenerator-runtime-0.13.3.tgz#7cf6a77d8f5c6f60eb73c5fc1955b2ceb01e6bf5"
+
+regenerator-runtime@^0.13.3, regenerator-runtime@^0.13.4:
+  version "0.13.5"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/regenerator-runtime/-/regenerator-runtime-0.13.5.tgz#d878a1d094b4306d10b9096484b33ebd55e26697"
+  integrity sha1-2Hih0JS0MG0QuQlkhLM+vVXiZpc=
 
 regenerator-transform@^0.14.0:
   version "0.14.1"
@@ -4184,9 +4272,10 @@ scheduler@^0.15.0:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
 
-scheduler@^0.18.0:
-  version "0.18.0"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/scheduler/-/scheduler-0.18.0.tgz#5901ad6659bc1d8f3fdaf36eb7a67b0d6746b1c4"
+scheduler@^0.19.0, scheduler@^0.19.1:
+  version "0.19.1"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/scheduler/-/scheduler-0.19.1.tgz#4f3e2ed2c1a7d65681f4c854fa8c5a1ccb40f196"
+  integrity sha1-Tz4u0sGn1laB9MhU+oxaHMtA8ZY=
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
@@ -4222,6 +4311,11 @@ semantic-ui-react@^0.88.2:
     react-is "^16.8.6"
     react-popper "^1.3.4"
     shallowequal "^1.1.0"
+
+semver-compare@^1.0.0:
+  version "1.0.0"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/semver-compare/-/semver-compare-1.0.0.tgz#0dee216a1c941ab37e9efb1788f6afc5ff5537fc"
+  integrity sha1-De4hahyUGrN+nvsXiPavxf9VN/w=
 
 semver-diff@^2.0.0:
   version "2.1.0"
@@ -4782,6 +4876,25 @@ typedarray-to-buffer@^3.1.5:
 typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
+
+typescript-compare@^0.0.2:
+  version "0.0.2"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/typescript-compare/-/typescript-compare-0.0.2.tgz#7ee40a400a406c2ea0a7e551efd3309021d5f425"
+  integrity sha1-fuQKQApAbC6gp+VR79MwkCHV9CU=
+  dependencies:
+    typescript-logic "^0.0.0"
+
+typescript-logic@^0.0.0:
+  version "0.0.0"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/typescript-logic/-/typescript-logic-0.0.0.tgz#66ebd82a2548f2b444a43667bec120b496890196"
+  integrity sha1-ZuvYKiVI8rREpDZnvsEgtJaJAZY=
+
+typescript-tuple@^2.2.1:
+  version "2.2.1"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/typescript-tuple/-/typescript-tuple-2.2.1.tgz#7d9813fb4b355f69ac55032e0363e8bb0f04dad2"
+  integrity sha1-fZgT+0s1X2msVQMuA2Pouw8E2tI=
+  dependencies:
+    typescript-compare "^0.0.2"
 
 ultron@1.0.x:
   version "1.0.2"
