@@ -97,7 +97,15 @@ const startPreview = (args) => {
         });
       });
     }))
-    .then(({ stopPreview, previewUrl }) => ({ ...args, stopPreview, previewUrl }));
+    .then(({ stopPreview, previewUrl }) => ({
+      ...args,
+      settings: {
+        ...args.settings,
+        joiningLink: `${previewUrl}/#!/join`,
+      },
+      stopPreview,
+      previewUrl,
+    }));
 };
 
 export default startPreview;

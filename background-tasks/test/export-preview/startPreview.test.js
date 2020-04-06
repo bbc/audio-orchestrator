@@ -52,12 +52,17 @@ describe('startPreview', () => {
   it('returns a promise passing through arguments and adding a url and a stop function', () => {
     const args = {
       outputDir: '/dev/null',
+      settings: {},
     };
 
     return startPreview(args)
       .then((result) => {
         expect(result).toEqual({
           ...args,
+          settings: {
+            ...args.settings,
+            joiningLink: expect.stringContaining('mock-address:1234/#!/join'),
+          },
           previewUrl: expect.any(String),
           stopPreview: expect.any(Function),
         });
