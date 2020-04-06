@@ -31,7 +31,7 @@ const behaviourTypes = [
         name: 'perDeviceGainAdjust',
         description: 'When the object is in multiple devices, multiply its gain by this value for each additional device it is in beyond the first one; applies the same adjustment to every device.',
         type: 'gain',
-        defaultValue: 1.0,
+        defaultValue: 0.0,
       },
     ],
   },
