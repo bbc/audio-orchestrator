@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import {
   Button,
@@ -11,8 +11,18 @@ const ConfirmDeleteButton = ({
   name,
   disabled,
   small,
+  onOpen,
+  onClose,
 }) => {
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      onOpen();
+    } else {
+      onClose();
+    }
+  }, [open]);
 
   const handleOpen = () => setOpen(!disabled);
 
@@ -62,6 +72,8 @@ ConfirmDeleteButton.propTypes = {
   type: PropTypes.string.isRequired,
   name: PropTypes.string,
   onDelete: PropTypes.func.isRequired,
+  onOpen: PropTypes.func,
+  onClose: PropTypes.func,
   disabled: PropTypes.bool,
   small: PropTypes.bool,
 };
@@ -70,6 +82,8 @@ ConfirmDeleteButton.defaultProps = {
   name: undefined,
   disabled: false,
   small: false,
+  onOpen: () => {},
+  onClose: () => {},
 };
 
 export default ConfirmDeleteButton;
