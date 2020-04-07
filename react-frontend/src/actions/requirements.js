@@ -3,7 +3,7 @@ import {
   setAppError,
 } from './ui';
 
-const requirementsService = new RequirementsService(window.API_URL || 'http://localhost:8000');
+const requirementsService = new RequirementsService();
 
 /* eslint-disable-next-line import/prefer-default-export */
 export const requestCheckRequirements = () => (dispatch) => {

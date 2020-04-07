@@ -1,33 +1,8 @@
 const POLL_TIMEOUT = 1000;
 
-class HttpService {
-  constructor(apiBase) {
-    // GET request wrapper
-    this.get = path => fetch(`${apiBase}/${path}`)
-      .then(response => response.json());
-
-    // POST request wrapper
-    this.post = (path, data) => fetch(
-      `${apiBase}/${path}`,
-      {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      },
-    )
-      .then(response => response.json());
-
-    // DELETE request wrapper
-    this.delete = path => fetch(`${apiBase}/${path}`, { method: 'delete' })
-      .then(response => response.json());
-  }
-}
-
 class BackgroundTasks {
-  constructor({ service, apiBase }) {
-    this.service = service || new HttpService(apiBase);
+  constructor() {
+    this.service = window.backgroundTasksIpcService;
   }
 
   createTask(name, args, callbacks = {}) {

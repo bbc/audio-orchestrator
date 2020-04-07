@@ -4,7 +4,7 @@ import ExportService from '../lib/ExportService';
 import LocalProjectStore from '../lib/LocalProjectStore';
 
 const ProjectStore = window.ProjectStore || LocalProjectStore;
-const exportService = new ExportService(window.API_URL || 'http://localhost:8000');
+const exportService = new ExportService();
 
 const exportAudio = exportService.exportAudio.bind(exportService);
 const exportTemplate = exportService.exportTemplate.bind(exportService);

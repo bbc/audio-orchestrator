@@ -4,9 +4,9 @@ import BackgroundTasks from './BackgroundTasks';
  * ExportService class, wraps all interaction with the analyse, encode, and project build APIs.
  */
 class ExportService {
-  constructor(apiBase) {
+  constructor() {
     this.runningTasks = [];
-    this.tasks = new BackgroundTasks({ apiBase });
+    this.tasks = new BackgroundTasks();
   }
 
   /**

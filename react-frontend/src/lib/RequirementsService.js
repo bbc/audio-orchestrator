@@ -1,8 +1,8 @@
 import BackgroundTasks from './BackgroundTasks';
 
 class RequirementsService {
-  constructor(apiBase) {
-    this.tasks = new BackgroundTasks({ apiBase });
+  constructor() {
+    this.tasks = new BackgroundTasks();
   }
 
   checkRequirements(callbacks = {}) {

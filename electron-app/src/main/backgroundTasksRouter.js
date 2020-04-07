@@ -1,26 +1,14 @@
-import { createServer } from 'http';
-import express from 'express';
-import bodyParser from 'body-parser';
-import { electronLogger as logger } from 'bbcat-orchestration-builder-logging';
 import backgroundTasks from 'bbcat-orchestration-builder-background-tasks';
+import Router from './Router';
 
-/**
- * A server process combining all the API calls tobe available locally.
- */
+// Register the 'routes' - the Router implemented here doesn't support everything an express app
+// does, but the format was mostly kept to allow easy porting between the two systems.
+// Notably, calling next() is always treated as an error because the concept of middleware is not
+// implemented, and calling res.json() does not actually encode the result as JSON, but does
+// immediately return a response.
+const backgroundTasksRouter = new Router();
 
-// Create the top level application
-const app = express();
-app.use(bodyParser.json({ limit: '50mb' }));
-
-// Allow cross-origin requests
-app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Accept, Content-Type');
-  res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, DELETE');
-  next();
-});
-
-app.post('/check-requirements', (req, res, next) => {
+backgroundTasksRouter.registerPost('/check-requirements', (req, res, next) => {
   backgroundTasks.checkRequirements()
     .then(({ taskId }) => {
       res.json({
@@ -40,7 +28,7 @@ app.post('/check-requirements', (req, res, next) => {
  * Respond with a task id that can be used to poll progress and results. The fileId is used
  * to trigger further operations on the files, as a file must be created before it can be used.
  */
-app.post('/analyse/create', (req, res, next) => {
+backgroundTasksRouter.registerPost('/analyse/create', (req, res, next) => {
   backgroundTasks.registerFiles({ files: req.body.files })
     .then(({ taskId }) => {
       res.json({
@@ -58,7 +46,7 @@ app.post('/analyse/create', (req, res, next) => {
  *
  * Respond with a task id that can be used to poll progress and results.
  */
-app.post('/analyse/probe', (req, res, next) => {
+backgroundTasksRouter.registerPost('/analyse/probe', (req, res, next) => {
   backgroundTasks.probeFiles({ files: req.body.files })
     .then(({ taskId }) => {
       res.json({
@@ -76,7 +64,7 @@ app.post('/analyse/probe', (req, res, next) => {
  *
  * Respond with a task id that can be used to poll progress and results.
  */
-app.post('/analyse/items', (req, res, next) => {
+backgroundTasksRouter.registerPost('/analyse/items', (req, res, next) => {
   backgroundTasks.detectItems({ files: req.body.files })
     .then(({ taskId }) => {
       res.json({
@@ -94,7 +82,7 @@ app.post('/analyse/items', (req, res, next) => {
  *
  * Respond with a task id that can be used to poll progress and results.
  */
-app.post('/analyse/encode', (req, res, next) => {
+backgroundTasksRouter.registerPost('/analyse/encode', (req, res, next) => {
   backgroundTasks.encodeFiles({ files: req.body.files })
     .then(({ taskId }) => {
       res.json({
@@ -117,7 +105,7 @@ app.post('/analyse/encode', (req, res, next) => {
  *
  * Creates a task that can be polled for progress using /task/<taskId>.
  */
-app.post('/export/audio', (req, res, next) => {
+backgroundTasksRouter.registerPost('/export/audio', (req, res, next) => {
   const { sequences, settings } = req.body;
   backgroundTasks.exportAudio({ sequences, settings })
     .then(({ taskId }) => {
@@ -137,7 +125,7 @@ app.post('/export/audio', (req, res, next) => {
  *
  * Creates a task that can be polled for progress using /task/<taskId>.
  */
-app.post('/export/template', (req, res, next) => {
+backgroundTasksRouter.registerPost('/export/template', (req, res, next) => {
   const {
     sequences, controls, settings, images,
   } = req.body;
@@ -159,13 +147,13 @@ app.post('/export/template', (req, res, next) => {
  * dist directory.
  *
  * This same task should be used to prepare the distribution for the preview, with the settings
- * (public path etc.) changed appropriately.
+ * (public path etc.) changed backgroundTasksRouterropriately.
  *
  * Expects the body to contain the sequences and settings objects as for /template.
  *
  * Creates a task that can be polled for progress using /task/<taskId>.
  */
-app.post('/export/distribution', (req, res, next) => {
+backgroundTasksRouter.registerPost('/export/distribution', (req, res, next) => {
   const {
     sequences, controls, settings, images,
   } = req.body;
@@ -185,7 +173,7 @@ app.post('/export/distribution', (req, res, next) => {
  * Starts a preview server after running the distribution task. Cancelling the task stops the
  * server.
  */
-app.post('/export/preview', (req, res, next) => {
+backgroundTasksRouter.registerPost('/export/preview', (req, res, next) => {
   const {
     sequences, controls, settings, images,
   } = req.body;
@@ -205,7 +193,7 @@ app.post('/export/preview', (req, res, next) => {
 /**
  * Poll the status of the given task, returning progress, error, and result data if set.
  */
-app.get('/task/:taskId', (req, res, next) => {
+backgroundTasksRouter.registerGet('/task/:taskId', (req, res, next) => {
   const { taskId } = req.params;
   backgroundTasks.getTask({ taskId })
     .then(({
@@ -230,7 +218,7 @@ app.get('/task/:taskId', (req, res, next) => {
 /**
  * Cancel the given task and delete any output files created by it.
  */
-app.delete('/task/:taskId', (req, res, next) => {
+backgroundTasksRouter.registerDelete('/task/:taskId', (req, res, next) => {
   const { taskId } = req.params;
   backgroundTasks.cancelTask({ taskId })
     .then(() => {
@@ -241,28 +229,4 @@ app.delete('/task/:taskId', (req, res, next) => {
     .catch(err => next(err));
 });
 
-// Error handler defined last -----------------------------
-app.use((err, req, res, next) => {
-  logger.error(err);
-  if (res.headersSent) {
-    next(err);
-  } else {
-    res.status(500);
-    res.json({ success: false });
-  }
-});
-
-// create and start a server, using a random free TCP port by setting port to 0.
-const host = '127.0.0.1';
-
-const server = createServer(app);
-server.listen(0, host, () => {
-  const { port } = server.address();
-  logger.info(`API listening on ${host}:${port}`);
-
-  process.send({
-    ready: true,
-    host,
-    port,
-  });
-});
+export default backgroundTasksRouter;

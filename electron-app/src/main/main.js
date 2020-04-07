@@ -6,34 +6,16 @@ import {
   BrowserWindow,
   ipcMain,
 } from 'electron';
-import { fork } from 'child_process';
 import {
   openUrl,
   openInFolder,
   saveExportAs,
   saveExportToDownloads,
 } from './save-exports';
+import backgroundTasksRouter from './backgroundTasksRouter';
 
 // TODO - this setting becomes the default in Electron 9 and can be removed then
 app.allowRendererProcessReuse = true;
-
-// Start the server process
-let apiUrl;
-const apiProcess = fork(path.resolve(__dirname, 'api.js'), {});
-const waitForApi = new Promise((resolve) => {
-  apiProcess.on('message', (message) => {
-    if (message.ready) {
-      apiUrl = `http://${message.host}:${message.port}`;
-      resolve();
-    }
-    if (message.error) {
-      throw new Error('Failed to start API server');
-    }
-  });
-});
-
-// stop the server when the application exits
-process.on('exit', apiProcess.kill);
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -104,9 +86,6 @@ function createCreditsWindow() {
 }
 
 const registerIpcHandlers = () => {
-  // get the apiUrl (which will have been set by the time this gets called)
-  ipcMain.handle('get-api-url', () => apiUrl);
-
   // get working directories to log to browser console
   ipcMain.handle('get-working-directories', () => ({
     homedir: os.homedir(),
@@ -132,15 +111,19 @@ const registerIpcHandlers = () => {
   ipcMain.handle('open-in-folder', openInFolder);
   ipcMain.handle('save-export-as', saveExportAs);
   ipcMain.handle('save-export-to-downloads', saveExportToDownloads);
+
+  // Handlers for background tasks API
+  ipcMain.handle('background-tasks-get', (e, p) => backgroundTasksRouter.get(p));
+  ipcMain.handle('background-tasks-post', (e, p, d) => backgroundTasksRouter.post(p, d));
+  ipcMain.handle('background-tasks-delete', (e, p) => backgroundTasksRouter.delete(p));
 };
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
-  waitForApi
-    .then(registerIpcHandlers)
-    .then(createWindow);
+  registerIpcHandlers();
+  createWindow();
 });
 
 // Quit when all windows are closed.
