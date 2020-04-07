@@ -138,8 +138,12 @@ app.post('/export/audio', (req, res, next) => {
  * Creates a task that can be polled for progress using /task/<taskId>.
  */
 app.post('/export/template', (req, res, next) => {
-  const { sequences, controls, settings, images } = req.body;
-  backgroundTasks.exportTemplate({ sequences, controls, settings, images })
+  const {
+    sequences, controls, settings, images,
+  } = req.body;
+  backgroundTasks.exportTemplate({
+    sequences, controls, settings, images,
+  })
     .then(({ taskId }) => {
       res.json({
         success: true,
@@ -162,8 +166,12 @@ app.post('/export/template', (req, res, next) => {
  * Creates a task that can be polled for progress using /task/<taskId>.
  */
 app.post('/export/distribution', (req, res, next) => {
-  const { sequences, controls, settings, images } = req.body;
-  backgroundTasks.exportDistribution({ sequences, controls, settings, images })
+  const {
+    sequences, controls, settings, images,
+  } = req.body;
+  backgroundTasks.exportDistribution({
+    sequences, controls, settings, images,
+  })
     .then(({ taskId }) => {
       res.json({
         success: true,
@@ -178,8 +186,12 @@ app.post('/export/distribution', (req, res, next) => {
  * server.
  */
 app.post('/export/preview', (req, res, next) => {
-  const { sequences, controls, settings, images } = req.body;
-  backgroundTasks.exportPreview({ sequences, controls, settings, images })
+  const {
+    sequences, controls, settings, images,
+  } = req.body;
+  backgroundTasks.exportPreview({
+    sequences, controls, settings, images,
+  })
     .then(({ taskId }) => {
       res.json({
         success: true,

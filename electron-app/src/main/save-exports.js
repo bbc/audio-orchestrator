@@ -1,24 +1,22 @@
 import { electronLogger as logger } from 'bbcat-orchestration-builder-logging';
 import path from 'path';
 import fse from 'fs-extra';
-import { remote } from 'electron';
-
-const {
+import {
   dialog,
-  getCurrentWindow,
   app,
   shell,
-} = remote;
+  BrowserWindow,
+} from 'electron';
 
-export const openUrl = (url) => {
+export const openUrl = (e, url) => {
   shell.openExternal(url);
 };
 
-export const openInFolder = (outputPath) => {
+export const openInFolder = (e, outputPath) => {
   shell.showItemInFolder(outputPath);
 };
 
-export const saveExportToDownloads = (exportDir) => {
+export const saveExportToDownloads = (e, exportDir) => {
   const dest = path.join(app.getPath('downloads'), path.basename(exportDir));
   return fse.move(exportDir, dest)
     .catch((err) => {
@@ -27,25 +25,24 @@ export const saveExportToDownloads = (exportDir) => {
     });
 };
 
-export const saveExportAs = (exportDir) => {
+export const saveExportAs = (e, exportDir) => {
   const defaultDest = path.join(app.getPath('documents'), path.basename(exportDir));
-  return new Promise((resolve, reject) => {
-    dialog.showSaveDialog(
-      getCurrentWindow(),
-      {
-        title: 'Save export as...',
-        defaultPath: defaultDest,
-      }, (fileName) => {
-        // Make sure the user actually selected a file.
-        if (fileName === undefined) {
-          reject(new Error('No file selected.'));
-          return;
-        }
 
-        resolve(fileName);
-      },
-    );
-  })
+  return dialog.showSaveDialog(
+    BrowserWindow.fromWebContents(e.sender),
+    {
+      title: 'Save export as...',
+      defaultPath: defaultDest,
+    },
+  )
+    .then(({ filePath }) => {
+      // Make sure the user actually selected a file.
+      if (filePath === undefined) {
+        throw new Error('No file selected.');
+      }
+
+      return filePath;
+    })
     .then(dest => fse.move(exportDir, dest).then(() => dest))
     .catch((err) => {
       logger.error(`failed to move ${exportDir} to selected destination`, err);
