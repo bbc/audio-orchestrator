@@ -3,6 +3,52 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.12.0`
+_2020-04-06_
+
+This is a major change from `0.11.0` and incorporates ~ 35 PR's previously maintained on the `v2-dev` branch. There are major changes to the internals, output template, and user interface, not least including an entirely new metadata model.
+
+**Projects authored with earlier versions may not open anymore**.
+
+ * Upgrade to electron 8 and apply new IPC model (#302)
+ * Add additional ffmpeg search path so we can use a different binary than the system installation (#301)
+ * Fix for behaviour deletion not being able to be confirmed (#300)
+ * Fix QR code and joining link in previewed template (#299)
+ * Change default perDeviceGainAdjust to 0 (#298)
+ * Store spread gain adjustments in dB (#297)
+ * Upgrade template dependency for getting the instructions page (#295)
+ * Allow selection and deletion of multiple objects (#294)
+ * Fix exported image file names (#293)
+ * Update presentation settings defaults to match the template and allow empty fields. (#292)
+ * More consistent delete button with confirmation (#291)
+ * Disable audio compression and set a default colour for new projects. (#289)
+ * Move project steps to the top (#288)
+ * Check ffmpeg version (#287)
+ * Update credits.html (#286)
+ * Use new template design and rework look & feel page to match, including images. (#285)
+ * Move electron-builder config into separate file, and add a restricted config that does not include sources for our libraries (#283)
+ * Remove ffmpeg binaries from build (#278)
+ * Help messages inside the tool (#277)
+ * Show advanced settings on export page (#259)
+ * Refactor ConditionInput and allow control values to be referenced in behaviours (#257)
+ * Allow reordering of controls (#256)
+ * Allow authoring control parameters for range and counter controls (#255)
+ * Allow authoring of control parameters and defaults for radio and checkbox (#253)
+ * First pass on look and feel of sequence settings (#254)
+ * Enable linting for JSX files and fix old linter errors (#252)
+ * Basic authoring for control behaviours (#251)
+ * Creating, renaming, and deleting controls (#248)
+ * Setup Jenkins for continuous integration (#250)
+ * Implement sequence list on condition behaviour parameter. (#249)
+ * Behaviour parameters refactor (#247)
+ * Add type-specific input interfaces for behaviour parameters (#243)
+ * Add warning for importing invalid project file (#242)
+ * Fix display bug for file input on import dialog and correct removal when Cancel is clicked
+ * Upgrade semantic-ui-react dependency (#241)
+ * New object metadata with rudimentary behaviour editing (#240)
+ * Move sequence settings from objects page to sequences page (#239)
+ * Add a step bar at the bottom of the page (#238)
+
 # `0.11.0`
 _2019-09-26_
 
