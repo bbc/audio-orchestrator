@@ -6,7 +6,7 @@ const helpText = {
   },
   sequences: {
     title: 'Sequences',
-    description: 'Each sequence is an independent section of content. Add metadata and audio files, and define links to other sequences.',
+    description: 'Each sequence is an independent section of content. Use this page to define sequences and how the user can move between them.',
   },
   controls: {
     title: 'Controls',

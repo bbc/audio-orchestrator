@@ -17,6 +17,8 @@ class SequenceSettings {
       hold,
       skippable,
       next,
+      choicesOpen,
+      settingsOpen,
     } = store.get(`sequences.${sequenceId}.settings`, {});
 
     data.name = name || '';
@@ -26,6 +28,8 @@ class SequenceSettings {
     data.hold = !!hold;
     data.skippable = !!skippable;
     data.next = next || [];
+    data.choicesOpen = choicesOpen || false;
+    data.settingsOpen = settingsOpen || false;
   }
 
   saveToStore() {
@@ -52,6 +56,11 @@ class SequenceSettings {
   get skippable() { return this.data.skippable; }
 
   get next() { return this.data.next; }
+
+  get choicesOpen() { return this.data.choicesOpen; }
+
+  get settingsOpen() { return this.data.settingsOpen; }
+
 
   set name(name) {
     const { data } = this;
@@ -95,6 +104,18 @@ class SequenceSettings {
     this.saveToStore();
   }
 
+  set choicesOpen(choicesOpen) {
+    const { data } = this;
+    data.choicesOpen = choicesOpen;
+    this.saveToStore();
+  }
+
+  set settingsOpen(settingsOpen) {
+    const { data } = this;
+    data.settingsOpen = settingsOpen;
+    this.saveToStore();
+  }
+
   /**
    * return the sequence settings required for exporting as a plain object.
    */
@@ -107,6 +128,8 @@ class SequenceSettings {
       hold,
       skippable,
       next,
+      choicesOpen,
+      settingsOpen,
     } = this;
 
     return {
@@ -117,6 +140,8 @@ class SequenceSettings {
       hold,
       skippable,
       next,
+      choicesOpen,
+      settingsOpen,
     };
   }
 }

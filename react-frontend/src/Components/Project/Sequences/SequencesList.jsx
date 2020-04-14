@@ -5,6 +5,7 @@ import {
   Card,
 } from 'semantic-ui-react';
 import SequenceItem from './SequenceItem';
+import AddSequenceCard from './AddSequenceCard';
 
 import {
   openSequencePage,
@@ -36,6 +37,7 @@ const SequencesList = ({
         isIntro={isIntro}
       />
     ))}
+    <AddSequenceCard projectId={projectId} />
   </Card.Group>
 );
 

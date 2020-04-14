@@ -28,6 +28,8 @@ const sequenceDefaults = {
   hold: false,
   skippable: false,
   next: [],
+  choicesOpen: false,
+  settingsOpen: false,
   probeTaskId: null,
   itemsTaskId: null,
   encodeTaskId: null,
@@ -188,6 +190,8 @@ const ProjectReducer = (state = initialState, action) => {
           skippable: action.skippable,
           hold: action.hold,
           next: action.next,
+          choicesOpen: action.choicesOpen,
+          settingsOpen: action.settingsOpen,
         },
       );
     case 'CLEAR_PROJECT_SEQUENCE_TASKS':

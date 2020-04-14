@@ -127,57 +127,64 @@ class SequenceChoices extends React.Component {
       text: sequence.name,
     }));
 
+    const drawTable = () => (
+      <Table collapsing size="small" basic="very">
+        <Table.Header>
+          <Table.Row>
+            <Table.HeaderCell content="Destination sequence" />
+            <Table.HeaderCell content="Button text" />
+            <Table.HeaderCell content="" />
+          </Table.Row>
+        </Table.Header>
+        <Table.Body>
+          { next.map(({ sequenceId, label, choiceId }) => (
+            <Table.Row key={choiceId || 'initial'}>
+              <Table.Cell>
+                <Dropdown
+                  placeholder="Select a sequence"
+                  search
+                  selection
+                  error={!sequenceId}
+                  value={sequenceId}
+                  options={sequenceOptions}
+                  onChange={(e, d) => this.handleSelectSequence(choiceId, d.value)}
+                />
+              </Table.Cell>
+              <Table.Cell>
+                <RequiredTextInput
+                  ref={(ref) => { this.labelRefs[choiceId] = ref; }}
+                  placeholder="e.g. Click to go to..."
+                  error={!label}
+                  defaultValue={label}
+                  onKeyPress={e => this.handleKeyPress(e, choiceId)}
+                  onBlur={e => this.handleChangeLabel(choiceId, e.target.value)}
+                />
+              </Table.Cell>
+              <Table.Cell>
+                <ConfirmDeleteButton
+                  type="destination"
+                  name={label}
+                  onDelete={() => this.handleDeleteChoice(choiceId)}
+                />
+              </Table.Cell>
+            </Table.Row>
+          ))}
+        </Table.Body>
+      </Table>
+    );
+
     return (
       <Container>
-        <Table collapsing size="small">
-          <Table.Header>
-            <Table.Row>
-              <Table.HeaderCell content="Choice Label" />
-              <Table.HeaderCell content="Target Sequence" />
-              <Table.HeaderCell content="" />
-            </Table.Row>
-          </Table.Header>
-          <Table.Body>
-            { next.map(({ sequenceId, label, choiceId }) => (
-              <Table.Row key={choiceId || 'initial'}>
-                <Table.Cell>
-                  <RequiredTextInput
-                    ref={(ref) => { this.labelRefs[choiceId] = ref; }}
-                    placeholder="Label"
-                    error={!label}
-                    defaultValue={label}
-                    onKeyPress={e => this.handleKeyPress(e, choiceId)}
-                    onBlur={e => this.handleChangeLabel(choiceId, e.target.value)}
-                  />
-                </Table.Cell>
-                <Table.Cell>
-                  <Dropdown
-                    placeholder="Select a sequence"
-                    search
-                    selection
-                    error={!sequenceId}
-                    value={sequenceId}
-                    options={sequenceOptions}
-                    onChange={(e, d) => this.handleSelectSequence(choiceId, d.value)}
-                  />
-                </Table.Cell>
-                <Table.Cell>
-                  <ConfirmDeleteButton
-                    type="choice"
-                    name={label}
-                    onDelete={() => this.handleDeleteChoice(choiceId)}
-                  />
-                </Table.Cell>
-              </Table.Row>
-            ))}
-          </Table.Body>
-        </Table>
+        {next.length > 0 ? <p /> : ''}
+        {next.length > 0
+          ? drawTable()
+          : <br />}
         <Button
           type="button"
           icon="plus"
           primary
           labelPosition="left"
-          content="Add choice"
+          content="Add destination"
           onClick={() => this.handleAddChoice()}
         />
       </Container>

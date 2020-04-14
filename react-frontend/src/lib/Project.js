@@ -268,15 +268,14 @@ class Project {
     settings.name = name;
     settings.isIntro = isIntro;
 
-    if (isIntro) {
-      settings.loop = true;
-      settings.skippable = true;
-      settings.hold = false;
-    } else {
-      settings.loop = false;
-      settings.skippable = false;
-      settings.hold = true;
-    }
+    // Sequence setting defaults (the same for into and non-intro sequences)
+    settings.loop = false;
+    settings.skippable = false;
+    settings.hold = true;
+
+    // Defaults for having the settings open or closed
+    settings.choicesOpen = false;
+    settings.settingsOpen = false;
 
     // Save the sequence object
     sequences[newSequenceId] = sequence;
