@@ -12,5 +12,8 @@
   "asarUnpack": [
     "**/node_modules/@bbc/bbcat-orchestration-template/**/*"
   ],
-  "removePackageScripts": false
+  "removePackageScripts": false,
+  "mac": {
+    "identity": null
+  }
 }
