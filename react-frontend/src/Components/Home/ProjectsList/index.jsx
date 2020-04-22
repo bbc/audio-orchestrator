@@ -2,28 +2,36 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import { connect } from 'react-redux';
 import {
-  Card,
-  Loader,
+  Table,
 } from 'semantic-ui-react';
 
 import ProjectItem from './ProjectItem';
 
 const ProjectsList = ({
   projects,
-  loading,
-}) => (
-  <Card.Group stackable itemsPerRow={3}>
-    <Loader active={loading} inline="centered" />
-    {projects.map(({ projectId, name }) => (
-      <ProjectItem key={projectId} projectId={projectId} name={name} />
-    ))}
-  </Card.Group>
-);
+}) => {
+  if (projects.length === 0) {
+    return null;
+  }
+
+  return (
+    <Table>
+      <Table.Header>
+        <Table.Row>
+          <Table.HeaderCell content="Recent Projects" colSpan={2} />
+        </Table.Row>
+      </Table.Header>
+      <Table.Body>
+        {projects.map(({ projectId, name, lastOpened }) => (
+          <ProjectItem key={projectId} projectId={projectId} name={name} lastOpened={lastOpened} />
+        ))}
+      </Table.Body>
+    </Table>
+  );
+};
 
 ProjectsList.propTypes = {
   projects: PropTypes.arrayOf(PropTypes.object).isRequired,
-  loading: PropTypes.bool.isRequired,
 };
 
-// export default connect(mapStateToProps)(ProjectsList);
 export default ProjectsList;

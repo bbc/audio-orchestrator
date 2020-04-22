@@ -89,7 +89,7 @@ export const requestExportAudio = projectId => (dispatch) => {
   // TODO wrap project store opening and accessing properties in a class to avoid duplication.
   // opening by projectId will not work well when the project was originally opened from a file.
   ProjectStore.openProject(projectId)
-    .then((store) => {
+    .then(({ store }) => {
       const project = new Project(store);
       const { settings } = project;
       const sequences = project.getSequencesToExport();
@@ -116,7 +116,7 @@ export const requestExportTemplate = projectId => (dispatch) => {
   dispatch(startExport('template source'));
 
   ProjectStore.openProject(projectId)
-    .then((store) => {
+    .then(({ store }) => {
       const project = new Project(store);
       const sequences = project.getSequencesToExport();
       const controls = project.getControlsToExport();
@@ -155,7 +155,7 @@ export const requestExportDistribution = projectId => (dispatch) => {
   dispatch(startExport('built distribution'));
 
   ProjectStore.openProject(projectId)
-    .then((store) => {
+    .then(({ store }) => {
       const project = new Project(store);
       const sequences = project.getSequencesToExport();
       const controls = project.getControlsToExport();
@@ -194,7 +194,7 @@ export const requestStartPreview = projectId => (dispatch) => {
   dispatch(startExport('preview'));
 
   ProjectStore.openProject(projectId)
-    .then((store) => {
+    .then(({ store }) => {
       const project = new Project(store);
       const sequences = project.getSequencesToExport();
       const controls = project.getControlsToExport();

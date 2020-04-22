@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import {
-  Card,
-  Button,
+  Table,
+  Header,
 } from 'semantic-ui-react';
 import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
 import {
@@ -13,22 +13,34 @@ import {
 
 const ProjectItem = ({
   name,
+  lastOpened,
   onOpen,
   onDelete,
 }) => (
-  <Card color="orange">
-    <Card.Content>
-      <Card.Header content={name} />
-    </Card.Content>
-    <Card.Content extra textAlign="right">
-      <ConfirmDeleteButton type="project" name={name} onDelete={onDelete} />
-      <Button icon="edit" labelPosition="left" content="Open" onClick={onOpen} color="orange" />
-    </Card.Content>
-  </Card>
+  <Table.Row>
+    <Table.Cell>
+      <Header
+        style={{ cursor: 'pointer' }}
+        tabIndex="0"
+        onClick={onOpen}
+        onKeyPress={(e) => {
+          if (e.key === 'Enter') {
+            onOpen();
+          }
+        }}
+        content={name}
+        subheader={`Last opened ${new Date(Date.parse(lastOpened)).toLocaleDateString()}`}
+      />
+    </Table.Cell>
+    <Table.Cell collapsing>
+      <ConfirmDeleteButton type="from list of recent projects" onDelete={onDelete} small />
+    </Table.Cell>
+  </Table.Row>
 );
 
 ProjectItem.propTypes = {
   name: PropTypes.string.isRequired,
+  lastOpened: PropTypes.string.isRequired,
   onOpen: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
 };

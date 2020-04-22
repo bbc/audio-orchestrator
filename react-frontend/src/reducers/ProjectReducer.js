@@ -14,6 +14,8 @@ const projectDefaults = {
   controls: {},
   controlsList: [],
   reviewItems: [],
+  // if this is > 0 we are waiting for a save action to complete
+  saveCount: 0,
 };
 
 const sequenceDefaults = {
@@ -127,7 +129,6 @@ const updateControl = (state, projectId, controlId, update) => {
   };
 };
 
-
 const ProjectReducer = (state = initialState, action) => {
   switch (action.type) {
     case 'PROJECT_PROJECTS_LIST_LOADING':
@@ -146,8 +147,21 @@ const ProjectReducer = (state = initialState, action) => {
       };
     case 'PROJECT_ALLOW_FILE_OPEN':
       return { ...state, allowFileOpen: action.allowFileOpen };
-    case 'SET_PROJECT_LOADING':
-      return updateProject(state, action.projectId, { loading: action.loading });
+    case 'PROJECT_RESET_SAVING':
+      return updateProject(state, action.projectId, { saveCount: 0 });
+    case 'PROJECT_SAVING':
+      // TODO using 1 and 0 instead of actually counting, because we don't know the initial value
+      // as the project store initiates some saves before returning the projectId to the client,
+      // and we can't be sure when exactly we start receiving events from it.
+      return updateProject(state, action.projectId, {
+        // saveCount: (state.projects[action.projectId] || { saveCount: 0 }).saveCount + 1,
+        saveCount: 1,
+      });
+    case 'PROJECT_SAVED':
+      return updateProject(state, action.projectId, {
+        // saveCount: (state.projects[action.projectId] || { saveCount: 0 }).saveCount - 1,
+        saveCount: 0,
+      });
     case 'SET_PROJECT_NAME':
       return updateProject(
         state, action.projectId,

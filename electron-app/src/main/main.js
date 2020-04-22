@@ -13,6 +13,13 @@ import {
   saveExportToDownloads,
 } from './save-exports';
 import backgroundTasksRouter from './backgroundTasksRouter';
+import {
+  openProject,
+  createProject,
+  saveProject,
+  listProjects,
+  removeRecentProjectById,
+} from './Projects';
 
 // TODO - this setting becomes the default in Electron 9 and can be removed then
 app.allowRendererProcessReuse = true;
@@ -116,6 +123,13 @@ const registerIpcHandlers = () => {
   ipcMain.handle('background-tasks-get', (e, p) => backgroundTasksRouter.get(p));
   ipcMain.handle('background-tasks-post', (e, p, d) => backgroundTasksRouter.post(p, d));
   ipcMain.handle('background-tasks-delete', (e, p) => backgroundTasksRouter.delete(p));
+
+  // Handlers for project store API
+  ipcMain.handle('project-open', (e, projectId) => openProject(e, projectId));
+  ipcMain.handle('project-create', e => createProject(e));
+  ipcMain.handle('project-save', (e, projectId, project) => saveProject(e, projectId, project));
+  ipcMain.handle('project-list', () => listProjects());
+  ipcMain.handle('project-remove-recent', (e, projectId) => removeRecentProjectById(projectId));
 };
 
 // This method will be called when Electron has finished

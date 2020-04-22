@@ -23,19 +23,14 @@ const projects = {};
 /**
  * Action creator, closes the project view.
  */
-export const closeProject = (projectId = null) => (dispatch) => {
+export const closeProject = () => (dispatch) => {
   dispatch(closeProjectPage());
-  if (projectId) {
-    dispatch({ type: 'SET_PROJECT_LOADING', projectId, loading: false });
-  }
 };
 
 /**
  * Action creator, requests a listing of all available projects from the store.
  */
 export const requestListProjects = () => (dispatch) => {
-  dispatch({ type: 'PROJECT_PROJECTS_LIST_LOADING' });
-
   ProjectStore.listProjects()
     .then((projectsList) => {
       dispatch({
@@ -172,8 +167,20 @@ const openedProject = projectId => (dispatch) => {
   // Move onto the project page
   dispatch(openProjectPage(projectId));
 
-  // Hide the loading indicator
-  dispatch({ type: 'SET_PROJECT_LOADING', projectId, loading: false });
+  // Start listening for saving/saved indicator updates
+  // TODO this is not implemented on LocalProjectStore!
+  ProjectStore.removeAllListeners(`saving-${projectId}`);
+  ProjectStore.removeAllListeners(`saved-${projectId}`);
+
+  dispatch({ type: 'PROJECT_RESET_SAVING', projectId });
+
+  ProjectStore.on(`saving-${projectId}`, () => {
+    dispatch({ type: 'PROJECT_SAVING', projectId });
+  });
+
+  ProjectStore.on(`saved-${projectId}`, () => {
+    dispatch({ type: 'PROJECT_SAVED', projectId });
+  });
 
   // TODO do this pretty much anywhere the project is updated
   dispatch(validateProject(projectId));
@@ -549,14 +556,14 @@ const checkImageFiles = projectId => (dispatch) => {
 /**
  * Action creator, opens a specified project from the store (or triggers a file-open dialogue).
  */
-export const requestOpenProject = (projectId = null) => (dispatch) => {
-  dispatch({ type: 'SET_PROJECT_LOADING', projectId, loading: true });
-
-  ProjectStore.openProject(projectId)
-    .then((store) => {
+export const requestOpenProject = (existingProjectId = null) => (dispatch) => {
+  ProjectStore.openProject(existingProjectId)
+    .then(({ cancelled, projectId, store }) => {
+      if (cancelled) {
+        // do nothing if the user cancelled the open dialog
+        return;
+      }
       projects[projectId] = new Project(store);
-    })
-    .then(() => {
       projects[projectId].sequencesList.forEach(({ sequenceId }) => {
         // trigger background analysis for all files in any of the sequences in the opened project.
         dispatch(analyseAllFiles(projectId, sequenceId));
@@ -566,14 +573,13 @@ export const requestOpenProject = (projectId = null) => (dispatch) => {
       });
       dispatch(checkImageFiles(projectId));
       dispatch(loadImages(projectId));
-    })
-    .then(() => {
       dispatch(openedProject(projectId));
     })
     .catch((e) => {
       console.error(e);
-      setAppWarning('The project could not be opened.');
+      dispatch(setAppWarning('The project file could not be opened and has been removed from the list of recent projects.'));
       dispatch(closeProject());
+      dispatch(requestListProjects());
     });
 };
 
@@ -583,7 +589,10 @@ export const requestOpenProject = (projectId = null) => (dispatch) => {
  */
 export const requestCreateProject = () => (dispatch) => {
   ProjectStore.createProject()
-    .then(({ projectId, store }) => {
+    .then(({ cancelled, projectId, store }) => {
+      if (cancelled) {
+        return;
+      }
       // create the project
       const project = new Project(store);
       projects[projectId] = project;
@@ -605,7 +614,7 @@ export const requestCreateProject = () => (dispatch) => {
     })
     .catch((e) => {
       console.error(e);
-      setAppWarning('The project could not be created.');
+      dispatch(setAppWarning('The project file could not be created.'));
       dispatch(closeProject());
     });
 };
@@ -642,22 +651,16 @@ const deleteProject = projectId => ({
  * Action creator, deletes a project.
  */
 export const requestDeleteProject = projectId => (dispatch) => {
-  // Have to open the project first to create the Project object, because this action is triggered
-  // from outside the project page.
-  ProjectStore.openProject(projectId)
-    .then((store) => {
-      const project = new Project(store);
-      project.delete();
-    })
-    .then(() => {
-      delete projects[projectId];
-      ProjectStore.deleteProject(projectId);
-    })
-    .then(() => {
-      dispatch(deleteProject());
-      dispatch(closeProjectPage());
-      dispatch(requestListProjects());
-    });
+  if (!projectId) {
+    console.error(`Cannot delete project without a projectId (got ${projectId})`);
+    return;
+  }
+
+  ProjectStore.deleteProject(projectId).then(() => {
+    dispatch(deleteProject());
+    dispatch(closeProjectPage());
+    dispatch(requestListProjects());
+  });
 };
 
 /**

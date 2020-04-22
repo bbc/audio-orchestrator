@@ -40,7 +40,7 @@ function createProjectStore(projectId, name) {
     store.set('name', name);
   }
 
-  return store;
+  return { projectId, store };
 }
 
 /**
@@ -63,8 +63,8 @@ class LocalProjectStore {
         return;
       }
 
-      const store = createProjectStore(projectId);
-      resolve(store);
+      const { store } = createProjectStore(projectId);
+      resolve({ projectId, store });
     });
   }
 
@@ -83,7 +83,7 @@ class LocalProjectStore {
       ]));
 
       // Create a store object to mask the backing storage and the projectId
-      const store = createProjectStore(projectId, name);
+      const { store } = createProjectStore(projectId, name);
 
       // resolve the promise to the new store object.
       resolve({ projectId, store });

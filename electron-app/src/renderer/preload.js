@@ -1,4 +1,5 @@
 import { ipcRenderer } from 'electron';
+import IpcProjectStore from './IpcProjectStore';
 
 // Just for debugging, log the working directories
 ipcRenderer.invoke('get-working-directories').then(({ cwd, homedir }) => {
@@ -22,3 +23,5 @@ window.backgroundTasksIpcService = {
   post: (path, data) => ipcRenderer.invoke('background-tasks-post', path, data),
   delete: path => ipcRenderer.invoke('background-tasks-delete', path),
 };
+
+window.ProjectStore = IpcProjectStore;

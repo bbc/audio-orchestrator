@@ -3,6 +3,14 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.13.0`
+_2020-04-22_
+
+ * Major change: Projects are now stored in files, instead of in an internal database. **Projects authored with an earlier version than 0.13.0 cannot be opened anymore.**
+ * Change: the template will now output in stereo on all devices, including auxiliary devices.
+ * Change: simplified sequences page look and feel.
+ * Internals: improved security of background tasks interface.
+
 # `0.12.0`
 _2020-04-06_
 

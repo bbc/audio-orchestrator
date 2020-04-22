@@ -5,5 +5,10 @@
   "rules": {
     "import/no-extraneous-dependencies": 1,
     "import/no-unresolved": 1,
+  },
+  "settings": {
+    "import/core-modules": [
+      'electron',
+    ],
   }
 }

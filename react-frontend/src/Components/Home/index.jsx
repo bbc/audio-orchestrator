@@ -27,7 +27,6 @@ import {
 } from '../../actions/requirements';
 
 class Home extends React.Component {
-  // TODO Do we need to request loading things from within the component?
   componentDidMount() {
     const {
       onRequestCheckRequirements,
@@ -65,28 +64,25 @@ class Home extends React.Component {
             : null
           }
           <Grid columns={2} textAlign="center">
+            <Grid.Column>
+              <Header icon>
+                <Icon name="file outline" />
+                Create a new project
+              </Header>
+              <Button primary content="Create" labelPosition="left" icon="plus" onClick={onCreateProject} />
+            </Grid.Column>
             { allowFileOpen
               ? (
                 <Grid.Column>
                   <Header icon>
                     <Icon name="folder open outline" />
-                    Load a previous project
+                    Open a project file
                   </Header>
                   <Button primary content="Open" labelPosition="left" icon="folder open outline" onClick={onOpenProject} />
                 </Grid.Column>
               )
               : null
             }
-            <Grid.Column>
-              <Header icon>
-                <Icon name="file outline" />
-                Start a new project
-                <Header.Subheader>
-                  A project describes an orchestrated audio prototype with one or more sequences.
-                </Header.Subheader>
-              </Header>
-              <Button primary content="Create" labelPosition="left" icon="plus" onClick={onCreateProject} />
-            </Grid.Column>
           </Grid>
         </Segment>
         <ProjectsList projects={projectsList} loading={projectsListLoading} />
