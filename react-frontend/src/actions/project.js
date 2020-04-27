@@ -727,8 +727,8 @@ const matchObjectsToFiles = (projectId, sequenceId) => {
   };
 
   const suffixToPanning = {
-    _L: 30,
-    _R: -30,
+    _L: -1,
+    _R: 1,
     _M: 0,
     _C: 0,
   };
@@ -929,22 +929,22 @@ export const deleteObject = (projectId, sequenceId, objectNumber) => (dispatch) 
 };
 
 export const setObjectPanning = (
-  projectId, sequenceId, objectNumber, channelMapping,
+  projectId, sequenceId, objectNumber, panning,
 ) => (dispatch) => {
   const project = projects[projectId];
   const sequence = project.sequences[sequenceId];
 
-  const channelMappingToPanning = {
-    left: 30,
-    mono: 0,
-    right: -30,
-  };
+  // Get channel mapping from panning
+  let newChannelMapping;
+  if (panning < 0) { newChannelMapping = 'left'; } else
+  if (panning > 0) { newChannelMapping = 'right'; } else
+  if (panning === 0) { newChannelMapping = 'mono'; }
 
   const object = sequence.objects[objectNumber];
   const newObject = {
     ...object,
-    channelMapping,
-    panning: channelMappingToPanning[channelMapping],
+    channelMapping: newChannelMapping,
+    panning, // : channelMappingToPanning[channelMapping],
   };
 
   sequence.objects = {

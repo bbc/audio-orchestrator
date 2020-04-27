@@ -78,6 +78,7 @@ const SequenceObjectTable = ({
     fileId: objects[objectNumber].fileId,
     file: files[objects[objectNumber].fileId],
     channelMapping: objects[objectNumber].channelMapping,
+    panning: objects[objectNumber].panning,
   })), [objectsList, objects, files]);
 
   // do not render the table if no files are available.
@@ -204,11 +205,11 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
 };
 
 const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
-  onChangePanning: (objectNumber, channelMapping) => dispatch(setObjectPanning(
+  onChangePanning: (objectNumber, panning) => dispatch(setObjectPanning(
     projectId,
     sequenceId,
     objectNumber,
-    channelMapping,
+    panning,
   )),
   onAddObjectBehaviour: (
     objectNumber,

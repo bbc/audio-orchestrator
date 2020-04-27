@@ -7,7 +7,7 @@ import {
   Checkbox,
 } from 'semantic-ui-react';
 
-import PanningFlag from './PanningFlag';
+import PanningControl from './PanningControl';
 import Behaviour from './Behaviour';
 import AddBehaviourButton from './AddBehaviourButton';
 
@@ -17,6 +17,7 @@ class ObjectRow extends React.PureComponent {
       objectNumber,
       objectBehaviours,
       channelMapping,
+      panning,
       // label,
       file,
       onChangePanning,
@@ -63,8 +64,9 @@ class ObjectRow extends React.PureComponent {
         }
 
         <Table.Cell singleLine>
-          <PanningFlag
+          <PanningControl
             channelMapping={channelMapping}
+            panning={panning}
             onChange={onChangePanning}
             objectNumber={objectNumber}
           />
@@ -100,6 +102,7 @@ class ObjectRow extends React.PureComponent {
 ObjectRow.propTypes = {
   objectNumber: PropTypes.number.isRequired,
   channelMapping: PropTypes.string.isRequired,
+  panning: PropTypes.number.isRequired,
   // label: PropTypes.string.isRequired,
   file: PropTypes.shape({
     name: PropTypes.string,
