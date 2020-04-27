@@ -22,23 +22,21 @@ class ObjectRow extends React.PureComponent {
       file,
       onChangePanning,
       onAddObjectBehaviour,
+      onEditObjectBehaviour,
       onDeleteObjectBehaviour,
-      onReplaceObjectBehaviourParameters,
-      sequencesList,
-      controls,
       highlighted,
       onToggleHighlight,
     } = this.props;
 
     return (
       <Table.Row negative={!file || !!file.error} verticalAlign="top" active={highlighted}>
-        <Table.Cell onClick={onToggleHighlight} singleLine>
-          <Checkbox checked={highlighted} label={objectNumber} />
+        <Table.Cell onClick={onToggleHighlight} singleLine collapsing>
+          <Checkbox checked={highlighted} />
         </Table.Cell>
 
         { file
           ? (
-            <Table.Cell>
+            <Table.Cell collapsing onClick={onToggleHighlight}>
               { !file.error
                 ? <span>{file.name}</span>
                 : (
@@ -56,14 +54,14 @@ class ObjectRow extends React.PureComponent {
             </Table.Cell>
           )
           : (
-            <Table.Cell>
+            <Table.Cell collapsing onClick={onToggleHighlight}>
               <Icon name="exclamation" />
               No audio file matches the object number.
             </Table.Cell>
           )
         }
 
-        <Table.Cell singleLine>
+        <Table.Cell singleLine collapsing>
           <PanningControl
             channelMapping={channelMapping}
             panning={panning}
@@ -72,19 +70,13 @@ class ObjectRow extends React.PureComponent {
           />
         </Table.Cell>
 
-        <Table.Cell>
+        <Table.Cell colSpan="2">
           {objectBehaviours.map(behaviour => (
             <Behaviour
               key={behaviour.behaviourId}
-              {...behaviour}
-              {...{
-                onDelete: () => onDeleteObjectBehaviour(objectNumber, behaviour.behaviourId),
-                onReplaceParameters: parameters => onReplaceObjectBehaviourParameters(
-                  objectNumber, behaviour.behaviourId, parameters,
-                ),
-                sequencesList,
-                controls,
-              }}
+              behaviourType={behaviour.behaviourType}
+              onEdit={() => onEditObjectBehaviour(objectNumber, behaviour.behaviourId)}
+              onDelete={() => onDeleteObjectBehaviour(objectNumber, behaviour.behaviourId)}
             />
           ))}
           <AddBehaviourButton
@@ -92,6 +84,7 @@ class ObjectRow extends React.PureComponent {
               onAddObjectBehaviour(objectNumber, behaviourType, behaviourParameters);
             }}
             usedBehaviourTypes={objectBehaviours.map(({ behaviourType }) => behaviourType)}
+            text="Add..."
           />
         </Table.Cell>
       </Table.Row>
@@ -114,13 +107,8 @@ ObjectRow.propTypes = {
   })).isRequired,
   onChangePanning: PropTypes.func.isRequired,
   onAddObjectBehaviour: PropTypes.func.isRequired,
+  onEditObjectBehaviour: PropTypes.func.isRequired,
   onDeleteObjectBehaviour: PropTypes.func.isRequired,
-  onReplaceObjectBehaviourParameters: PropTypes.func.isRequired,
-  sequencesList: PropTypes.arrayOf(PropTypes.shape({
-    sequenceId: PropTypes.String,
-    name: PropTypes.String,
-  })).isRequired,
-  controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   highlighted: PropTypes.bool,
   onToggleHighlight: PropTypes.func.isRequired,
 };

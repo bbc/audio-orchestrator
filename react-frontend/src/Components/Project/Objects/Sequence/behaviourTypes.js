@@ -1,27 +1,35 @@
-const behaviourTypes = [
-  {
-    name: 'mainDeviceOnly',
+export const behaviourTypes = [
+  'mainDeviceOnly',
+  'auxDevicesOnly',
+  'allowedEverywhere',
+  'spread',
+  'preferredIf',
+  'allowedIf',
+  'prohibitedIf',
+  'exclusive',
+  'onChange',
+];
+
+export const behaviourTypeDetails = {
+  mainDeviceOnly: {
     displayName: 'main device only',
     description: 'The object is prohibited from any devices but the main device (the one that creates the session).',
     multiple: false,
     color: 'orange',
   },
-  {
-    name: 'auxDevicesOnly',
+  auxDevicesOnly: {
     displayName: 'auxiliary devices only',
     description: 'The object is prohibited from the main device (the one that creates the session).',
     multiple: false,
     color: 'orange',
   },
-  {
-    name: 'allowedEverywhere',
+  allowedEverywhere: {
     displayName: 'allowed everywhere',
     description: 'The object is allowed on every device it is not prohibited from by another behaviour.',
     multiple: false,
     color: 'teal',
   },
-  {
-    name: 'spread',
+  spread: {
     displayName: 'spread',
     description: 'The object will be allocated to all devices it is allowed in after all behaviours have been taken into account.',
     multiple: false,
@@ -35,8 +43,7 @@ const behaviourTypes = [
       },
     ],
   },
-  {
-    name: 'preferredIf',
+  preferredIf: {
     displayName: 'preferred if',
     description: 'The object will be preferred on any device that fulfills all of the conditions added to this behaviour.',
     multiple: true,
@@ -50,8 +57,7 @@ const behaviourTypes = [
       },
     ],
   },
-  {
-    name: 'allowedIf',
+  allowedIf: {
     displayName: 'allowed if',
     description: 'The object will be allowed on any device that fulfills all of the conditions added to this behaviour.',
     multiple: true,
@@ -65,8 +71,7 @@ const behaviourTypes = [
       },
     ],
   },
-  {
-    name: 'prohibitedIf',
+  prohibitedIf: {
     displayName: 'prohibited if',
     description: 'The object will be prohibited on any device that fulfills all of the conditions added to this behaviour.',
     multiple: true,
@@ -80,15 +85,13 @@ const behaviourTypes = [
       },
     ],
   },
-  {
-    name: 'exclusive',
+  exclusive: {
     displayName: 'exclusive',
     description: 'The object will take control of the device it is assigned to, and prevent other objects from being assigned to the same device.',
     multiple: false,
     color: 'pink',
   },
-  {
-    name: 'onChange',
+  onChange: {
     displayName: 'on change',
     description: 'Determines what happens to the object when devices join or leave, or when a control value changes.',
     multiple: false,
@@ -119,6 +122,4 @@ const behaviourTypes = [
       },
     ],
   },
-];
-
-export default behaviourTypes;
+};

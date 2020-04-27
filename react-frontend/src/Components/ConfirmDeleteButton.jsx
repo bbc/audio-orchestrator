@@ -13,6 +13,8 @@ const ConfirmDeleteButton = ({
   small,
   onOpen,
   onClose,
+  icon,
+  color,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -40,7 +42,8 @@ const ConfirmDeleteButton = ({
       basic={small}
       compact={small}
       negative={!small}
-      icon="trash"
+      icon={icon}
+      color={color}
     />
   );
 
@@ -76,6 +79,8 @@ ConfirmDeleteButton.propTypes = {
   onClose: PropTypes.func,
   disabled: PropTypes.bool,
   small: PropTypes.bool,
+  icon: PropTypes.string,
+  color: PropTypes.string,
 };
 
 ConfirmDeleteButton.defaultProps = {
@@ -84,6 +89,8 @@ ConfirmDeleteButton.defaultProps = {
   small: false,
   onOpen: () => {},
   onClose: () => {},
+  icon: 'trash',
+  color: undefined,
 };
 
 export default ConfirmDeleteButton;

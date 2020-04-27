@@ -20,7 +20,6 @@ const initialState = {
   sequenceAudioError: null,
   error: null,
   warning: null,
-  expandTable: true,
 };
 
 const UIReducer = (state = initialState, action) => {
@@ -88,11 +87,6 @@ const UIReducer = (state = initialState, action) => {
       return {
         ...state,
         warning: action.warning,
-      };
-    case 'UI_SET_TABLE_EXPANDED':
-      return {
-        ...state,
-        expandTable: action.expanded,
       };
     default:
       return state;

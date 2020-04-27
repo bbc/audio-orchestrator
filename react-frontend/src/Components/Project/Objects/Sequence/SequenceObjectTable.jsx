@@ -11,6 +11,7 @@ import {
 } from 'semantic-ui-react';
 import ObjectHeader from './ObjectHeader';
 import ObjectRow from './ObjectRow';
+import BehaviourSettingsModal from './BehaviourSettingsModal';
 import {
   setObjectPanning,
   deleteObject,
@@ -20,7 +21,6 @@ import {
 } from '../../../../actions/project';
 
 const SequenceObjectTable = ({
-  filesList,
   files,
   filesLoading,
   filesLoadingCompleted,
@@ -38,13 +38,16 @@ const SequenceObjectTable = ({
   // Remember which object rows are currently highlighted (selected)
   const [highlightedObjects, setHighlightedObjects] = useState([]);
 
-  // Clear the highlights list if any object is modified, added, or deleted.
+  // Make sure that any removed objects are also removed from the list of highlighted objects
   useEffect(() => {
-    setHighlightedObjects([]);
+    setHighlightedObjects(highlightedObjects.filter(
+      objectNumber => objectsList.find(o => o.objectNumber === objectNumber),
+    ));
   }, [objectsList, objects]);
 
   // Determine the state of the select-all checkbox
-  const allChecked = highlightedObjects.length === objectsList.length;
+  const allChecked = highlightedObjects.length > 0
+    && highlightedObjects.length === objectsList.length;
   const allIndeterminate = highlightedObjects.length > 0 && !allChecked;
 
   // Handle all rows being (un-)highlighted
@@ -65,10 +68,112 @@ const SequenceObjectTable = ({
     ]);
   };
 
+  // state and handlers for editing behaviour parameters - now in one modal
+  const [behaviourSettingsContents, setBehaviourSettingsContents] = useState(null);
+
+  // Called when the save button in the modal is clicked.
+  const handleBehaviourSettingsChange = (behaviourParameters) => {
+    const {
+      objectNumbers,
+      edit,
+      behaviourType,
+      behaviourId,
+    } = behaviourSettingsContents;
+
+    if (edit) {
+      // Replace the parameters for an existing behaviourId
+      objectNumbers.forEach(objectNumber => onReplaceObjectBehaviourParameters(
+        objectNumber,
+        behaviourId,
+        behaviourParameters,
+      ));
+    } else {
+      // Add a new behaviour of the given type and parameters
+      objectNumbers.forEach(objectNumber => onAddObjectBehaviour(
+        objectNumber,
+        behaviourType,
+        behaviourParameters,
+      ));
+    }
+
+    // close the settings modal
+    setBehaviourSettingsContents(null);
+  };
+
+  // Called when the cancel button in the modal is clicked or when it is closed without saving.
+  const handleBehaviourSettingsClose = () => {
+    // Discard any pending changes (also do not add the behaviour to objects if it was new),
+    // just close the settings modal.
+    setBehaviourSettingsContents(null);
+  };
+
+  // Called when a behaviour is to be added to one or more objects; this will open the modal if
+  // the behaviour has parameters.
+  const handleAddBehaviour = (givenObjectNumbers, behaviourType, behaviourParameters) => {
+    const objectNumbers = givenObjectNumbers.length ? givenObjectNumbers : [givenObjectNumbers];
+
+    if (Object.keys(behaviourParameters).length > 0) { // TODO base check on behaviourTypes info
+      // open the behaviour settings modal with the initial default parameters for user to confirm.
+      setBehaviourSettingsContents({
+        objectNumbers,
+        edit: false,
+        behaviourType,
+        behaviourParameters,
+      });
+    } else {
+      // no parameters, so add the behaviour immediately.
+      objectNumbers.forEach(objectNumber => onAddObjectBehaviour(
+        objectNumber,
+        behaviourType,
+        behaviourParameters,
+      ));
+    }
+  };
+
+  const handleEditBehaviour = (objectNumber, behaviourId) => {
+    // find the behaviour and its parameters
+    const behaviour = objects[objectNumber].objectBehaviours.find(
+      b => b.behaviourId === behaviourId,
+    );
+    if (!behaviour) {
+      // TODO - silently failing if the behaviour was not found - better than crashing though!
+      return;
+    }
+    const {
+      behaviourType,
+      behaviourParameters,
+    } = behaviour;
+
+    // open the settings modal with the initial parameters
+    setBehaviourSettingsContents({
+      objectNumbers: [objectNumber],
+      edit: true,
+      behaviourId,
+      behaviourType,
+      behaviourParameters,
+    });
+  };
+
   // Handle deleting multiple selected objects
   const deleteHighlighted = () => {
     highlightedObjects.forEach(objectNumber => onDeleteObject(objectNumber));
   };
+
+  // Handle adding behaviours to multipe selected objects
+  const addBehaviourToHighlighted = (behaviourType, behaviourParameters) => {
+    handleAddBehaviour(highlightedObjects, behaviourType, behaviourParameters);
+  };
+
+  const usedBehaviourTypesSet = new Set();
+  highlightedObjects.forEach((objectNumber) => {
+    const object = objects[objectNumber];
+    if (object) {
+      object.objectBehaviours.forEach(({ behaviourType }) => {
+        usedBehaviourTypesSet.add(behaviourType);
+      });
+    }
+  });
+  const usedBehaviourTypes = [...usedBehaviourTypesSet];
 
   // Combine object and file data to use for displaying table rows.
   const objectsWithFiles = useMemo(() => objectsList.map(({ objectNumber, label }) => ({
@@ -81,9 +186,8 @@ const SequenceObjectTable = ({
     panning: objects[objectNumber].panning,
   })), [objectsList, objects, files]);
 
-  // do not render the table if no files are available.
-  // TODO shouldn't this use objectsList instead?
-  if (!filesList || filesList.length === 0) {
+  // do not render the table if we have no objects.
+  if (objectsList.length === 0) {
     return null;
   }
 
@@ -95,6 +199,18 @@ const SequenceObjectTable = ({
           : <Loader inline="centered" content={`Checking Audio Files (${filesLoadingCompleted}/${filesLoadingTotal})`} />
         }
       </Dimmer>
+
+      { behaviourSettingsContents && (
+        <BehaviourSettingsModal
+          contents={behaviourSettingsContents}
+          onChange={handleBehaviourSettingsChange}
+          onClose={handleBehaviourSettingsClose}
+          onDelete={() => {}}
+          sequencesList={sequencesList}
+          controls={controls}
+
+        />
+      )}
 
       <Container style={{ margin: '1em 0' }}>
         { !objectsWithFiles.every(({ file }) => !!file)
@@ -118,24 +234,31 @@ const SequenceObjectTable = ({
             checked={allChecked}
             onToggleAllHighlights={toggleAllHighlights}
             onDeleteHighlighted={deleteHighlighted}
+            usedBehaviourTypes={usedBehaviourTypes}
+            onAddBehaviourToHighlighted={addBehaviourToHighlighted}
           />
           <Table.Body>
-            { objectsWithFiles.map(object => (
-              <ObjectRow
-                key={object.objectNumber}
-                highlighted={highlightedObjects.indexOf(object.objectNumber) !== -1}
-                onToggleHighlight={() => toggleHighlight(object.objectNumber)}
-                {...{
-                  onChangePanning,
-                  onAddObjectBehaviour,
-                  onReplaceObjectBehaviourParameters,
-                  onDeleteObjectBehaviour,
-                  sequencesList,
-                  controls,
-                }}
-                {...object}
-              />
-            ))}
+            { objectsWithFiles.map((object) => {
+              const {
+                objectNumber,
+              } = object;
+
+              return (
+                <ObjectRow
+                  {...object}
+                  key={objectNumber}
+                  highlighted={highlightedObjects.indexOf(objectNumber) !== -1}
+                  onAddObjectBehaviour={handleAddBehaviour}
+                  onEditObjectBehaviour={handleEditBehaviour}
+                  onToggleHighlight={() => toggleHighlight(objectNumber)}
+                  {...{
+                    onChangePanning,
+                    onReplaceObjectBehaviourParameters,
+                    onDeleteObjectBehaviour,
+                  }}
+                />
+              );
+            })}
           </Table.Body>
         </Table>
       </Container>
@@ -144,7 +267,6 @@ const SequenceObjectTable = ({
 };
 
 SequenceObjectTable.propTypes = {
-  filesList: PropTypes.arrayOf(PropTypes.object).isRequired,
   files: PropTypes.shape({
     name: PropTypes.string,
   }).isRequired,
@@ -181,7 +303,6 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
     controlsList,
   } = project;
   const {
-    filesList,
     files,
     objectsList,
     objects,
@@ -192,7 +313,6 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
   const { total, completed } = UI.tasks[filesTaskId] || {};
 
   return {
-    filesList,
     files,
     objectsList,
     objects,

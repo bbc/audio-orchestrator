@@ -31,9 +31,10 @@ let creditsWin;
 
 function createWindow() {
   // Create the browser window.
+  // TODO can we remember the previous window size in settings?
   win = new BrowserWindow({
-    width: 1024,
-    height: 1200,
+    width: 1280,
+    height: 1024,
     webPreferences: {
       nodeIntegration: false,
       sandbox: false,

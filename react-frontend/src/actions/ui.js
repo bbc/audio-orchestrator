@@ -52,8 +52,3 @@ export const setAppWarning = warning => ({
 export const clearAppWarning = () => ({
   type: 'UI_CLEAR_WARNING',
 });
-
-export const setTableExpanded = expanded => ({
-  type: 'UI_SET_TABLE_EXPANDED',
-  expanded,
-});

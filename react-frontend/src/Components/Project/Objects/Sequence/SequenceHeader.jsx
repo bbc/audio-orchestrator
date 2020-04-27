@@ -14,17 +14,11 @@ import {
   requestReplaceAllAudioFiles,
 } from '../../../../actions/project';
 
-import {
-  setTableExpanded,
-} from '../../../../actions/ui';
-
 const SequenceHeader = ({
   haveFiles,
   onReplaceAudioFiles,
   sequenceAudioError,
   sequenceAudioConfirmation,
-  // expandTable,
-  // onSetExpanded,
 }) => {
   if (!haveFiles) {
     return (
@@ -45,11 +39,6 @@ const SequenceHeader = ({
       </Segment>
     );
   }
-
-  //  { expandTable
-  //    ? <Button icon="compress" content="simplify table" onClick={() => onSetExpanded(false)} />
-  //    : <Button icon="expand" content="expand table" onClick={() => onSetExpanded(true)} />
-  //  }
 
   return (
     <Container>
@@ -80,8 +69,6 @@ SequenceHeader.propTypes = {
   sequenceAudioError: PropTypes.string,
   sequenceAudioConfirmation: PropTypes.string,
   onReplaceAudioFiles: PropTypes.func.isRequired,
-  // expandTable: PropTypes.bool.isRequired,
-  // onSetExpanded: PropTypes.func.isRequired,
 };
 
 SequenceHeader.defaultProps = {
@@ -99,20 +86,17 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
   const {
     sequenceAudioError,
     sequenceAudioConfirmation,
-    // expandTable,
   } = UI;
 
   return {
     haveFiles: (filesList && filesList.length > 0),
     sequenceAudioConfirmation,
     sequenceAudioError,
-    // expandTable,
   };
 };
 
 const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
   onReplaceAudioFiles: () => dispatch(requestReplaceAllAudioFiles(projectId, sequenceId)),
-  onSetExpanded: expanded => dispatch(setTableExpanded(expanded)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SequenceHeader);

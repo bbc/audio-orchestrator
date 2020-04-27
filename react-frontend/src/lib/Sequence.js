@@ -238,6 +238,7 @@ class Sequence {
 
     return {
       sequenceId,
+      // TODO translate meta behaviours here for exporting
       objects: objectsList.map(({ objectNumber }) => objects[objectNumber]),
       ...settings.getExportData(),
     };
