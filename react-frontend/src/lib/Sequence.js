@@ -1,3 +1,5 @@
+import getExportObjectBehaviours from './getExportObjectBehaviours';
+
 class SequenceSettings {
   constructor(store, sequenceId) {
     this.data = {};
@@ -239,7 +241,15 @@ class Sequence {
     return {
       sequenceId,
       // TODO translate meta behaviours here for exporting
-      objects: objectsList.map(({ objectNumber }) => objects[objectNumber]),
+      objects: objectsList.map(({ objectNumber }) => {
+        const object = objects[objectNumber];
+        const exportBehaviours = getExportObjectBehaviours(object.objectBehaviours);
+
+        return {
+          ...object,
+          objectBehaviours: exportBehaviours,
+        };
+      }),
       ...settings.getExportData(),
     };
   }

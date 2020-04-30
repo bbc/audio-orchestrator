@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Dropdown,
 } from 'semantic-ui-react';
-import { behaviourTypes, behaviourTypeDetails } from './behaviourTypes';
+import Behaviours from 'Lib/Behaviours';
 
 // TODO: Using the click handler instead of onChange does not allow adding a behaviour using the
 // keyboard, but fixes a bug where behaviours were added when the dropdown lost focus.
@@ -13,30 +13,25 @@ const AddBehaviourButton = React.memo(({
   text,
   disabled,
 }) => {
-  const options = behaviourTypes.map((behaviourType) => {
-    const {
+  const options = Behaviours.getAllDetails({ includeFixed: false })
+    .map(({
+      behaviourType,
       displayName,
       multiple,
-      parameters,
-    } = behaviourTypeDetails[behaviourType];
+    }) => {
+      const cannotAdd = !multiple && usedBehaviourTypes.includes(behaviourType);
 
-    const cannotAdd = !multiple && usedBehaviourTypes.includes(behaviourType);
-
-    return {
-      key: behaviourType,
-      value: behaviourType,
-      text: displayName || behaviourType,
-      disabled: cannotAdd,
-      icon: cannotAdd ? 'checkmark' : 'plus',
-      onClick: cannotAdd ? null : () => {
-        const defaultParameters = {};
-        (parameters || []).forEach(({ name: parameterName, defaultValue }) => {
-          defaultParameters[parameterName] = defaultValue;
-        });
-        onAddBehaviour(behaviourType, defaultParameters);
-      },
-    };
-  });
+      return {
+        key: behaviourType,
+        value: behaviourType,
+        text: displayName || behaviourType,
+        disabled: cannotAdd,
+        icon: cannotAdd ? 'checkmark' : 'plus',
+        onClick: cannotAdd ? null : () => {
+          onAddBehaviour(behaviourType, Behaviours.getDefaultParameters(behaviourType));
+        },
+      };
+    });
 
   return (
     <Dropdown

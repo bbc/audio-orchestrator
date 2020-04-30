@@ -58,6 +58,7 @@ module.exports = (env, { mode = 'development' }) => ({
     extensions: ['.js', '.jsx'],
     alias: {
       Components: path.resolve(__dirname, 'src/Components'),
+      Lib: path.resolve(__dirname, 'src/lib'),
     },
   },
   plugins: [

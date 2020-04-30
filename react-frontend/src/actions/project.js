@@ -1,7 +1,8 @@
 import uuidv4 from 'uuid/v4';
-import LocalProjectStore from '../lib/LocalProjectStore';
-import Project from '../lib/Project';
-import FileService from '../lib/FileService';
+import LocalProjectStore from 'Lib/LocalProjectStore';
+import Project from 'Lib/Project';
+import FileService from 'Lib/FileService';
+import Behaviours from 'Lib/Behaviours';
 import {
   setTaskProgress,
   openProjectPage,
@@ -754,7 +755,18 @@ const matchObjectsToFiles = (projectId, sequenceId) => {
       // Create an object with the default metadata
       newObjects[objectNumber] = {
         objectNumber,
-        objectBehaviours: [],
+        objectBehaviours: [
+          {
+            behaviourId: uuidv4(),
+            behaviourType: 'fixedDevices',
+            behaviourParameters: Behaviours.getDefaultParameters('fixedDevices'),
+          },
+          {
+            behaviourId: uuidv4(),
+            behaviourType: 'fixedSpread',
+            behaviourParameters: Behaviours.getDefaultParameters('fixedSpread'),
+          },
+        ],
         label,
         fileId,
         panning: suffixToPanning[suffix] || 0,

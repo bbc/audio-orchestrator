@@ -5,7 +5,7 @@ import {
   Popup,
 } from 'semantic-ui-react';
 import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
-import { behaviourTypeDetails } from './behaviourTypes';
+import Behaviours from 'Lib/Behaviours';
 
 const Behaviour = ({
   behaviourType,
@@ -17,13 +17,13 @@ const Behaviour = ({
     description,
     parameters,
     color,
-  } = behaviourTypeDetails[behaviourType];
+  } = Behaviours.getDetails(behaviourType);
 
   const haveParameters = parameters && parameters.length > 0;
 
   return (
     <Button.Group
-      style={{ margin: '4px' }}
+      style={{ marginRight: '3px', marginBottom: '3px' }}
       size="tiny"
     >
       <Popup

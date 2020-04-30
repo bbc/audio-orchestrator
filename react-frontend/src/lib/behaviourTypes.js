@@ -8,6 +8,8 @@ export const behaviourTypes = [
   'prohibitedIf',
   'exclusive',
   'onChange',
+  'fixedDevices',
+  'fixedSpread',
 ];
 
 export const behaviourTypeDetails = {
@@ -28,6 +30,7 @@ export const behaviourTypeDetails = {
     description: 'The object is allowed on every device it is not prohibited from by another behaviour.',
     multiple: false,
     color: 'teal',
+    additive: true,
   },
   spread: {
     displayName: 'spread',
@@ -48,6 +51,7 @@ export const behaviourTypeDetails = {
     description: 'The object will be preferred on any device that fulfills all of the conditions added to this behaviour.',
     multiple: true,
     color: 'green',
+    additive: true,
     parameters: [
       {
         name: 'conditions',
@@ -62,6 +66,7 @@ export const behaviourTypeDetails = {
     description: 'The object will be allowed on any device that fulfills all of the conditions added to this behaviour.',
     multiple: true,
     color: 'yellow',
+    additive: true,
     parameters: [
       {
         name: 'conditions',
@@ -118,6 +123,44 @@ export const behaviourTypeDetails = {
           { value: 'stayInPrevious', displayName: 'Stay in previous' },
           { value: 'moveToAllowedNotPrevious', displayName: 'Move to allowed - not previous' },
           { value: 'moveToAllowed', displayName: 'Move to allowed' },
+        ],
+      },
+    ],
+  },
+  fixedDevices: {
+    displayName: 'Device type',
+    description: 'Determines what kind of device the object can be allocated to.',
+    fixed: true,
+    color: 'green',
+    parameters: [
+      {
+        name: 'deviceType',
+        type: 'enum',
+        description: '',
+        defaultValue: 'any',
+        allowedValues: [
+          { value: 'any', displayName: 'any device' },
+          { value: 'main', displayName: 'main device only' },
+          { value: 'aux', displayName: 'aux devices only' },
+        ],
+      },
+    ],
+  },
+  fixedSpread: {
+    displayName: 'How many devices',
+    description: 'Determines whether the object is allocated to all qualifying devices at once, or to single one (at random if there are multiple equally preferred devices).',
+    fixed: true,
+    color: 'green',
+    parameters: [
+      {
+        name: 'spread',
+        type: 'enum',
+        description: '',
+        defaultValue: 'doNotSpread',
+        allowedValues: [
+          { value: 'spread', displayName: 'most suitable device' },
+          { value: 'doNotSpread', displayName: 'all applicable' },
+          { value: 'spreadWithSmallGainReduction', displayName: 'all applicable with gain adjustment' },
         ],
       },
     ],

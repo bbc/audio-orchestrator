@@ -6,8 +6,8 @@ import {
   Label,
 } from 'semantic-ui-react';
 // import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
+import Behaviours from 'Lib/Behaviours';
 import BehaviourParameters from './BehaviourParameters';
-import { behaviourTypeDetails } from './behaviourTypes';
 
 const BehaviourSettingsModal = ({
   contents,
@@ -37,10 +37,9 @@ const BehaviourSettingsModal = ({
     description,
     parameters,
     color,
-  } = behaviourTypeDetails[behaviourType];
+  } = Behaviours.getDetails(behaviourType);
 
   const haveParameters = parameters && parameters.length > 0;
-
 
   const handleSave = () => {
     onChange(behaviourParameters);

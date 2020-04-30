@@ -28,7 +28,7 @@ class PanningControl extends React.PureComponent {
         trigger={(
           <Button
             compact
-            size="mini"
+            size="tiny"
             content={generateLabel(panning)}
           />
         )}

@@ -7,9 +7,11 @@ import {
   Checkbox,
 } from 'semantic-ui-react';
 
+import Behaviours from 'Lib/Behaviours';
 import PanningControl from './PanningControl';
 import Behaviour from './Behaviour';
 import AddBehaviourButton from './AddBehaviourButton';
+import FixedBehaviour from './FixedBehaviour';
 
 class ObjectRow extends React.PureComponent {
   render() {
@@ -23,10 +25,13 @@ class ObjectRow extends React.PureComponent {
       onChangePanning,
       onAddObjectBehaviour,
       onEditObjectBehaviour,
+      onReplaceObjectBehaviourParameters,
       onDeleteObjectBehaviour,
       highlighted,
       onToggleHighlight,
     } = this.props;
+
+    const annotatedBehaviours = Behaviours.getAnnotatedObjectBehaviours(objectBehaviours);
 
     return (
       <Table.Row negative={!file || !!file.error} verticalAlign="top" active={highlighted}>
@@ -71,14 +76,35 @@ class ObjectRow extends React.PureComponent {
         </Table.Cell>
 
         <Table.Cell colSpan="2">
-          {objectBehaviours.map(behaviour => (
-            <Behaviour
-              key={behaviour.behaviourId}
-              behaviourType={behaviour.behaviourType}
-              onEdit={() => onEditObjectBehaviour(objectNumber, behaviour.behaviourId)}
-              onDelete={() => onDeleteObjectBehaviour(objectNumber, behaviour.behaviourId)}
-            />
-          ))}
+          {annotatedBehaviours.map(({
+            behaviourId,
+            behaviourType,
+            behaviourParameters,
+            fixed,
+          }) => {
+            if (fixed) {
+              return (
+                <FixedBehaviour
+                  key={behaviourId}
+                  behaviourType={behaviourType}
+                  behaviourParameters={behaviourParameters}
+                  onChange={newBehaviourParameters => onReplaceObjectBehaviourParameters(
+                    objectNumber,
+                    behaviourId,
+                    newBehaviourParameters,
+                  )}
+                />
+              );
+            }
+            return (
+              <Behaviour
+                key={behaviourId}
+                behaviourType={behaviourType}
+                onEdit={() => onEditObjectBehaviour(objectNumber, behaviourId)}
+                onDelete={() => onDeleteObjectBehaviour(objectNumber, behaviourId)}
+              />
+            );
+          })}
           <AddBehaviourButton
             onAddBehaviour={(behaviourType, behaviourParameters) => {
               onAddObjectBehaviour(objectNumber, behaviourType, behaviourParameters);
@@ -108,6 +134,7 @@ ObjectRow.propTypes = {
   onChangePanning: PropTypes.func.isRequired,
   onAddObjectBehaviour: PropTypes.func.isRequired,
   onEditObjectBehaviour: PropTypes.func.isRequired,
+  onReplaceObjectBehaviourParameters: PropTypes.func.isRequired,
   onDeleteObjectBehaviour: PropTypes.func.isRequired,
   highlighted: PropTypes.bool,
   onToggleHighlight: PropTypes.func.isRequired,
