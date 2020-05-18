@@ -11,10 +11,16 @@ const ConfirmDeleteButton = ({
   name,
   disabled,
   small,
+  notBasic, // fix for use within a Button.Group, where basic must be set on the container instead
   onOpen,
   onClose,
   icon,
   color,
+  onBlur,
+  onClick,
+  onFocus,
+  onMouseLeave,
+  onMouseEnter,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -26,7 +32,10 @@ const ConfirmDeleteButton = ({
     }
   }, [open]);
 
-  const handleOpen = () => setOpen(!disabled);
+  const handleOpen = () => {
+    setOpen(!disabled);
+    if (onClick) onClick();
+  };
 
   const handleClose = () => setOpen(false);
 
@@ -39,15 +48,20 @@ const ConfirmDeleteButton = ({
     <Button
       disabled={disabled}
       size={small ? 'tiny' : undefined}
-      basic={small}
+      basic={small && !notBasic}
       compact={small}
       negative={!small}
       icon={icon}
       color={color}
+      onClick={handleOpen}
+      onBlur={onBlur}
+      onFocus={onFocus}
+      onMouseLeave={onMouseLeave}
+      onMouseEnter={onMouseEnter}
     />
   );
 
-  if (disabled) {
+  if (disabled || !open) {
     return trigger;
   }
 
@@ -81,6 +95,12 @@ ConfirmDeleteButton.propTypes = {
   small: PropTypes.bool,
   icon: PropTypes.string,
   color: PropTypes.string,
+  onBlur: PropTypes.func,
+  onClick: PropTypes.func,
+  onFocus: PropTypes.func,
+  onMouseLeave: PropTypes.func,
+  onMouseEnter: PropTypes.func,
+  notBasic: PropTypes.bool,
 };
 
 ConfirmDeleteButton.defaultProps = {
@@ -91,6 +111,12 @@ ConfirmDeleteButton.defaultProps = {
   onClose: () => {},
   icon: 'trash',
   color: undefined,
+  onBlur: undefined,
+  onClick: undefined,
+  onFocus: undefined,
+  onMouseLeave: undefined,
+  onMouseEnter: undefined,
+  notBasic: false,
 };
 
 export default ConfirmDeleteButton;

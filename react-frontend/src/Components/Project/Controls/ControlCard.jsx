@@ -40,7 +40,7 @@ class ControlCard extends React.PureComponent {
       <Card>
         <Card.Content style={{ flexGrow: 0 }}>
           <Button.Group floated="right" basic size="tiny">
-            <ConfirmDeleteButton type="control" small onDelete={onDelete} />
+            <ConfirmDeleteButton type="control" small notBasic onDelete={onDelete} />
             <Button icon="left arrow" compact onClick={() => onMove(-1)} />
             <Button icon="right arrow" compact onClick={() => onMove(1)} />
           </Button.Group>

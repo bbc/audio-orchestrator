@@ -286,6 +286,19 @@ class Project {
   }
 
   /**
+   * Changes the project's intro sequence by setting the isIntro flag on one sequence and removing
+   * it from all other sequences.
+   * @param string initialSequenceId
+   */
+  setIntroSequence(initialSequenceId) {
+    Object.keys(this.sequences).forEach((sequenceId) => {
+      this.sequences[sequenceId].settings.isIntro = sequenceId === initialSequenceId;
+    });
+
+    this.updateSequencesList();
+  }
+
+  /**
    * Deletes a sequence
    *
    * @param {string} sequenceId

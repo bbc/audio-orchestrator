@@ -598,12 +598,8 @@ export const requestCreateProject = () => (dispatch) => {
       const project = new Project(store);
       projects[projectId] = project;
 
-      // create the standard sequences
+      // create the standard sequence; with a single link going back to itself
       const introSequence = project.addSequence({ name: 'Initial Sequence', isIntro: true });
-
-      // link the standard sequences together:
-      // the intro points to the main sequence, and can be skipped; and
-      // the main sequence links back to itself, holds at the end, and cannot be skipped.
       introSequence.settings.next = [
         {
           sequenceId: introSequence.sequenceId,
@@ -639,6 +635,17 @@ export const requestDeleteSequence = (projectId, sequenceId) => (dispatch) => {
   dispatch(loadSequences(projectId));
   dispatch(validateProject(projectId));
 };
+
+/**
+ * Action creator, changes the initial sequence for the project
+ */
+export const requestSetIntroSequence = (projectId, sequenceId) => (dispatch) => {
+  const project = projects[projectId];
+  project.setIntroSequence(sequenceId);
+  dispatch(loadSequences(projectId));
+  dispatch(validateProject(projectId));
+};
+
 
 /**
  * Delete the project from the state.

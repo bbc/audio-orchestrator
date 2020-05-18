@@ -7,7 +7,6 @@ import {
 import SequencesList from './SequencesList';
 import PageTitleBar from '../../PageTitleBar';
 
-
 const Sequences = ({
   projectId,
 }) => (

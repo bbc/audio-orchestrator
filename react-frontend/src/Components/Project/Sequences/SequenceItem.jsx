@@ -9,14 +9,18 @@ import {
   Divider,
 } from 'semantic-ui-react';
 import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
+import InlineHelpPopup from 'Components/InlineHelpPopup';
 import EditableText from '../EditableText';
 import SequenceSettings from './SequenceSettings';
 import SequenceChoices from './SequenceChoices';
-// import SequenceMenu from './SequenceMenu';
-import { setSequenceSetting } from '../../../actions/project';
-
+import {
+  setSequenceSetting,
+  requestSetIntroSequence,
+} from '../../../actions/project';
 
 // TODO: The EditableText is very large when it's clicked
+// NOTE: Must not allow deleting the initial sequence; or edit lib/Project to assign a new initial
+// sequence if it is, because the project cannot be exported without an initial sequence.
 class SequenceItem extends React.Component {
   constructor(props) {
     super(props);
@@ -35,6 +39,7 @@ class SequenceItem extends React.Component {
       name,
       onOpen,
       onDelete,
+      onSetIntro,
       sequenceId,
       projectId,
       isIntro,
@@ -48,20 +53,43 @@ class SequenceItem extends React.Component {
       <Card>
         <Card.Content style={{ flexGrow: 0 }}>
           <Button.Group floated="right" basic size="tiny">
-            <Button
-              compact
-              icon="file audio outline"
-              onClick={() => {
-                onOpen(sequenceId);
-              }}
-            />
-            <ConfirmDeleteButton
-              small
-              disabled={isIntro}
-              type="sequence"
-              name={name}
-              onDelete={() => onDelete(sequenceId)}
-            />
+            <InlineHelpPopup
+              content={isIntro
+                ? 'Use as entry point (select this button on another sequence to change which sequence plays when the experience starts)'
+                : 'Use as entry point (play this sequence when the experience starts)'
+              }
+              className="ui buttons"
+            >
+              <Button
+                compact
+                disabled={isIntro}
+                icon={isIntro ? 'circle dot' : 'circle outline'}
+                onClick={() => onSetIntro(sequenceId)}
+              />
+            </InlineHelpPopup>
+            <InlineHelpPopup
+              content="Edit sequence audio objects"
+              className="ui buttons"
+            >
+              <Button
+                compact
+                icon="file audio outline"
+                onClick={() => onOpen(sequenceId)}
+              />
+            </InlineHelpPopup>
+            <InlineHelpPopup
+              content={isIntro ? 'The entry point sequence cannot be deleted.' : 'Delete sequence'}
+              className="ui buttons"
+            >
+              <ConfirmDeleteButton
+                small
+                disabled={isIntro}
+                type="sequence"
+                name={name}
+                notBasic
+                onDelete={() => onDelete(sequenceId)}
+              />
+            </InlineHelpPopup>
           </Button.Group>
           <Card.Header>
             <EditableText
@@ -70,7 +98,7 @@ class SequenceItem extends React.Component {
               onChange={onSetName}
             />
           </Card.Header>
-          { isIntro ? <Card.Meta content="The experience starts here." /> : <br /> }
+          { isIntro ? <Card.Meta content="This sequence is the entry point." /> : <br /> }
         </Card.Content>
 
         <Card.Content>
@@ -120,6 +148,7 @@ SequenceItem.propTypes = {
   name: PropTypes.string.isRequired,
   onOpen: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
+  onSetIntro: PropTypes.func.isRequired,
   sequenceId: PropTypes.string.isRequired,
   projectId: PropTypes.string.isRequired,
   isIntro: PropTypes.bool,
@@ -151,6 +180,7 @@ const mapStateToProps = (state, { projectId, sequenceId }) => {
 const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
   onSetName: name => dispatch(setSequenceSetting(projectId, sequenceId, 'name', name)),
   onChangeSetting: (key, value) => dispatch(setSequenceSetting(projectId, sequenceId, key, value)),
+  onSetIntro: () => dispatch(requestSetIntroSequence(projectId, sequenceId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SequenceItem);
