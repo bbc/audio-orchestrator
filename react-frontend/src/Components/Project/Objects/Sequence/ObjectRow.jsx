@@ -29,6 +29,7 @@ class ObjectRow extends React.PureComponent {
       onDeleteObjectBehaviour,
       highlighted,
       onToggleHighlight,
+      controls,
     } = this.props;
 
     const annotatedBehaviours = Behaviours.getAnnotatedObjectBehaviours(objectBehaviours);
@@ -100,6 +101,7 @@ class ObjectRow extends React.PureComponent {
               <Behaviour
                 key={behaviourId}
                 behaviourType={behaviourType}
+                controls={controls}
                 onEdit={() => onEditObjectBehaviour(objectNumber, behaviourId)}
                 onDelete={() => onDeleteObjectBehaviour(objectNumber, behaviourId)}
               />
@@ -110,6 +112,7 @@ class ObjectRow extends React.PureComponent {
               onAddObjectBehaviour(objectNumber, behaviourType, behaviourParameters);
             }}
             usedBehaviourTypes={objectBehaviours.map(({ behaviourType }) => behaviourType)}
+            controls={controls}
             text="Add..."
           />
         </Table.Cell>
@@ -122,6 +125,7 @@ ObjectRow.propTypes = {
   objectNumber: PropTypes.number.isRequired,
   channelMapping: PropTypes.string.isRequired,
   panning: PropTypes.number.isRequired,
+  controls: PropTypes.arrayOf(PropTypes.shape({})),
   // label: PropTypes.string.isRequired,
   file: PropTypes.shape({
     name: PropTypes.string,
@@ -143,6 +147,7 @@ ObjectRow.propTypes = {
 ObjectRow.defaultProps = {
   file: null,
   highlighted: false,
+  controls: [],
 };
 
 export default ObjectRow;

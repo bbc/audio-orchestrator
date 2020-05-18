@@ -230,7 +230,7 @@ class Sequence {
    * return the sequence data required for exporting as a plain object, with all settings included
    * at the top level, a list of objects, and a files object.
    */
-  getExportData() {
+  getExportData(controls) {
     const {
       sequenceId,
       objectsList,
@@ -240,10 +240,9 @@ class Sequence {
 
     return {
       sequenceId,
-      // TODO translate meta behaviours here for exporting
       objects: objectsList.map(({ objectNumber }) => {
         const object = objects[objectNumber];
-        const exportBehaviours = getExportObjectBehaviours(object.objectBehaviours);
+        const exportBehaviours = getExportObjectBehaviours(object.objectBehaviours, controls);
 
         return {
           ...object,
@@ -317,6 +316,23 @@ class Sequence {
       error,
       sequenceId,
     };
+  }
+
+  handleDeleteControl(controlId) {
+    const newObjects = {};
+
+    this.objectsList.forEach(({ objectNumber }) => {
+      const newObject = {
+        ...this.objects[objectNumber],
+      };
+
+      newObject.objectBehaviours = newObject.objectBehaviours
+        .filter(({ behaviourType }) => behaviourType !== `control:${controlId}`);
+
+      newObjects[objectNumber] = newObject;
+    });
+
+    this.objects = newObjects;
   }
 }
 

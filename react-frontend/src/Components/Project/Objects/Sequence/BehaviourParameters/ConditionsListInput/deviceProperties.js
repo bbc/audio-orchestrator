@@ -1,23 +1,17 @@
-// TODO automatically generate it from the schema
+/* eslint-disable max-len */
 // As specified in bbcat-orchestration/schemas/device.json
 const deviceProperties = [
   {
-    name: 'deviceId',
-    displayName: 'ID',
-    description: 'Unique identifier for this device, automatically generated',
-    type: 'string',
-  },
-  {
     name: 'deviceIsMain',
-    displayName: 'Main Device',
+    displayName: 'Main device',
     description: 'True if this device is the main device (the device that manages playback and allocations)',
     type: 'bool',
   },
   {
     name: 'deviceType',
-    displayName: 'Type',
+    displayName: 'Device type',
     description: 'Device type as detected by the application',
-    type: 'string',
+    type: 'deviceType',
   },
   {
     name: 'deviceJoiningNumber',
@@ -27,20 +21,8 @@ const deviceProperties = [
   },
   {
     name: 'deviceCurrentNumber',
-    displayName: 'Current Number',
+    displayName: 'Current number',
     description: 'Current position in the joining order, 1-based',
-    type: 'number',
-  },
-  {
-    name: 'deviceLatency',
-    displayName: 'Latency',
-    description: 'Emission delay, in milliseconds, if known',
-    type: 'number',
-  },
-  {
-    name: 'deviceGain',
-    displayName: 'Gain',
-    description: 'Calibration gain multiplier to be applied to the output from the device, if known',
     type: 'number',
   },
 ];

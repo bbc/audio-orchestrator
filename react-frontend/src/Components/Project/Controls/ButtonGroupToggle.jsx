@@ -11,11 +11,12 @@ const ButtonGroupToggle = React.memo(({
   name,
 }) => (
   <Button.Group size="tiny" fluid>
-    { allowedValues.map(({ value: optionValue, displayName }) => (
+    { allowedValues.map(({ value: optionValue, displayName, color }) => (
       <Button
         name={name}
         key={optionValue}
-        positive={optionValue === value}
+        positive={optionValue === value && !color}
+        color={optionValue === value && color ? color : undefined}
         icon={optionValue === value ? 'dot circle outline' : 'circle outline'}
         content={displayName}
         onClick={e => onChange(e, { name, value: optionValue })}
@@ -29,7 +30,10 @@ ButtonGroupToggle.propTypes = {
     name: PropTypes.string,
     displayName: PropTypes.string,
   })).isRequired,
-  value: PropTypes.string.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.bool,
+    PropTypes.string,
+  ]).isRequired,
   onChange: PropTypes.func.isRequired,
   name: PropTypes.string,
 };

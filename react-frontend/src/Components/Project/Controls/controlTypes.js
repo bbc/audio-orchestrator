@@ -1,3 +1,4 @@
+// Removed type names used previously: coordinate, text.
 const controlTypes = [
   {
     name: 'radio',
@@ -40,50 +41,6 @@ const controlTypes = [
       {
         name: 'step',
         defaultValue: 1,
-      },
-    ],
-  },
-  {
-    name: 'coordinate',
-    displayName: 'Coordinates',
-    description: 'Select an x-y coordinate pair on a two-dimensional map.',
-    icon: 'map',
-    parameters: [
-      {
-        name: 'xMin',
-        defaultValue: -1,
-      },
-      {
-        name: 'xMax',
-        defaultValue: 1,
-      },
-      {
-        name: 'xStep',
-        defaultValue: 0.1,
-      },
-      {
-        name: 'yMin',
-        defaultValue: -1,
-      },
-      {
-        name: 'yMax',
-        defaultValue: 1,
-      },
-      {
-        name: 'yStep',
-        defaultValue: 0.1,
-      },
-    ],
-  },
-  {
-    name: 'text',
-    displayName: 'Text',
-    decription: 'Enter free text.',
-    icon: 'text cursor',
-    parameters: [
-      {
-        name: 'length',
-        defaultValue: 32,
       },
     ],
   },

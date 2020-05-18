@@ -24,7 +24,7 @@ const operatorOptions = operators.map(({ name, displayName }) => ({
 }));
 
 const propertyGroupColors = {
-  deviceControls: 'violet',
+  deviceControls: 'orange',
   device: 'purple',
   session: 'teal',
 };
@@ -122,6 +122,16 @@ const getPropertyTypeAndOperators = (property, { controls = [], sequencesList = 
     result.allowedValues = [
       { value: true, displayName: 'True' },
       { value: false, displayName: 'False' },
+    ];
+  } else if (result.type === 'deviceType') {
+    // based on template use of bowser getPlatform().type values here:
+    // https://github.com/lancedikson/bowser/blob/master/src/constants.js#L86
+    result.type = 'enum';
+    result.allowedValues = [
+      { value: 'tablet', displayName: 'Tablet' },
+      { value: 'mobile', displayName: 'Mobile' },
+      { value: 'desktop', displayName: 'Desktop/laptop' },
+      { value: 'tv', displayName: 'TV' },
     ];
   }
 

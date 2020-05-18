@@ -37,13 +37,19 @@ const BehaviourSettingsModal = ({
     description,
     parameters,
     color,
-  } = Behaviours.getDetails(behaviourType);
+  } = Behaviours.getDetails(behaviourType, controls);
 
   const haveParameters = parameters && parameters.length > 0;
 
   const handleSave = () => {
     onChange(behaviourParameters);
   };
+
+  // if it's a control behaviour, determine the controlId from the second half of the behaviourType
+  let controlId;
+  if (behaviourType.startsWith('control:')) {
+    [, controlId] = behaviourType.split(':');
+  }
 
   return (
     <Modal open closeIcon onClose={onClose}>
@@ -58,10 +64,9 @@ const BehaviourSettingsModal = ({
         {' behaviour'}
       </Modal.Header>
 
-      <Modal.Content content={description} />
-
-      { haveParameters && (
-        <Modal.Content scrolling>
+      <Modal.Content scrolling>
+        <p>{description}</p>
+        { haveParameters && (
           <BehaviourParameters
             parameters={parameters}
             values={behaviourParameters}
@@ -71,9 +76,10 @@ const BehaviourSettingsModal = ({
             })}
             sequencesList={sequencesList}
             controls={controls}
+            controlId={controlId}
           />
-        </Modal.Content>
-      )}
+        )}
+      </Modal.Content>
 
       <Modal.Actions>
         <Button

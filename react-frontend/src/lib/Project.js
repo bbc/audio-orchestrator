@@ -363,13 +363,13 @@ class Project {
             {
               conditionId: uuidv4(),
               property: 'device.deviceIsMain',
-              operator: 'oneOf',
+              operator: 'anyOf',
               value: [true, false],
             },
             {
               conditionId: uuidv4(),
               property: 'session.currentContentId',
-              operator: 'oneOf',
+              operator: 'anyOf',
               value: [],
               invertCondition: true,
             },
@@ -403,6 +403,9 @@ class Project {
     const control = controls[controlId];
     control.delete();
     delete controls[controlId];
+
+    // also remove any object behaviours that rely on this control
+    Object.values(this.sequences).forEach(sequence => sequence.handleDeleteControl(controlId));
 
     this.updateControlsList();
   }
@@ -445,7 +448,7 @@ class Project {
       })
       .map(({ sequenceId }) => {
         const sequence = this.sequences[sequenceId];
-        return sequence.getExportData();
+        return sequence.getExportData(this.controls);
       });
   }
 

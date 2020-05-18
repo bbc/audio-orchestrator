@@ -9,6 +9,7 @@ import Behaviours from 'Lib/Behaviours';
 
 const Behaviour = ({
   behaviourType,
+  controls,
   onEdit,
   onDelete,
 }) => {
@@ -17,7 +18,7 @@ const Behaviour = ({
     description,
     parameters,
     color,
-  } = Behaviours.getDetails(behaviourType);
+  } = Behaviours.getDetails(behaviourType, controls);
 
   const haveParameters = parameters && parameters.length > 0;
 
@@ -62,6 +63,11 @@ Behaviour.propTypes = {
   behaviourType: PropTypes.string.isRequired,
   onDelete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
+  controls: PropTypes.arrayOf(PropTypes.shape({})),
+};
+
+Behaviour.defaultProps = {
+  controls: [],
 };
 
 export default Behaviour;

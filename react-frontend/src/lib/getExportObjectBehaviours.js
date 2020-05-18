@@ -5,7 +5,7 @@ import Behaviours from 'Lib/Behaviours';
 // Translates the object behaviour list used in the project file and for authoring, to the metadata
 // exported for use with the library. Primarily replaces fixed and control behaviours with lower
 // level behaviours, and removes some unique identifiers not needed for rendering.
-const getExportObjectBehaviours = (objectBehaviours) => {
+const getExportObjectBehaviours = (objectBehaviours, controls = {}) => {
   // Annotate the object's behaviour data with details from the behaviour type definitions
   const annotatedBehaviours = Behaviours.getAnnotatedObjectBehaviours(objectBehaviours);
 
@@ -15,7 +15,80 @@ const getExportObjectBehaviours = (objectBehaviours) => {
     behaviourType,
     behaviourParameters,
   }) => {
-    // Depending on the behaviour type, call a handler
+    // for control behaviour, interpret the parameters based on the control type
+    if (behaviourType.startsWith('control:')) {
+      const [, controlId] = behaviourType.split(':');
+      if (!controls[controlId]) {
+        return; // silently ignore missing controls
+      }
+
+      // Initialise empty list of conditions. These are added based on the control type. The
+      // conditions are then added to an allowedIf behaviour; and inverted versions are added
+      // to a prohibitedIf behaviour.
+      const conditions = [];
+
+      const { controlType } = controls[controlId];
+
+      switch (controlType) {
+        case 'checkbox':
+        case 'radio':
+          if (behaviourParameters.allowed.length > 0) {
+            conditions.push({
+              property: `deviceControls.${controlId}`,
+              operator: 'anyOf',
+              value: behaviourParameters.allowed,
+            });
+          }
+          break;
+        case 'range':
+        case 'counter':
+          {
+            // get the min and max values from the allowedd list in the behaviour parameters
+            const [min, max] = behaviourParameters.allowed || [];
+
+            // generate a >= min and <= max condition, if min or max are numbers
+            if (Number.isFinite(min)) {
+              conditions.push({
+                property: `deviceControls.${controlId}`,
+                operator: 'greaterThanOrEqual',
+                value: min,
+              });
+            }
+            if (Number.isFinite(max)) {
+              conditions.push({
+                property: `deviceControls.${controlId}`,
+                operator: 'lessThanOrEqual',
+                value: max,
+              });
+            }
+          }
+          break;
+        default:
+          break;
+      }
+
+      if (conditions.length > 0) {
+        exportBehaviours.push({
+          behaviourType: 'allowedIf',
+          behaviourParameters: {
+            conditions,
+          },
+        });
+        exportBehaviours.push({
+          behaviourType: 'prohibitedIf',
+          behaviourParameters: {
+            conditions: conditions.map(condition => ({
+              ...condition,
+              invertCondition: !condition.invertCondition,
+            })),
+          },
+        });
+      }
+
+      return; // don't process the switch statement below because the behaviour has been dealt with.
+    }
+
+    // Depending on the behaviour type, call a handler for the 'normal' and 'fixed' behaviours
     switch (behaviourType) {
       case 'fixedDevices':
         // The fixedDevices behaviour is translated to a prohibitedIf excluding the de-selected
@@ -87,6 +160,7 @@ const getExportObjectBehaviours = (objectBehaviours) => {
       case 'allowedIf':
       case 'preferredIf':
       case 'prohibitedIf':
+        // Remove conditionId from conditional behaviours - this is not needed in the metadata file
         exportBehaviours.push({
           behaviourType,
           behaviourParameters: {
@@ -102,7 +176,7 @@ const getExportObjectBehaviours = (objectBehaviours) => {
       default:
         exportBehaviours.push({
           behaviourType,
-          behaviourParameters, // TODO remove conditionId from conditions
+          behaviourParameters,
         });
     }
   });

@@ -1084,8 +1084,10 @@ export const deleteControl = (projectId, controlId) => (dispatch) => {
   const project = projects[projectId];
   project.deleteControl(controlId);
 
-  // reload the controls to update the UI
+  // reload the controls (and sequences data because object behaviours might be affected)
   dispatch(loadControls(projectId));
+  dispatch(loadSequences(projectId));
+  validateProject(projectId);
 };
 
 // TODO should probably be separate actions to prevent overwriting private properties of control

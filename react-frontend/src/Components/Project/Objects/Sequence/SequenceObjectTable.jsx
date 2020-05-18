@@ -107,11 +107,9 @@ const SequenceObjectTable = ({
     setBehaviourSettingsContents(null);
   };
 
-  // Called when a behaviour is to be added to one or more objects; this will open the modal if
+  // Called when a behaviour is to be added to some objects; this will open the modal if
   // the behaviour has parameters.
-  const handleAddBehaviour = (givenObjectNumbers, behaviourType, behaviourParameters) => {
-    const objectNumbers = givenObjectNumbers.length ? givenObjectNumbers : [givenObjectNumbers];
-
+  const handleAddBehaviour = (objectNumbers, behaviourType, behaviourParameters) => {
     if (Object.keys(behaviourParameters).length > 0) { // TODO base check on behaviourTypes info
       // open the behaviour settings modal with the initial default parameters for user to confirm.
       setBehaviourSettingsContents({
@@ -159,9 +157,19 @@ const SequenceObjectTable = ({
     highlightedObjects.forEach(objectNumber => onDeleteObject(objectNumber));
   };
 
-  // Handle adding behaviours to multipe selected objects
+  // Handle adding a behaviour to the selected objects (from button above the table)
   const addBehaviourToHighlighted = (behaviourType, behaviourParameters) => {
     handleAddBehaviour(highlightedObjects, behaviourType, behaviourParameters);
+  };
+
+  // Handle adding a behaviour from the button in an object row.
+  // It adds to all selected objects if the row the request comes from is part of the selection.
+  const addBehaviourToObject = (objectNumber, behaviourType, behaviourParameters) => {
+    if (highlightedObjects.includes(objectNumber)) {
+      handleAddBehaviour(highlightedObjects, behaviourType, behaviourParameters);
+    } else {
+      handleAddBehaviour([objectNumber], behaviourType, behaviourParameters);
+    }
   };
 
   const usedBehaviourTypesSet = new Set();
@@ -208,7 +216,6 @@ const SequenceObjectTable = ({
           onDelete={() => {}}
           sequencesList={sequencesList}
           controls={controls}
-
         />
       )}
 
@@ -236,6 +243,7 @@ const SequenceObjectTable = ({
             onDeleteHighlighted={deleteHighlighted}
             usedBehaviourTypes={usedBehaviourTypes}
             onAddBehaviourToHighlighted={addBehaviourToHighlighted}
+            controls={controls}
           />
           <Table.Body>
             { objectsWithFiles.map((object) => {
@@ -248,13 +256,14 @@ const SequenceObjectTable = ({
                   {...object}
                   key={objectNumber}
                   highlighted={highlightedObjects.indexOf(objectNumber) !== -1}
-                  onAddObjectBehaviour={handleAddBehaviour}
+                  onAddObjectBehaviour={addBehaviourToObject}
                   onEditObjectBehaviour={handleEditBehaviour}
                   onToggleHighlight={() => toggleHighlight(objectNumber)}
                   {...{
                     onChangePanning,
                     onReplaceObjectBehaviourParameters,
                     onDeleteObjectBehaviour,
+                    controls,
                   }}
                 />
               );

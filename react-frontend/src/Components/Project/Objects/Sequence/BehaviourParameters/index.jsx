@@ -1,8 +1,5 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Table,
-} from 'semantic-ui-react';
 import BehaviourParameter from './BehaviourParameter';
 
 const BehaviourParameters = React.memo(({
@@ -11,24 +8,24 @@ const BehaviourParameters = React.memo(({
   onChange,
   sequencesList,
   controls,
+  controlId,
 }) => (
-  <Table definition>
-    <Table.Body>
-      {parameters.map(parameter => (
-        <BehaviourParameter
-          key={parameter.name}
-          {...parameter}
-          value={values[parameter.name]}
-          onChange={(e, data) => onChange(e, {
-            name: parameter.name,
-            value: data.value,
-          })}
-          sequencesList={sequencesList}
-          controls={controls}
-        />
-      ))}
-    </Table.Body>
-  </Table>
+  <>
+    {parameters.map(parameter => (
+      <BehaviourParameter
+        key={parameter.name}
+        {...parameter}
+        value={values[parameter.name]}
+        onChange={(e, data) => onChange(e, {
+          name: parameter.name,
+          value: data.value,
+        })}
+        sequencesList={sequencesList}
+        controls={controls}
+        controlId={controlId}
+      />
+    ))}
+  </>
 ));
 
 BehaviourParameters.propTypes = {
@@ -40,6 +37,11 @@ BehaviourParameters.propTypes = {
     name: PropTypes.String,
   })).isRequired,
   controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  controlId: PropTypes.string,
+};
+
+BehaviourParameters.defaultProps = {
+  controlId: undefined, // only exists for control-linked behaviours
 };
 
 export default BehaviourParameters;

@@ -13,6 +13,7 @@ const ObjectHeader = ({
   indeterminate,
   checked,
   usedBehaviourTypes,
+  controls,
   onToggleAllHighlights,
   onDeleteHighlighted,
   onAddBehaviourToHighlighted,
@@ -28,6 +29,7 @@ const ObjectHeader = ({
             text="Add behaviour"
             onAddBehaviour={onAddBehaviourToHighlighted}
             usedBehaviourTypes={usedBehaviourTypes}
+            controls={controls}
           />
         </Table.HeaderCell>
         <Table.HeaderCell collapsing>
@@ -89,6 +91,7 @@ ObjectHeader.propTypes = {
   indeterminate: PropTypes.bool,
   checked: PropTypes.bool,
   usedBehaviourTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
+  controls: PropTypes.arrayOf(PropTypes.shape({})),
   onToggleAllHighlights: PropTypes.func.isRequired,
   onDeleteHighlighted: PropTypes.func.isRequired,
   onAddBehaviourToHighlighted: PropTypes.func.isRequired,
@@ -97,6 +100,7 @@ ObjectHeader.propTypes = {
 ObjectHeader.defaultProps = {
   indeterminate: false,
   checked: false,
+  controls: [],
 };
 
 export default ObjectHeader;

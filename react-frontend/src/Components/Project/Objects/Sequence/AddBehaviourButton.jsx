@@ -12,23 +12,32 @@ const AddBehaviourButton = React.memo(({
   usedBehaviourTypes,
   text,
   disabled,
+  controls,
 }) => {
-  const options = Behaviours.getAllDetails({ includeFixed: false })
+  const options = Behaviours.getAllDetails({ includeFixed: false }, controls)
     .map(({
       behaviourType,
       displayName,
       multiple,
+      color,
     }) => {
       const cannotAdd = !multiple && usedBehaviourTypes.includes(behaviourType);
+      const isUserControl = behaviourType.startsWith('control:');
 
       return {
         key: behaviourType,
         value: behaviourType,
-        text: displayName || behaviourType,
+        text: isUserControl ? `User control: ${displayName}` : (displayName || behaviourType),
         disabled: cannotAdd,
-        icon: cannotAdd ? 'checkmark' : 'plus',
+        icon: cannotAdd ? {
+          name: 'checkmark',
+          color,
+        } : {
+          name: 'circle',
+          color,
+        },
         onClick: cannotAdd ? null : () => {
-          onAddBehaviour(behaviourType, Behaviours.getDefaultParameters(behaviourType));
+          onAddBehaviour(behaviourType, Behaviours.getDefaultParameters(behaviourType, controls));
         },
       };
     });
@@ -51,11 +60,13 @@ AddBehaviourButton.propTypes = {
   usedBehaviourTypes: PropTypes.arrayOf(PropTypes.string).isRequired,
   text: PropTypes.string,
   disabled: PropTypes.bool,
+  controls: PropTypes.arrayOf(PropTypes.shape({})),
 };
 
 AddBehaviourButton.defaultProps = {
   text: 'Add behaviour',
   disabled: false,
+  controls: [],
 };
 
 export default AddBehaviourButton;

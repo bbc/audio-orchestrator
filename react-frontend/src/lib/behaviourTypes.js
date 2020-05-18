@@ -1,15 +1,19 @@
 export const behaviourTypes = [
-  'mainDeviceOnly',
-  'auxDevicesOnly',
-  'allowedEverywhere',
-  'spread',
+  // Controls - are generated dynamically and added to the start of the list in lib/Behaviours.js
+  // Fixed
+  'fixedDevices',
+  'fixedSpread',
+  // Custom
   'preferredIf',
   'allowedIf',
   'prohibitedIf',
   'exclusive',
   'onChange',
-  'fixedDevices',
-  'fixedSpread',
+  // Not supported anymore; replaced by fixed/presets
+  // 'mainDeviceOnly',
+  // 'auxDevicesOnly',
+  // 'allowedEverywhere',
+  // 'spread',
 ];
 
 export const behaviourTypeDetails = {
@@ -40,6 +44,7 @@ export const behaviourTypeDetails = {
     parameters: [
       {
         name: 'perDeviceGainAdjust',
+        displayName: 'Gain adjustment based on number of devices',
         description: 'When the object is in multiple devices, multiply its gain by this value for each additional device it is in beyond the first one; applies the same adjustment to every device.',
         type: 'gain',
         defaultValue: 0.0,
@@ -51,10 +56,10 @@ export const behaviourTypeDetails = {
     description: 'The object will be preferred on any device that fulfills all of the conditions added to this behaviour.',
     multiple: true,
     color: 'green',
-    additive: true,
     parameters: [
       {
         name: 'conditions',
+        displayName: 'Conditions',
         description: 'The conditions to be met by the session or device.',
         type: 'conditionsList',
         defaultValue: [],
@@ -66,10 +71,11 @@ export const behaviourTypeDetails = {
     description: 'The object will be allowed on any device that fulfills all of the conditions added to this behaviour.',
     multiple: true,
     color: 'yellow',
-    additive: true,
+    additive: true, // Additive means that this behaviour replaces the implicit allowedEverywhere.
     parameters: [
       {
         name: 'conditions',
+        displayName: 'Conditions',
         description: 'The conditions to be met by the session or device.',
         type: 'conditionsList',
         defaultValue: [],
@@ -84,6 +90,7 @@ export const behaviourTypeDetails = {
     parameters: [
       {
         name: 'conditions',
+        displayName: 'Conditions',
         description: 'The conditions to be met by the session or device.',
         type: 'conditionsList',
         defaultValue: [],
@@ -104,17 +111,19 @@ export const behaviourTypeDetails = {
     parameters: [
       {
         name: 'start',
+        displayName: 'When can the object start?',
         type: 'enum',
         description: 'Determines when the object can start playing.',
         defaultValue: 'canAlwaysStart',
         allowedValues: [
           { value: 'canAlwaysStart', displayName: 'Can always start' },
           { value: 'canNeverStart', displayName: 'Can never start' },
-          { value: 'canOnlyStartOnFirstRun', displayName: 'Can only start on first run' },
+          { value: 'canOnlyStartOnFirstRun', displayName: 'Can only start at the beginning of the sequence' },
         ],
       },
       {
         name: 'allocate',
+        displayName: 'When can the object move?',
         type: 'listOfEnum',
         description: 'Determines when the object can or should move to another device.',
         defaultValue: ['moveToPreferred', 'stayInPrevious', 'moveToAllowedNotPrevious', 'moveToAllowed'],
@@ -131,7 +140,7 @@ export const behaviourTypeDetails = {
     displayName: 'Device type',
     description: 'Determines what kind of device the object can be allocated to.',
     fixed: true,
-    color: 'green',
+    color: 'grey',
     parameters: [
       {
         name: 'deviceType',
@@ -150,7 +159,7 @@ export const behaviourTypeDetails = {
     displayName: 'How many devices',
     description: 'Determines whether the object is allocated to all qualifying devices at once, or to single one (at random if there are multiple equally preferred devices).',
     fixed: true,
-    color: 'green',
+    color: 'grey',
     parameters: [
       {
         name: 'spread',
@@ -158,8 +167,8 @@ export const behaviourTypeDetails = {
         description: '',
         defaultValue: 'doNotSpread',
         allowedValues: [
-          { value: 'spread', displayName: 'most suitable device' },
-          { value: 'doNotSpread', displayName: 'all applicable' },
+          { value: 'doNotSpread', displayName: 'most suitable device' },
+          { value: 'spread', displayName: 'all applicable' },
           { value: 'spreadWithSmallGainReduction', displayName: 'all applicable with gain adjustment' },
         ],
       },
