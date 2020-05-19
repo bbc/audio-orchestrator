@@ -53,6 +53,7 @@ const generateSequenceMetatata = (
         duration: item.duration,
         source: {
           channelMapping: object.channelMapping,
+          panning: object.panning,
           type: item.type,
           url: `${baseUrl}/${sequenceId}/${item.relativePath}`,
           urlSafari: item.relativePathSafari ? `${baseUrl}/${sequenceId}/${item.relativePathSafari}` : null,
