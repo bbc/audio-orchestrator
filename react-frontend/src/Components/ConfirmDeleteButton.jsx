@@ -67,6 +67,7 @@ const ConfirmDeleteButton = ({
 
   return (
     <Popup
+      basic
       open={open}
       onOpen={handleOpen}
       onClose={handleClose}

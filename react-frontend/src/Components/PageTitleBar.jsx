@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Header,
 } from 'semantic-ui-react';
-import HelpModal from './HelpModal';
+import HelpLinkIcon from './HelpLinkIcon';
 
 const PageTitleBar = ({
   title,
@@ -18,7 +18,7 @@ const PageTitleBar = ({
         {' '}
         {helpId
           ? (
-            <HelpModal helpId={helpId} />
+            <HelpLinkIcon helpId={helpId} />
           )
           : null}
       </span>
