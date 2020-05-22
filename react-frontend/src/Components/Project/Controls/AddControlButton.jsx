@@ -29,7 +29,7 @@ const AddControlButton = React.memo(({
         controlType,
         `New ${displayName || controlType} control`,
         controlParameters,
-        [],
+        ['counter', 'range'].includes(controlType) ? [0] : [],
       );
     },
   }));
