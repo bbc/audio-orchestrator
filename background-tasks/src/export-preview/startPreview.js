@@ -9,6 +9,8 @@ import serveStatic from 'serve-static';
 
 const DEFAULT_PORT = 8000;
 
+const previewStopFunctions = [];
+
 const selectHost = () => new Promise((resolve) => {
   const interfacesObj = os.networkInterfaces();
   const addresses = [];
@@ -73,6 +75,16 @@ const startPreview = (args) => {
     })
     .then(() => fse.ensureDir(distDir))
     .then(() => {
+      // Stop any preview server that might still be running
+      while (previewStopFunctions.length > 0) {
+        try {
+          previewStopFunctions.shift()();
+        } catch (e) {
+          logger.warn('could not stop a previous preview server', e);
+        }
+      }
+    })
+    .then(() => {
       serve = serveStatic(distDir);
       server = http.createServer((req, res) => {
         serve(req, res, finalhandler(req, res));
@@ -87,13 +99,22 @@ const startPreview = (args) => {
 
       server.listen(handle, () => {
         const { port, address } = server.address();
-        logger.info(`Preview server for ${distDir} listening on ${address}:${port}.`);
+
+        const previewUrl = `http://${address}:${port}`;
+
+        const stopPreview = () => {
+          logger.info(`Stopping preview server at ${previewUrl}.`);
+          server.close();
+        };
+
+        // Save the stop function here as well, to be able to stop the server without user request
+        previewStopFunctions.push(stopPreview);
+
+        logger.info(`Preview server for ${distDir} running at ${address}:${port}.`);
+
         resolve({
-          stopPreview: () => {
-            logger.info(`Stopping preview server on ${address}:${port}.`);
-            server.close();
-          },
-          previewUrl: `http://${address}:${port}`,
+          stopPreview,
+          previewUrl,
         });
       });
     }))
