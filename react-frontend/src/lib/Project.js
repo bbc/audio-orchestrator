@@ -504,6 +504,7 @@ class Project {
       warning: !valid,
       error: false,
       projectPage: PAGE_PROJECT_PRESENTATION,
+      editIcon: 'paint brush',
     };
   }
 
@@ -538,6 +539,7 @@ class Project {
       warning: false,
       error: !valid,
       projectPage: PAGE_PROJECT_EXPORT,
+      editIcon: 'share',
     };
   }
 
@@ -557,6 +559,7 @@ class Project {
       warning: !valid,
       error: false,
       projectPage: PAGE_PROJECT_PRESENTATION,
+      editIcon: 'paint brush',
     };
   }
 

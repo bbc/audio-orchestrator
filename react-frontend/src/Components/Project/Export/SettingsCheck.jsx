@@ -12,6 +12,7 @@ const SettingsCheck = ({
   error,
   warning,
   onReview,
+  editIcon,
 }) => {
   const valid = !warning && !error;
   const invalidIcon = error ? 'delete' : 'exclamation';
@@ -24,7 +25,7 @@ const SettingsCheck = ({
       </Table.Cell>
       <Table.Cell>
         {!valid && !!onReview
-          ? <Button icon="edit" onClick={onReview} />
+          ? <Button icon={editIcon} onClick={onReview} />
           : null
         }
       </Table.Cell>
@@ -38,6 +39,7 @@ SettingsCheck.propTypes = {
   error: PropTypes.bool,
   warning: PropTypes.bool,
   onReview: PropTypes.func,
+  editIcon: PropTypes.string,
 };
 
 SettingsCheck.defaultProps = {
@@ -45,6 +47,7 @@ SettingsCheck.defaultProps = {
   error: false,
   warning: false,
   onReview: () => {},
+  editIcon: 'edit',
 };
 
 export default SettingsCheck;

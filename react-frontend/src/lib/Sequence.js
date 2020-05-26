@@ -1,5 +1,9 @@
 import getExportObjectBehaviours from './getExportObjectBehaviours';
 
+import {
+  PAGE_PROJECT_SEQUENCES,
+} from '../reducers/UIReducer';
+
 class SequenceSettings {
   constructor(store, sequenceId) {
     this.data = {};
@@ -276,6 +280,8 @@ class Sequence {
     let message = null;
     let error = false;
     let warning = false;
+    let projectPage; // defaults to Object page for this sequence if not set
+    let editIcon = 'file audio outline';
 
     const numFilesAdded = filesList.length;
     const numObjectsAdded = objectsList.length || 0;
@@ -298,6 +304,8 @@ class Sequence {
       error = true;
     } else if (!choicesAreGood) {
       message = 'Not all choices have a valid label and sequence.';
+      projectPage = PAGE_PROJECT_SEQUENCES;
+      editIcon = 'code branch';
       error = true;
     }
 
@@ -305,6 +313,8 @@ class Sequence {
       if (!next || next.length === 0) {
         message = 'No links to other sequences have been added.';
         warning = true;
+        projectPage = PAGE_PROJECT_SEQUENCES;
+        editIcon = 'code branch';
       }
     }
 
@@ -315,6 +325,8 @@ class Sequence {
       warning,
       error,
       sequenceId,
+      projectPage,
+      editIcon,
     };
   }
 

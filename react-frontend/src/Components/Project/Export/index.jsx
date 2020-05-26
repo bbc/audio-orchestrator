@@ -56,6 +56,7 @@ const Review = ({
                 <SettingsCheck
                   {...item}
                   projectId={projectId}
+                  editIcon={item.editIcon}
                   onReview={() => onOpenProjectPage(projectId, item.projectPage)}
                 />
               ))
@@ -73,7 +74,14 @@ const Review = ({
                 <SettingsCheck
                   {...item}
                   projectId={projectId}
-                  onReview={() => onOpenSequencePage(projectId, item.sequenceId)}
+                  editIcon={item.editIcon}
+                  onReview={() => {
+                    if (item.projectPage) {
+                      onOpenProjectPage(projectId, item.projectPage);
+                    } else {
+                      onOpenSequencePage(projectId, item.sequenceId);
+                    }
+                  }}
                 />
               ))
             }
