@@ -13,7 +13,6 @@ import {
   Button,
 } from 'semantic-ui-react';
 import ProjectsList from './ProjectsList';
-import DeveloperMenu from './DeveloperMenu';
 
 import {
   requestListProjects,
@@ -54,7 +53,6 @@ class Home extends React.Component {
           <Menu.Menu position="right">
             <Menu.Item content={`Orchestrator ${VERSION}`} />
             <Menu.Item icon="info" onClick={window.openCredits} />
-            <DeveloperMenu />
           </Menu.Menu>
         </Menu>
 
