@@ -139,7 +139,7 @@ class CheckboxControlSettings extends React.PureComponent {
 
     return (
       <Card.Content>
-        <Header content="Options" subheader="Options are the items the listener can select from." />
+        <Header content="Options" subheader="Specify the options that the listener can select." />
         {options && options.length > 0
           ? (
             <Table>
@@ -178,7 +178,15 @@ class CheckboxControlSettings extends React.PureComponent {
               </Table.Body>
             </Table>
           ) : null }
-        <Button size="tiny" primary content="Add option" onClick={this.handleAdd} />
+        <Button
+          type="button"
+          icon="plus"
+          primary
+          labelPosition="left"
+          content="Add option"
+          size="tiny"
+          onClick={this.handleAdd}
+        />
       </Card.Content>
     );
   }

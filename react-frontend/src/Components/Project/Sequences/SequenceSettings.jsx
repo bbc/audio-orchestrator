@@ -60,7 +60,7 @@ class SequenceSettingsNew extends React.Component {
           </List.Item>
           <List.Item>
             <Checkbox
-              label="Hold at end of sequence"
+              label="Wait for user to choose a destination at end of sequence"
               checked={hold}
               onChange={() => this.handleChange('hold', !hold)}
               disabled={loop}

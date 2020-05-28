@@ -54,7 +54,7 @@ class ControlBehavioursSequences extends React.PureComponent {
           error={value.length === 0}
           placeholder="Click to add sequences..."
         />
-        Select during which sequences the control should be visible.
+        Select the sequences during which the control should be visible.
       </Card.Content>
     );
   }

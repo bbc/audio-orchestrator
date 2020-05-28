@@ -55,8 +55,8 @@ class SequenceItem extends React.Component {
           <Button.Group floated="right" basic size="tiny">
             <InlineHelpPopup
               content={isIntro
-                ? 'Use as entry point (select this button on another sequence to change which sequence plays when the experience starts)'
-                : 'Use as entry point (play this sequence when the experience starts)'
+                ? 'Use as entry point (select this option on another sequence to change which sequence plays when the experience starts).'
+                : 'Use as entry point (select this option to play this sequence when the experience starts).'
               }
               className="ui buttons"
             >
@@ -68,7 +68,7 @@ class SequenceItem extends React.Component {
               />
             </InlineHelpPopup>
             <InlineHelpPopup
-              content="Edit sequence audio objects"
+              content="Edit the audio objects for this sequence."
               className="ui buttons"
             >
               <Button
@@ -78,7 +78,7 @@ class SequenceItem extends React.Component {
               />
             </InlineHelpPopup>
             <InlineHelpPopup
-              content={isIntro ? 'The entry point sequence cannot be deleted.' : 'Delete sequence'}
+              content={isIntro ? 'The entry point sequence cannot be deleted.' : 'Delete this sequence.'}
               className="ui buttons"
             >
               <ConfirmDeleteButton
@@ -131,7 +131,7 @@ class SequenceItem extends React.Component {
               </b>
             </Accordion.Title>
             <Accordion.Content active={settingsOpen}>
-              <Card.Meta content="Settings determine how and when the user can interact with the choices." />
+              <Card.Meta content="Settings determine how and when the user can move between sequences." />
               <br />
               <SequenceSettings sequenceId={sequenceId} projectId={projectId} />
             </Accordion.Content>

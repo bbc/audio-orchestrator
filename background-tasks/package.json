@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-background-tasks",
-  "version": "0.14.9",
+  "version": "0.14.10",
   "description": "Methods for analysing, encoding, and packaging files to create orchestrated experiences.",
   "main": "dist/index.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",

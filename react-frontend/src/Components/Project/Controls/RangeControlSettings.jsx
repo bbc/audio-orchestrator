@@ -69,7 +69,7 @@ class RangeControlSettings extends React.PureComponent {
 
     return (
       <Card.Content>
-        <Header content="Range" subheader="The endpoints of the slider (minimum and maximum values)." />
+        <Header content="Range" subheader="The end points of the slider (minimum and maximum values)." />
         <Input
           type="number"
           placeholder="Minimum"

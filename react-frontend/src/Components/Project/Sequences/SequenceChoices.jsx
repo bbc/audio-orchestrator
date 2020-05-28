@@ -185,6 +185,7 @@ class SequenceChoices extends React.Component {
           primary
           labelPosition="left"
           content="Add destination"
+          size="tiny"
           onClick={() => this.handleAddChoice()}
         />
       </Container>

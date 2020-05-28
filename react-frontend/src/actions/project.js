@@ -599,11 +599,11 @@ export const requestCreateProject = () => (dispatch) => {
       projects[projectId] = project;
 
       // create the standard sequence; with a single link going back to itself
-      const introSequence = project.addSequence({ name: 'Initial Sequence', isIntro: true });
+      const introSequence = project.addSequence({ name: 'Initial sequence', isIntro: true });
       introSequence.settings.next = [
         {
           sequenceId: introSequence.sequenceId,
-          label: 'Listen Again',
+          label: 'Listen again',
         },
       ];
 

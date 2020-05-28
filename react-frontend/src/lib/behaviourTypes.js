@@ -137,8 +137,8 @@ export const behaviourTypeDetails = {
     ],
   },
   fixedDevices: {
-    displayName: 'Device type',
-    description: 'Determines what kind of device the object can be allocated to.',
+    displayName: 'Device roles',
+    description: 'Determines which device roles the object can be allocated to (main, aux, or either).',
     fixed: true,
     color: 'grey',
     parameters: [
@@ -148,16 +148,16 @@ export const behaviourTypeDetails = {
         description: '',
         defaultValue: 'any',
         allowedValues: [
-          { value: 'any', displayName: 'any device' },
-          { value: 'main', displayName: 'main device only' },
-          { value: 'aux', displayName: 'aux devices only' },
+          { value: 'any', displayName: 'Any device role' },
+          { value: 'main', displayName: 'Main device only' },
+          { value: 'aux', displayName: 'Aux devices only' },
         ],
       },
     ],
   },
   fixedSpread: {
     displayName: 'How many devices',
-    description: 'Determines whether the object is allocated to all qualifying devices at once, or to single one (at random if there are multiple equally preferred devices).',
+    description: 'Determines how many devices the object can be allocated to.',
     fixed: true,
     color: 'grey',
     parameters: [
@@ -167,9 +167,9 @@ export const behaviourTypeDetails = {
         description: '',
         defaultValue: 'doNotSpread',
         allowedValues: [
-          { value: 'doNotSpread', displayName: 'most suitable device' },
-          { value: 'spread', displayName: 'all applicable' },
-          { value: 'spreadWithSmallGainReduction', displayName: 'all applicable with gain adjustment' },
+          { value: 'doNotSpread', displayName: 'One device only' },
+          { value: 'spread', displayName: 'All applicable devices' },
+          { value: 'spreadWithSmallGainReduction', displayName: 'All applicable with gain reduction' },
         ],
       },
     ],

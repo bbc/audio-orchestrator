@@ -253,7 +253,7 @@ class Project {
    * @returns {Sequence} - the newly created sequence object
    */
   addSequence({
-    name = 'New Sequence',
+    name = 'New sequence',
     isIntro = false,
   } = {}) {
     const { store, data } = this;

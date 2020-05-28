@@ -88,7 +88,7 @@ class Presentation extends React.Component {
       <Container>
         <Form>
           <PageTitleBar
-            title="Look & Feel"
+            title="Appearance"
             shortDescription="The presentation settings customise the look and feel of the preview and exported prototype application."
             helpId="presentation"
           />

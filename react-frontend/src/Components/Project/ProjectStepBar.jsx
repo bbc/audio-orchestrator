@@ -34,13 +34,13 @@ const steps = [
   {
     key: PAGE_PROJECT_OBJECTS,
     icon: 'file audio outline',
-    title: 'Audio objects',
+    title: 'Audio',
     // description: 'Import audio and define where objects are rendered',
   },
   {
     key: PAGE_PROJECT_PRESENTATION,
     icon: 'paint brush',
-    title: 'Look & feel',
+    title: 'Appearance',
     // description: 'Define a colour scheme and images',
   },
   {

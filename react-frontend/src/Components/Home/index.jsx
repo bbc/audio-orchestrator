@@ -1,4 +1,3 @@
-/* global VERSION */
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -51,7 +50,6 @@ class Home extends React.Component {
         <Menu inverted color="blue" attached="bottom">
           <Menu.Item header>Home</Menu.Item>
           <Menu.Menu position="right">
-            <Menu.Item content={`Orchestrator ${VERSION}`} />
             <Menu.Item icon="info" onClick={window.openCredits} />
           </Menu.Menu>
         </Menu>

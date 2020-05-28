@@ -29,6 +29,7 @@ const Behaviour = ({
     >
       <Popup
         inverted
+        basic
         content={description}
         trigger={(
           <Button

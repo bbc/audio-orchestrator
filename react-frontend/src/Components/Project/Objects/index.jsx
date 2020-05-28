@@ -41,8 +41,8 @@ const Objects = ({
   return (
     <Container>
       <PageTitleBar
-        title="Audio objects"
-        shortDescription="Import audio files and add object metadata for each sequence to define how each object should be rendered."
+        title="Audio"
+        shortDescription="For each sequence, import audio files and add object metadata to define how each object should be allocated to devices."
         helpId="objects"
       />
       <Tab

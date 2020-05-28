@@ -8,6 +8,7 @@ import {
   Icon,
   Header,
   Label,
+  List,
 } from 'semantic-ui-react';
 
 import {
@@ -25,14 +26,19 @@ const SequenceHeader = ({
       <Segment placeholder>
         <Header icon>
           <Icon name="file audio outline" />
-          Audio files
+          Add audio files to this sequence.
           <Header.Subheader>
-            There should be one continuous mono WAV file for each object.
+            <List bulleted>
+              <List.Item content="There must be one continuous mono .wav file for each object." />
+              <List.Item content="All files must be the same length." />
+              <List.Item content="Filenames must start wih ascending numbers, e.g. 01_example.wav." />
+            </List>
           </Header.Subheader>
         </Header>
         <Button
           primary
-          icon="linkify"
+          labelPosition="left"
+          icon="plus"
           content="Add audio files"
           onClick={onReplaceAudioFiles}
         />
@@ -44,8 +50,9 @@ const SequenceHeader = ({
     <Container>
       <Button
         primary
-        icon="linkify"
-        content="Replace audio files"
+        labelPosition="left"
+        icon="refresh"
+        content="Replace all audio files"
         onClick={onReplaceAudioFiles}
       />
 

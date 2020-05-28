@@ -13,7 +13,7 @@ const Sequences = ({
   <Container>
     <PageTitleBar
       title="Sequences"
-      shortDescription="Each sequence is an independent section of content. Use this page to define sequences and how the user can move between them."
+      shortDescription="Each sequence is an independent section of content."
       helpId="sequences"
     />
     <SequencesList projectId={projectId} />

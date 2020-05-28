@@ -27,7 +27,7 @@ const AddControlButton = React.memo(({
 
       onAddControl(
         controlType,
-        `New ${displayName || controlType} control`,
+        `New ${(displayName || controlType).toLowerCase()} control`,
         controlParameters,
         ['counter', 'range'].includes(controlType) ? [0] : [],
       );

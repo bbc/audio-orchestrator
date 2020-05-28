@@ -303,7 +303,7 @@ class Sequence {
       message = 'Some audio files have errors.';
       error = true;
     } else if (!choicesAreGood) {
-      message = 'Not all choices have a valid label and sequence.';
+      message = 'Not all destinations have a valid label and target sequence.';
       projectPage = PAGE_PROJECT_SEQUENCES;
       editIcon = 'code branch';
       error = true;

@@ -113,7 +113,6 @@ class ObjectRow extends React.PureComponent {
             }}
             usedBehaviourTypes={objectBehaviours.map(({ behaviourType }) => behaviourType)}
             controls={controls}
-            text="Add..."
           />
         </Table.Cell>
       </Table.Row>

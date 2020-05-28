@@ -47,7 +47,7 @@ const Project = ({
       <Menu inverted color="orange" attached>
         <Menu.Item header content={name} />
         <SaveIndicator count={saveCount} />
-        <Menu.Item position="right" icon="close" content="close" onClick={onClose} />
+        <Menu.Item position="right" icon="close" content="Close" onClick={onClose} />
       </Menu>
       <ProjectStepBar projectId={projectId} />
 

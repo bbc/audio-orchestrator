@@ -28,8 +28,8 @@ const AddSequenceCard = ({
         style={{ height: '100%', minHeight: '12em' }}
         textAlign="center"
       >
-        <Header content="More sequences" subheader="You can add as many sequences as you like..." />
-        <Button primary icon="plus" content="Add new sequence" onClick={onAddSequence} labelPosition="left" />
+        <Header content="More sequences" subheader="You can add as many sequences as you need." />
+        <Button primary icon="plus" content="Add sequence" onClick={onAddSequence} labelPosition="left" />
       </Segment>
     </Card.Content>
   </Card>

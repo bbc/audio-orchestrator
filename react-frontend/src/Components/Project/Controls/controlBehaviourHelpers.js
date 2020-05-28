@@ -8,7 +8,7 @@ const ALL_DEVICES = 'all';
 export const devicesOptions = [
   {
     value: ALL_DEVICES,
-    displayName: 'All devices',
+    displayName: 'Any device role',
   },
   {
     value: MAIN_DEVICE_ONLY,
@@ -16,7 +16,7 @@ export const devicesOptions = [
   },
   {
     value: OTHER_DEVICES_ONLY,
-    displayName: 'Other devices only',
+    displayName: 'Aux devices only',
   },
 ];
 

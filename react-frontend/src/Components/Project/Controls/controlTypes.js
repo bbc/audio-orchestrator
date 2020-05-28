@@ -3,7 +3,7 @@ const controlTypes = [
   {
     name: 'radio',
     displayName: 'Radio buttons',
-    description: 'Select a single value from the set of options.',
+    description: 'the listener can select a single option.',
     icon: 'radio',
     parameters: [
       {
@@ -15,7 +15,7 @@ const controlTypes = [
   {
     name: 'checkbox',
     displayName: 'Checkboxes',
-    description: 'Select none, one, or multiple values from the list of options.',
+    description: 'the listener can select one or more options.',
     icon: 'check square',
     parameters: [
       {
@@ -27,7 +27,7 @@ const controlTypes = [
   {
     name: 'range',
     displayName: 'Range',
-    description: 'Select a number between a maximum and minimum value by moving a slider.',
+    description: 'the listener can select a number by moving a slider.',
     icon: 'sliders',
     parameters: [
       {
@@ -46,8 +46,8 @@ const controlTypes = [
   },
   {
     name: 'counter',
-    displayName: 'Counter button',
-    description: 'Increment or decrement a number by clicking a button.',
+    displayName: 'Button',
+    description: 'the listener can increment or decrement a counter by clicking a button.',
     icon: 'plus square',
     parameters: [
       {

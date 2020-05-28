@@ -203,8 +203,8 @@ const SequenceObjectTable = ({
     <div>
       <Dimmer active={filesLoading} inverted verticalAlign="top">
         { !filesLoadingTotal
-          ? <Loader indeterminate inline="centered" content="Checking Audio Files" />
-          : <Loader inline="centered" content={`Checking Audio Files (${filesLoadingCompleted}/${filesLoadingTotal})`} />
+          ? <Loader indeterminate inline="centered" content="Checking audio files..." />
+          : <Loader inline="centered" content={`Checking audio files (${filesLoadingCompleted}/${filesLoadingTotal})`} />
         }
       </Dimmer>
 

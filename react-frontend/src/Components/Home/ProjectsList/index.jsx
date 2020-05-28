@@ -18,7 +18,7 @@ const ProjectsList = ({
     <Table>
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell content="Recent Projects" colSpan={2} />
+          <Table.HeaderCell content="Recent projects" colSpan={2} />
         </Table.Row>
       </Table.Header>
       <Table.Body>

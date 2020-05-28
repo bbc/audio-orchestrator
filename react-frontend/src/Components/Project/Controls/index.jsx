@@ -58,7 +58,7 @@ class Controls extends React.PureComponent {
       <Container>
         <PageTitleBar
           title="Controls"
-          shortDescription="Controls are displayed on the listeners' devices so they can make choices that affect object rendering."
+          shortDescription="Controls are displayed on the listeners' devices so they can make choices that affect object allocation."
           helpId="controls"
         />
         { (controlsList.length > 0)
@@ -71,13 +71,18 @@ class Controls extends React.PureComponent {
                   onChange={(name, value) => onChangeControl(controlId, name, value)}
                   {...controls[controlId]}
                   sequencesList={sequencesList}
-                  onMove={direction => this.handleMoveControl(i, direction)}
+                  onMoveUp={i === 0 ? undefined : () => {
+                    this.handleMoveControl(i, -1);
+                  }}
+                  onMoveDown={i === controlsList.length - 1 ? undefined : () => {
+                    this.handleMoveControl(i, 1);
+                  }}
                 />
               ))}
               <Card key="add-control">
                 <Card.Content>
                   <Segment placeholder textAlign="center">
-                    <Header content="More controls" subheader="You can add as many controls as you like..." />
+                    <Header content="More controls" subheader="You can add as many controls as you need." />
                     <AddControlButton onAddControl={onAddControl} />
                   </Segment>
                 </Card.Content>

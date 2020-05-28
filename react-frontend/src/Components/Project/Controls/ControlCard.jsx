@@ -5,6 +5,7 @@ import {
   Button,
 } from 'semantic-ui-react';
 import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
+import InlineHelpPopup from 'Components/InlineHelpPopup';
 import EditableText from '../EditableText';
 import ControlBehavioursDevices from './ControlBehavioursDevices';
 import ControlBehavioursSequences from './ControlBehavioursSequences';
@@ -21,13 +22,15 @@ class ControlCard extends React.PureComponent {
       controlDefaultValues,
       onDelete,
       onChange,
-      onMove,
+      onMoveUp,
+      onMoveDown,
       sequencesList,
     } = this.props;
 
     // Get display name for control type
     const {
       displayName,
+      description,
     } = controlTypes.find(
       ({ name }) => name === controlType,
     );
@@ -40,9 +43,26 @@ class ControlCard extends React.PureComponent {
       <Card>
         <Card.Content style={{ flexGrow: 0 }}>
           <Button.Group floated="right" basic size="tiny">
-            <ConfirmDeleteButton type="control" small notBasic onDelete={onDelete} />
-            <Button icon="left arrow" compact onClick={() => onMove(-1)} />
-            <Button icon="right arrow" compact onClick={() => onMove(1)} />
+            <InlineHelpPopup
+              content="Delete this control."
+              className="ui buttons"
+            >
+              <ConfirmDeleteButton type="control" name={controlName} small notBasic onDelete={onDelete} />
+            </InlineHelpPopup>
+
+            <InlineHelpPopup
+              content="Change the display order of this control."
+              className="ui buttons"
+            >
+              <Button icon="left arrow" disabled={!onMoveUp} compact onClick={onMoveUp} />
+            </InlineHelpPopup>
+
+            <InlineHelpPopup
+              content="Change the display order of this control."
+              className="ui buttons"
+            >
+              <Button icon="right arrow" disabled={!onMoveDown} compact onClick={onMoveDown} />
+            </InlineHelpPopup>
           </Button.Group>
           <Card.Header>
             <EditableText
@@ -52,6 +72,8 @@ class ControlCard extends React.PureComponent {
             />
           </Card.Header>
           {controlTypeDisplayName}
+          {': '}
+          {description}
         </Card.Content>
 
         <ControlSettingsComponent
@@ -99,7 +121,13 @@ ControlCard.propTypes = {
     behaviourType: PropTypes.string,
     behaviourParameters: PropTypes.shape({}),
   })).isRequired,
-  onMove: PropTypes.func.isRequired,
+  onMoveUp: PropTypes.func,
+  onMoveDown: PropTypes.func,
+};
+
+ControlCard.defaultProps = {
+  onMoveUp: undefined,
+  onMoveDown: undefined,
 };
 
 export default ControlCard;
