@@ -32,3 +32,13 @@ To build the app for the current platform, run `yarn build`. This creates a self
 The versions of all packages in this repo are kept in sync by running the `yarn bump` script at the top level to apply the same version change across all packages.
 
 We currently track development tasks and feature requests as issues in this repository (best viewed in the [Github Project](https://github.com/bbc/bbcat-orchestration-builder/projects/3)).
+
+# Releases
+
+We do not currently publish releases.
+
+The Changelog and GitHub Releases are updated manually on a new major/minor version (we do not currently follow strict semantic versioning). Creating a Github release also generates a git tag for that version.
+
+To create a release build and `.dmg` installer run the `yarn dist:signed` task (ensuring you have an Apple development certificate in your keychain - see xcode/preferences/accounts/apple id/manage certificates). We do not yet notarise our builds.
+
+For reproducible builds, release builds should be created in an isolated environment such as a CI system, and use [environment variables](https://www.electron.build/code-signing) to set the signing certificate. This process is not yet set up.
