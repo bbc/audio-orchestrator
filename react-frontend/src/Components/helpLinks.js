@@ -1,19 +1,56 @@
 // TODO Add links to actual documentation pages
 const helpLinks = {
   sequences: {
-    link: null,
+    links: [
+      {
+        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        description: 'Defining sequences',
+      },
+    ],
   },
   controls: {
-    link: null,
+    links: [
+      {
+        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        description: 'Adding controls',
+      },
+    ],
   },
   objects: {
-    link: null,
+    links: [
+      {
+        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        description: 'Handling audio objects',
+      },
+      {
+        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        description: 'Fixed behaviours',
+      },
+      {
+        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        description: 'Control-linked behaviours',
+      },
+      {
+        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        description: 'Custom behaviours',
+      },
+    ],
   },
   presentation: {
-    link: null,
+    links: [
+      {
+        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        description: 'Setting the appearance',
+      },
+    ],
   },
   export: {
-    link: null,
+    links: [
+      {
+        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        description: 'Exporting projects',
+      },
+    ],
   },
 };
 

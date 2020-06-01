@@ -22,10 +22,11 @@ const HelpLinkIcon = ({
 
   // Get the values from the JSON file
   const {
-    link = null,
+    links = null,
   } = helpLinks[helpId];
 
-  if (link) {
+
+  if (links) {
     return (
       <Popup
         basic
@@ -40,13 +41,29 @@ const HelpLinkIcon = ({
       >
         <Popup.Header content="Documentation" />
         <Popup.Content>
-          <Button
-            content="Open in browser"
-            onClick={() => {
-              onOpenUrl(link);
-              setOpen(false);
-            }}
-          />
+          {links.map((item) => {
+            const {
+              link,
+              description,
+            } = item;
+
+            return (
+              <p key={link}>
+                <Button
+                  type="button"
+                  icon="question circle outline"
+                  primary
+                  labelPosition="left"
+                  size="tiny"
+                  content={description}
+                  onClick={() => {
+                    onOpenUrl(link);
+                    setOpen(false);
+                  }}
+                />
+              </p>
+            );
+          })}
         </Popup.Content>
       </Popup>
     );
