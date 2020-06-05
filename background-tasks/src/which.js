@@ -1,12 +1,12 @@
 import path from 'path';
 import os from 'os';
 import { promisify } from 'util';
-import { exec as execCB } from 'child_process';
+import { execFile as execFileCB } from 'child_process';
 import { realpath as realpathCB } from 'fs';
 import { getLogger } from 'bbcat-orchestration-builder-logging';
 
 const logger = getLogger('which');
-const exec = promisify(execCB);
+const execFile = promisify(execFileCB);
 const realpath = promisify(realpathCB);
 
 // TODO macOS/Linux specific
@@ -17,14 +17,24 @@ const searchPath = [
   '/usr/local/bin',
 ].join(':');
 
+
 const results = {};
 
 const which = (name) => {
+  const allowedNames = [
+    'ffmpeg',
+    'ffprobe',
+  ];
+
+  if (!allowedNames.includes(name)) {
+    return Promise.reject(new Error('Requested binary name is not allowed'));
+  }
+
   if (name in results) {
     return Promise.resolve(results[name]);
   }
 
-  return exec(`which ${name}`, {
+  return execFile('/usr/bin/which', [name], {
     env: {
       ...process.env,
       PATH: searchPath,

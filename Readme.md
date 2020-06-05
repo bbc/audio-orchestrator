@@ -1,12 +1,18 @@
-# bbcat-orchestration-builder
+# bbcat-orchestration-builder (_Orchestrator_)
 
-Prototype an orchestrated audio experience that works with mobile devices from per-object audio tracks exported from a DAW and a Metadata file generated using the [S3A plugins](http://www.s3a-spatialaudio.org/plugins), all in one place.
+Prototype an orchestrated audio experience that works with mobile devices from per-object audio tracks exported from a DAW all in one place. It outputs a live preview, encoded audio files and metadata, a template code bundle, or a ready-to-deploy application build based on our [device orchestration template](https://github.com/bbc/bbcat-orchestration-template).
 
-This graphical tool replaces the packaging scripts and build process from the [bbcat-orchestration library](https://github.com/bbc/bbcat-orchestration) and the associated [user interface template](https://github.com/bbc/bbcat-orchestration-template), making it more accessible for prototyping with a graphical user interface.
+End-user documentation is currently being compiled in the [bbcat-orchestration-docs](https://github.com/bbc/bbcat-orchestration-docs/) repository.
 
-Builds are available from `/audioteam/2-inprogress-projects/MDO-Builder-Tool/builds`.
+The tool requires `ffmpeg` and `ffprobe` to be available in the system path. Both are most easily installed with [homebrew](https://brew.sh) by running `brew install ffmpeg`. If installing them manually, ensure that links to the binaries are created in `/usr/bin`, or `/usr/local/bin`, or `~/bbcat-orchestration-ffmpeg/bin`.
 
-The tool requires `ffmpeg` and `ffprobe` to be available in the system path. Both are most easily installed with [homebrew](https://brew.sh) by running `brew install ffmpeg`. If installing them manually, ensure that links to the binaries are created in `/usr/bin` or `/usr/local/bin`.
+# Architecture
+
+This project is a desktop application for authoring, previewing, and exporting orchestrated audio experiences. Users can create a project, import audio files and images, and author metadata to define the experience. The result can be previewed with real devices on their local network through an integrated web server included with the tool.
+
+Orchestrator is implemented in the electron framework, using React for the front-end, and providing a background task service that access the file systems and spawns media analysis and encoding child processes. Communication between electron’s two processes (main and renderer) is done securely via IPC channels.
+
+![Architecture overview](docs/OrchestratorArchitecture_KH_2020-05-27.png)
 
 # Development
 
