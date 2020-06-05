@@ -15,23 +15,23 @@ const exportTemplate = (
 ) => {
   const steps = [
     {
-      name: 'packaging audio',
+      name: 'Packaging audio...',
       fn: exportAudio,
     },
     {
-      name: 'copying template source files',
+      name: 'Copying template source files...',
       fn: copyTemplateSources,
     },
     {
-      name: 'copying audio files',
+      name: 'Copying audio files...',
       fn: copyAudioFiles,
     },
     {
-      name: 'copying image files',
+      name: 'Copying image files...',
       fn: copyImageFiles,
     },
     {
-      name: 'configuring template settings',
+      name: 'Configuring template settings...',
       fn: configureTemplateSettings,
     },
   ];

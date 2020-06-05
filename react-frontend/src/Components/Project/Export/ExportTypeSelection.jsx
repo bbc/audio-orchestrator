@@ -40,7 +40,7 @@ class ExportTypeSelection extends React.Component {
           <Button
             primary
             content="Export"
-            labelPosition="right"
+            labelPosition="left"
             icon="share"
             onClick={this.handleOpen}
             disabled={disabled}

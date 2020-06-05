@@ -3,6 +3,27 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.15.0`
+_2020-06-05_
+
+ * Change the application name to _BBC R&D Audio Orchestrator_
+ * Changes to copy and UX throughout the tool; including renaming of some concepts and pages to be more consistent with documentation.
+ * Store Cloud-Sync host name in project file (requiring old projects to be updated in advanced settings).
+ * Fixed a bug preventing controls from being allocated to devices correctly, and a related issue with the `anyOf` operator in object behaviours.
+ * Added a BBC R&D logo to the Audio Orchestrator credits page, and to the template application footer.
+ * Fixed a bug where new range and button controls were exported without a default value.
+ * Added help links opening in default browser (but the documentation is not yet public).
+ * Fixed a bug where multiple preview servers would remain active if there was an error during the export process.
+ * Output panning metadata in a new format to support stereo panning, rather than just mapping to a left/right/mono output.
+ * Allow the user to change which sequence is used as the entry point.
+
+# `0.14.0`
+_2020-05-18_
+
+ * Add ability to add behaviours with custom settings to multiple objects at once.
+ * Add 'fixed behaviours' for determining which device roles (main, aux, or both) an object can be allocated to, and whether it can be allocated to just one or multiple devices at the same time (these replace the _main device only_, _aux devices only_, _allowed everywhere_, and _spread_ behaviours).
+ * Add 'control linked behaviours' based on a user-defined control, to select the control values for which an object will be allowed or prohibited.
+
 # `0.13.0`
 _2020-04-22_
 

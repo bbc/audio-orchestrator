@@ -3,22 +3,23 @@ import Sequence from './Sequence';
 import Control from './Control';
 import {
   PAGE_PROJECT_PRESENTATION,
-  PAGE_PROJECT_EXPORT,
+  // PAGE_PROJECT_EXPORT,
 } from '../reducers/UIReducer';
 
 const DEFAULT_BASE_URL = 'audio';
 
 const DEFAULT_SETTINGS = {
   title: 'Title',
-  subtitle: 'Secondary title',
+  subtitle: 'Subtitle',
   introduction: 'Introduction',
-  startLabel: 'Start session',
+  startLabel: 'Start new session',
   joinLabel: 'Join existing session',
-  compressorRatio: 4,
-  compressorThreshold: -40,
+  compressorRatio: 2,
+  compressorThreshold: -20,
   accentColour: '#006def',
   enableDebugUI: true,
   enableTutorial: false,
+  cloudSyncHostname: 'cloudsync.virt.ch.bbc.co.uk',
 };
 
 /**
@@ -37,7 +38,7 @@ const isUrl = (str) => {
 /**
  * Helper for validating cloud-sync hostname in advanced project settings
  */
-const isHostname = str => isUrl(`wss://${str}`) && !str.includes('/') && !str.includes(':');
+const isHostname = str => str && isUrl(`wss://${str}`) && !str.includes('/') && !str.includes(':');
 
 /**
  * Class representing an open project.
@@ -499,7 +500,7 @@ class Project {
 
     return {
       key: 'presentation',
-      title: 'Presentation Settings',
+      title: 'Appearance settings',
       message: valid ? null : 'Not all fields have been completed.',
       warning: !valid,
       error: false,
@@ -519,7 +520,7 @@ class Project {
       cloudSyncHostname,
     } = settings;
     const joiningLinkValid = !joiningLink || isUrl(joiningLink);
-    const cloudSyncHostnameValid = !cloudSyncHostname || isHostname(cloudSyncHostname);
+    const cloudSyncHostnameValid = isHostname(cloudSyncHostname);
     const valid = joiningLinkValid && cloudSyncHostnameValid;
 
     let message = null;
@@ -538,7 +539,7 @@ class Project {
       message,
       warning: false,
       error: !valid,
-      projectPage: PAGE_PROJECT_EXPORT,
+      // projectPage: PAGE_PROJECT_EXPORT,
       editIcon: 'share',
     };
   }
@@ -550,11 +551,11 @@ class Project {
     const { images } = this.data;
     const valid = Object.values(images).every(({ error }) => !error);
 
-    const message = valid ? null : 'Some image files may be missing; defaults will be used.';
+    const message = valid ? null : 'Image file is missing; the default will be used.';
 
     return {
       key: 'images',
-      title: 'Image files',
+      title: 'Image file',
       message,
       warning: !valid,
       error: false,

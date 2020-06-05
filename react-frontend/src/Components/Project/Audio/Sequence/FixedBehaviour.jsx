@@ -39,6 +39,7 @@ const FixedBehaviour = ({
   return (
     <Popup
       inverted
+      basic
       content={description}
       trigger={(
         <Dropdown

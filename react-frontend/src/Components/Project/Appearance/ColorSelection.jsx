@@ -22,6 +22,8 @@ const ColorSelection = ({
   // Create a click handler for selecting one of the pre-defined colors
   const handleClick = useMemo(() => (e, data) => {
     onChange(e, { name, value: data.value });
+    setCustomColor(data.value);
+    setCustomColorError(false);
   }, [name, onChange]);
 
   // Create a change handler for typing into the custom color field
@@ -39,6 +41,25 @@ const ColorSelection = ({
 
   return (
     <Segment>
+      {custom
+        ? (
+          <Input
+            labelPosition="right"
+            value={customColor}
+            error={customColorError}
+            onChange={handleCustomColorChange}
+          >
+            <input type="text" style={{ width: 'auto' }} />
+            <Button
+              attached="right"
+              style={{ backgroundColor: customColorError ? '#ffffff' : customColor, color: '#ffffff', marginRight: '4px' }}
+              value={customColor}
+              icon={customColor === value ? 'checkmark' : 'circle outline'}
+              onClick={handleClick}
+            />
+          </Input>
+        ) : null
+      }
       {colors.map(color => (
         <Button
           style={{ backgroundColor: color, color: '#ffffff' }}
@@ -49,22 +70,6 @@ const ColorSelection = ({
           onClick={handleClick}
         />
       ))}
-      {custom
-        ? (
-          <Input
-            value={customColor}
-            error={customColorError}
-            onChange={handleCustomColorChange}
-            action={{
-              style: { backgroundColor: customColorError ? '#ffffff' : customColor, color: '#ffffff' },
-              value: customColor,
-              circular: true,
-              icon: customColor === value ? 'checkmark' : 'circle outline',
-              onClick: handleClick,
-            }}
-          />
-        ) : null
-      }
     </Segment>
   );
 };

@@ -5,6 +5,7 @@ import {
   app,
   BrowserWindow,
   ipcMain,
+  shell,
 } from 'electron';
 import {
   openUrl,
@@ -77,7 +78,7 @@ function createWindow() {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
-function createCreditsWindow() {
+const createCreditsWindow = () => {
   if (creditsWin || !win) return;
 
   creditsWin = new BrowserWindow({
@@ -91,7 +92,15 @@ function createCreditsWindow() {
   creditsWin.on('closed', () => {
     creditsWin = null;
   });
-}
+
+
+  creditsWin.webContents.on('new-window', (e, url) => {
+    if (url.startsWith('http:') || url.startsWith('https://')) {
+      e.preventDefault();
+      shell.openExternal(url);
+    }
+  });
+};
 
 const registerIpcHandlers = () => {
   // get working directories to log to browser console

@@ -57,29 +57,29 @@ class AdvancedSettings extends React.Component {
           <Form>
             <Form.Input
               label="Short joining link"
-              placeholder="https://example.com/#!/join"
+              placeholder=""
               name="joiningLink"
               defaultValue={joiningLink}
               onBlur={this.handleBlur}
             />
             <Form.Input
-              label="Custom cloud-sync service hostname"
-              placeholder="cloudsync.virt.ch.bbc.co.uk"
+              label="Custom Cloud-Sync service hostname"
+              placeholder=""
               name="cloudSyncHostname"
               defaultValue={cloudSyncHostname}
               onBlur={this.handleBlur}
+              error={!cloudSyncHostname}
             />
             <Form.Input
-              label="Port number (for custom cloud-sync endpoint, leave empty to use the default wss:// connection)"
+              label="Port number (for custom Cloud-Sync end point; leave empty to use the default wss:// connection)"
               placeholder="default"
               name="cloudSyncPort"
               defaultValue={cloudSyncPort}
               onBlur={this.handleBlur}
-              disabled={!cloudSyncHostname}
             />
             <Form.Input
               label="Audio base URL (if audio files are served from a separate content delivery network)"
-              placeholder="audio/"
+              placeholder="audio"
               name="baseUrl"
               defaultValue={baseUrl}
               onBlur={this.handleBlur}

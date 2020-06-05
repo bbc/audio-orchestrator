@@ -1,9 +1,10 @@
 {
   "appId": "uk.co.bbc.rd.bbcat-orchestration-builder",
   "copyright": "Copyright © 2020 BBC R&D",
-  "productName": "BBC R&D Orchestrator",
+  "productName": "BBC R&D Audio Orchestrator",
   "files": [
     "./credits.html",
+    "./bbcrd-logo.svg",
     "./bin/**/*"
   ],
   "asar": {

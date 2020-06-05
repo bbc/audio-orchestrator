@@ -61,7 +61,7 @@ const writeCreditsFile = (info) => {
   const creditsPage = `<DOCTYPE html>
   <html>
   <head>
-    <title>BBC R&amp;D Orchestrator</title>
+    <title>BBC R&amp;D Audio Orchestrator</title>
     <style type="text/css">
       body { font-family: sans-serif; }
       ul { list-style: none; padding: 0; }
@@ -71,8 +71,9 @@ const writeCreditsFile = (info) => {
     </style>
   </head>
   <body>
-    <h1>About</h1>
-    <p>Orchestrator was developed at BBC R&amp;D by Kristian Hentschel, with contributions from Jon Francombe, Danial Haddadi, and Emma Young. Find out more on <a href="https://www.bbc.co.uk/makerbox/tools/orchestrator" target="_blank">BBC MakerBox</a>.
+    <h1>About Audio Orchestrator from BBC R&D</h1>
+    <p><img src="bbcrd-logo.svg" width="120" alt="BBC Research and Development" /></p>
+    <p>Audio Orchestrator was developed at BBC R&amp;D by Kristian Hentschel, with contributions from Jon Francombe, Danial Haddadi, and Emma Young. Find out more on <a href="https://www.bbc.co.uk/makerbox/tools/orchestrator" target="_blank">BBC MakerBox</a>.
     <h2>Open source licences</h2>
     <p>This is a list of open-source components used to create this software. Click on the package name to see licence information.</p>
     <ul>

@@ -4,6 +4,7 @@ import {
   Button,
   Modal,
   Label,
+  Header,
 } from 'semantic-ui-react';
 // import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
 import Behaviours from 'Lib/Behaviours';
@@ -62,10 +63,10 @@ const BehaviourSettingsModal = ({
           style={{ display: 'inline' }}
         />
         {' behaviour'}
+        <Header style={{ marginTop: '8px' }} subheader={description} />
       </Modal.Header>
 
       <Modal.Content scrolling>
-        <p>{description}</p>
         { haveParameters && (
           <BehaviourParameters
             parameters={parameters}

@@ -13,11 +13,11 @@ const previewWorker = (
 ) => {
   const steps = [
     {
-      name: 'initialising preview server',
+      name: 'Initialising preview server...',
       fn: startPreview,
     },
     {
-      name: 'creating distribution',
+      name: 'Creating distribution...',
       fn: exportDistribution,
     },
   ];

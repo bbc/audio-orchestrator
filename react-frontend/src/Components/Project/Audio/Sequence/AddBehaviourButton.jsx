@@ -44,13 +44,15 @@ const AddBehaviourButton = React.memo(({
 
   return (
     <Dropdown
-      floating
-      disabled={disabled}
-      button
       text={text}
-      className="tiny compact primary"
-      value=""
+      disabled={disabled}
       options={options}
+      value=""
+      className="icon tiny compact primary"
+      floating
+      button
+      labeled
+      icon="plus"
     />
   );
 });

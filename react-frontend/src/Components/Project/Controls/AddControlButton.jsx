@@ -36,12 +36,14 @@ const AddControlButton = React.memo(({
 
   return (
     <Dropdown
-      floating
-      button
       text="Add control"
-      className="small compact primary"
+      className="icon primary"
       value=""
       options={options}
+      floating
+      button
+      labeled
+      icon="plus"
     />
   );
 });

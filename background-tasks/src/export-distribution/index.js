@@ -12,11 +12,11 @@ const distributionWorker = (
 ) => {
   const steps = [
     {
-      name: 'packaging audio and generating template source code',
+      name: 'Packaging audio and generating template source code...',
       fn: exportTemplate,
     },
     {
-      name: 'removing temporary files',
+      name: 'Removing temporary files...',
       fn: removeUnusedTemplateFiles,
     },
   ];

@@ -4,6 +4,7 @@
   "productName": "BBC R&D Orchestrator",
   "files": [
     "./credits.html",
+    "./bbcrd-logo.svg",
     "./bin/**/*"
   ],
   "asar": {

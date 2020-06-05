@@ -5,6 +5,7 @@ import {
   Container,
   Message,
   Tab,
+  Menu,
 } from 'semantic-ui-react';
 import PageTitleBar from '../../PageTitleBar';
 
@@ -13,7 +14,7 @@ import {
   openSequencePage,
 } from '../../../actions/ui';
 
-const Objects = ({
+const Audio = ({
   currentProjectId,
   currentSequenceId,
   sequencesList,
@@ -21,7 +22,7 @@ const Objects = ({
 }) => {
   const tabPanes = sequencesList.map(({ name, sequenceId }) => ({
     sequenceId,
-    menuItem: name,
+    menuItem: <Menu.Item key={sequenceId} content={name} />,
     render: () => (
       <Tab.Pane>
         <Sequence projectId={currentProjectId} sequenceId={sequenceId} />
@@ -58,11 +59,11 @@ const Objects = ({
   );
 };
 
-Objects.defaultProps = {
+Audio.defaultProps = {
   currentSequenceId: null,
 };
 
-Objects.propTypes = {
+Audio.propTypes = {
   currentProjectId: PropTypes.string.isRequired,
   currentSequenceId: PropTypes.string,
   sequencesList: PropTypes.arrayOf(PropTypes.shape({
@@ -97,4 +98,4 @@ const mapDispatchToProps = (dispatch, { projectId }) => ({
   onOpenSequence: sequenceId => dispatch(openSequencePage(projectId, sequenceId)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Objects);
+export default connect(mapStateToProps, mapDispatchToProps)(Audio);

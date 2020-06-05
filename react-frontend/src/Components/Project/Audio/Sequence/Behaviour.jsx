@@ -54,6 +54,7 @@ const Behaviour = ({
         color={color}
         icon="delete"
         type="behaviour"
+        name={displayName}
         onDelete={onDelete}
       />
     </Button.Group>

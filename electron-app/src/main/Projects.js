@@ -14,7 +14,7 @@ import {
 } from './settings';
 
 const PROJECT_FILE_FILTERS = [
-  { name: 'Orchestrator projects', extensions: ['orc'] },
+  { name: 'Audio Orchestrator projects', extensions: ['orc'] },
 ];
 const CURRENT_PROJECT_STORE_VERSION = 2;
 const openProjectFiles = {};

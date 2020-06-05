@@ -51,8 +51,6 @@ const templateConfiguration = (sequences, controls, settings, imageUrls) => {
     if (!Number.isNaN(port)) {
       configuration.CLOUDSYNC_ENDPOINT.port = port;
     }
-  } else {
-    configuration.CLOUDSYNC_ENDPOINT = { hostname: 'cloudsync.virt.ch.bbc.co.uk' };
   }
 
   configuration.TEXT_TITLE = settings.title;

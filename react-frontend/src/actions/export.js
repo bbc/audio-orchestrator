@@ -60,7 +60,7 @@ export const requestCancelExport = () => (dispatch) => {
  */
 const waitForExportTask = (dispatch, task, args) => {
   // ensure the task is created in the state.
-  dispatch(setExportProgress(0, 'preparing'));
+  dispatch(setExportProgress(0, 'Preparing...'));
 
   // return a promise that resolves when the task has been completed and results are available.
   return new Promise((resolve, reject) => {

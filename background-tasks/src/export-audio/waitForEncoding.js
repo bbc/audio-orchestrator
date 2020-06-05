@@ -15,7 +15,7 @@ const waitForEncoding = (args, onProgress) => {
     .then(({ result }) => {
       const filesWithErrors = result.filter(r => r.success === false);
       if (filesWithErrors.length > 0) {
-        throw new Error(`${filesWithErrors.length} audio files could not be encoded. (Error on first file was: ${filesWithErrors[0].error})`);
+        throw new Error(`${filesWithErrors.length} audio file${filesWithErrors.length > 1 ? 's' : ''} could not be encoded. (${filesWithErrors[0].error})`);
       }
     })
     .then(() => ({ ...args, files }));

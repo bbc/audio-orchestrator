@@ -45,16 +45,17 @@ export const makeBehavioursWithAllowedDevices = (behaviours, devicesAllowed) => 
   const deviceCondition = conditionByProperty(behaviour, DEVICE_PROPERTY);
 
   // create the array of isMainDevice values to be allowed
+  // TODO: this stores boolean values as strings as the library only handles strings currently
   let value;
   switch (devicesAllowed) {
     case MAIN_DEVICE_ONLY:
-      value = [true];
+      value = ['true'];
       break;
     case OTHER_DEVICES_ONLY:
-      value = [false];
+      value = ['false'];
       break;
     default:
-      value = [true, false];
+      value = ['true', 'false'];
   }
 
   // return a new behaviour list, leaving the other behaviours and the contentId condition unchanged
@@ -115,8 +116,9 @@ export const getDevicesAllowed = (behaviours) => {
 
   // Determine whether all, the main device only, or other devices only are allowed
   const mainDeviceAllowedList = conditionValueByProperty(behaviour, DEVICE_PROPERTY) || [];
-  const mainDeviceAllowed = mainDeviceAllowedList.includes(true);
-  const otherDevicesAllowed = mainDeviceAllowedList.includes(false);
+  // TODO again, using strings for boolean values because of library anyOf implementation
+  const mainDeviceAllowed = mainDeviceAllowedList.includes('true');
+  const otherDevicesAllowed = mainDeviceAllowedList.includes('false');
 
   let devicesAllowed = ALL_DEVICES;
 

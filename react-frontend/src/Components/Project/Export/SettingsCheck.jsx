@@ -46,7 +46,7 @@ SettingsCheck.defaultProps = {
   message: null,
   error: false,
   warning: false,
-  onReview: () => {},
+  onReview: undefined,
   editIcon: 'edit',
 };
 

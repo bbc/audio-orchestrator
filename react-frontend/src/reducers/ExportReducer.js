@@ -17,7 +17,7 @@ const ExportReducer = (state = initialState, action) => {
         ...initialState,
         running: true,
         title: action.title,
-        stepTitle: 'Preparing',
+        stepTitle: 'Preparing...',
       };
     case 'EXPORT_CLOSE':
       return {

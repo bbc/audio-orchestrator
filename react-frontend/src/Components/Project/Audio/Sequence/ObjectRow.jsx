@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import {
   Table,
   Icon,
-  Popup,
   Checkbox,
 } from 'semantic-ui-react';
 
 import Behaviours from 'Lib/Behaviours';
+import InlineHelpPopup from 'Components/InlineHelpPopup';
 import PanningControl from './PanningControl';
 import Behaviour from './Behaviour';
 import AddBehaviourButton from './AddBehaviourButton';
@@ -46,23 +46,20 @@ class ObjectRow extends React.PureComponent {
               { !file.error
                 ? <span>{file.name}</span>
                 : (
-                  <Popup
-                    trigger={(
-                      <span>
-                        <Icon name="exclamation" />
-                        {file.name}
-                      </span>
-                    )}
-                    content={file.error}
-                  />
+                  <InlineHelpPopup content={file.error}>
+                    <Icon name="exclamation" />
+                    {file.name}
+                  </InlineHelpPopup>
                 )
               }
             </Table.Cell>
           )
           : (
             <Table.Cell collapsing onClick={onToggleHighlight}>
-              <Icon name="exclamation" />
-              No audio file matches the object number.
+              <InlineHelpPopup content="No replacement audio file was selected. You can delete this object if it is no longer required.">
+                <Icon name="exclamation" />
+                <i>No audio file.</i>
+              </InlineHelpPopup>
             </Table.Cell>
           )
         }

@@ -33,7 +33,7 @@ const colors = [
   '#80bbff',
 ];
 
-class Presentation extends React.Component {
+class Appearance extends React.Component {
   constructor(props) {
     super(props);
 
@@ -74,7 +74,7 @@ class Presentation extends React.Component {
       joinLabel,
       introduction,
       enableDebugUI,
-      enableTutorial,
+      // enableTutorial,
       accentColour,
       compressorRatio,
       compressorThreshold,
@@ -89,10 +89,10 @@ class Presentation extends React.Component {
         <Form>
           <PageTitleBar
             title="Appearance"
-            shortDescription="The presentation settings customise the look and feel of the preview and exported prototype application."
+            shortDescription="Use the appearance settings to customise the look and feel of the prototype application that the listener will see."
             helpId="presentation"
           />
-          <Header content="Title text" subheader="This text will appear on the front page of the experience." />
+          <Header content="Text" subheader="This text will appear at various places in the prototype application." />
           <Form.Group widths="equal">
             <Form.Input
               label="Title"
@@ -116,18 +116,16 @@ class Presentation extends React.Component {
               onBlur={this.handleBlur}
             />
           </Form.Group>
-
-          <Header content="Button labels" subheader="These labels will appear on the start and join buttons on the home page." />
           <Form.Group widths="equal">
             <Form.Input
-              label="Start button"
+              label="Start button label"
               placeholder=""
               name="startLabel"
               defaultValue={startLabel}
               onBlur={this.handleBlur}
             />
             <Form.Input
-              label="Join button"
+              label="Join button label"
               placeholder=""
               name="joinLabel"
               defaultValue={joinLabel}
@@ -135,7 +133,10 @@ class Presentation extends React.Component {
             />
           </Form.Group>
 
-          <Header content="Colours" subheader="The accent colour is used as the background for any buttons, the default cover image, and the play bar." />
+          <Header
+            content="Accent colour"
+            subheader="The accent colour is used as the background for any buttons and the play bar."
+          />
 
           <ColorSelection colors={colors} custom name="accentColour" value={accentColour} onChange={this.handleChange} />
 
@@ -150,7 +151,7 @@ class Presentation extends React.Component {
             <Card.Content extra textAlign="center">
               <Button
                 primary
-                icon="linkify"
+                icon={playerImageId ? 'refresh' : 'plus'}
                 content={`${playerImageId ? 'Replace' : 'Add'} cover image`}
                 onClick={onReplaceCoverImage}
               />
@@ -159,19 +160,13 @@ class Presentation extends React.Component {
 
           <Header content="Interface options" />
           <Form.Checkbox
-            label="Enable tutorial screen"
-            name="enableTutorial"
-            defaultChecked={enableTutorial}
-            onChange={this.handleChange}
-          />
-          <Form.Checkbox
             label="Display list of active audio objects"
             name="enableDebugUI"
             defaultChecked={enableDebugUI}
             onChange={this.handleChange}
           />
 
-          <Header content="Audio compression" subheader="Audio compression is applied to the output of auxiliary devices (set the threshold to 0 to disable compression)." />
+          <Header content="Audio compression" subheader="Audio compression is applied to the output of aux devices (set the threshold to 0 to disable compression)." />
           <Form.Group widths="equal">
             <Form.Input
               label="Compressor ratio"
@@ -184,8 +179,8 @@ class Presentation extends React.Component {
               onBlur={this.handleBlur}
             />
             <Form.Input
-              label="Compressor threshold in dB"
-              placeholder="Set the threshold in dB (between -100 and 0)"
+              label="Compressor threshold (dB)"
+              placeholder="Set the threshold (between -100 dB and 0 dB)"
               type="number"
               min="-100"
               max="0"
@@ -200,7 +195,7 @@ class Presentation extends React.Component {
   }
 }
 
-Presentation.propTypes = {
+Appearance.propTypes = {
   projectId: PropTypes.string.isRequired,
   title: PropTypes.string,
   subtitle: PropTypes.string,
@@ -208,7 +203,7 @@ Presentation.propTypes = {
   joinLabel: PropTypes.string,
   introduction: PropTypes.string,
   enableDebugUI: PropTypes.bool,
-  enableTutorial: PropTypes.bool,
+  // enableTutorial: PropTypes.bool,
   compressorRatio: PropTypes.number,
   compressorThreshold: PropTypes.number,
   accentColour: PropTypes.string,
@@ -217,14 +212,14 @@ Presentation.propTypes = {
   onReplaceCoverImage: PropTypes.func.isRequired,
 };
 
-Presentation.defaultProps = {
+Appearance.defaultProps = {
   title: undefined,
   subtitle: undefined,
   startLabel: undefined,
   joinLabel: undefined,
   introduction: undefined,
   enableDebugUI: undefined,
-  enableTutorial: undefined,
+  // enableTutorial: undefined,
   compressorRatio: undefined,
   compressorThreshold: undefined,
   accentColour: undefined,
@@ -244,7 +239,7 @@ const mapStateToProps = (state, { projectId }) => {
     introduction,
     accentColour,
     enableDebugUI,
-    enableTutorial,
+    // enableTutorial,
     compressorRatio,
     compressorThreshold,
     playerImageId,
@@ -258,7 +253,7 @@ const mapStateToProps = (state, { projectId }) => {
     introduction,
     accentColour,
     enableDebugUI,
-    enableTutorial,
+    // enableTutorial,
     compressorRatio,
     compressorThreshold,
     playerImageId,
@@ -270,4 +265,4 @@ const mapDispatchToProps = (dispatch, { projectId }) => ({
   onReplaceCoverImage: () => dispatch(requestReplaceProjectPlayerImage(projectId)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Presentation);
+export default connect(mapStateToProps, mapDispatchToProps)(Appearance);

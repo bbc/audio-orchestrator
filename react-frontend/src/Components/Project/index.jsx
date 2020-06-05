@@ -9,8 +9,8 @@ import {
 } from 'semantic-ui-react';
 import Sequences from './Sequences';
 import Controls from './Controls';
-import Objects from './Objects';
-import Presentation from './Presentation';
+import Audio from './Audio';
+import Appearance from './Appearance';
 import Export from './Export';
 import ProjectStepBar from './ProjectStepBar';
 import SaveIndicator from './SaveIndicator';
@@ -29,8 +29,8 @@ import {
 const projectPageComponents = {
   [PAGE_PROJECT_SEQUENCES]: Sequences,
   [PAGE_PROJECT_CONTROLS]: Controls,
-  [PAGE_PROJECT_OBJECTS]: Objects,
-  [PAGE_PROJECT_PRESENTATION]: Presentation,
+  [PAGE_PROJECT_OBJECTS]: Audio,
+  [PAGE_PROJECT_PRESENTATION]: Appearance,
   [PAGE_PROJECT_EXPORT]: Export,
 };
 

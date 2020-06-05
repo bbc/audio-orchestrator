@@ -8,6 +8,7 @@ import {
   Checkbox,
   List,
   Input,
+  Button,
 } from 'semantic-ui-react';
 import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
 import operators from './operators';
@@ -23,19 +24,28 @@ const operatorOptions = operators.map(({ name, displayName }) => ({
   value: name,
 }));
 
-const propertyGroupColors = {
-  deviceControls: 'orange',
-  device: 'purple',
-  session: 'teal',
+const propertyGroupInfo = {
+  deviceControls: {
+    color: 'orange',
+    displayName: 'Device controls metadata',
+  },
+  device: {
+    color: 'purple',
+    displayName: 'Device metadata',
+  },
+  session: {
+    color: 'teal',
+    displayName: 'Session metadata',
+  },
 };
 
 const makePropertyOption = (group, value, displayName) => ({
   key: `${group}.${value}`,
   value: `${group}.${value}`,
   text: displayName || value,
-  description: group,
+  description: propertyGroupInfo[group].displayName,
   label: {
-    color: propertyGroupColors[group],
+    color: propertyGroupInfo[group].color,
     size: 'tiny',
     empty: true,
     circular: true,
@@ -131,7 +141,7 @@ const getPropertyTypeAndOperators = (property, { controls = [], sequencesList = 
       { value: 'tablet', displayName: 'Tablet' },
       { value: 'mobile', displayName: 'Mobile' },
       { value: 'desktop', displayName: 'Desktop/laptop' },
-      { value: 'tv', displayName: 'TV' },
+      // { value: 'tv', displayName: 'TV' },
     ];
   }
 
@@ -283,9 +293,11 @@ class ConditionInput extends React.PureComponent {
 
     return (
       <Segment>
+        <Button.Group floated="right" basic size="tiny">
+          <ConfirmDeleteButton type="condition" small onDelete={onDelete} />
+        </Button.Group>
         Condition
-        {' '}
-        <ConfirmDeleteButton type="condition" small onDelete={onDelete} />
+
         <List>
           <List.Item>
             <Dropdown

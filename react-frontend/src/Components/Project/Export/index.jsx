@@ -40,8 +40,8 @@ const Review = ({
 }) => (
   <Container>
     <PageTitleBar
-      title="Preview and export"
-      shortDescription="The experience can be previewed directly on this computer and devices on the same network once all content and settings are filled in."
+      title="Export"
+      shortDescription="The experience can be previewed (using devices on the same network) or exported to share elsewhere."
       helpId="export"
     />
     <Header content="Validation" />
@@ -57,7 +57,10 @@ const Review = ({
                   {...item}
                   projectId={projectId}
                   editIcon={item.editIcon}
-                  onReview={() => onOpenProjectPage(projectId, item.projectPage)}
+                  onReview={item.projectPage
+                    ? () => { onOpenProjectPage(projectId, item.projectPage); }
+                    : undefined
+                  }
                 />
               ))
             }
@@ -88,15 +91,17 @@ const Review = ({
           </Table.Body>
         </Table>
       </Grid.Column>
-      <Grid.Column>
-        <Header size="small" content="Background tasks" />
-        <Table basic>
-          <Table.Body>
-            <TaskProgress name="Audio analysis" taskIds={itemsTaskIds} />
-            <TaskProgress name="Audio transcoding" taskIds={encodeTaskIds} />
-          </Table.Body>
-        </Table>
-      </Grid.Column>
+      { false && (
+        <Grid.Column>
+          <Header size="small" content="Background tasks" />
+          <Table basic>
+            <Table.Body>
+              <TaskProgress name="Audio analysis" taskIds={itemsTaskIds} />
+              <TaskProgress name="Audio transcoding" taskIds={encodeTaskIds} />
+            </Table.Body>
+          </Table>
+        </Grid.Column>
+      )}
     </Grid>
 
     <Header
@@ -114,7 +119,8 @@ const Review = ({
       primary
       disabled={!canExport}
       icon="eye"
-      content="Start Preview"
+      content="Start preview"
+      labelPosition="left"
       onClick={() => onStartPreview(projectId)}
     />
 

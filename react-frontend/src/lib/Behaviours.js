@@ -21,7 +21,7 @@ class Behaviours {
         behaviourType,
         control,
         displayName: control.controlName || 'control value',
-        description: `Whether the object can be rendered on a device depends on the value of the user control "${control.controlName}" for that device.`,
+        description: `Whether the object can be allocated to a device depends on the value of the user control "${control.controlName}" for that device.`,
         multiple: false,
         color: 'orange',
         additive: true,
@@ -32,8 +32,8 @@ class Behaviours {
             // TODO relies on knowing the available control types; should perhaps access control
             // type definitions instead.
             description: ['range', 'counter'].includes(controlType)
-              ? 'Choose control values for which the object will be allowed.'
-              : 'Choose for which user selections the object will be allowed or prohibited.',
+              ? 'Set the range of control values for which the object will be allowed.'
+              : 'Choose whether the object will be allowed or prohibited for each control option.',
             type: 'controlValues',
             defaultValue: [],
           },

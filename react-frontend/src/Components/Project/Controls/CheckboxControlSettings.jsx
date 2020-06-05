@@ -142,7 +142,7 @@ class CheckboxControlSettings extends React.PureComponent {
         <Header content="Options" subheader="Specify the options that the listener can select." />
         {options && options.length > 0
           ? (
-            <Table>
+            <Table size="small" basic="very">
               <Table.Header>
                 <Table.Row>
                   <Table.HeaderCell content="Default" />

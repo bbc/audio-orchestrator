@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Card,
 } from 'semantic-ui-react';
-import ListOfEnumInput from '../Objects/Sequence/BehaviourParameters/ListOfEnumInput';
+import ListOfEnumInput from '../Audio/Sequence/BehaviourParameters/ListOfEnumInput';
 import {
   getSequenceIdsAllowed,
   makeBehavioursWithDisallowedSequenceIds,

@@ -128,12 +128,12 @@ class SequenceChoices extends React.Component {
     }));
 
     const drawTable = () => (
-      <Table collapsing size="small" basic="very">
+      <Table size="small" basic="very">
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell content="Destination sequence" />
+            <Table.HeaderCell content="Destination sequence" collapsing />
             <Table.HeaderCell content="Button text" />
-            <Table.HeaderCell content="" />
+            <Table.HeaderCell content="" collapsing />
           </Table.Row>
         </Table.Header>
         <Table.Body>
@@ -158,6 +158,7 @@ class SequenceChoices extends React.Component {
                   defaultValue={label}
                   onKeyPress={e => this.handleKeyPress(e, choiceId)}
                   onBlur={e => this.handleChangeLabel(choiceId, e.target.value)}
+                  fluid
                 />
               </Table.Cell>
               <Table.Cell>

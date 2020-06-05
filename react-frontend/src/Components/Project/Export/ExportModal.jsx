@@ -5,6 +5,7 @@ import {
   Modal,
   Button,
   Progress,
+  Message,
 } from 'semantic-ui-react';
 import {
   requestCancelExport,
@@ -29,10 +30,10 @@ const ExportModal = ({
 }) => {
   let progressDescription = stepTitle;
   const preview = (title === 'preview');
-  let intro = 'This might take a few minutes, please stand by.';
+  let intro = 'This might take a moment, please stand by.';
 
   if (failed) {
-    progressDescription = error;
+    progressDescription = 'Failed.';
     intro = 'The export has failed.';
   }
 
@@ -50,9 +51,10 @@ const ExportModal = ({
       <Modal.Header content={`Export as ${title}`} />
       <Modal.Content>
         <p>{ intro }</p>
-        <Progress indicating percent={progressPercent} error={failed} success={complete}>
+        <Progress color="grey" percent={progressPercent} error={failed} success={complete}>
           {progressDescription}
         </Progress>
+        { failed && <Message negative icon="delete" header="Export failed" content={error} /> }
       </Modal.Content>
       { preview && complete
         ? (
@@ -60,15 +62,15 @@ const ExportModal = ({
         ) : null }
       <Modal.Actions>
         { complete && preview
-          ? <Button icon="external" content="Open in browser" onClick={() => openUrl(outputPath)} />
+          ? <Button labelPosition="left" icon="stop" negative content="Stop preview" onClick={cancelExport} />
           : null
         }
         { complete && preview
-          ? <Button icon="stop" negative content="Stop preview" onClick={cancelExport} />
+          ? <Button primary labelPosition="left" icon="external" content="Open in browser" onClick={() => openUrl(outputPath)} />
           : null
         }
         { complete && !preview
-          ? <Button icon="external" content="Show in folder" onClick={() => openInFolder(outputPath)} />
+          ? <Button labelPosition="left" icon="external" content="Show in folder" onClick={() => openInFolder(outputPath)} />
           : null
         }
         { running

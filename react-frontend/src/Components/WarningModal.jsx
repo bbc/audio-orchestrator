@@ -18,7 +18,7 @@ const WarningModal = ({
     <Header icon="exclamation" content="Warning" />
     <Modal.Content content={content} />
     <Modal.Actions>
-      <Button content="close" onClick={onClose} />
+      <Button content="Close" onClick={onClose} />
     </Modal.Actions>
   </Modal>
 );

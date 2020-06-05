@@ -311,7 +311,7 @@ class Sequence {
 
     if (!error) {
       if (!next || next.length === 0) {
-        message = 'No links to other sequences have been added.';
+        message = 'No destinations have been added.';
         warning = true;
         projectPage = PAGE_PROJECT_SEQUENCES;
         editIcon = 'code branch';

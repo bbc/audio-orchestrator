@@ -13,15 +13,15 @@ const exportAudio = (
 ) => {
   const steps = [
     {
-      name: 'checking sequence metadata',
+      name: 'Checking sequence metadata...',
       fn: checkSequencesAreValid,
     },
     {
-      name: 'waiting for audio analysis and encoding to finish',
+      name: 'Waiting for audio analysis and encoding to finish...',
       fn: waitForEncoding,
     },
     {
-      name: 'copying encoded audio files and writing metadata',
+      name: 'Copying encoded audio files and writing metadata...',
       fn: copyEncodedAudioFiles,
     },
   ];

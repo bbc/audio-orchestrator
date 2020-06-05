@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Message } from 'semantic-ui-react';
 import ToggleTableInput from './ToggleTableInput';
 import RangeInput from './RangeInput';
 
@@ -27,17 +28,15 @@ const ControlValuesInput = React.memo(({
 
     if (allowedValues.length === 0) {
       return (
-        <p>
-          {`The control "${controlName}" currently has no options. Add the desired options on the Controls page and they will appear here.`}
-        </p>
+        <Message warning content={`The control "${controlName}" currently has no options. Add the desired options on the controls page and they will appear here.`} icon="exclamation" />
       );
     }
 
     return (
       <ToggleTableInput
         allowedValues={allowedValues}
-        labelOn="allowed"
-        labelOff="prohibited"
+        labelOn="Allowed"
+        labelOff="Prohibited"
         value={value || []}
         onChange={onChange}
         name={name}

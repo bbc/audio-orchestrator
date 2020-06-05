@@ -31,7 +31,6 @@ describe('templateConfiguration', () => {
       INITIAL_CONTENT_ID: expect.any(String),
       SEQUENCE_URLS: expect.any(Array),
       CONTROLS: expect.any(Array),
-      CLOUDSYNC_ENDPOINT: expect.any(Object),
     }));
   });
 
@@ -47,12 +46,10 @@ describe('templateConfiguration', () => {
       },
     ));
 
-    expect(result1).toEqual(expect.objectContaining({
-      CLOUDSYNC_ENDPOINT: {
-        hostname: 'cloudsync.virt.ch.bbc.co.uk',
-      },
-    }));
+    // for result1, no cloudsync_endpoint was given so it should not be set.
+    expect(result1.CLOUDSYNC_ENDPOINT).toBe(undefined);
 
+    // for result2, an endpoint of 'localhost' was given, so it should be set to that.
     expect(result2).toEqual(expect.objectContaining({
       CLOUDSYNC_ENDPOINT: {
         hostname: 'localhost',
