@@ -96,8 +96,14 @@ class AudioFile {
 
     // If encodedItems are already stored, check that they still exist before returning.
     if (this.data.encodedItems) {
-      logger.debug(`Checking if previously stored encodedItemsBasePath for ${this.fileName} still exists.`);
+      logger.debug(`Checking if all previously stored encoded item files for ${this.fileName} still exists.`);
+      // TODO this succeeds if the DASH manifest exists but the segments do not; in that case the
+      // export will not work but no error will be raised. Cannot check all segments here without
+      // parsing the DASH manifest.
       return checkFileExists(this.data.encodedItemsBasePath)
+        .then(() => Promise.all(this.data.encodedItems.map(item => checkFileExists(
+          path.join(this.data.encodedItemsBasePath, item.relativePath),
+        ))))
         .then(() => ({
           encodedItems: this.data.encodedItems,
           encodedItemsBasePath: this.data.encodedItemsBasePath,
