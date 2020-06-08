@@ -535,7 +535,7 @@ class Project {
 
     return {
       key: 'advanced',
-      title: 'Advanced Settings',
+      title: 'Advanced settings',
       message,
       warning: false,
       error: !valid,
