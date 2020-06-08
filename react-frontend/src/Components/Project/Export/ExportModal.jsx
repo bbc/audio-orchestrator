@@ -10,7 +10,6 @@ import {
 import {
   requestCancelExport,
   requestOpenInFolder,
-  requestOpenUrl,
 } from '../../../actions/export';
 import QRCode from './QRCode';
 
@@ -26,7 +25,6 @@ const ExportModal = ({
   outputPath,
   cancelExport,
   openInFolder,
-  openUrl,
 }) => {
   let progressDescription = stepTitle;
   const preview = (title === 'preview');
@@ -66,7 +64,7 @@ const ExportModal = ({
           : null
         }
         { complete && preview
-          ? <Button primary labelPosition="left" icon="external" content="Open in browser" onClick={() => openUrl(outputPath)} />
+          ? <Button primary labelPosition="left" icon="external" content="Open in browser" onClick={() => window.open(outputPath)} />
           : null
         }
         { complete && !preview
@@ -98,7 +96,6 @@ ExportModal.propTypes = {
   outputPath: PropTypes.string,
   cancelExport: PropTypes.func.isRequired,
   openInFolder: PropTypes.func.isRequired,
-  openUrl: PropTypes.func.isRequired,
 };
 
 ExportModal.defaultProps = {
@@ -113,7 +110,6 @@ const mapStateToProps = ({ Export }) => ({
 const mapDispatchToProps = dispatch => ({
   cancelExport: () => dispatch(requestCancelExport()),
   openInFolder: path => dispatch(requestOpenInFolder(path)),
-  openUrl: url => dispatch(requestOpenUrl(url)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExportModal);

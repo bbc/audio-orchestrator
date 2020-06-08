@@ -8,10 +8,6 @@ import {
   BrowserWindow,
 } from 'electron';
 
-export const openUrl = (e, url) => {
-  shell.openExternal(url);
-};
-
 export const openInFolder = (e, outputPath) => {
   shell.showItemInFolder(outputPath);
 };

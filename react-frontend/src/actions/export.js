@@ -1,9 +1,8 @@
 import Project from '../lib/Project';
 
 import ExportService from '../lib/ExportService';
-import LocalProjectStore from '../lib/LocalProjectStore';
+import ProjectStore from '../lib/IpcProjectStore';
 
-const ProjectStore = window.ProjectStore || LocalProjectStore;
 const exportService = new ExportService();
 
 const exportAudio = exportService.exportAudio.bind(exportService);
@@ -11,6 +10,8 @@ const exportTemplate = exportService.exportTemplate.bind(exportService);
 const exportDistribution = exportService.exportDistribution.bind(exportService);
 const startPreview = exportService.startPreview.bind(exportService);
 const cancelExports = exportService.cancelExports.bind(exportService);
+
+const { exportFunctions } = window;
 
 /* --- private basic action creators --- */
 
@@ -97,11 +98,8 @@ export const requestExportAudio = projectId => (dispatch) => {
     })
     .then(({ result }) => {
       const { outputDir } = result;
-      if (window.saveExportAs) {
-        return window.saveExportAs(outputDir)
-          .catch(() => outputDir); // return original path if it cannot be moved.
-      }
-      return outputDir;
+      return exportFunctions.saveExportAs(outputDir)
+        .catch(() => outputDir); // return original path if it cannot be moved.
     })
     .then((outputDir) => {
       dispatch(completeExport(outputDir));
@@ -136,11 +134,8 @@ export const requestExportTemplate = projectId => (dispatch) => {
     ))
     .then(({ result }) => {
       const { outputDir } = result;
-      if (window.saveExportAs) {
-        return window.saveExportAs(outputDir)
-          .catch(() => outputDir); // return original path if it cannot be moved.
-      }
-      return outputDir;
+      return exportFunctions.saveExportAs(outputDir)
+        .catch(() => outputDir); // return original path if it cannot be moved.
     })
     .then((outputDir) => {
       dispatch(completeExport(outputDir));
@@ -175,11 +170,8 @@ export const requestExportDistribution = projectId => (dispatch) => {
     ))
     .then(({ result }) => {
       const { outputDir } = result;
-      if (window.saveExportAs) {
-        return window.saveExportAs(outputDir)
-          .catch(() => outputDir); // return original path if it cannot be moved.
-      }
-      return outputDir;
+      return exportFunctions.saveExportAs(outputDir)
+        .catch(() => outputDir); // return original path if it cannot be moved.
     })
     .then((outputDir) => {
       dispatch(completeExport(outputDir));
@@ -222,15 +214,6 @@ export const requestStartPreview = projectId => (dispatch) => {
     });
 };
 
-
 export const requestOpenInFolder = outputPath => () => {
-  if (window.openInFolder) {
-    window.openInFolder(outputPath);
-  }
-};
-
-export const requestOpenUrl = url => () => {
-  if (window.openUrl) {
-    window.openUrl(url);
-  }
+  exportFunctions.openInFolder(outputPath);
 };

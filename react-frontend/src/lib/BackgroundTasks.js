@@ -2,7 +2,7 @@ const POLL_TIMEOUT = 1000;
 
 class BackgroundTasks {
   constructor() {
-    this.service = window.backgroundTasksIpcService;
+    this.service = window.backgroundTaskFunctions;
   }
 
   createTask(name, args, callbacks = {}) {

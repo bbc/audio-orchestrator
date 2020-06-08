@@ -1,17 +1,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
 import {
   Popup,
   Icon,
   Button,
 } from 'semantic-ui-react';
 import helpLinks from './helpLinks';
-import { requestOpenUrl } from '../actions/export';
 
 const HelpLinkIcon = ({
   helpId,
-  onOpenUrl,
 }) => {
   const [open, setOpen] = useState(false);
 
@@ -57,7 +54,7 @@ const HelpLinkIcon = ({
                   size="tiny"
                   content={description}
                   onClick={() => {
-                    onOpenUrl(link);
+                    window.open(link);
                     setOpen(false);
                   }}
                 />
@@ -74,11 +71,6 @@ const HelpLinkIcon = ({
 
 HelpLinkIcon.propTypes = {
   helpId: PropTypes.string.isRequired,
-  onOpenUrl: PropTypes.func.isRequired,
 };
 
-const mapDispatchToProps = dispatch => ({
-  onOpenUrl: url => dispatch(requestOpenUrl(url)),
-});
-
-export default connect(null, mapDispatchToProps)(HelpLinkIcon);
+export default HelpLinkIcon;

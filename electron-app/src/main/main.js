@@ -1,14 +1,15 @@
 import { electronLogger as logger } from 'bbcat-orchestration-builder-logging';
 import path from 'path';
 import os from 'os';
+import { URL } from 'url';
 import {
   app,
   BrowserWindow,
   ipcMain,
   shell,
+  session,
 } from 'electron';
 import {
-  openUrl,
   openInFolder,
   saveExportAs,
   saveExportToDownloads,
@@ -22,13 +23,26 @@ import {
   removeRecentProjectById,
 } from './Projects';
 
-// TODO - this setting becomes the default in Electron 9 and can be removed then
-app.allowRendererProcessReuse = true;
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win;
 let creditsWin;
+
+// Ensure devMode is only enabled if the environment var is set, and the app is not packaged for
+// production. This avoids someone overriding the setting in a packaged app.
+const devMode = process.env.NODE_ENV === 'development' && !app.isPackaged;
+
+// Override the name of the application to use in menu entries (cannot use special characters so not
+// including 'BBC R&D' prefix here).
+app.setName('Audio Orchestrator');
+
+// Define default security settings to use for any newly created BrowserWindows.
+const defaultWebPreferences = {
+  nodeIntegration: false, // Must be false; setting it to true would allow access to any node module
+  enableRemoteModule: false, // Must be false; preload script can still be used
+  contextIsolation: true, // Must be true; means that pages cannot modify prototypes used in preload
+  sandbox: true, // Must be true.
+};
 
 function createWindow() {
   // Create the browser window.
@@ -37,26 +51,28 @@ function createWindow() {
     width: 1280,
     height: 1024,
     webPreferences: {
-      nodeIntegration: false,
-      sandbox: false,
-      contextIsolation: false,
+      ...defaultWebPreferences,
       preload: path.resolve(__dirname, '../renderer/preload.js'),
     },
   });
 
-  // install devTools
-  if (process.env.NODE_ENV === 'development') {
-    /* eslint-disable-next-line global-require */
-    const { default: installExtension, REACT_DEVELOPER_TOOLS, REDUX_DEVTOOLS } = require('electron-devtools-installer');
-    installExtension(REACT_DEVELOPER_TOOLS)
-      .then(name => logger.info(`Added Extension:  ${name}`))
-      .catch(err => logger.warn('An error occurred: ', err));
-    installExtension(REDUX_DEVTOOLS)
-      .then(name => logger.info(`Added Extension:  ${name}`))
-      .catch(err => logger.warn('An error occurred: ', err));
-  }
+  // TODO: install devTools - currently not working so commented out
+  // if (devMode) {
+  //   /* eslint-disable-next-line global-require */
+  //   const {
+  //     default: installExtension,
+  //     REACT_DEVELOPER_TOOLS,
+  //     REDUX_DEVTOOLS,
+  //   } = require('electron-devtools-installer');
+  //   installExtension(REACT_DEVELOPER_TOOLS)
+  //     .then(name => logger.info(`Added Extension:  ${name}`))
+  //     .catch(err => logger.warn('An error occurred: ', err));
+  //   installExtension(REDUX_DEVTOOLS)
+  //     .then(name => logger.info(`Added Extension:  ${name}`))
+  //     .catch(err => logger.warn('An error occurred: ', err));
+  // }
 
-  if (process.env.NODE_ENV === 'development') {
+  if (devMode) {
     // load the user interface hosted by webpack-dev-server
     win.loadURL('http://localhost:8080');
 
@@ -85,20 +101,15 @@ const createCreditsWindow = () => {
     width: 800,
     height: 600,
     parent: win,
+    webPreferences: {
+      ...defaultWebPreferences,
+    },
   });
 
   creditsWin.loadFile('credits.html');
 
   creditsWin.on('closed', () => {
     creditsWin = null;
-  });
-
-
-  creditsWin.webContents.on('new-window', (e, url) => {
-    if (url.startsWith('http:') || url.startsWith('https://')) {
-      e.preventDefault();
-      shell.openExternal(url);
-    }
   });
 };
 
@@ -124,7 +135,6 @@ const registerIpcHandlers = () => {
   });
 
   // Handlers for saving exports:
-  ipcMain.handle('open-url', openUrl);
   ipcMain.handle('open-in-folder', openInFolder);
   ipcMain.handle('save-export-as', saveExportAs);
   ipcMain.handle('save-export-to-downloads', saveExportToDownloads);
@@ -142,10 +152,29 @@ const registerIpcHandlers = () => {
   ipcMain.handle('project-remove-recent', (e, projectId) => removeRecentProjectById(projectId));
 };
 
+const setContentSecurityPolicy = () => {
+  // Only set a CSP when in production mode, because setting it like this seems to break webpack's
+  // hot-reloading and opening the chromium developer tools.
+  if (!devMode) {
+    logger.silly('Running in production mode; setting a default content security policy.');
+    session.defaultSession.webRequest.onHeadersReceived((details, callback) => {
+      callback({
+        responseHeaders: {
+          ...details.responseHeaders,
+          'Content-Security-Policy': ['script-src \'self\''],
+        },
+      });
+    });
+  } else {
+    logger.warn('Running in development mode; not setting a default content security policy.');
+  }
+};
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
+  setContentSecurityPolicy();
   registerIpcHandlers();
   createWindow();
 });
@@ -165,4 +194,22 @@ app.on('activate', () => {
   if (win === null) {
     createWindow();
   }
+});
+
+// register default handlers on all created web contents
+app.on('web-contents-created', (webContentsCreatedEvent, contents) => {
+  contents.on('will-navigate', (willNavigateEvent, url) => {
+    logger.warn(`preventing navigation to ${url}`);
+    willNavigateEvent.preventDefault();
+  });
+
+  contents.on('new-window', (windowEvent, url) => {
+    const parsedUrl = new URL(url);
+    if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
+      windowEvent.preventDefault();
+      shell.openExternal(url);
+    } else {
+      logger.warn('preventing new window with non-standard protocol');
+    }
+  });
 });

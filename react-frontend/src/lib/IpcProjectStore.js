@@ -1,7 +1,7 @@
-import { ipcRenderer } from 'electron';
 import EventEmitter from 'events';
 
 const logger = console;
+const { projectStoreFunctions } = window;
 
 const CURRENT_PROJECT_STORE_VERSION = 2;
 
@@ -27,7 +27,7 @@ function createProjectStore(projectId, name) {
   // - using objects should reduce parsing/stringifying overhead
   // - using JSON means we avoid issues when users assign to properties of a returned object
 
-  return ipcRenderer.invoke('project-open', projectId).then(({
+  return projectStoreFunctions.openProject(projectId).then(({
     cancelled,
     project: initialProject,
   }) => {
@@ -49,7 +49,7 @@ function createProjectStore(projectId, name) {
 
       if (now - lastSave > SAVE_PERIOD) {
         lastSave = now;
-        ipcRenderer.invoke('project-save', actualProjectId, project)
+        projectStoreFunctions.saveProject(actualProjectId, project)
           .then(() => {
             saveEmitter.emit(`saved-${actualProjectId}`);
           })
@@ -124,7 +124,7 @@ class IpcProjectStore {
    * @returns {Promise<Object>} - Resolves to an object with projectId and store keys
    */
   static createProject(name = 'Untitled Project') {
-    return ipcRenderer.invoke('project-create')
+    return projectStoreFunctions.createProject()
       .then(({ cancelled, projectId }) => {
         if (cancelled) {
           logger.debug('user cancelled project creation');
@@ -141,7 +141,7 @@ class IpcProjectStore {
    * @returns {Promise<Array<Object>>}
    */
   static listProjects() {
-    return ipcRenderer.invoke('project-list');
+    return projectStoreFunctions.listProjects();
   }
 
   static canOpenUnlisted() {
@@ -149,7 +149,7 @@ class IpcProjectStore {
   }
 
   static deleteProject(projectId) {
-    return ipcRenderer.invoke('project-remove-recent', projectId);
+    return projectStoreFunctions.removeRecentProject(projectId);
   }
 
   static dumpProjectData() {

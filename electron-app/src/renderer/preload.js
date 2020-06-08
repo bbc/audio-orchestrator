@@ -1,5 +1,4 @@
-import { ipcRenderer } from 'electron';
-import IpcProjectStore from './IpcProjectStore';
+import { ipcRenderer, contextBridge } from 'electron';
 
 // Just for debugging, log the working directories
 ipcRenderer.invoke('get-working-directories').then(({ cwd, homedir }) => {
@@ -8,20 +7,29 @@ ipcRenderer.invoke('get-working-directories').then(({ cwd, homedir }) => {
 });
 
 // To trigger moving and opening exported files
-window.openUrl = (...args) => ipcRenderer.invoke('open-url', ...args);
-window.openInFolder = (...args) => ipcRenderer.invoke('open-in-folder', ...args);
-window.saveExportAs = (...args) => ipcRenderer.invoke('save-export-as', ...args);
-window.saveExportToDownloads = (...args) => ipcRenderer.invoke('save-export-to-downloads', ...args);
+contextBridge.exposeInMainWorld('exportFunctions', {
+  openInFolder: (...args) => ipcRenderer.invoke('open-in-folder', ...args),
+  saveExportAs: (...args) => ipcRenderer.invoke('save-export-as', ...args),
+  saveExportToDownloads: (...args) => ipcRenderer.invoke('save-export-to-downloads', ...args),
+});
 
-// For developer menu
-window.openDevTools = () => ipcRenderer.invoke('open-dev-tools');
-window.openCredits = () => ipcRenderer.invoke('open-credits');
 
 // For accessing background services (previously HTTP API)
-window.backgroundTasksIpcService = {
+contextBridge.exposeInMainWorld('backgroundTaskFunctions', {
   get: path => ipcRenderer.invoke('background-tasks-get', path),
   post: (path, data) => ipcRenderer.invoke('background-tasks-post', path, data),
   delete: path => ipcRenderer.invoke('background-tasks-delete', path),
-};
+});
 
-window.ProjectStore = IpcProjectStore;
+// For project store
+contextBridge.exposeInMainWorld('projectStoreFunctions', {
+  listProjects: () => ipcRenderer.invoke('project-list'),
+  createProject: () => ipcRenderer.invoke('project-create'),
+  saveProject: (projectId, project) => ipcRenderer.invoke('project-save', projectId, project),
+  removeRecentProject: projectId => ipcRenderer.invoke('project-remove-recent', projectId),
+  openProject: projectId => ipcRenderer.invoke('project-open', projectId),
+});
+
+contextBridge.exposeInMainWorld('miscFunctions', {
+  openCredits: () => ipcRenderer.invoke('open-credits'),
+});

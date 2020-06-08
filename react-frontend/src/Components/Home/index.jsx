@@ -50,7 +50,7 @@ class Home extends React.Component {
         <Menu inverted color="blue" attached="bottom">
           <Menu.Item header>Home</Menu.Item>
           <Menu.Menu position="right">
-            <Menu.Item icon="info" onClick={window.openCredits} />
+            <Menu.Item icon="info" onClick={() => window.miscFunctions.openCredits()} />
           </Menu.Menu>
         </Menu>
 

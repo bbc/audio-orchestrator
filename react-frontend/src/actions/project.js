@@ -1,5 +1,5 @@
 import uuidv4 from 'uuid/v4';
-import LocalProjectStore from 'Lib/LocalProjectStore';
+import ProjectStore from 'Lib/IpcProjectStore';
 import Project from 'Lib/Project';
 import FileService from 'Lib/FileService';
 import Behaviours from 'Lib/Behaviours';
@@ -14,7 +14,6 @@ import {
 } from './ui';
 
 // Project store is the interface to the persistent project data accessed by projectId.
-const ProjectStore = window.ProjectStore || LocalProjectStore;
 const fileService = new FileService(window.API_URL || 'http://localhost:8000');
 
 // The projects object is local to this file and stores references to each project store opened in
@@ -169,7 +168,6 @@ const openedProject = projectId => (dispatch) => {
   dispatch(openProjectPage(projectId));
 
   // Start listening for saving/saved indicator updates
-  // TODO this is not implemented on LocalProjectStore!
   ProjectStore.removeAllListeners(`saving-${projectId}`);
   ProjectStore.removeAllListeners(`saved-${projectId}`);
 
