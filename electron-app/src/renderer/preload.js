@@ -30,6 +30,8 @@ contextBridge.exposeInMainWorld('projectStoreFunctions', {
   openProject: projectId => ipcRenderer.invoke('project-open', projectId),
 });
 
+// Other methods
 contextBridge.exposeInMainWorld('miscFunctions', {
   openCredits: () => ipcRenderer.invoke('open-credits'),
+  openUrl: url => ipcRenderer.invoke('open-url', url),
 });

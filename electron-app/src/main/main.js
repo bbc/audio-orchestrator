@@ -134,6 +134,15 @@ const registerIpcHandlers = () => {
     }
   });
 
+  // Allow the web page to open a URL in the default browser
+  // TODO same code as in new-window handler below
+  ipcMain.handle('open-url', (e, url) => {
+    const parsedUrl = new URL(url);
+    if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
+      shell.openExternal(url);
+    }
+  });
+
   // Handlers for saving exports:
   ipcMain.handle('open-in-folder', openInFolder);
   ipcMain.handle('save-export-as', saveExportAs);
@@ -204,9 +213,10 @@ app.on('web-contents-created', (webContentsCreatedEvent, contents) => {
   });
 
   contents.on('new-window', (windowEvent, url) => {
+    windowEvent.preventDefault();
+
     const parsedUrl = new URL(url);
     if (parsedUrl.protocol === 'http:' || parsedUrl.protocol === 'https:') {
-      windowEvent.preventDefault();
       shell.openExternal(url);
     } else {
       logger.warn('preventing new window with non-standard protocol');

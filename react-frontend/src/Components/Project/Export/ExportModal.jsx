@@ -64,7 +64,7 @@ const ExportModal = ({
           : null
         }
         { complete && preview
-          ? <Button primary labelPosition="left" icon="external" content="Open in browser" onClick={() => window.open(outputPath)} />
+          ? <Button primary labelPosition="left" icon="external" content="Open in browser" onClick={() => window.miscFunctions.openUrl(outputPath)} />
           : null
         }
         { complete && !preview

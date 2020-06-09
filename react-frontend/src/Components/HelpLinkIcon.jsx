@@ -54,7 +54,7 @@ const HelpLinkIcon = ({
                   size="tiny"
                   content={description}
                   onClick={() => {
-                    window.open(link);
+                    window.miscFunctions.openUrl(link);
                     setOpen(false);
                   }}
                 />
