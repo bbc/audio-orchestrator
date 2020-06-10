@@ -128,6 +128,12 @@ export const loadControls = projectId => (dispatch) => {
   dispatch({ type: 'SET_PROJECT_CONTROLS_LIST', projectId, controlsList });
 };
 
+export const setProjectImagesLoading = (projectId, imagesLoading) => ({
+  type: 'SET_PROJECT_IMAGES_LOADING',
+  projectId,
+  imagesLoading,
+});
+
 export const loadImages = projectId => (dispatch) => {
   const { images } = projects[projectId];
 
@@ -232,6 +238,7 @@ const replaceProjectImages = (projectId, images) => (dispatch) => {
   project.images = images;
 
   dispatch(loadImages(projectId));
+  dispatch(setProjectImagesLoading(projectId, false));
   dispatch(validateProject(projectId));
 };
 
@@ -504,18 +511,31 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
     });
 };
 
-
-const checkImageFiles = projectId => (dispatch) => {
+// Checks images listed in the project, or a replacement set of images, and updates the project with
+// the results.
+const checkImageFiles = (projectId, newImages = null) => (dispatch) => {
   const project = projects[projectId];
-  const { images } = project;
+  let { images } = project;
+
+  if (newImages) {
+    images = newImages;
+  }
+
+  // Create empty updated images object, will be filled with details for successfully checked files
+  const updatedImages = {};
 
   // TODO may not need a task for this as progress is not shown anywhere yet.
   const createTaskId = uuidv4();
-
   dispatch(setTaskProgress(createTaskId, 0, 0));
+  const probeTaskId = uuidv4();
+  dispatch(setTaskProgress(probeTaskId, 0, 0));
+
+  // Set images loading, to prevent images from showing before they are checked.
+  dispatch(setProjectImagesLoading(projectId, true));
 
   // bind file service methods to pass into task creator
   const registerAll = fileService.registerAll.bind(fileService);
+  const probeAll = fileService.probeAll.bind(fileService);
 
   // Register the files with the server, this also checks if the file exists on the file system.
   createTaskWithProgress(
@@ -527,20 +547,33 @@ const checkImageFiles = projectId => (dispatch) => {
       return {
         fileId: imageId,
         path: imagePath,
+        type: 'image',
       };
     }),
   )
-    .then((result) => {
-      // Create updated images object
-      // TODO this re-creates each image object (analyseAllFiles only updates changed properties).
-      const updatedImages = {};
-      result.forEach(({ success, fileId }) => {
+    .then((createResult) => {
+      // Save error message for image files that are missing:
+      createResult.filter(({ success }) => !success).forEach(({ fileId }) => {
+        updatedImages[fileId] = {
+          imageId: fileId,
+          imagePath: images[fileId].imagePath,
+          error: 'Image file is missing.',
+        };
+      });
+
+      // Probe the remaining image files:
+      return createTaskWithProgress(
+        dispatch, probeAll, probeTaskId, createResult.filter(({ success }) => success),
+      );
+    })
+    .then((probeResult) => {
+      probeResult.forEach(({ success, fileId, error }) => {
         const imageId = fileId;
 
         updatedImages[imageId] = {
           imageId,
           imagePath: images[imageId].imagePath,
-          error: success ? null : 'Image file is missing.',
+          error: success ? null : (error || 'Image file is missing or damaged.'),
         };
       });
 
@@ -1129,7 +1162,7 @@ export const requestReplaceProjectPlayerImage = projectId => (dispatch) => {
   new Promise((resolve, reject) => {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = 'image/*';
+    input.accept = '.jpg,.jpeg,.png';
     input.multiple = false;
     input.style.display = 'none';
 
@@ -1182,10 +1215,8 @@ export const requestReplaceProjectPlayerImage = projectId => (dispatch) => {
     if (playerImageId in updatedImages) {
       delete updatedImages[playerImageId];
     }
-    project.images = updatedImages;
 
-    dispatch(loadImages(projectId));
-    dispatch(checkImageFiles(projectId));
+    dispatch(checkImageFiles(projectId, updatedImages));
     dispatch(setProjectSetting(projectId, 'playerImageId', newImageId));
   }).catch((e) => {
     console.warn(e);

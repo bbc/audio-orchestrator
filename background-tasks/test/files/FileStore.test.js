@@ -48,6 +48,7 @@ describe('FileStore', () => {
         expect(mockRegisterFile).toHaveBeenCalledWith(
           fileId,
           '/foo/bar',
+          undefined, // TODO should eventually be 'audio'
         );
         expect(processFiles).toHaveBeenCalledWith(
           expect.any(Function),

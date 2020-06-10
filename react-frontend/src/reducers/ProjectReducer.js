@@ -16,6 +16,8 @@ const projectDefaults = {
   reviewItems: [],
   // if this is > 0 we are waiting for a save action to complete
   saveCount: 0,
+  images: {},
+  imagesLoading: false,
 };
 
 const sequenceDefaults = {
@@ -171,6 +173,11 @@ const ProjectReducer = (state = initialState, action) => {
       return updateProject(
         state, action.projectId,
         { settings: action.settings },
+      );
+    case 'SET_PROJECT_IMAGES_LOADING':
+      return updateProject(
+        state, action.projectId,
+        { imagesLoading: action.imagesLoading },
       );
     case 'SET_PROJECT_IMAGES':
       return updateProject(

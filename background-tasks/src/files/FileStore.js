@@ -1,6 +1,7 @@
 import path from 'path';
 import processFiles from './processFiles';
 import AudioFile from './AudioFile';
+import ImageFile from './ImageFile';
 
 /**
  * @class
@@ -21,7 +22,7 @@ class FileStore {
     return this.files[fileId];
   }
 
-  registerFile(fileId, filePath) {
+  registerFile(fileId, filePath, fileType = 'audio') {
     // Check the file has an absolute path.
     if (!path.isAbsolute(filePath)) {
       throw new Error(`File ${fileId} does not have an absolute path.`);
@@ -29,7 +30,13 @@ class FileStore {
 
     // Create the file object.
     // If the file was already registered, it will be replaced (and previous results discarded).
-    this.files[fileId] = new AudioFile(fileId, path.normalize(filePath));
+    if (fileType === 'audio') {
+      this.files[fileId] = new AudioFile(fileId, path.normalize(filePath));
+    } else if (fileType === 'image') {
+      this.files[fileId] = new ImageFile(fileId, path.normalize(filePath));
+    } else {
+      throw new Error(`Unknown file type ${fileType}`);
+    }
   }
 
   registerFiles(files, onProgress) {
@@ -38,7 +45,7 @@ class FileStore {
     return Promise.resolve()
       .then(() => {
         files.forEach((file) => {
-          this.registerFile(file.fileId, file.path);
+          this.registerFile(file.fileId, file.path, file.type);
         });
       })
       .then(() => processFiles(({ fileId }) => this.getFile(fileId).exists(), files, onProgress));

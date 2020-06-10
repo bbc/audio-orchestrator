@@ -151,6 +151,7 @@ class Appearance extends React.Component {
             <Card.Content extra textAlign="center">
               <Button
                 primary
+                labelPosition="left"
                 icon={playerImageId ? 'refresh' : 'plus'}
                 content={`${playerImageId ? 'Replace' : 'Add'} cover image`}
                 onClick={onReplaceCoverImage}

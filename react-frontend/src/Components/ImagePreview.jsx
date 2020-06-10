@@ -4,45 +4,63 @@ import PropTypes from 'prop-types';
 import {
   Image,
   Message,
+  Placeholder,
 } from 'semantic-ui-react';
-
 
 const ImagePreview = ({
   imagePath,
   error,
-}) => (
-  <Image wrapped src={`file://${imagePath}`}>
-    { error
-      ? (
-        <Message
-          attached
-          negative
-          icon="warning"
-          content={error}
-        />
-      )
-      : null
-    }
-  </Image>
-);
+  loading,
+}) => {
+  if (loading) {
+    return (
+      <Placeholder>
+        <Placeholder.Image square />
+      </Placeholder>
+    );
+  }
+
+  if (error) {
+    return (
+      <Message
+        attached
+        negative
+        icon="delete"
+        content={error}
+      />
+    );
+  }
+
+  if (imagePath) {
+    return (
+      <Image wrapped src={loading ? null : `file://${imagePath}`} />
+    );
+  }
+
+  return null;
+};
 
 ImagePreview.propTypes = {
-  imagePath: PropTypes.string.isRequired,
+  imagePath: PropTypes.string,
   error: PropTypes.string,
+  loading: PropTypes.bool,
 };
 
 ImagePreview.defaultProps = {
+  loading: false,
+  imagePath: undefined,
   error: undefined,
 };
 
 const mapStateToProps = (state, { projectId, imageId }) => {
   const project = state.Project.projects[projectId];
-  const { images } = project;
+  const { images, imagesLoading } = project;
   const image = images[imageId] || {};
   const { imagePath, error } = image;
 
   return {
-    imagePath,
+    imagePath: (imagesLoading || error) ? null : imagePath,
+    loading: imagesLoading,
     error,
   };
 };

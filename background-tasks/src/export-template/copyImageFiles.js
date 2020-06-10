@@ -9,12 +9,22 @@ const logger = getLogger('export-template');
  * imageUrls object that can be used to reference these images by imageId later.
  */
 const copyImageFiles = (args) => {
-  const { images, outputDir } = args;
+  const { images, outputDir, fileStore } = args;
 
   // Promise that resolves once all files have been copied
   return Promise.all(
-    Object.values(images || {}).map(({ imageId, imagePath }) => {
-      const imageUrl = path.join('images', `${imageId}${path.extname(imagePath)}`);
+    Object.values(images || {}).map(({ imageId }) => {
+      const {
+        filePath,
+        probe,
+      } = fileStore.getFile(imageId);
+
+      if (!probe) {
+        logger.warn(`Ignoring image ${path.basename(filePath)} as it has no probe results recorded.`);
+        return null;
+      }
+
+      const imageUrl = path.join('images', `${imageId}${path.extname(filePath)}`);
       const imageOutputPath = path.join(outputDir, imageUrl);
       const imageDistOutputPath = path.join(outputDir, 'dist', imageUrl);
 
@@ -22,8 +32,8 @@ const copyImageFiles = (args) => {
       // then returns imageId, imageUrl if both copies succeeded,
       // or returns null when either of the copies failed.
       return Promise.all([
-        fse.copy(imagePath, imageOutputPath),
-        fse.copy(imagePath, imageDistOutputPath),
+        fse.copy(filePath, imageOutputPath),
+        fse.copy(filePath, imageDistOutputPath),
       ])
         .then(() => ({ imageId, imageUrl }))
         .catch((e) => {
