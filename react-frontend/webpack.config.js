@@ -64,7 +64,6 @@ module.exports = (env, { mode = 'development' }) => ({
   plugins: [
     new webpack.DefinePlugin({
       VERSION: JSON.stringify(`${version}-${mode}${versionSuffix ? `-${versionSuffix}` : ''}`),
-      RESTRICTED: versionSuffix === 'restricted',
       DEVELOPMENT: (mode === 'development'),
     }),
     new CleanWebpackPlugin(),

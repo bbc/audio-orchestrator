@@ -11,11 +11,12 @@ import {
 } from 'semantic-ui-react';
 import SettingsCheck from './SettingsCheck';
 import TaskProgress from './TaskProgress';
-import ExportTypeSelection from './ExportTypeSelection';
+// import ExportTypeSelection from './ExportTypeSelection';
 import ExportModal from './ExportModal';
 import AdvancedSettings from './AdvancedSettings';
 import {
   requestStartPreview,
+  requestExportDistribution,
 } from '../../../actions/export';
 import {
   openSequencePage,
@@ -23,12 +24,7 @@ import {
 } from '../../../actions/ui';
 import PageTitleBar from '../../PageTitleBar';
 
-// TODO remove RESTRICTED setting.
-// RESTRICTED is set in the webpack config based on an environment variable
-/* eslint-disable-next-line no-undef */
-const hideFileExport = RESTRICTED;
-
-const Review = ({
+const Export = ({
   projectId,
   itemsTaskIds,
   encodeTaskIds,
@@ -37,6 +33,7 @@ const Review = ({
   onOpenSequencePage,
   onOpenProjectPage,
   canExport,
+  onExport,
 }) => (
   <Container>
     <PageTitleBar
@@ -124,20 +121,27 @@ const Review = ({
       onClick={() => onStartPreview(projectId)}
     />
 
-    { hideFileExport
-      ? null
-      : (
-        <ExportTypeSelection
-          disabled={!canExport}
-          projectId={projectId}
-        />
-      )}
+    <Button
+      primary
+      disabled={!canExport}
+      icon="share"
+      content="Export"
+      labelPosition="left"
+      onClick={() => onExport(projectId)}
+    />
 
     <ExportModal />
   </Container>
 );
 
-Review.propTypes = {
+/*
+    <ExportTypeSelection
+      disabled={!canExport}
+      projectId={projectId}
+    />
+*/
+
+Export.propTypes = {
   projectId: PropTypes.string.isRequired,
   itemsTaskIds: PropTypes.arrayOf(PropTypes.string).isRequired,
   encodeTaskIds: PropTypes.arrayOf(PropTypes.string).isRequired,
@@ -153,9 +157,10 @@ Review.propTypes = {
   canExport: PropTypes.bool,
   onOpenSequencePage: PropTypes.func.isRequired,
   onOpenProjectPage: PropTypes.func.isRequired,
+  onExport: PropTypes.func.isRequired,
 };
 
-Review.defaultProps = {
+Export.defaultProps = {
   canExport: false,
 };
 
@@ -183,6 +188,7 @@ const mapDispatchToProps = dispatch => ({
   onOpenProjectPage: (projectId, projectPage) => {
     dispatch(openProjectPage(projectId, projectPage));
   },
+  onExport: projectId => dispatch(requestExportDistribution(projectId)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Review);
+export default connect(mapStateToProps, mapDispatchToProps)(Export);

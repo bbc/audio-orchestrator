@@ -17,7 +17,7 @@ const configureTemplateSettings = (args) => {
   // There are two versions of index.html, currently both are the same. Both contain a script
   // tag that sets the configuration and initialises the template.
   const configPaths = [
-    path.join(outputDir, 'src', 'index.html'),
+    // path.join(outputDir, 'src', 'index.html'), // TODO re-enable this for template export
     path.join(outputDir, 'dist', 'index.html'),
   ];
 
@@ -30,7 +30,7 @@ const configureTemplateSettings = (args) => {
         /const config = \{[\s\S]*?\};/,
         `const config = ${configuration};`,
       ))
-      // Remove other variable definitions (TODO just remove them from template)
+      // Remove other variable definitions
       .then(contents => contents.replace(
         /const [A-Z_]+ = '.*';/g,
         '',

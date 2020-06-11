@@ -44,7 +44,7 @@ describe('ProgressReporter', () => {
     expect(mockOnProgress).toHaveBeenCalledWith({
       completed: 2,
       total: 2,
-      currentStep: 'done',
+      currentStep: 'Done.',
     });
   });
 

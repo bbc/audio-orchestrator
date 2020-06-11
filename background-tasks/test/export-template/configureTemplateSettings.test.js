@@ -28,7 +28,7 @@ describe('configureTemplateSettings', () => {
       });
   });
 
-  it('writes the return value of templateConfiguration to the two config files', () => {
+  it('writes the return value of templateConfiguration to the config file(s)', () => {
     const outputDir = '/dev/null';
     const sequences = [];
     const controls = [];
@@ -53,8 +53,10 @@ describe('configureTemplateSettings', () => {
         expect(templateConfiguration).toHaveBeenCalledWith(
           sequences, controls, settings, imageUrls,
         );
-        expect(fse.readFile).toHaveBeenCalledTimes(2);
-        expect(fse.writeFile).toHaveBeenCalledTimes(2);
+
+        // TODO change back to 2 when including template sources again
+        expect(fse.readFile).toHaveBeenCalledTimes(1);
+        expect(fse.writeFile).toHaveBeenCalledTimes(1);
 
         // just make sure some (but not all) of the file content is replaced with the new config:
         [

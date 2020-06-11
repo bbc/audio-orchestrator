@@ -36,7 +36,7 @@ class ProgressReporter {
     this.onProgress({
       completed: this.completed,
       total: this.total,
-      currentStep: 'done',
+      currentStep: 'Done.',
     });
   }
 }
