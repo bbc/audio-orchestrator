@@ -378,7 +378,7 @@ class Project {
               conditionId: uuidv4(),
               property: 'device.deviceIsMain',
               operator: 'anyOf',
-              value: [true, false],
+              value: ['true', 'false'],
             },
             {
               conditionId: uuidv4(),
