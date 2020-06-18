@@ -37,14 +37,16 @@ const App = ({
   currentProjectId,
   onCloseWarning,
   error,
+  errorLink,
   warning,
+  warningLink,
 }) => {
   const Page = getCurrentPageComponent(currentPage);
   return (
     <div>
       <Page projectId={currentProjectId} />
-      <ErrorModal content={error} />
-      <WarningModal content={warning} onClose={onCloseWarning} />
+      <ErrorModal content={error} link={errorLink} />
+      <WarningModal content={warning} link={warningLink} onClose={onCloseWarning} />
     </div>
   );
 };
@@ -54,20 +56,26 @@ App.propTypes = {
   currentProjectId: PropTypes.string,
   onCloseWarning: PropTypes.func.isRequired,
   error: PropTypes.string,
+  errorLink: PropTypes.string,
   warning: PropTypes.string,
+  warningLink: PropTypes.string,
 };
 
 App.defaultProps = {
   currentProjectId: null,
   error: null,
+  errorLink: null,
   warning: null,
+  warningLink: null,
 };
 
 const mapStateToProps = ({ UI }) => ({
   currentPage: UI.currentPage,
   currentProjectId: UI.currentProjectId,
   error: UI.error,
+  errorLink: UI.errorLink,
   warning: UI.warning,
+  warningLink: UI.warningLink,
 });
 
 const mapDispatchToProps = dispatch => ({

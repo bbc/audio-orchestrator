@@ -609,7 +609,10 @@ export const requestOpenProject = (existingProjectId = null) => (dispatch) => {
     })
     .catch((e) => {
       console.error(e);
-      dispatch(setAppWarning('The project file could not be opened and has been removed from the list of recent projects.'));
+      dispatch(setAppWarning(
+        'The project file could not be opened. It may be missing, damaged, or created with a more recent version of this application.',
+        'https://bbc.github.io/bbcat-orchestration-docs/error-messages/the-project-file-could-not-be-opened/',
+      ));
       dispatch(closeProject());
       dispatch(requestListProjects());
     });
@@ -939,7 +942,10 @@ export const requestReplaceAllAudioFiles = (projectId, sequenceId) => (dispatch)
     return files;
   }).then((files) => {
     if (files.some(({ name }) => !parseInt(name, 10))) {
-      dispatch(setAppWarning('All imported audio filenames must start with a non-zero number, e.g. 01_example.wav.'));
+      dispatch(setAppWarning(
+        'All imported audio filenames must start with a non-zero number, e.g. 01_example.wav.',
+        'https://bbc.github.io/bbcat-orchestration-docs/error-messages/audio-filenames-must-start-with-a-number/',
+      ));
       throw new Error('Audio file names must start with a non-zero number');
     }
 

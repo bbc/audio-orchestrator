@@ -3,6 +3,18 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.16.0`
+_2020-06-18_
+ * Remove _template code_ and _audio only_ export options -- only the built prototype can be exported now, as the template source code is no longer included with the application. Template customisation is still possible by copying the exported _index.html_ and _audio/_ folder into a copy of the template repository obtained separately.
+ * Update application icon.
+ * Upgrade to Electron 9.0 and review security measures.
+ * Ensure that imported image files have a valid image header.
+ * Ensure that files for previously encoded items still exist during export.
+ * Fix _StereoPanner_ causing a crash in Safari.
+ * Change the gain calculation for objects sent to _all applicable devices with gain adjustment_, it is now compensated as if adding incoherent sources.
+ * Add version to project files, to be able to convert project files created by older versions and reject those created by newer versions.
+ * Add documentation links to common error messages.
+
 # `0.15.0`
 _2020-06-05_
 

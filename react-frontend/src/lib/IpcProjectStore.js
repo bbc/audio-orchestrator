@@ -3,8 +3,6 @@ import EventEmitter from 'events';
 const logger = console;
 const { projectStoreFunctions } = window;
 
-const CURRENT_PROJECT_STORE_VERSION = 2;
-
 const openProjectStores = {};
 
 const saveEmitter = new EventEmitter();
@@ -81,12 +79,6 @@ function createProjectStore(projectId, name) {
         save();
       },
     };
-
-    const projectStoreVersion = store.get('_PROJECT_STORE_VERSION', 0);
-    if (projectStoreVersion < CURRENT_PROJECT_STORE_VERSION) {
-      console.warn(`Mismatched project store version, migration from version ${projectStoreVersion} to ${CURRENT_PROJECT_STORE_VERSION} is a no-op.`);
-      store.set('_PROJECT_STORE_VERSION', CURRENT_PROJECT_STORE_VERSION);
-    }
 
     store.set('lastOpened', new Date().toISOString());
     if (!store.has('name')) {

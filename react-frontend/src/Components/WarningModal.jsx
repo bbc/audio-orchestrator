@@ -8,6 +8,7 @@ import {
 
 const WarningModal = ({
   content,
+  link,
   onClose,
 }) => (
   <Modal
@@ -15,8 +16,22 @@ const WarningModal = ({
     onClose={onClose}
     closeIcon
   >
-    <Header icon="exclamation" content="Warning" />
-    <Modal.Content content={content} />
+    <Header icon="delete" content="Error" />
+    <Modal.Content>
+      <p>{content}</p>
+      { link && (
+        <p>
+          <Button
+            primary
+            icon="question circle outline"
+            labelPosition="left"
+            content="More information"
+            onClick={() => { window.miscFunctions.openUrl(link); }}
+          />
+        </p>
+      )}
+    </Modal.Content>
+
     <Modal.Actions>
       <Button content="Close" onClick={onClose} />
     </Modal.Actions>
@@ -25,11 +40,13 @@ const WarningModal = ({
 
 WarningModal.propTypes = {
   content: PropTypes.string,
+  link: PropTypes.string,
   onClose: PropTypes.func,
 };
 
 WarningModal.defaultProps = {
   content: null,
+  link: null,
   onClose: () => {},
 };
 

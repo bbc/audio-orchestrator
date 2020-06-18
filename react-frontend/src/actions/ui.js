@@ -39,14 +39,16 @@ export const setSequenceAudioError = error => ({
   error,
 });
 
-export const setAppError = error => ({
+export const setAppError = (error, link = null) => ({
   type: 'UI_SET_ERROR',
   error,
+  link,
 });
 
-export const setAppWarning = warning => ({
+export const setAppWarning = (warning, link = null) => ({
   type: 'UI_SET_WARNING',
   warning,
+  link,
 });
 
 export const clearAppWarning = () => ({

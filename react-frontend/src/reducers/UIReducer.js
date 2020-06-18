@@ -19,7 +19,9 @@ const initialState = {
   sequenceAudioConfirmation: null,
   sequenceAudioError: null,
   error: null,
+  errorLink: null,
   warning: null,
+  warningLink: null,
 };
 
 const UIReducer = (state = initialState, action) => {
@@ -77,11 +79,13 @@ const UIReducer = (state = initialState, action) => {
       return {
         ...state,
         error: action.error,
+        errorLink: action.link,
       };
     case 'UI_SET_WARNING':
       return {
         ...state,
         warning: action.warning,
+        warningLink: action.link,
       };
     case 'UI_CLEAR_WARNING':
       return {

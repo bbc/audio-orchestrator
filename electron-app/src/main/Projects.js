@@ -2,21 +2,34 @@ import { v4 as uuidv4 } from 'uuid';
 import { electronLogger as logger } from 'bbcat-orchestration-builder-logging';
 import fse from 'fs-extra';
 import path from 'path';
+import ElectronStore from 'electron-store';
+import semver from 'semver';
 import {
   dialog,
   BrowserWindow,
 } from 'electron';
-import ElectronStore from 'electron-store';
 import {
   getRecentProjects,
   setRecentProject,
   removeRecentProject,
 } from './settings';
+import migrations from './migrations';
+import { version as projectVersion } from '../../package.json';
+
+const migrationsWithNewerVersionCheck = {
+  [`<= ${projectVersion}`]: (store) => {
+    const fileVersion = store.get('__internal__.migrations.version', '0.0.0');
+    if (semver.gt(fileVersion, projectVersion)) {
+      throw new Error('The project was created with a more recent version and cannot be opened.');
+    }
+  },
+  ...migrations,
+};
 
 const PROJECT_FILE_FILTERS = [
   { name: 'Audio Orchestrator projects', extensions: ['orc'] },
 ];
-const CURRENT_PROJECT_STORE_VERSION = 2;
+
 const openProjectFiles = {};
 const openProjectStores = {};
 
@@ -31,7 +44,6 @@ const getProjectStore = (realProjectPath, create = false) => {
     const dirName = path.dirname(realProjectPath);
     projectStore = new ElectronStore({
       defaults: {
-        _PROJECT_STORE_VERSION: CURRENT_PROJECT_STORE_VERSION,
         name: fileName,
       },
       fileExtension: fileExtension.slice(1),
@@ -39,7 +51,8 @@ const getProjectStore = (realProjectPath, create = false) => {
       cwd: dirName,
       clearInvalidConfig: !!create,
       // TODO can also add a schema to validate
-      // TODO can also add migrations
+      migrations: migrationsWithNewerVersionCheck,
+      projectVersion,
     });
     openProjectStores[realProjectPath] = projectStore;
   }
@@ -87,7 +100,7 @@ const openProjectFile = (projectFilePath, create = false) => {
   }).catch((e) => {
     logger.error(`Failed to open project file ${projectFilePath}.`, e);
     removeRecentProject(projectFilePath);
-    throw new Error('Failed to open project file.');
+    throw new Error(`Failed to open project file. ${e.message}`);
   });
 };
 
