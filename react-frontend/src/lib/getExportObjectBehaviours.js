@@ -142,13 +142,16 @@ const getExportObjectBehaviours = (objectBehaviours, controls = {}) => {
           case 'spread':
             exportBehaviours.push({
               behaviourType: 'spread',
+              behaviourParameters: {
+                enableGainCompensation: false,
+              },
             });
             break;
           case 'spreadWithSmallGainReduction':
             exportBehaviours.push({
               behaviourType: 'spread',
               behaviourParameters: {
-                perDeviceGainAdjust: -3,
+                enableGainCompensation: true,
               },
             });
             break;
