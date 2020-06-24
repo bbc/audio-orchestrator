@@ -1,9 +1,8 @@
-// TODO Add links to actual documentation pages
 const helpLinks = {
   sequences: {
     links: [
       {
-        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        link: 'https://bbc.github.io/bbcat-orchestration-docs/sequences/',
         description: 'Defining sequences',
       },
     ],
@@ -11,7 +10,7 @@ const helpLinks = {
   controls: {
     links: [
       {
-        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        link: 'https://bbc.github.io/bbcat-orchestration-docs/controls/',
         description: 'Adding controls',
       },
     ],
@@ -19,19 +18,19 @@ const helpLinks = {
   objects: {
     links: [
       {
-        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        link: 'https://bbc.github.io/bbcat-orchestration-docs/audio/',
         description: 'Handling audio objects',
       },
       {
-        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        link: 'https://bbc.github.io/bbcat-orchestration-docs/audio/#fixed-behaviours',
         description: 'Fixed behaviours',
       },
       {
-        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        link: 'https://bbc.github.io/bbcat-orchestration-docs/control-linked-behaviours/',
         description: 'Control-linked behaviours',
       },
       {
-        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        link: 'https://bbc.github.io/bbcat-orchestration-docs/custom-behaviours/',
         description: 'Custom behaviours',
       },
     ],
@@ -39,7 +38,7 @@ const helpLinks = {
   presentation: {
     links: [
       {
-        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        link: 'https://bbc.github.io/bbcat-orchestration-docs/appearance/',
         description: 'Setting the appearance',
       },
     ],
@@ -47,7 +46,7 @@ const helpLinks = {
   export: {
     links: [
       {
-        link: 'https://makerbox-discourse.tools.bbc.co.uk/c/immersive/orchestrator',
+        link: 'https://bbc.github.io/bbcat-orchestration-docs/export/',
         description: 'Exporting projects',
       },
     ],

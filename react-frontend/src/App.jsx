@@ -10,6 +10,9 @@ import {
 // Semantic-UI's theme CSS provides the styling of the page and has to be imported once.
 import 'semantic-ui-css/semantic.min.css';
 
+// styles overriding some semantic-ui styles
+import './main.css';
+
 import {
   clearAppWarning,
 } from './actions/ui';

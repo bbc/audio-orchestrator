@@ -1,0 +1,9 @@
+.ui.card>.extra,
+.ui.cards>.card>.extra,
+.ui.card .meta,
+.ui.cards>.card .meta,
+.ui.default.dropdown:not(.button)>.text,
+.ui.dropdown:not(.button)>.default.text
+{
+  color: rgba(0, 0, 0, 0.6) !important;
+}

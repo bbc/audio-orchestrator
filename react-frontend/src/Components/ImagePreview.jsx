@@ -33,7 +33,7 @@ const ImagePreview = ({
 
   if (imagePath) {
     return (
-      <Image wrapped src={loading ? null : `file://${imagePath}`} />
+      <Image wrapped src={loading ? null : `file://${imagePath}`} alt="Preview of the cover image" />
     );
   }
 

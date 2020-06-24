@@ -14,6 +14,7 @@ const DEFAULT_SETTINGS = {
   introduction: 'Introduction',
   startLabel: 'Start new session',
   joinLabel: 'Join existing session',
+  playerImageAltText: '',
   compressorRatio: 2,
   compressorThreshold: -20,
   accentColour: '#006def',

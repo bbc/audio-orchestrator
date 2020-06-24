@@ -79,6 +79,7 @@ class Appearance extends React.Component {
       compressorRatio,
       compressorThreshold,
       playerImageId,
+      playerImageAltText,
       onReplaceCoverImage,
     } = this.props;
 
@@ -148,6 +149,18 @@ class Appearance extends React.Component {
               : <Card.Content content="No image selected." />
             }
 
+            { playerImageId && (
+              <Card.Content extra>
+                <Form.Input
+                  label="Image alt text"
+                  placeholder=""
+                  name="playerImageAltText"
+                  defaultValue={playerImageAltText}
+                  onBlur={this.handleBlur}
+                />
+              </Card.Content>
+            )}
+
             <Card.Content extra textAlign="center">
               <Button
                 primary
@@ -209,6 +222,7 @@ Appearance.propTypes = {
   compressorThreshold: PropTypes.number,
   accentColour: PropTypes.string,
   playerImageId: PropTypes.string,
+  playerImageAltText: PropTypes.string,
   onChangeSetting: PropTypes.func.isRequired,
   onReplaceCoverImage: PropTypes.func.isRequired,
 };
@@ -225,6 +239,7 @@ Appearance.defaultProps = {
   compressorThreshold: undefined,
   accentColour: undefined,
   playerImageId: undefined,
+  playerImageAltText: undefined,
 };
 
 const mapStateToProps = (state, { projectId }) => {
@@ -244,6 +259,7 @@ const mapStateToProps = (state, { projectId }) => {
     compressorRatio,
     compressorThreshold,
     playerImageId,
+    playerImageAltText,
   } = settings;
 
   return {
@@ -258,6 +274,7 @@ const mapStateToProps = (state, { projectId }) => {
     compressorRatio,
     compressorThreshold,
     playerImageId,
+    playerImageAltText,
   };
 };
 

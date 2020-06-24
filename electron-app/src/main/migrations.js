@@ -12,6 +12,16 @@ const migrations = {
     // the old project store version is no longer required.
     store.delete('_PROJECT_STORE_VERSION');
   },
+  '0.16.1': (store) => {
+    // Add playerImageAltText property to project settings
+    const settings = store.get('settings');
+    if (settings) {
+      store.set('settings', {
+        ...settings,
+        playerImageAltText: '',
+      });
+    }
+  },
 };
 
 export default migrations;
