@@ -1,18 +1,11 @@
 import { ipcRenderer, contextBridge } from 'electron';
 
-// Just for debugging, log the working directories
-ipcRenderer.invoke('get-working-directories').then(({ cwd, homedir }) => {
-  console.info(`current working directory: ${cwd}`);
-  console.info(`log file location: ${homedir}`);
-});
-
 // To trigger moving and opening exported files
 contextBridge.exposeInMainWorld('exportFunctions', {
   openInFolder: (...args) => ipcRenderer.invoke('open-in-folder', ...args),
   saveExportAs: (...args) => ipcRenderer.invoke('save-export-as', ...args),
   saveExportToDownloads: (...args) => ipcRenderer.invoke('save-export-to-downloads', ...args),
 });
-
 
 // For accessing background services (previously HTTP API)
 contextBridge.exposeInMainWorld('backgroundTaskFunctions', {

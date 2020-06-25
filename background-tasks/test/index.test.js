@@ -14,6 +14,7 @@ describe('background-tasks', () => {
       exportPreview: expect.any(Function),
       getTask: expect.any(Function),
       cancelTask: expect.any(Function),
+      addSearchPath: expect.any(Function),
     });
   });
 });

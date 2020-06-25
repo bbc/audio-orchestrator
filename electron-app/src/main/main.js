@@ -1,6 +1,6 @@
-import { electronLogger as logger } from 'bbcat-orchestration-builder-logging';
+import { electronLogger as logger, addLogFileTransport } from 'bbcat-orchestration-builder-logging';
+import backgroundTasks from 'bbcat-orchestration-builder-background-tasks';
 import path from 'path';
-import os from 'os';
 import { URL } from 'url';
 import {
   app,
@@ -43,6 +43,14 @@ const defaultWebPreferences = {
   contextIsolation: true, // Must be true; means that pages cannot modify prototypes used in preload
   sandbox: true, // Must be true.
 };
+
+// define log file path
+const logFilePath = path.join(app.getPath('userData'), 'bbcat-orchestration-builder.log');
+addLogFileTransport(logFilePath);
+logger.silly(`Logging to ${logFilePath}`);
+
+// add user data /ffmpeg/bin as extra search path
+backgroundTasks.addSearchPath(path.join(app.getPath('userData'), 'ffmpeg', 'bin'));
 
 function createWindow() {
   // Create the browser window.
@@ -114,12 +122,6 @@ const createCreditsWindow = () => {
 };
 
 const registerIpcHandlers = () => {
-  // get working directories to log to browser console
-  ipcMain.handle('get-working-directories', () => ({
-    homedir: os.homedir(),
-    cwd: process.cwd(),
-  }));
-
   // Allow the web page to trigger the developer tools
   ipcMain.handle('open-dev-tools', () => {
     if (win) {

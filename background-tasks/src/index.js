@@ -18,6 +18,8 @@ import exportTemplate from './export-template';
 import exportPreview from './export-preview';
 import exportDistribution from './export-distribution';
 
+import { addSearchPath } from './which';
+
 const fileStore = new FileStore();
 const manager = new TaskManager(fileStore);
 
@@ -41,4 +43,7 @@ export default {
   // Meta task actions
   getTask: ({ taskId }) => manager.getTask(taskId),
   cancelTask: ({ taskId }) => manager.cancelTask(taskId),
+
+  // configuration for binary lookup; must be called before first use of which().
+  addSearchPath,
 };

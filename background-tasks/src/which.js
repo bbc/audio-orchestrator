@@ -11,12 +11,12 @@ const realpath = promisify(realpathCB);
 
 // TODO macOS/Linux specific
 const searchPath = [
+  path.join(os.homedir(), 'audio-orchestrator-ffmpeg', 'bin'),
   path.join(os.homedir(), 'bbcat-orchestration-builder-ffmpeg', 'bin'),
   process.env.PATH,
-  '/usr/bin',
   '/usr/local/bin',
-].join(':');
-
+  '/usr/bin',
+];
 
 const results = {};
 
@@ -37,7 +37,7 @@ const which = (name) => {
   return execFile('/usr/bin/which', [name], {
     env: {
       ...process.env,
-      PATH: searchPath,
+      PATH: searchPath.join(':'),
     },
   })
     .then(({ stdout }) => {
@@ -54,6 +54,10 @@ const which = (name) => {
       logger.error(`Could not find ${name} (running 'which ${name}' or resolving real path failed: ${err})`);
       throw new Error(`${name} not found in PATH.`);
     });
+};
+
+export const addSearchPath = (extraSearchPath) => {
+  searchPath.unshift(extraSearchPath);
 };
 
 export default which;

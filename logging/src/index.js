@@ -1,5 +1,4 @@
 const os = require('os');
-const path = require('path');
 const winston = require('winston');
 
 // A format that prefixes the message with the component and removes the component property if set.
@@ -27,8 +26,13 @@ const rootLogger = winston.createLogger({
       ),
       handleExceptions: true,
     }),
+  ],
+});
+
+const addLogFileTransport = (logFilePath) => {
+  rootLogger.add(
     new winston.transports.File({
-      filename: path.join(os.homedir(), 'bbcat-orchestration-builder.log'),
+      filename: logFilePath,
       level: 'silly',
       format: winston.format.combine(
         winston.format.timestamp(),
@@ -39,11 +43,12 @@ const rootLogger = winston.createLogger({
       tailable: true,
       handleExceptions: true,
     }),
-  ],
-});
+  );
+};
 
 module.exports = {
   rootLogger,
+  addLogFileTransport,
   analyseLogger: rootLogger.child({ component: 'background-tasks' }), // TODO remove
   exportLogger: rootLogger.child({ component: 'background-tasks' }), // TODO remove
   electronLogger: rootLogger.child({ component: 'electron-app' }),
