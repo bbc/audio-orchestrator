@@ -16,7 +16,7 @@ const DEFAULT_SETTINGS = {
   joinLabel: 'Join existing session',
   playerImageAltText: '',
   compressorRatio: 2,
-  compressorThreshold: -20,
+  compressorThreshold: 0,
   accentColour: '#006def',
   enableDebugUI: true,
   enableTutorial: false,
