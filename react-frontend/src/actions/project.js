@@ -21,6 +21,28 @@ const fileService = new FileService(window.API_URL || 'http://localhost:8000');
 const projects = {};
 
 /**
+ * helper function, replaces relative paths by prepending given absolute path
+ * TODO: POSIX-style path specific
+ */
+const replaceRelativePath = (path, basePath) => {
+  if (typeof path !== 'string' || path.startsWith('/')) {
+    return path;
+  }
+
+  return `${basePath}/${path}`;
+};
+
+const removeBasePath = (path, basePath) => {
+  const basePathWithSlash = `${basePath}/`;
+  // return original path if it isn't defined, or doesn't start with the base path
+  if (typeof path !== 'string' || !path.startsWith(basePathWithSlash)) {
+    return path;
+  }
+
+  return path.slice(basePathWithSlash.length);
+};
+
+/**
  * Action creator, closes the project view.
  */
 export const closeProject = () => (dispatch) => {
@@ -135,12 +157,20 @@ export const setProjectImagesLoading = (projectId, imagesLoading) => ({
 });
 
 export const loadImages = projectId => (dispatch) => {
-  const { images } = projects[projectId];
+  const { images, projectBasePath } = projects[projectId];
+
+  const imagesWithAbsolutePaths = {};
+  Object.entries(images).forEach(([imageId, image]) => {
+    imagesWithAbsolutePaths[imageId] = {
+      ...image,
+      imagePath: replaceRelativePath(image.imagePath, projectBasePath),
+    };
+  });
 
   dispatch({
     type: 'SET_PROJECT_IMAGES',
     projectId,
-    images,
+    images: imagesWithAbsolutePaths,
   });
 };
 
@@ -317,6 +347,7 @@ const createTaskWithProgress = (dispatch, task, taskId, argument) => {
  */
 export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
   const project = projects[projectId];
+  const { projectBasePath } = project;
   const sequence = project.sequences[sequenceId];
   const { filesList, files } = sequence;
 
@@ -346,7 +377,10 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
     createTaskId,
     filesList.map(({ fileId }) => {
       const { path } = files[fileId] || {};
-      return { fileId, path };
+      return {
+        fileId,
+        path: replaceRelativePath(path, projectBasePath),
+      };
     }),
   )
     .then((result) => {
@@ -515,6 +549,7 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
 // the results.
 const checkImageFiles = (projectId, newImages = null) => (dispatch) => {
   const project = projects[projectId];
+  const { projectBasePath } = project;
   let { images } = project;
 
   if (newImages) {
@@ -546,7 +581,7 @@ const checkImageFiles = (projectId, newImages = null) => (dispatch) => {
       const { imagePath } = images[imageId] || {};
       return {
         fileId: imageId,
-        path: imagePath,
+        path: replaceRelativePath(imagePath, projectBasePath),
         type: 'image',
       };
     }),
@@ -861,13 +896,17 @@ const initialiseSequenceFiles = (projectId, sequenceId, newFiles) => (dispatch) 
   const filesWithIds = newFiles.map(file => ({ ...file, fileId: uuidv4() }));
 
   const project = projects[projectId];
+  const { projectBasePath } = project;
   const sequence = project.sequences[sequenceId];
 
   // create a file object, initially only containing the path and name, to store more detailed info
   // about each file.
   const files = {};
   filesWithIds.forEach(({ fileId, path, name }) => {
-    files[fileId] = { path, name };
+    files[fileId] = {
+      path: removeBasePath(path, projectBasePath),
+      name,
+    };
   });
 
   // create a list of { fileId, name }, sorted by ascending name for use as an index.
@@ -1203,7 +1242,7 @@ export const requestReplaceProjectPlayerImage = projectId => (dispatch) => {
 
     return files;
   }).then((files) => {
-    const { images, settings } = project;
+    const { images, settings, projectBasePath } = project;
     const { playerImageId } = settings;
 
     const newImageId = uuidv4();
@@ -1214,7 +1253,7 @@ export const requestReplaceProjectPlayerImage = projectId => (dispatch) => {
       ...images,
       [newImageId]: {
         imageId: newImageId,
-        imagePath: path,
+        imagePath: removeBasePath(path, projectBasePath),
       },
     };
 

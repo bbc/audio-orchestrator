@@ -88,7 +88,9 @@ const openProjectFile = (projectFilePath, create = false) => {
     // set the project name in metadata to the file name in case the file was renamed
     const fileExtension = path.extname(projectFilePath);
     const fileName = path.basename(projectFilePath, fileExtension);
+    const dirName = path.dirname(projectFilePath);
     projectStore.set('name', fileName);
+    projectStore.set('projectBasePath', dirName);
 
     // get a copy of everything in the store as an object to return
     const project = projectStore.store;

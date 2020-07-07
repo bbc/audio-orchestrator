@@ -63,6 +63,7 @@ class Project {
     const { store, data } = this;
     // Get simple top level properties
     data.name = store.get('name', '');
+    data.projectBasePath = store.get('projectBasePath', '');
     data.lastOpened = store.get('lastOpened', '');
     data.settings = store.get('settings', DEFAULT_SETTINGS);
     data.images = store.get('images', {});
@@ -109,6 +110,13 @@ class Project {
    * @returns {string}
    */
   get name() { return this.data.name; }
+
+  /**
+   * Gets the path to the directory where the project file is stored.
+   *
+   * @returns {string}
+   */
+  get projectBasePath() { return this.data.projectBasePath; }
 
   /**
    * Gets a sequences list, enumerating all sequenceIds and some basic sequence settings.
