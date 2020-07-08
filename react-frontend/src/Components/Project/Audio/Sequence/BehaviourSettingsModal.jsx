@@ -6,15 +6,34 @@ import {
   Label,
   Header,
 } from 'semantic-ui-react';
-// import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
 import Behaviours from 'Lib/Behaviours';
 import BehaviourParameters from './BehaviourParameters';
+
+const validateBehaviourParameters = (
+  parameterDefinitions, parameterValues,
+) => parameterDefinitions.every(({ name, type, defaultValue }) => {
+  const value = parameterValues[name];
+  switch (type) {
+    case 'number':
+      return value !== undefined && !Number.isNaN(value);
+    case 'object':
+      return value !== defaultValue;
+    case 'conditionsList':
+      return value.every(condition => !!condition.property
+        && condition.operator !== undefined
+        && condition.value !== undefined);
+    default:
+      // assume parameters of unknown type are always valid
+      return true;
+  }
+});
 
 const BehaviourSettingsModal = ({
   contents,
   onChange,
   onClose,
   sequencesList,
+  objectsList,
   controls,
 }) => {
   const {
@@ -42,6 +61,8 @@ const BehaviourSettingsModal = ({
 
   const haveParameters = parameters && parameters.length > 0;
 
+  const parametersValid = validateBehaviourParameters(parameters, behaviourParameters);
+
   const handleSave = () => {
     onChange(behaviourParameters);
   };
@@ -66,7 +87,7 @@ const BehaviourSettingsModal = ({
         <Header style={{ marginTop: '8px' }} subheader={description} />
       </Modal.Header>
 
-      <Modal.Content scrolling>
+      <Modal.Content>
         { haveParameters && (
           <BehaviourParameters
             parameters={parameters}
@@ -76,6 +97,7 @@ const BehaviourSettingsModal = ({
               value: data.value,
             })}
             sequencesList={sequencesList}
+            objectsList={objectsList}
             controls={controls}
             controlId={controlId}
           />
@@ -83,6 +105,14 @@ const BehaviourSettingsModal = ({
       </Modal.Content>
 
       <Modal.Actions>
+        { !parametersValid && (
+          <Label
+            basic
+            color="red"
+            icon="exclamation"
+            content="Not all settings are complete."
+          />
+        )}
         <Button
           onClick={onClose}
           content={edit ? 'Discard changes' : 'Cancel'}
@@ -91,6 +121,7 @@ const BehaviourSettingsModal = ({
           primary
           onClick={handleSave}
           content={edit ? 'Save' : `Add to ${objectNumbers.length > 1 ? `${objectNumbers.length} objects` : 'object'}`}
+          disabled={!parametersValid}
         />
       </Modal.Actions>
     </Modal>
@@ -111,6 +142,10 @@ BehaviourSettingsModal.propTypes = {
   sequencesList: PropTypes.arrayOf(PropTypes.shape({
     sequenceId: PropTypes.String,
     name: PropTypes.String,
+  })).isRequired,
+  objectsList: PropTypes.arrayOf(PropTypes.shape({
+    objectNumber: PropTypes.number,
+    label: PropTypes.String,
   })).isRequired,
   controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };

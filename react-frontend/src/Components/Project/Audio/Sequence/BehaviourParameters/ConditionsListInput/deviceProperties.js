@@ -25,6 +25,12 @@ const deviceProperties = [
     description: 'Current position in the joining order, 1-based',
     type: 'number',
   },
+  {
+    name: 'objectIds',
+    displayName: 'Objects allocated to same device',
+    description: 'Any of the objects that have been allocated to the device so far, up to the current object',
+    type: 'object',
+  },
 ];
 
 export default deviceProperties;

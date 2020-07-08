@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-background-tasks",
-  "version": "0.16.4",
+  "version": "0.16.5",
   "description": "Methods for analysing, encoding, and packaging files to create orchestrated experiences.",
   "main": "dist/index.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
@@ -8,7 +8,7 @@
   "license": "UNLICENSED",
   "private": true,
   "dependencies": {
-    "@bbc/bbcat-orchestration-template": "^0.13.0",
+    "@bbc/bbcat-orchestration-template": "^0.13.1",
     "async": "^3.0.1",
     "bbcat-orchestration-builder-logging": "link:../logging",
     "ffprobe-client": "^1.1.2",

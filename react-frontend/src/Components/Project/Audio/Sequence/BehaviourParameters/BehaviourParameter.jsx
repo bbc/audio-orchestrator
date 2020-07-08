@@ -10,6 +10,7 @@ import ConditionsListInput from './ConditionsListInput';
 import EnumInput from './EnumInput';
 import ListOfEnumInput from './ListOfEnumInput';
 import ControlValuesInput from './ControlValuesInput';
+import ObjectInput from './ObjectInput';
 
 const inputComponents = {
   gain: GainInput,
@@ -17,6 +18,7 @@ const inputComponents = {
   enum: EnumInput,
   listOfEnum: ListOfEnumInput,
   controlValues: ControlValuesInput,
+  object: ObjectInput,
 };
 
 const BehaviourParameter = React.memo(({
@@ -28,6 +30,7 @@ const BehaviourParameter = React.memo(({
   value,
   onChange,
   sequencesList,
+  objectsList,
   controls,
   controlId,
 }) => {
@@ -42,6 +45,7 @@ const BehaviourParameter = React.memo(({
         value={value}
         onChange={onChange}
         sequencesList={sequencesList}
+        objectsList={objectsList}
         controls={controls}
         controlId={controlId}
       />
@@ -64,6 +68,10 @@ BehaviourParameter.propTypes = {
   sequencesList: PropTypes.arrayOf(PropTypes.shape({
     sequenceId: PropTypes.String,
     name: PropTypes.String,
+  })).isRequired,
+  objectsList: PropTypes.arrayOf(PropTypes.shape({
+    objectNumber: PropTypes.String,
+    label: PropTypes.String,
   })).isRequired,
   controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   controlId: PropTypes.string,

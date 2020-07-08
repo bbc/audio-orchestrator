@@ -215,6 +215,7 @@ const SequenceObjectTable = ({
           onClose={handleBehaviourSettingsClose}
           onDelete={() => {}}
           sequencesList={sequencesList}
+          objectsList={objectsList}
           controls={controls}
         />
       )}

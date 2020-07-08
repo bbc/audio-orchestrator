@@ -4,7 +4,7 @@ const operators = [
     name: 'equals',
     displayName: 'Equal to',
     valueIsArray: false,
-    allowedTypes: ['number', 'string', 'enum'],
+    allowedTypes: ['number', 'string', 'enum', 'object'],
   },
   {
     name: 'lessThan',
@@ -34,7 +34,7 @@ const operators = [
     name: 'anyOf',
     displayName: 'Any of',
     valueIsArray: true,
-    allowedTypes: ['number', 'string', 'enum'],
+    allowedTypes: ['number', 'string', 'enum', 'object'],
   },
   {
     name: 'moduloIsZero',

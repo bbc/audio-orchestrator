@@ -735,12 +735,12 @@
     weak-map "^1.0.5"
     winston "^2.4.0"
 
-"@bbc/bbcat-orchestration-template@^0.13.0":
-  version "0.13.0"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.13.0.tgz#a1bfcc4b13539b7f112a566c3ef2ce8a3f38a59c"
-  integrity sha1-ob/MSxNTm38RKlZsPvLOij84pZw=
+"@bbc/bbcat-orchestration-template@^0.13.1":
+  version "0.13.1"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.13.1.tgz#fd80efa8782741924f85fe4a6eddd1883cea9fa0"
+  integrity sha1-/YDvqHgnQZJPhf5Kbt3RiDzqn6A=
   dependencies:
-    "@bbc/bbcat-orchestration" "^0.8.0"
+    "@bbc/bbcat-orchestration" "^0.8.1"
     "@hot-loader/react-dom" "^16.11.0"
     bowser "^2.9.0"
     classnames "^2.2.6"
@@ -759,10 +759,10 @@
     uuid "^3.3.2"
     whatwg-fetch "^3.0.0"
 
-"@bbc/bbcat-orchestration@^0.8.0":
-  version "0.8.0"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration/-/@bbc/bbcat-orchestration-0.8.0.tgz#3c6e032fa391b33cdd8e706eb3d47ae032108fab"
-  integrity sha1-PG4DL6ORszzdjnBus9R64DIQj6s=
+"@bbc/bbcat-orchestration@^0.8.1":
+  version "0.8.1"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration/-/@bbc/bbcat-orchestration-0.8.1.tgz#ea95e47e1c45d3a041fae8a98061db29db0a17f1"
+  integrity sha1-6pXkfhxF06BB+uipgGHbKdsKF/E=
   dependencies:
     "@bbc/bbcat-orchestration-bbcat" "^0.2.0"
     "@bbc/bbcat-orchestration-cloud-sync-client" "^2.2.0"

@@ -14,6 +14,7 @@ export const behaviourTypes = [
   // 'auxDevicesOnly',
   // 'allowedEverywhere',
   // 'spread',
+  'muteIf',
 ];
 
 export const behaviourTypeDetails = {
@@ -173,5 +174,20 @@ export const behaviourTypeDetails = {
         ],
       },
     ],
+  },
+  muteIf: {
+    displayName: 'Mute if',
+    description: 'The object will be muted if the reference object is currently allocated to a device.',
+    color: 'purple',
+    parameters: [
+      {
+        displayName: 'Reference object',
+        name: 'objectId',
+        type: 'object',
+        description: '',
+        defaultValue: 'NONE', // Have to have a default that's a string but not a valid objectId
+      },
+    ],
+    multiple: true,
   },
 };

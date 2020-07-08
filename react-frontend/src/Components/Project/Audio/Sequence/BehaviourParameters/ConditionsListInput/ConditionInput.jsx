@@ -68,7 +68,11 @@ const getPropertyOptions = controls => [
   ...sessionPropertyOptions,
 ];
 
-const getPropertyTypeAndOperators = (property, { controls = [], sequencesList = [] }) => {
+const getPropertyTypeAndOperators = (property, {
+  controls = [],
+  sequencesList = [],
+  objectsList = [],
+}) => {
   const [group, name] = property.split('.');
   const propertyLists = {
     device: deviceProperties,
@@ -126,6 +130,14 @@ const getPropertyTypeAndOperators = (property, { controls = [], sequencesList = 
       value: sequenceId,
       displayName: sequenceName,
     }));
+  } else if (result.type === 'object') {
+    // If the type is 'object', generate allowedValues from the given objectsList, and reset
+    // type to 'enum'.
+    result.type = 'enum';
+    result.allowedValues = objectsList.map(({ objectNumber, label }) => ({
+      value: `${objectNumber}-${label}`,
+      displayName: `${objectNumber}: ${label}`,
+    }));
   } else if (result.type === 'bool') {
     // Do the same for 'bool', for now use an enum input with values for true and false
     result.type = 'enum';
@@ -181,7 +193,10 @@ class ConditionInput extends React.PureComponent {
     if (fieldType === 'checkbox') {
       newValue[fieldName] = checked;
     } else if (fieldType === 'number') {
-      newValue[fieldName] = parseFloat(fieldValue);
+      newValue[fieldName] = fieldValue === '-' ? '-' : parseFloat(fieldValue);
+      if (Number.isNaN(newValue[fieldName])) {
+        newValue[fieldName] = undefined;
+      }
     }
 
     // if the property was changed, reset the operator and value
@@ -207,6 +222,7 @@ class ConditionInput extends React.PureComponent {
       onDelete,
       controls,
       sequencesList,
+      objectsList,
     } = this.props;
 
     const {
@@ -234,7 +250,7 @@ class ConditionInput extends React.PureComponent {
         type,
         allowedOperators,
         allowedValues,
-      } = getPropertyTypeAndOperators(property, { controls, sequencesList });
+      } = getPropertyTypeAndOperators(property, { controls, sequencesList, objectsList });
 
       // Save expected type of value for selecting the right input component once an operator has
       // also been chosen.
@@ -371,6 +387,10 @@ ConditionInput.propTypes = {
   sequencesList: PropTypes.arrayOf(PropTypes.shape({
     sequenceId: PropTypes.String,
     name: PropTypes.String,
+  })).isRequired,
+  objectsList: PropTypes.arrayOf(PropTypes.shape({
+    objectNumber: PropTypes.number,
+    label: PropTypes.string,
   })).isRequired,
 };
 

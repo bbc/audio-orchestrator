@@ -63,6 +63,7 @@ class ConditionsListInput extends React.PureComponent {
     const {
       value,
       sequencesList,
+      objectsList,
       controls,
     } = this.props;
 
@@ -86,6 +87,7 @@ class ConditionsListInput extends React.PureComponent {
             onDelete={e => this.handleDelete(e, conditionId)}
             onChange={(e, data) => this.handleConditionChange(e, { ...data, conditionId })}
             sequencesList={sequencesList}
+            objectsList={objectsList}
             controls={controls}
           />
         ))}
@@ -101,6 +103,10 @@ ConditionsListInput.propTypes = {
   sequencesList: PropTypes.arrayOf(PropTypes.shape({
     sequenceId: PropTypes.String,
     name: PropTypes.String,
+  })).isRequired,
+  objectsList: PropTypes.arrayOf(PropTypes.shape({
+    objectNumber: PropTypes.number,
+    label: PropTypes.string,
   })).isRequired,
   controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
 };

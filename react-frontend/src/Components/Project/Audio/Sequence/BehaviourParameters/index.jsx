@@ -7,6 +7,7 @@ const BehaviourParameters = React.memo(({
   values,
   onChange,
   sequencesList,
+  objectsList,
   controls,
   controlId,
 }) => (
@@ -21,6 +22,7 @@ const BehaviourParameters = React.memo(({
           value: data.value,
         })}
         sequencesList={sequencesList}
+        objectsList={objectsList}
         controls={controls}
         controlId={controlId}
       />
@@ -35,6 +37,10 @@ BehaviourParameters.propTypes = {
   sequencesList: PropTypes.arrayOf(PropTypes.shape({
     sequenceId: PropTypes.String,
     name: PropTypes.String,
+  })).isRequired,
+  objectsList: PropTypes.arrayOf(PropTypes.shape({
+    objectNumber: PropTypes.number,
+    label: PropTypes.String,
   })).isRequired,
   controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   controlId: PropTypes.string,

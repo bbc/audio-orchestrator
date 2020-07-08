@@ -6,6 +6,12 @@ const sessionProperties = [
     displayName: 'Number of devices currently connected',
     type: 'number',
   },
+  {
+    name: 'objectIds',
+    displayName: 'Objects allocated to any device',
+    description: 'List of objects that have been allocated to any device so far, up to but not including the current object',
+    type: 'object',
+  },
 ];
 
 export default sessionProperties;
