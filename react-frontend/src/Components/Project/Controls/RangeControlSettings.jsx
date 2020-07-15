@@ -109,6 +109,7 @@ class RangeControlSettings extends React.PureComponent {
           step={step}
           value={defaultValue}
           onChange={this.handleChange}
+          className="inputSliderFix"
         />
         <Label pointing="left" content={defaultValue} />
       </Card.Content>

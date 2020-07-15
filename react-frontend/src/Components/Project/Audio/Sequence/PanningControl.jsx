@@ -73,6 +73,8 @@ class PanningControl extends React.PureComponent {
             step={0.01}
             value={panning}
             onChange={(e, { value }) => onChange(objectNumber, Number(value))}
+            className="inputSliderFix"
+            style={{ width: '100%' }}
           />
         </Container>
       </Popup>

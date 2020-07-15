@@ -1,3 +1,4 @@
+/* Increase contrast to improve readability of some small text */
 .ui.card>.extra,
 .ui.cards>.card>.extra,
 .ui.card .meta,
@@ -6,4 +7,10 @@
 .ui.dropdown:not(.button)>.default.text
 {
   color: rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Correct slider input padding */
+.inputSliderFix input {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
