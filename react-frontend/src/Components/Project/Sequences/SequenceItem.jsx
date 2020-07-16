@@ -47,6 +47,8 @@ class SequenceItem extends React.Component {
       next,
       choicesOpen,
       settingsOpen,
+      onMoveUp,
+      onMoveDown,
     } = this.props;
 
     return (
@@ -67,6 +69,7 @@ class SequenceItem extends React.Component {
                 onClick={() => onSetIntro(sequenceId)}
               />
             </InlineHelpPopup>
+
             <InlineHelpPopup
               content="Edit the audio objects for this sequence."
               className="ui buttons"
@@ -77,6 +80,7 @@ class SequenceItem extends React.Component {
                 onClick={() => onOpen(sequenceId)}
               />
             </InlineHelpPopup>
+
             <InlineHelpPopup
               content={isIntro ? 'The entry point sequence cannot be deleted.' : 'Delete this sequence.'}
               className="ui buttons"
@@ -90,6 +94,21 @@ class SequenceItem extends React.Component {
                 onDelete={() => onDelete(sequenceId)}
               />
             </InlineHelpPopup>
+
+            <InlineHelpPopup
+              content="Change the display order of this sequence."
+              className="ui buttons"
+            >
+              <Button icon="left arrow" disabled={!onMoveUp} compact onClick={onMoveUp} />
+            </InlineHelpPopup>
+
+            <InlineHelpPopup
+              content="Change the display order of this sequence."
+              className="ui buttons"
+            >
+              <Button icon="right arrow" disabled={!onMoveDown} compact onClick={onMoveDown} />
+            </InlineHelpPopup>
+
           </Button.Group>
           <Card.Header>
             <EditableText
@@ -160,10 +179,14 @@ SequenceItem.propTypes = {
   })).isRequired,
   choicesOpen: PropTypes.bool.isRequired,
   settingsOpen: PropTypes.bool.isRequired,
+  onMoveUp: PropTypes.func,
+  onMoveDown: PropTypes.func,
 };
 
 SequenceItem.defaultProps = {
   isIntro: false,
+  onMoveUp: undefined,
+  onMoveDown: undefined,
 };
 
 const mapStateToProps = (state, { projectId, sequenceId }) => {

@@ -786,6 +786,14 @@ export const setSequenceSetting = (projectId, sequenceId, key, value) => (dispat
   dispatch(validateProject(projectId));
 };
 
+export const swapSequenceOrder = (projectId, sequenceId, otherSequenceId) => (dispatch) => {
+  const project = projects[projectId];
+
+  project.swapSequenceOrder(sequenceId, otherSequenceId);
+
+  dispatch(loadSequences(projectId));
+};
+
 const fileNameToObjectNumber = name => parseInt(name, 10) || null;
 
 /**

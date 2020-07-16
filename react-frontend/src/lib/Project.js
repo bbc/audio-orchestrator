@@ -77,7 +77,8 @@ class Project {
 
     // get sequences listed in sequenceIds
     data.sequences = {};
-    store.get('sequenceIds', []).forEach((sequenceId) => {
+    data.sequenceIds = store.get('sequenceIds', []);
+    data.sequenceIds.forEach((sequenceId) => {
       data.sequences[sequenceId] = new Sequence(store, sequenceId);
     });
   }
@@ -88,8 +89,8 @@ class Project {
    * @private
    */
   updateSequencesList() {
-    const { store, sequencesList } = this;
-    store.set('sequenceIds', sequencesList.map(({ sequenceId }) => sequenceId));
+    const { store, data } = this;
+    store.set('sequenceIds', data.sequenceIds);
   }
 
   /**
@@ -124,7 +125,7 @@ class Project {
    * @returns {Array<Object>}
    */
   get sequencesList() {
-    return Object.keys(this.sequences).map((sequenceId) => {
+    return this.data.sequenceIds.map((sequenceId) => {
       const { settings } = this.sequences[sequenceId];
       const {
         name,
@@ -182,6 +183,26 @@ class Project {
       this.updateControlsList();
     }
   }
+
+  /**
+   * Swaps the position of the given sequenceId in the list of sequences
+   *
+   * @param {string} sequenceId
+   * @param {string} otherSequenceId
+   */
+  swapSequenceOrder(sequenceId, otherSequenceId) {
+    const { sequenceIds } = this.data;
+    const index = sequenceIds.indexOf(sequenceId);
+    const otherIndex = sequenceIds.indexOf(otherSequenceId);
+
+    // Only update if both sequenceIds are found
+    if (index > -1 && otherIndex > -1) {
+      sequenceIds[index] = otherSequenceId;
+      sequenceIds[otherIndex] = sequenceId;
+      this.updateSequencesList();
+    }
+  }
+
 
   /**
    * Gets the sequences object, individual sequences are accessed using the sequenceId as the key.
@@ -267,7 +288,7 @@ class Project {
     isIntro = false,
   } = {}) {
     const { store, data } = this;
-    const { sequences } = data;
+    const { sequences, sequenceIds } = data;
 
     // Generate a random UUID for the new sequence
     const newSequenceId = uuidv4();
@@ -289,7 +310,7 @@ class Project {
 
     // Save the sequence object
     sequences[newSequenceId] = sequence;
-
+    data.sequenceIds = [...sequenceIds, newSequenceId];
     this.updateSequencesList();
 
     return sequence;
@@ -304,8 +325,6 @@ class Project {
     Object.keys(this.sequences).forEach((sequenceId) => {
       this.sequences[sequenceId].settings.isIntro = sequenceId === initialSequenceId;
     });
-
-    this.updateSequencesList();
   }
 
   /**
@@ -315,7 +334,7 @@ class Project {
    */
   deleteSequence(sequenceId) {
     const { data } = this;
-    const { sequences } = data;
+    const { sequences, sequenceIds } = data;
 
     // if the sequence doesn't exist, silently move on.
     if (!(sequenceId in sequences)) {
@@ -335,8 +354,7 @@ class Project {
     const sequence = sequences[sequenceId];
     sequence.delete();
     delete sequences[sequenceId];
-
-    // Refresh the stored sequencesList, only storing the sequenceId.
+    data.sequenceIds = sequenceIds.filter(s => s !== sequenceId);
     this.updateSequencesList();
   }
 
