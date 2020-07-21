@@ -70,7 +70,6 @@ const silenceArgs = [
   '-filter_complex', '[0:a] concat=n=2:v=0:a=1',
 ];
 
-
 let silencePromise = null;
 
 /**

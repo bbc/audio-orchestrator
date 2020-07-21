@@ -23,7 +23,6 @@ import { addSearchPath } from './which';
 const fileStore = new FileStore();
 const manager = new TaskManager(fileStore);
 
-
 export default {
   // General actions
   checkRequirements: args => manager.createTask(checkRequirements, args),

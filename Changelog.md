@@ -3,6 +3,19 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.17.0`
+_2020-07-20_
+
+ * Adjust some colours in the production tool and experience template to improve contrast.
+ * Add option to specify alt-text for the cover image.
+ * Add new search paths for locating ffmpeg.
+ * Move log file to Application Support.
+ * Disable dynamic range compression on auxiliary devices by default.
+ * Use relative file paths for audio and image files where appropriate.
+ * Add a new behaviour type, `mute if`, and enable conditional behaviours to referr to other objects allocated to the current or any device.
+ * Allow sequences to be re-ordered on the Sequences page (no effect on exported experience).
+ * Add an option to enable manual latency calibration in exported experiences (controlled by a new checkbox the Appearance page).
+
 # `0.16.0`
 _2020-06-18_
  * Remove _template code_ and _audio only_ export options -- only the built prototype can be exported now, as the template source code is no longer included with the application. Template customisation is still possible by copying the exported _index.html_ and _audio/_ folder into a copy of the template repository obtained separately.

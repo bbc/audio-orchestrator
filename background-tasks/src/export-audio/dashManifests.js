@@ -57,7 +57,6 @@ export const dashManifest = (
   ].join('\n');
 };
 
-
 export const safariDashManifest = (outputName, baseUrl, duration, sampleRate) => dashManifest(
   outputName,
   baseUrl,

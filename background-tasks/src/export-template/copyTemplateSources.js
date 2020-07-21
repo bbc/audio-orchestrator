@@ -15,6 +15,7 @@ const copyTemplateSources = (args) => {
   return fse.readdir(templateSourceDir)
     .then((files) => {
       // copy all files that are not audio files or node_modules
+      // TODO: keep the calibration audio files (audio/calibration) for template code export.
       const filesToCopy = files.filter(file => !([
         'node_modules',
         'audio',

@@ -1,6 +1,5 @@
+import { mkdtemp } from 'fs-extra';
 import encodeItems from '../../src/files/encodeItems';
-import { mkdir, mkdtemp, mkdtempSync } from 'fs-extra';
-import mapSeries from 'async/mapSeries';
 
 // mockExecFile as a jest mock function to easily change resolved values for
 const mockExecFile = jest.fn(() => Promise.resolve({ stdout: '', stderr: '' }));

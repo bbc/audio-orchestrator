@@ -76,6 +76,10 @@ const templateConfiguration = (sequences, controls, settings, imageUrls) => {
     configuration.TEXT_PLAYER_IMAGE_ALT = settings.playerImageAltText;
   }
 
+  if (settings.enableCalibration) {
+    configuration.CALIBRATION_SEQUENCE_URL = `${settings.baseUrl}/calibration/sequence.json`;
+  }
+
   return JSON.stringify(configuration, null, 2);
 };
 

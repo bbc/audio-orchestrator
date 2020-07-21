@@ -20,6 +20,7 @@ const DEFAULT_SETTINGS = {
   accentColour: '#006def',
   enableDebugUI: true,
   enableTutorial: false,
+  enableCalibration: false,
   cloudSyncHostname: 'cloudsync.virt.ch.bbc.co.uk',
 };
 

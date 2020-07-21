@@ -93,7 +93,6 @@ backgroundTasksRouter.registerPost('/analyse/encode', (req, res, next) => {
     .catch(err => next(err));
 });
 
-
 // Export routes ------------------------------------------
 /**
  * Checks that all referenced encoded files exist, copies them into one temporary folder, and

@@ -75,6 +75,7 @@ class Appearance extends React.Component {
       introduction,
       enableDebugUI,
       // enableTutorial,
+      enableCalibration,
       accentColour,
       compressorRatio,
       compressorThreshold,
@@ -180,6 +181,13 @@ class Appearance extends React.Component {
             onChange={this.handleChange}
           />
 
+          <Form.Checkbox
+            label="Enable calibration"
+            name="enableCalibration"
+            defaultChecked={enableCalibration}
+            onChange={this.handleChange}
+          />
+
           <Header content="Audio compression" subheader="Audio compression is applied to the output of aux devices (set the threshold to 0 to disable compression)." />
           <Form.Group widths="equal">
             <Form.Input
@@ -218,6 +226,7 @@ Appearance.propTypes = {
   introduction: PropTypes.string,
   enableDebugUI: PropTypes.bool,
   // enableTutorial: PropTypes.bool,
+  enableCalibration: PropTypes.bool,
   compressorRatio: PropTypes.number,
   compressorThreshold: PropTypes.number,
   accentColour: PropTypes.string,
@@ -235,6 +244,7 @@ Appearance.defaultProps = {
   introduction: undefined,
   enableDebugUI: undefined,
   // enableTutorial: undefined,
+  enableCalibration: undefined,
   compressorRatio: undefined,
   compressorThreshold: undefined,
   accentColour: undefined,
@@ -256,6 +266,7 @@ const mapStateToProps = (state, { projectId }) => {
     accentColour,
     enableDebugUI,
     // enableTutorial,
+    enableCalibration,
     compressorRatio,
     compressorThreshold,
     playerImageId,
@@ -271,6 +282,7 @@ const mapStateToProps = (state, { projectId }) => {
     accentColour,
     enableDebugUI,
     // enableTutorial,
+    enableCalibration,
     compressorRatio,
     compressorThreshold,
     playerImageId,

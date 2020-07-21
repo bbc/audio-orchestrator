@@ -2,7 +2,6 @@ import Store from 'electron-store';
 
 const settingsStore = new Store();
 
-
 export const getRecentProjects = () => {
   const recentProjects = settingsStore.get('recentProjects', []);
 
