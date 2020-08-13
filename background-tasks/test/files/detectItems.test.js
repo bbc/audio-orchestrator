@@ -39,10 +39,12 @@ describe('detectItems', () => {
   });
 
   it('parses silence data into items', () => {
+    // Include both the case with, and without decimals points, as ffmpeg sometimes reports integer
+    // times without.
     mockExecFile.mockResolvedValueOnce({
       stderr: [
         'silence_end: 4.0 | silence_duration: 2.0',
-        'silence_end: 8.0 | silence_duration: 2.0',
+        'silence_end: 8 | silence_duration: 2',
       ].join('\n'),
     });
 

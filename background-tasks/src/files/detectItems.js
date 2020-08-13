@@ -34,7 +34,7 @@ const detectItems = (filePath, fileDuration) => {
     '-', // output to stdout
   ];
 
-  const silenceExpression = /silence_end: (?<end>\d+\.\d+) \| silence_duration: (?<duration>\d+\.\d+)/;
+  const silenceExpression = /silence_end: (?<end>\d+\.?\d*) \| silence_duration: (?<duration>\d+\.?\d*)/;
 
   // probe the file (again)
   // then get the duration from the probe results
