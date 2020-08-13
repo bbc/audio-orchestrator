@@ -22,7 +22,7 @@ const helpLinks = {
         description: 'Handling audio objects',
       },
       {
-        link: 'https://bbc.github.io/bbcat-orchestration-docs/audio/#fixed-behaviours',
+        link: 'https://bbc.github.io/bbcat-orchestration-docs/fixed-behaviours/',
         description: 'Fixed behaviours',
       },
       {
