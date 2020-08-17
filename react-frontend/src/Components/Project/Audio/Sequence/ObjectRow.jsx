@@ -34,6 +34,8 @@ class ObjectRow extends React.PureComponent {
 
     const annotatedBehaviours = Behaviours.getAnnotatedObjectBehaviours(objectBehaviours);
 
+    const isStereo = file && file.probe && file.probe.numChannels === 2;
+
     return (
       <Table.Row negative={!file || !!file.error} verticalAlign="top" active={highlighted}>
         <Table.Cell onClick={onToggleHighlight} singleLine collapsing>
@@ -66,7 +68,7 @@ class ObjectRow extends React.PureComponent {
 
         <Table.Cell singleLine collapsing>
           <PanningControl
-            channelMapping={channelMapping}
+            channelMapping={isStereo ? 'stereo' : channelMapping}
             panning={panning}
             onChange={onChangePanning}
             objectNumber={objectNumber}
@@ -126,6 +128,9 @@ ObjectRow.propTypes = {
   file: PropTypes.shape({
     name: PropTypes.string,
     error: PropTypes.string,
+    probe: PropTypes.shape({
+      numChannels: PropTypes.number,
+    }),
   }),
   objectBehaviours: PropTypes.arrayOf(PropTypes.shape({
     behaviourType: PropTypes.string.isRequired,

@@ -11,25 +11,31 @@ import {
 class PanningControl extends React.PureComponent {
   render() {
     const {
+      channelMapping,
       panning,
       onChange,
       objectNumber,
     } = this.props;
 
-    const generateLabel = (panValue) => {
-      if (panValue === 0) {
-        return 'Centre';
-      }
-      return `${Math.abs(panValue * 100).toFixed(0)}% ${panValue < 0 ? 'L' : 'R'}`;
-    };
+    let label;
+    let disabled = false;
+    if (channelMapping === 'stereo') {
+      label = 'Stereo';
+      disabled = true;
+    } else if (panning === 0) {
+      label = 'Centre';
+    } else {
+      label = `${Math.abs(panning * 100).toFixed(0)}% ${panning < 0 ? 'L' : 'R'}`;
+    }
 
     return (
       <Popup
         trigger={(
           <Button
+            disabled={disabled}
             compact
             size="tiny"
-            content={generateLabel(panning)}
+            content={label}
           />
         )}
         hoverable
@@ -83,6 +89,7 @@ class PanningControl extends React.PureComponent {
 }
 
 PanningControl.propTypes = {
+  channelMapping: PropTypes.string.isRequired,
   panning: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
   objectNumber: PropTypes.number.isRequired,

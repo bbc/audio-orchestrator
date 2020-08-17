@@ -18,14 +18,17 @@ function formatPT(seconds) {
 /**
  * Generates a DASH manifest
  *
- * @param outputName name (folder name) of the rendering item.
- * @param baseUrl baseUrl to where the media is hosted on the server, no trailing slash
- * @param duration duration of the encoded media to use in the manifest
+ * @param {string} outputName name (folder name) of the rendering item.
+ * @param {number} baseUrl baseUrl to where the media is hosted on the server, no trailing slash
+ * @param {number} duration duration of the encoded media to use in the manifest
+ * @param {number} sampleRate output sample rate
+ * @param {number} numChannels number of channels in the media
+ * @param {string} segmentTemplateAttributes additional XML attributes to include in SegmentTemplate
  *
  * @returns {string} the content of the compiled manifest
  */
 export const dashManifest = (
-  outputName, baseUrl, duration, sampleRate, segmentTemplateAttributes,
+  outputName, baseUrl, duration, sampleRate, numChannels, segmentTemplateAttributes,
 ) => {
   const minBufferTime = formatPT(2 * segmentDuration(sampleRate));
   const durationPT = formatPT(duration);
@@ -49,7 +52,7 @@ export const dashManifest = (
     `  <Period start="${periodStartPT}" duration="${durationPT}">`,
     `    <AdaptationSet id="${adaptationSetId}" contentType="audio" segmentAlignment="true" mimeType="audio/mp4">`,
     `      <Representation id="0" mimeType="audio/mp4" codecs="mp4a.40.2" bandwidth="${representationBandwidth}" audioSamplingRate="${representationAudioSamplingRate}" />`,
-    '      <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="1" />',
+    `      <AudioChannelConfiguration schemeIdUri="urn:mpeg:dash:23003:3:audio_channel_configuration:2011" value="${numChannels}" />`,
     `      <SegmentTemplate timescale="${timescale}" duration="${dashSegmentDuration}" ${segmentTemplateAttributes} />`,
     '    </AdaptationSet>',
     '  </Period>',
@@ -57,18 +60,24 @@ export const dashManifest = (
   ].join('\n');
 };
 
-export const safariDashManifest = (outputName, baseUrl, duration, sampleRate) => dashManifest(
+export const safariDashManifest = (
+  outputName, baseUrl, duration, sampleRate, numChannels,
+) => dashManifest(
   outputName,
   baseUrl,
   duration,
   sampleRate,
+  numChannels,
   `media="${SAFARI_SEGMENT_MEDIA}" startNumber="0"`,
 );
 
-export const headerlessDashManifest = (outputName, baseUrl, duration, sampleRate) => dashManifest(
+export const headerlessDashManifest = (
+  outputName, baseUrl, duration, sampleRate, numChannels,
+) => dashManifest(
   outputName,
   baseUrl,
   duration,
   sampleRate,
+  numChannels,
   'initialization="init-stream$RepresentationID$.m4s" media="chunk-stream$RepresentationID$-$Number%05d$.m4s" startNumber="1"',
 );

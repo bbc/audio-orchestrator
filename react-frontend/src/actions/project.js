@@ -1036,18 +1036,28 @@ export const setObjectPanning = (
 ) => (dispatch) => {
   const project = projects[projectId];
   const sequence = project.sequences[sequenceId];
+  const { objects, files } = sequence;
+  const object = objects[objectNumber];
+  const file = files[object.fileId];
 
-  // Get channel mapping from panning
+  // Get channel mapping from panning, unless it is a stereo file
+  let newPanning = panning;
   let newChannelMapping;
-  if (panning < 0) { newChannelMapping = 'left'; } else
-  if (panning > 0) { newChannelMapping = 'right'; } else
-  if (panning === 0) { newChannelMapping = 'mono'; }
+  if (object.channelMapping === 'stereo' || (file && file.probe && file.probe.numChannels === 2)) {
+    newChannelMapping = 'stereo';
+    newPanning = 0;
+  } else if (panning < 0) {
+    newChannelMapping = 'left';
+  } else if (panning > 0) {
+    newChannelMapping = 'right';
+  } else {
+    newChannelMapping = 'mono';
+  }
 
-  const object = sequence.objects[objectNumber];
   const newObject = {
     ...object,
     channelMapping: newChannelMapping,
-    panning, // : channelMappingToPanning[channelMapping],
+    panning: newPanning,
   };
 
   sequence.objects = {

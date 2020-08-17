@@ -12,7 +12,7 @@ const LOG_FFMPEG = false;
 const MIN_SILENCE_DURATION = 1;
 const MAX_BUFFER_DURATION = 10;
 const EXTEND_ITEM_DURATION = 0.1;
-const SILENCE_NOISE_FLOOR = '-80dB';
+const SILENCE_NOISE_FLOOR = '-70dB';
 
 const TIME_DECIMALS = 2;
 const roundTime = t => parseFloat(parseFloat(t).toFixed(TIME_DECIMALS));

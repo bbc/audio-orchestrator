@@ -824,17 +824,18 @@
     weak-map "^1.0.5"
     winston "^2.4.0"
 
-"@bbc/bbcat-orchestration-template@^0.14.1":
-  version "0.14.1"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.14.1.tgz#2b9a536b2296085da9e5b90466446fe717ffe106"
-  integrity sha1-K5pTayKWCF2p5bkEZkRv5xf/4QY=
+"@bbc/bbcat-orchestration-template@^0.14.4":
+  version "0.14.4"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.14.4.tgz#716c7dfab2721008647dc5340009fc95c14db44d"
+  integrity sha1-cWx9+rJyEAhkfcU0AAn8lcFNtE0=
   dependencies:
-    "@bbc/bbcat-orchestration" "^0.8.3"
+    "@bbc/bbcat-orchestration" "^0.9.1"
     "@hot-loader/react-dom" "^16.11.0"
     bowser "^2.9.0"
     classnames "^2.2.6"
     clipboard-copy "^3.1.0"
     core-js "^3.6.4"
+    nosleep.js "^0.11.0"
     pepjs "^0.5.2"
     prop-types "^15.7.2"
     qrcodejs "^1.0.0"
@@ -848,10 +849,10 @@
     uuid "^3.3.2"
     whatwg-fetch "^3.0.0"
 
-"@bbc/bbcat-orchestration@^0.8.3":
-  version "0.8.3"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration/-/@bbc/bbcat-orchestration-0.8.3.tgz#5d00486df2b1521476869738a3b6af33bdd94d5d"
-  integrity sha1-XQBIbfKxUhR2hpc4o7avM73ZTV0=
+"@bbc/bbcat-orchestration@^0.9.1":
+  version "0.9.1"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration/-/@bbc/bbcat-orchestration-0.9.1.tgz#fc100d34a56e6d7f3d9821543940ae3c7eac4103"
+  integrity sha1-/BANNKVubX89mCFUOUCuPH6sQQM=
   dependencies:
     "@bbc/bbcat-orchestration-bbcat" "^0.2.0"
     "@bbc/bbcat-orchestration-cloud-sync-client" "^2.2.0"
@@ -4044,6 +4045,11 @@ normalize-path@^3.0.0:
   version "3.0.0"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/normalize-path/-/normalize-path-3.0.0.tgz#0dcd69ff23a1c9b11fd0978316644a0388216a65"
   integrity sha1-Dc1p/yOhybEf0JeDFmRKA4ghamU=
+
+nosleep.js@^0.11.0:
+  version "0.11.0"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/nosleep.js/-/nosleep.js-0.11.0.tgz#4e03af6751d7a969ceade0c45a1b481887b2b0c2"
+  integrity sha1-TgOvZ1HXqWnOreDEWhtIGIeysMI=
 
 npm-run-path@^2.0.0:
   version "2.0.2"

@@ -36,7 +36,6 @@ beforeEach(() => {
   jest.restoreAllMocks();
 });
 
-
 describe('encodeItems', () => {
   it('runs ffmpeg', () => {
     const mockFilePath = '/dev/null';
@@ -47,25 +46,24 @@ describe('encodeItems', () => {
       { start: 29, duration: 4, type: 'dash' },
     ];
 
-    return encodeItems(mockFilePath, mockItems)
+    return encodeItems(mockFilePath, mockItems, 1)
       .then(({ encodedItems, encodedItemsBasePath }) => {
         expect(mockExecFile).toHaveBeenCalledWith(
           expect.any(String),
           expect.arrayContaining([mockFilePath]),
         );
-        // +1 because silence also calls ffmpeg once
-        expect(mockExecFile).toHaveBeenCalledTimes(mockItems.length + 1);
+        expect(mockExecFile).toHaveBeenCalledTimes(mockItems.length);
         expect(encodedItems).toEqual(expect.any(Array));
         expect(encodedItemsBasePath).toEqual(expect.any(String));
       });
   });
 
-  it('creates a temporary directory if none is given', () => encodeItems('', [], 48000)
+  it('creates a temporary directory if none is given', () => encodeItems('', [], 48000, 1)
     .then(() => {
       expect(mkdtemp).toHaveBeenCalled();
     }));
 
-  it('does not create a temporary directory if one was given', () => encodeItems('', [], 48000, '/dev/null')
+  it('does not create a temporary directory if one was given', () => encodeItems('', [], 48000, 1, '/dev/null')
     .then(() => {
       expect(mkdtemp).not.toHaveBeenCalled();
     }));

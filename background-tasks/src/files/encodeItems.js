@@ -17,8 +17,6 @@ import {
   BUFFER_EXTENSION,
   SAFARI_SEGMENT_NAMES,
   segmentDuration,
-  SILENCE_SAMPLE_RATE,
-  SILENCE_DURATION,
 } from '../encodingConfig';
 
 const execFile = promisify(execFileCB);
@@ -65,38 +63,6 @@ const bufferArgs = [
   '-b:a', ENCODE_BITRATE,
 ];
 
-const silenceArgs = [
-  '-i', SILENCE_PATH,
-  '-filter_complex', '[0:a] concat=n=2:v=0:a=1',
-];
-
-let silencePromise = null;
-
-/**
- * ensures the silence file is available at SILENCE_PATH, regenerates it if it is not.
- *
- * @returns {Promise}
- */
-const ensureSilence = () => {
-  if (silencePromise !== null) {
-    return silencePromise;
-  }
-
-  silencePromise = which('ffmpeg')
-    .then(ffmpegPath => execFile(ffmpegPath, [
-      '-y',
-      '-f', 'lavfi',
-      '-i', `anullsrc=r=${SILENCE_SAMPLE_RATE}:cl=mono`,
-      '-t', segmentDuration(SILENCE_SAMPLE_RATE),
-      SILENCE_PATH,
-    ]))
-    .then(() => {
-      logger.info(`generated silence file at ${SILENCE_PATH}`);
-    });
-
-  return silencePromise;
-};
-
 /**
  * Encode a single item, returning a promise that resolves to the output file location(s) when
  * ffmpeg exits.
@@ -115,6 +81,7 @@ const encodeItem = ({
   duration,
   type,
   sampleRate,
+  numChannels,
 }, callback) => {
   // create a result item, to be populated with relativePath (and relativePathSafari) fields below.
   const resultItem = {
@@ -143,6 +110,7 @@ const encodeItem = ({
       // The input (and timing) arguments are the same regardless of item type.
       const inputArgs = [
         '-ss', start, // seek before -i, to speed up the process, and to make it count for multiple outputs.
+        '-t', duration,
         '-i', filePath,
       ];
 
@@ -154,7 +122,6 @@ const encodeItem = ({
           return [
             ...inputArgs,
             ...bufferArgs,
-            '-t', duration,
             path.join(encodedItemsBasePath, resultItem.relativePath),
           ];
         case 'dash':
@@ -163,16 +130,21 @@ const encodeItem = ({
           // schemes for manifests and segments, but generated from a single ffmpeg command.
           resultItem.relativePath = path.join(outputName, 'manifest.mpd');
           resultItem.relativePathSafari = path.join(outputName, 'manifest-safari.mpd');
-          return ensureSilence().then(() => [
+          return [
             ...inputArgs,
-            ...silenceArgs,
+            ...[ // generate and append a segment's length of silence
+              '-t', segmentDuration(sampleRate),
+              '-f', 'lavfi',
+              '-i', `anullsrc=channel_layout=${numChannels === 1 ? 'mono' : 'stereo'}:sample_rate=${sampleRate}`,
+              '-filter_complex', '[0:a][1:a]concat=n=2:v=0:a=1,asplit=2[outa][outb]',
+            ],
+            '-map', '[outa]',
             ...dashArgs(sampleRate),
-            '-t', duration + SILENCE_DURATION,
             path.join(encodedItemsBasePath, resultItem.relativePath),
+            '-map', '[outb]',
             ...sarafiDashArgs(sampleRate),
-            '-t', duration + SILENCE_DURATION,
             path.join(encodedItemsBasePath, outputName, SAFARI_SEGMENT_NAMES),
-          ]);
+          ];
         default:
           throw new Error(`Unknown item type ${type}`);
       }
@@ -212,6 +184,7 @@ const encodeItems = (
   filePath,
   items,
   sampleRate,
+  numChannels,
   presetBasePath,
 ) => {
   let encodedItemsBasePath = presetBasePath;
@@ -231,6 +204,7 @@ const encodeItems = (
         filePath,
         encodedItemsBasePath,
         sampleRate,
+        numChannels,
         index,
       })),
       encodeItem,

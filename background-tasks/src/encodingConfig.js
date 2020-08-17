@@ -18,6 +18,3 @@ export const SAFARI_SEGMENT_NAMES = `safari_%05d${BUFFER_EXTENSION}`;
 
 // Equivalent pattern for use in DASH manifests
 export const SAFARI_SEGMENT_MEDIA = `safari_$Number%05d$${BUFFER_EXTENSION}`; // different placeholder format for use in manifest
-
-export const SILENCE_SAMPLE_RATE = 48000;
-export const SILENCE_DURATION = segmentDuration(SILENCE_SAMPLE_RATE);

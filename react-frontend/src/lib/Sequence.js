@@ -240,6 +240,7 @@ class Sequence {
       objectsList,
       objects,
       settings,
+      files,
     } = this;
 
     return {
@@ -248,9 +249,17 @@ class Sequence {
         const object = objects[objectNumber];
         const exportBehaviours = getExportObjectBehaviours(object.objectBehaviours, controls);
 
+        // Ignore channelMapping and set to 'stereo' if the object's file has two channels
+        let { channelMapping } = object;
+        const file = files[object.fileId];
+        if (file && file.probe && file.probe.numChannels === 2) {
+          channelMapping = 'stereo';
+        }
+
         return {
           ...object,
           objectBehaviours: exportBehaviours,
+          channelMapping,
         };
       }),
       ...settings.getExportData(),

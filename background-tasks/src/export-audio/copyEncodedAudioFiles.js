@@ -4,7 +4,7 @@ import mapSeries from 'async/mapSeries';
 import { getLogger } from 'bbcat-orchestration-builder-logging';
 import generateSequenceMetadata from './generateSequenceMetadata';
 import { headerlessDashManifest, safariDashManifest } from './dashManifests';
-import { SILENCE_DURATION } from '../encodingConfig';
+import { segmentDuration } from '../encodingConfig';
 
 const logger = getLogger('export-audio');
 
@@ -40,7 +40,7 @@ const copyEncodedAudioFiles = (args) => {
         // for each object, copy the audio files and generate DASH manifests where needed.
         objects.forEach(({ fileId }) => {
           const { probe } = fileStore.getFile(fileId);
-          const { sampleRate } = probe;
+          const { sampleRate, numChannels } = probe;
           const { encodedItems, encodedItemsBasePath } = files[fileId];
 
           const sequenceDestPath = sequenceOutputDir(audioOutputDir, sequenceId);
@@ -65,17 +65,21 @@ const copyEncodedAudioFiles = (args) => {
             if (type === 'dash') {
               const { baseUrl } = settings;
               const sequenceUrl = `${baseUrl}/${sequenceId}`;
-              const paddedDuration = duration + SILENCE_DURATION;
+              const paddedDuration = duration + segmentDuration(sampleRate);
 
               tasks.push(cb => fse.writeFile(
                 path.join(sequenceDestPath, relativePath),
-                headerlessDashManifest(relativeSourcePath, sequenceUrl, paddedDuration, sampleRate),
+                headerlessDashManifest(
+                  relativeSourcePath, sequenceUrl, paddedDuration, sampleRate, numChannels,
+                ),
                 cb,
               ));
 
               tasks.push(cb => fse.writeFile(
                 path.join(sequenceDestPath, relativePathSafari),
-                safariDashManifest(relativeSourcePath, sequenceUrl, paddedDuration, sampleRate),
+                safariDashManifest(
+                  relativeSourcePath, sequenceUrl, paddedDuration, sampleRate, numChannels,
+                ),
                 cb,
               ));
             }
