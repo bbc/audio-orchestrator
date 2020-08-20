@@ -3,6 +3,16 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.18.0`
+_2020-08-18_
+
+ * Encode and play objects imported as stereo .wav files, to avoid a problem where left and right channels could be allocated to different devices.
+ * Display the list of connected devices on the instruction screen for all devices.
+ * Include nosleep.js in the prototype application to keep mobile devices awake while playing.
+ * Increase threshold for silence detection to -70dB, to avoid dithering noise (enabled by default in Audacity) not being recognised as silence.
+ * Fix handling of silent audio segments ending at an integer-second position, improving playback performance problems in some projects.
+ * Correct link to fixed behaviours documentation.
+
 # `0.17.0`
 _2020-07-20_
 

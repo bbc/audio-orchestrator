@@ -1,28 +1,69 @@
-# bbcat-orchestration-builder (_Orchestrator_)
+# Audio Orchestrator
 
-Prototype an orchestrated audio experience that works with mobile devices from per-object audio tracks exported from a DAW all in one place. It outputs a live preview, encoded audio files and metadata, a template code bundle, or a ready-to-deploy application build based on our [device orchestration template](https://github.com/bbc/bbcat-orchestration-template).
+_Audio Orchestrator_ is a desktop application for prototyping orchestrated audio experiences.
 
-End-user documentation is currently being compiled in the [bbcat-orchestration-docs](https://github.com/bbc/bbcat-orchestration-docs/) repository.
+Create a project, import audio files, and author metadata for audio objects, sequence destinations, and user controls to define the experience; then start a preview with real devices on your local network or export a web application bundle to host it on a server.
 
-The tool requires `ffmpeg` and `ffprobe` to be available in the system path. Both are most easily installed with [homebrew](https://brew.sh) by running `brew install ffmpeg`. If installing them manually, ensure that links to the binaries are created in `/usr/bin`, or `/usr/local/bin`, or `~/bbcat-orchestration-ffmpeg/bin`.
+The software is currently distributed to BBC staff and external users (subject to a licence agreement) via [BBC Connected Studio MakerBox](https://www.bbc.co.uk/makerbox).
 
-# Architecture
+ * Preview an [example project](https://orchestrator-demos.virt.ch.bbc.co.uk/getting-started-with-orchestration) made with it.
+ * [Read the user guide](https://bbc.github.io/bbcat-orchestration-docs).
+ * [Request access to use _Audio Orchestrator_](https://www.bbc.co.uk/makerbox/tools/audio-orchestrator).
+ * [Join the community](https://makerbox-discourse.tools.bbc.co.uk/c/immersive/audio-orchestrator).
+ * See also these related repositories:
+    * the [template](https://github.com/bbc/bbcat-orchestration-template/) application used for the preview and export,
+    * the [library](https://github.com/bbc/bbcat-orchestration/) for handling audio rendering and communication between devices in the template, and
+    * the [docs](https://github.com/bbc/bbcat-orchestration-docs/).
 
-This project is a desktop application for authoring, previewing, and exporting orchestrated audio experiences. Users can create a project, import audio files and images, and author metadata to define the experience. The result can be previewed with real devices on their local network through an integrated web server included with the tool.
+_Audio Orchestrator_ requires `ffmpeg` and `ffprobe` to be available in the system path. Both are most easily installed with [homebrew](https://brew.sh) by running `brew install ffmpeg`. If installing them manually ensure the binaries are placed in `~/audio-orchestrator-ffmpeg/bin`, and see the [installation instructions](https://bbc.github.io/bbcat-orchestration-docs/installation/) for more details.
 
-Orchestrator is implemented in the electron framework, using React for the front-end, and providing a background task service that access the file systems and spawns media analysis and encoding child processes. Communication between electron’s two processes (main and renderer) is done securely via IPC channels.
+# Architecture overview
+
+_Audio Orchestrator_ is implemented in the [Electron](https://www.electronjs.org/) framework, using [React](https://reactjs.org/) for the front-end, and providing a background task service that accesses the file systems and spawns media analysis and encoding child processes. Communication between Electron's two processes (main and renderer) is done via IPC channels.
 
 ![Architecture overview](docs/OrchestratorArchitecture_KH_2020-05-27.png)
 
+_NB the update service shown in the diagram is not yet implemented._
+
 # Development
 
-We use `yarn` as our package manager ([configure it for artifactory access](https://confluence.dev.bbc.co.uk/display/audioteam/bbcat-orchestration+libraries+and+tools) to get our private packages). To install the dependencies, run the following command at the top level:
+## Getting started
+
+You'll need:
+
+  * [Node.js](https://nodejs.org/en/) (version 12+ recommended)
+  * [yarn](https://classic.yarnpkg.com/lang/en/) (notes may be for 1.x)
+
+Configure yarn to use your developer certificate and install packages from the R&D Artifactory service instead of npm ([more details on confluence](https://confluence.dev.bbc.co.uk/display/audioteam/bbcat-orchestration+libraries+and+tools)):
+
+```
+export CERTIFICATE_FILENAME=/path/to/your/cert
+yarn config set cert -- "$(openssl pkcs12 -in $CERTIFICATE_FILENAME -nodes -clcerts -nokeys | LC_ALL=C sed '/^Bag Attributes:/d; /^subject=.*CN=BBC FMT Greenhouse - Root/,$d')"
+yarn config set key -- "$(openssl pkcs12 -in $CERTIFICATE_FILENAME -nodes -nocerts)"
+yarn config set registry https://artifactory.virt.ch.bbc.co.uk/artifactory/api/npm/npm 
+```
+
+Install the dependencies:
 
 ```
 yarn install # runs yarn install in each package directory
 ```
 
-This installs dependencies in all the packages and creates symlinks to local dependencies where required. Local dependencies also contained in this repository are referenced using the `link:../foo-bar` syntax in `package.json` files, instead of specifying a version number.
+Run a development version of the app:
+
+```
+yarn dev
+```
+
+Build the `.dmg` installer:
+
+```
+yarn dist
+```
+
+Building the installer may require a valid Apple development certificate in your keychain. When it is built, the installer can be found in `electron-app/dist/mac`.
+
+## Repository structure
 
 The packages are designed to be used together to build the Electron app. The current structure looks like this:
 
@@ -31,20 +72,20 @@ The packages are designed to be used together to build the Electron app. The cur
   * `electron-app/`: The `electron-app` bundling and configuring all the other components to create a standalone desktop application.
   * `logging/`: A common logging module for server-side packages based on `winston`.
 
-To start a development version of the app, run `yarn dev`. This rebuilds the `background-tasks`, starts a development server with hot-reloading for the `react-frontend`, and runs the `electron-app`.
+Running `yarn install` at the top level installs dependencies for all of these packages. References between them are expressed using the link syntax (e.g. `link:../logging`) in `package.json` files. We do not use any special monorepo management scripts such as _lerna_ or _yarn workspaces_.
 
-To build the app for the current platform, run `yarn build`. This creates a self-contained electron app. `yarn dist` creates a `.dmg` macOS installer image for distribution - stored in `electron-app/dist/mac`.
+The development version (`yarn dev`) builds the `background-tasks`, `electron-app`, and `logging` packages; and runs a development server for the `react-frontend`. Changes to the frontend source code are automatically reflected after a few seconds, but you may need to reload the page (CMD-R in the electron app). Changes to the other packages require the `yarn dev` command to be run again (CTRL-C in the terminal session to stop it). _NB the frontend development server runs on port 8080; make sure this is not used by something else._
 
-The versions of all packages in this repo are kept in sync by running the `yarn bump` script at the top level to apply the same version change across all packages.
+## Releases and versions
 
-We currently track development tasks and feature requests as issues in this repository (best viewed in the [Github Project](https://github.com/bbc/bbcat-orchestration-builder/projects/3)).
+The [Changelog](./Changelog.md) and [GitHub Releases]() are updated manually, usually on minor version increments (e.g. `0.17.0` to `0.18.0`). We create a Github release linked to a git tag for that version.
 
-# Releases
+To create a release build and the `.dmg` installer run the `yarn dist` task. As the tool is currently distributed through MakerBox, upload the dmg to Dropbox and notify the team in the `#makerbox-orchestrator` channel.
 
-We do not currently publish releases.
+The versions of all packages in this repo should be kept in sync by running the `yarn bump` script at the top level to apply the same version change across all packages. Generally, we increment the patch version for every PR, and increment the minor version for new releases (NB this is not strictly compatible with semantic versioning).
 
-The Changelog and GitHub Releases are updated manually on a new major/minor version (we do not currently follow strict semantic versioning). Creating a Github release also generates a git tag for that version.
+## Team
 
-To create a release build and `.dmg` installer run the `yarn dist:signed` task (ensuring you have an Apple development certificate in your keychain - see xcode/preferences/accounts/apple id/manage certificates). We do not yet notarise our builds.
+_Audio Orchestrator_ is developed in the BBC R&D Audio Team ([confluence](https://confluence.dev.bbc.co.uk/display/audioteam/)), as part of the _Audio Device Orchestration_ workstream contributing to the _Novel Audience Experiences_ programme.
 
-For reproducible builds, release builds should be created in an isolated environment such as a CI system, and use [environment variables](https://www.electron.build/code-signing) to set the signing certificate. This process is not yet set up.
+Email [Kristian.Hentschel@bbc.co.uk](mailto:kristian.hentschel@bbc.co.uk) or [Jon.Francombe@bbc.co.uk](mailto:jon.francombe@bbc.co.uk) or find us on Slack (`#audio-orchestration` in the BBC R&D space).
