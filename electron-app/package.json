@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-electron-app",
-  "version": "0.18.1",
+  "version": "0.18.2",
   "description": "Electron desktop application for generating orchestrated audio applications.",
   "main": "bin/main/main.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
@@ -18,10 +18,10 @@
     "uuid": "^7.0.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.2.3",
-    "@babel/core": "^7.4.0",
-    "@babel/preset-env": "^7.4.2",
-    "concurrently": "^4.1.0",
+    "@babel/cli": "^7.12.1",
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "concurrently": "^5.3.0",
     "electron": "^9.0.2",
     "electron-builder": "^22.4.0",
     "electron-devtools-installer": "^3.0.0",
@@ -29,7 +29,7 @@
     "eslint-config-airbnb-base": "^14.0.0",
     "eslint-plugin-import": "^2.20.2",
     "license-checker": "^25.0.1",
-    "license-to-fail": "^3.0.0"
+    "license-to-fail": "^4.0.0"
   },
   "scripts": {
     "build": "yarn build-frontend && yarn build-background-tasks && yarn build-main && yarn credits",
@@ -86,6 +86,10 @@
       {
         "name": "cycle",
         "reason": "Souce code comment states that code is in public-domain"
+      },
+      {
+        "name": "weak-map",
+        "reason": "package.json and Readme state it is released under Apache 2.0"
       }
     ]
   }

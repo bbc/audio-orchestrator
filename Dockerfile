@@ -1,4 +1,4 @@
-FROM node:11@sha256:a23014909228ec00666b0ddf5f28638a9fac8f844a972bed831838f6d1c73641
+FROM node:12@sha256:beb72fb7dab30898dad23419a58e1f995a6364b4c8b000100715aa190c323392
 
 ENV http_proxy http://www-cache.rd.bbc.co.uk:8080
 ENV https_proxy http://www-cache.rd.bbc.co.uk:8080
