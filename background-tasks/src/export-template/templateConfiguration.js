@@ -62,6 +62,7 @@ const templateConfiguration = (sequences, controls, settings, imageUrls) => {
 
   configuration.DEBUG_UI = settings.enableDebugUI;
   configuration.ENABLE_TUTORIAL = settings.enableTutorial;
+  configuration.ENABLE_PLAY_PAUSE_ON_AUX = settings.enablePlayPauseOnAux;
 
   if (!Number.isNaN(settings.compressorRatio)) {
     configuration.MDO_COMPRESSOR_RATIO = settings.compressorRatio;

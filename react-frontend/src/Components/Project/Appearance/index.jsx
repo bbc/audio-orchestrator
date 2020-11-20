@@ -76,6 +76,7 @@ class Appearance extends React.Component {
       enableDebugUI,
       // enableTutorial,
       enableCalibration,
+      enablePlayPauseOnAux,
       accentColour,
       compressorRatio,
       compressorThreshold,
@@ -188,6 +189,13 @@ class Appearance extends React.Component {
             onChange={this.handleChange}
           />
 
+          <Form.Checkbox
+            label="Show Play and Pause buttons on auxiliary devices"
+            name="enablePlayPauseOnAux"
+            defaultChecked={enablePlayPauseOnAux}
+            onChange={this.handleChange}
+          />
+
           <Header content="Audio compression" subheader="Audio compression is applied to the output of aux devices (set the threshold to 0 to disable compression)." />
           <Form.Group widths="equal">
             <Form.Input
@@ -227,6 +235,7 @@ Appearance.propTypes = {
   enableDebugUI: PropTypes.bool,
   // enableTutorial: PropTypes.bool,
   enableCalibration: PropTypes.bool,
+  enablePlayPauseOnAux: PropTypes.bool,
   compressorRatio: PropTypes.number,
   compressorThreshold: PropTypes.number,
   accentColour: PropTypes.string,
@@ -245,6 +254,7 @@ Appearance.defaultProps = {
   enableDebugUI: undefined,
   // enableTutorial: undefined,
   enableCalibration: undefined,
+  enablePlayPauseOnAux: undefined,
   compressorRatio: undefined,
   compressorThreshold: undefined,
   accentColour: undefined,
@@ -267,6 +277,7 @@ const mapStateToProps = (state, { projectId }) => {
     enableDebugUI,
     // enableTutorial,
     enableCalibration,
+    enablePlayPauseOnAux,
     compressorRatio,
     compressorThreshold,
     playerImageId,
@@ -287,6 +298,7 @@ const mapStateToProps = (state, { projectId }) => {
     compressorThreshold,
     playerImageId,
     playerImageAltText,
+    enablePlayPauseOnAux,
   };
 };
 
