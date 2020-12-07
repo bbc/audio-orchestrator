@@ -1,7 +1,7 @@
 import ffprobe from 'ffprobe-client';
 import which from '../which';
 
-const allowedCodecNames = ['png', 'mjpeg'];
+const allowedCodecNames = ['png', 'mjpeg', 'gif'];
 
 /**
  * Run ffprobe on the file and verify that the first stream is a jpg or png image.
@@ -27,7 +27,7 @@ const probeFile = filePath => which('ffprobe')
     const { codec_name, width, height } = stream;
 
     if (!allowedCodecNames.includes(codec_name) || !width || !height) {
-      throw new Error('File is not of a supported image type (PNG or JPG).');
+      throw new Error('File is not of a supported image type (GIF, PNG, or JPG).');
     }
 
     const probe = {

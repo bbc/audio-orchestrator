@@ -11,6 +11,7 @@ import EnumInput from './EnumInput';
 import ListOfEnumInput from './ListOfEnumInput';
 import ControlValuesInput from './ControlValuesInput';
 import ObjectInput from './ObjectInput';
+import ImageItemsInput from './ImageItemsInput';
 
 const inputComponents = {
   gain: GainInput,
@@ -19,9 +20,10 @@ const inputComponents = {
   listOfEnum: ListOfEnumInput,
   controlValues: ControlValuesInput,
   object: ObjectInput,
+  imageItems: ImageItemsInput,
 };
 
-const BehaviourParameter = React.memo(({
+const BehaviourParameter = ({
   name,
   displayName,
   description,
@@ -33,6 +35,10 @@ const BehaviourParameter = React.memo(({
   objectsList,
   controls,
   controlId,
+  sequenceDuration,
+  images,
+  imagesLoading,
+  onAddImages,
 }) => {
   // If the type is not registered, use a standard text input
   const InputComponent = inputComponents[type] || Input;
@@ -48,10 +54,14 @@ const BehaviourParameter = React.memo(({
         objectsList={objectsList}
         controls={controls}
         controlId={controlId}
+        sequenceDuration={sequenceDuration}
+        images={images}
+        imagesLoading={imagesLoading}
+        onAddImages={onAddImages}
       />
     </Segment>
   );
-});
+};
 
 BehaviourParameter.propTypes = {
   onChange: PropTypes.func.isRequired,
@@ -75,6 +85,10 @@ BehaviourParameter.propTypes = {
   })).isRequired,
   controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   controlId: PropTypes.string,
+  sequenceDuration: PropTypes.number.isRequired,
+  images: PropTypes.shape({}).isRequired,
+  imagesLoading: PropTypes.bool.isRequired,
+  onAddImages: PropTypes.func.isRequired,
 };
 
 BehaviourParameter.defaultProps = {

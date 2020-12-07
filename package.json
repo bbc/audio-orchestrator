@@ -24,5 +24,6 @@
   "pre-commit": [
     "lint",
     "credits"
-  ]
+  ],
+  "dependencies": {}
 }

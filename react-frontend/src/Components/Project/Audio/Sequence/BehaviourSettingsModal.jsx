@@ -22,6 +22,9 @@ const validateBehaviourParameters = (
       return value.every(condition => !!condition.property
         && condition.operator !== undefined
         && condition.value !== undefined);
+    case 'imageItems':
+      return value.every(item => item.start !== undefined && !Number.isNaN(item.start)
+        && item.duration !== undefined && !Number.isNaN(item.duration));
     default:
       // assume parameters of unknown type are always valid
       return true;
@@ -35,6 +38,10 @@ const BehaviourSettingsModal = ({
   sequencesList,
   objectsList,
   controls,
+  sequenceDuration,
+  images,
+  imagesLoading,
+  onAddImages,
 }) => {
   const {
     objectNumbers,
@@ -100,6 +107,10 @@ const BehaviourSettingsModal = ({
             objectsList={objectsList}
             controls={controls}
             controlId={controlId}
+            sequenceDuration={sequenceDuration}
+            images={images}
+            imagesLoading={imagesLoading}
+            onAddImages={onAddImages}
           />
         )}
       </Modal.Content>
@@ -148,6 +159,10 @@ BehaviourSettingsModal.propTypes = {
     label: PropTypes.String,
   })).isRequired,
   controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  sequenceDuration: PropTypes.number.isRequired,
+  images: PropTypes.shape({}).isRequired,
+  imagesLoading: PropTypes.bool.isRequired,
+  onAddImages: PropTypes.func.isRequired,
 };
 
 export default BehaviourSettingsModal;

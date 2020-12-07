@@ -2,6 +2,7 @@
   "extends": [
     "../.eslintrc",
     "eslint-config-airbnb",
+    "plugin:react-hooks/recommended",
   ],
   "settings": {
     "import/resolver": "webpack",

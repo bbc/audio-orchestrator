@@ -14,6 +14,47 @@ const findSequenceDuration = (objects, files) => {
   return duration;
 };
 
+const getAudioItems = (object, files, baseUrl, sequenceId) => {
+  if (!files[object.fileId]) {
+    return [];
+  }
+
+  return files[object.fileId].encodedItems.map(item => ({
+    start: item.start,
+    duration: item.duration,
+    source: {
+      channelMapping: object.channelMapping,
+      panning: object.panning,
+      type: item.type,
+      url: `${baseUrl}/${sequenceId}/${item.relativePath}`,
+      urlSafari: item.relativePathSafari ? `${baseUrl}/${sequenceId}/${item.relativePathSafari}` : null,
+    },
+  }));
+};
+
+const getImageEffectsItems = (object, imageUrls) => {
+  const { objectNumber, objectBehaviours = [] } = object;
+  const { behaviourParameters = {} } = objectBehaviours
+    .find(b => b.behaviourType === 'imageEffects') || {};
+  const { items = [] } = behaviourParameters;
+
+  return items.map(({
+    start, duration, imageId, effect,
+  }) => ({
+    start,
+    duration,
+    source: {
+      type: 'image',
+      src: imageUrls[imageId],
+      // For now, use object number as proxy for priority; as priority cannot be edited for
+      // individual items.
+      priority: objectNumber,
+      alt: undefined, // TODO
+      effect,
+    },
+  }));
+};
+
 /**
  * Generates the JSON structure to be written to a sequence.json file for the given sequence and
  * project settings objects.
@@ -36,6 +77,7 @@ const generateSequenceMetatata = (
   } = {}, // sequence
   settings,
   files,
+  imageUrls,
 ) => {
   const { baseUrl } = settings;
 
@@ -47,18 +89,12 @@ const generateSequenceMetatata = (
     outPoints,
     objects: objects.map(object => ({
       objectId: `${object.objectNumber}-${object.label}`,
-      objectBehaviours: object.objectBehaviours || [],
-      items: files[object.fileId].encodedItems.map(item => ({
-        start: item.start,
-        duration: item.duration,
-        source: {
-          channelMapping: object.channelMapping,
-          panning: object.panning,
-          type: item.type,
-          url: `${baseUrl}/${sequenceId}/${item.relativePath}`,
-          urlSafari: item.relativePathSafari ? `${baseUrl}/${sequenceId}/${item.relativePathSafari}` : null,
-        },
-      })),
+      objectBehaviours: (object.objectBehaviours || [])
+        .filter(behaviour => behaviour.behaviourType !== 'imageEffects'),
+      items: [
+        ...getAudioItems(object, files, baseUrl, sequenceId),
+        ...getImageEffectsItems(object, imageUrls),
+      ],
     })),
   };
 };

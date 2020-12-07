@@ -18,6 +18,7 @@ import {
   addObjectBehaviour,
   deleteObjectBehaviour,
   replaceObjectBehaviourParameters,
+  requestAddImages,
 } from '../../../../actions/project';
 
 const SequenceObjectTable = ({
@@ -34,16 +35,26 @@ const SequenceObjectTable = ({
   onDeleteObject,
   sequencesList,
   controls,
+  images,
+  imagesLoading,
+  onAddImages,
 }) => {
   // Remember which object rows are currently highlighted (selected)
   const [highlightedObjects, setHighlightedObjects] = useState([]);
 
   // Make sure that any removed objects are also removed from the list of highlighted objects
   useEffect(() => {
-    setHighlightedObjects(highlightedObjects.filter(
+    // filtered list only contains those object numbers that also exist in objectsList
+    const filteredHighlightedObjects = highlightedObjects.filter(
       objectNumber => objectsList.find(o => o.objectNumber === objectNumber),
-    ));
-  }, [objectsList, objects]);
+    );
+
+    // Only update the state if there was a change, to avoid infinite render loop
+    if (filteredHighlightedObjects.length !== highlightedObjects.length) {
+      setHighlightedObjects(filteredHighlightedObjects);
+    }
+  }, [objectsList, objects, highlightedObjects]);
+
 
   // Determine the state of the select-all checkbox
   const allChecked = highlightedObjects.length > 0
@@ -199,6 +210,11 @@ const SequenceObjectTable = ({
     return null;
   }
 
+  let sequenceDuration = 0;
+  if (objectsWithFiles[0] && objectsWithFiles[0].file && objectsWithFiles[0].file.probe) {
+    sequenceDuration = objectsWithFiles[0].file.probe.duration;
+  }
+
   return (
     <div>
       <Dimmer active={filesLoading} inverted verticalAlign="top">
@@ -217,6 +233,10 @@ const SequenceObjectTable = ({
           sequencesList={sequencesList}
           objectsList={objectsList}
           controls={controls}
+          sequenceDuration={sequenceDuration}
+          images={images}
+          imagesLoading={imagesLoading}
+          onAddImages={onAddImages}
         />
       )}
 
@@ -297,6 +317,9 @@ SequenceObjectTable.propTypes = {
     name: PropTypes.String,
   })).isRequired,
   controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  images: PropTypes.shape({}).isRequired,
+  imagesLoading: PropTypes.bool.isRequired,
+  onAddImages: PropTypes.func.isRequired,
 };
 
 SequenceObjectTable.defaultProps = {
@@ -311,6 +334,8 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
     sequencesList,
     controls,
     controlsList,
+    images,
+    imagesLoading,
   } = project;
   const {
     files,
@@ -331,6 +356,8 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
     filesLoadingCompleted: completed,
     sequencesList,
     controls: controlsList.map(({ controlId }) => controls[controlId]),
+    images,
+    imagesLoading,
   };
 };
 
@@ -372,6 +399,7 @@ const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
     sequenceId,
     objectNumber,
   )),
+  onAddImages: () => dispatch(requestAddImages(projectId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SequenceObjectTable);

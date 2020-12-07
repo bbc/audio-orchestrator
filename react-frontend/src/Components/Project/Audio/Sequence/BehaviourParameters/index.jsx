@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import BehaviourParameter from './BehaviourParameter';
 
-const BehaviourParameters = React.memo(({
+const BehaviourParameters = ({
   parameters,
   values,
   onChange,
@@ -10,6 +10,10 @@ const BehaviourParameters = React.memo(({
   objectsList,
   controls,
   controlId,
+  sequenceDuration,
+  images,
+  imagesLoading,
+  onAddImages,
 }) => (
   <>
     {parameters.map(parameter => (
@@ -25,10 +29,14 @@ const BehaviourParameters = React.memo(({
         objectsList={objectsList}
         controls={controls}
         controlId={controlId}
+        sequenceDuration={sequenceDuration}
+        images={images}
+        imagesLoading={imagesLoading}
+        onAddImages={onAddImages}
       />
     ))}
   </>
-));
+);
 
 BehaviourParameters.propTypes = {
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
@@ -44,6 +52,10 @@ BehaviourParameters.propTypes = {
   })).isRequired,
   controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   controlId: PropTypes.string,
+  sequenceDuration: PropTypes.number.isRequired,
+  images: PropTypes.shape({}).isRequired,
+  imagesLoading: PropTypes.bool.isRequired,
+  onAddImages: PropTypes.func.isRequired,
 };
 
 BehaviourParameters.defaultProps = {

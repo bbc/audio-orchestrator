@@ -10,7 +10,7 @@ const copyAudioFiles = (args) => {
   const outputDistAudioDir = path.join(outputDir, 'dist', 'audio');
   return fse.readdir(outputDistAudioDir)
     .then((files) => {
-      // Delete audio files shipped with the tempalte from dist/audio, except if they are needed
+      // Delete audio files shipped with the template from dist/audio, except if they are needed
       // for the calibration option (and that option is enabled)
       const filesToDelete = settings.enableCalibration
         ? files.filter(file => path.basename(file) !== 'calibration')

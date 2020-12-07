@@ -3,6 +3,7 @@ import runExportSteps from '../runExportSteps';
 
 import checkSequencesAreValid from './checkSequencesAreValid';
 import waitForEncoding from './waitForEncoding';
+import collectImageFiles from './collectImageFiles';
 import copyEncodedAudioFiles from './copyEncodedAudioFiles';
 
 // const logger = getLogger('export-audio');
@@ -19,6 +20,10 @@ const exportAudio = (
     {
       name: 'Waiting for audio analysis and encoding to finish...',
       fn: waitForEncoding,
+    },
+    {
+      name: 'Collecting image files...',
+      fn: collectImageFiles,
     },
     {
       name: 'Copying encoded audio files and writing metadata...',

@@ -15,6 +15,7 @@ export const behaviourTypes = [
   // 'allowedEverywhere',
   // 'spread',
   'muteIf',
+  'imageEffects',
 ];
 
 export const behaviourTypeDetails = {
@@ -189,5 +190,23 @@ export const behaviourTypeDetails = {
       },
     ],
     multiple: true,
+  },
+  imageEffects: {
+    displayName: 'Images and effects',
+    description: 'Display timed images and animated lighting effects on devices this object is allocated to.',
+    color: 'olive',
+    multiple: false,
+    parameters: [
+      {
+        // TODO: have to have a parameter to enable editing the behaviour, but a custom dialogue is
+        // used instead of the behaviour parameters modal, so the description of the parameter does
+        // not matter.
+        displayName: 'Items',
+        name: 'items',
+        type: 'imageItems',
+        description: 'Each item specifies a time range. After adding an item, click the placeholders to configure the image or effect.',
+        defaultValue: [],
+      },
+    ],
   },
 };

@@ -7,6 +7,7 @@ import {
   Header,
   Button,
   Card,
+  Segment,
 } from 'semantic-ui-react';
 import PageTitleBar from '../../PageTitleBar';
 import ImagePreview from '../../ImagePreview';
@@ -141,7 +142,9 @@ class Appearance extends React.Component {
             subheader="The accent colour is used as the background for any buttons and the play bar."
           />
 
-          <ColorSelection colors={colors} custom name="accentColour" value={accentColour} onChange={this.handleChange} />
+          <Segment>
+            <ColorSelection colors={colors} custom name="accentColour" value={accentColour} onChange={this.handleChange} />
+          </Segment>
 
           <Header content="Cover image" subheader="The cover artwork should be a square image (recommended size 600 x 600 pixels)." />
 

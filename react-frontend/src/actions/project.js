@@ -547,16 +547,18 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
 
 // Checks images listed in the project, or a replacement set of images, and updates the project with
 // the results.
-const checkImageFiles = (projectId, newImages = null) => (dispatch) => {
+const checkAndAddImageFiles = (projectId, imagesToAdd = null) => (dispatch) => {
   const project = projects[projectId];
   const { projectBasePath } = project;
-  let { images } = project;
+  const { images: currentProjectImages } = project;
 
-  if (newImages) {
-    images = newImages;
-  }
 
-  // Create empty updated images object, will be filled with details for successfully checked files
+  // Run a check on either:
+  // - all images already in the project (when opening the project); or
+  // - the images to add.
+  const images = imagesToAdd || currentProjectImages;
+
+  // Create an updated images object, which will be populated with results of the probe checks
   const updatedImages = {};
 
   // TODO may not need a task for this as progress is not shown anywhere yet.
@@ -590,8 +592,7 @@ const checkImageFiles = (projectId, newImages = null) => (dispatch) => {
       // Save error message for image files that are missing:
       createResult.filter(({ success }) => !success).forEach(({ fileId }) => {
         updatedImages[fileId] = {
-          imageId: fileId,
-          imagePath: images[fileId].imagePath,
+          ...images[fileId],
           error: 'Image file is missing.',
         };
       });
@@ -606,8 +607,7 @@ const checkImageFiles = (projectId, newImages = null) => (dispatch) => {
         const imageId = fileId;
 
         updatedImages[imageId] = {
-          imageId,
-          imagePath: images[imageId].imagePath,
+          ...images[imageId],
           error: success ? null : (error || 'Image file is missing or damaged.'),
         };
       });
@@ -615,7 +615,10 @@ const checkImageFiles = (projectId, newImages = null) => (dispatch) => {
       // update error messages etc based on result
       dispatch(replaceProjectImages(
         projectId,
-        updatedImages,
+        {
+          ...currentProjectImages, // will be replaced if also present in updatedImages
+          ...updatedImages, // always add these
+        },
       ));
     });
 };
@@ -638,7 +641,7 @@ export const requestOpenProject = (existingProjectId = null) => (dispatch) => {
         // load the object metadata
         dispatch(loadSequenceObjects(projectId, sequenceId));
       });
-      dispatch(checkImageFiles(projectId));
+      dispatch(checkAndAddImageFiles(projectId));
       dispatch(loadImages(projectId));
       dispatch(openedProject(projectId));
     })
@@ -1214,19 +1217,22 @@ export const swapControlOrder = (projectId, controlId, otherControlId) => (dispa
   dispatch(loadControls(projectId));
 };
 
-/**
- * opens a file-open dialogue and if an image is selected, replaces the project's player image;
- * deleting the link to the previous image as well.
- */
-export const requestReplaceProjectPlayerImage = projectId => (dispatch) => {
+const selectImageFiles = (projectId, multiple = false) => {
   const project = projects[projectId];
+  const { images } = project;
+  const maxIndex = Object.values(images).reduce((acc, { imageIndex }) => {
+    if (!imageIndex) {
+      return acc;
+    }
+    return Math.max(imageIndex, acc);
+  }, 0);
 
   // TODO mostly copied from replaceAllAudioFiles, refactor? esp. for using images elsewhere.
-  new Promise((resolve, reject) => {
+  return new Promise((resolve, reject) => {
     const input = document.createElement('input');
     input.type = 'file';
-    input.accept = '.jpg,.jpeg,.png';
-    input.multiple = false;
+    input.accept = '.gif,.jpg,.jpeg,.png';
+    input.multiple = multiple;
     input.style.display = 'none';
 
     const onChange = () => {
@@ -1260,29 +1266,77 @@ export const requestReplaceProjectPlayerImage = projectId => (dispatch) => {
 
     return files;
   }).then((files) => {
-    const { images, settings, projectBasePath } = project;
-    const { playerImageId } = settings;
+    const { projectBasePath, images: currentProjectImages } = project;
 
-    const newImageId = uuidv4();
+    const newImages = {};
 
-    const { path } = files[0];
+    files.forEach(({ path, name }, i) => {
+      const imagePath = removeBasePath(path, projectBasePath);
+      const imageFilename = name;
 
-    const updatedImages = {
-      ...images,
-      [newImageId]: {
-        imageId: newImageId,
-        imagePath: removeBasePath(path, projectBasePath),
-      },
-    };
+      // Check if an image with the same path already exists in the project
+      // By using the imageId of an image already in the project, the existing image record will
+      // be replaced with this one.
+      const duplicate = Object.values(currentProjectImages)
+        .find(image => image.imagePath === imagePath);
+      const imageId = duplicate ? duplicate.imageId : uuidv4();
 
-    if (playerImageId in updatedImages) {
-      delete updatedImages[playerImageId];
-    }
+      // Assemble the new image object, including incrementing an index to ensure new images end
+      // up at the end of the list
+      newImages[imageId] = {
+        imageId,
+        imagePath,
+        imageFilename,
+        imageIndex: maxIndex + i + 1,
+      };
+    });
 
-    dispatch(checkImageFiles(projectId, updatedImages));
-    dispatch(setProjectSetting(projectId, 'playerImageId', newImageId));
-  }).catch((e) => {
-    console.warn(e);
-    setAppWarning('No image file selected, please try again.');
+    return newImages;
   });
+};
+
+/**
+ * opens a file-open dialogue and if an image is selected, replaces the project's player image;
+ * deleting the link to the previous image as well.
+ */
+export const requestReplaceProjectPlayerImage = projectId => (dispatch) => {
+  selectImageFiles(projectId, false)
+    .then((newImages) => {
+      const newPlayerImageId = Object.keys(newImages)[0];
+
+      dispatch(checkAndAddImageFiles(projectId, newImages));
+      dispatch(setProjectSetting(projectId, 'playerImageId', newPlayerImageId));
+    })
+    .catch((e) => {
+      console.warn(e);
+      dispatch(setAppWarning('No image file was selected.'));
+    });
+};
+
+/**
+ * opens a file-open dialogue and adds any selected images to the project.
+ */
+export const requestAddImages = projectId => (dispatch) => {
+  selectImageFiles(projectId, true)
+    .then((newImages) => {
+      dispatch(checkAndAddImageFiles(projectId, newImages));
+    })
+    .catch((e) => {
+      console.warn(e);
+      dispatch(setAppWarning('No image files were added.'));
+    });
+};
+
+export const setImageAlt = (projectId, imageId, imageAlt) => (dispatch) => {
+  const project = projects[projectId];
+  const updatedImages = {
+    ...project.images,
+    [imageId]: {
+      ...project.images[imageId],
+      imageAlt,
+    },
+  };
+  project.images = updatedImages;
+
+  dispatch(loadImages(projectId));
 };

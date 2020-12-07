@@ -12,7 +12,7 @@ const sequenceOutputDir = (basePath, sequenceId) => path.join(basePath, `${seque
 
 const copyEncodedAudioFiles = (args) => {
   const {
-    sequences, settings, files, outputDir, fileStore,
+    sequences, settings, files, outputDir, fileStore, imageUrls,
   } = args;
 
   const audioOutputDir = path.join(outputDir, 'audio');
@@ -87,7 +87,7 @@ const copyEncodedAudioFiles = (args) => {
         });
 
         // Generate sequence metadata file with paths to audio files
-        const sequenceMetadata = generateSequenceMetadata(sequence, settings, files);
+        const sequenceMetadata = generateSequenceMetadata(sequence, settings, files, imageUrls);
         tasks.push(cb => fse.writeFile(
           path.join(sequenceOutputDir(audioOutputDir, sequenceId), 'sequence.json'),
           JSON.stringify(sequenceMetadata, 0, 2),

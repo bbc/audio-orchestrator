@@ -1,3 +1,5 @@
+import path from 'path';
+
 // Project file migrations
 // * The keys used in the migrations object represent the versions being migrated to.
 // * All migrations with a higher version than that of the project file will be applied in order.
@@ -21,6 +23,41 @@ const migrations = {
         playerImageAltText: '',
       });
     }
+  },
+  '0.18.3': (store) => {
+    // Add imageIndex, imageFilename, imageAlt properties to images
+    const images = store.get('images', {});
+    const settings = store.get('settings', {});
+    const { playerImageId, playerImageAltText } = settings;
+    const newImages = {};
+    Object.values(images).forEach((image, i) => {
+      const { imageId, imagePath } = image;
+      let { imageIndex, imageAlt } = image;
+
+      // set the imageFilename e.g. foo.jpg
+      const imageFilename = path.parse(imagePath).base;
+
+      // Generate imageIndex and imageAlt if they are note already set
+      if (imageIndex === undefined) { imageIndex = i; }
+      if (imageAlt === undefined) { imageAlt = ''; }
+
+      // if the image is used as the default player image (appearance page) it might have an
+      // alt text defined in the settings.
+      if (playerImageId === imageId && playerImageAltText) {
+        imageAlt = playerImageAltText;
+      }
+
+      // combine with any exisitng properties of the original image object
+      newImages[imageId] = {
+        ...image,
+        imageFilename,
+        imageAlt,
+        imageIndex: imageIndex !== undefined ? imageIndex : i,
+      };
+    });
+
+    // overwrite the images object
+    store.set('images', newImages);
   },
 };
 

@@ -1,12 +1,22 @@
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
-  Segment,
   Input,
   Button,
 } from 'semantic-ui-react';
+import { useDebounce } from 'Components/utils';
 
 const isValidColor = c => /#[0-9a-fA-F]{6}/.test(c);
+
+const colorInputStyles = {
+  display: 'inline-block',
+  verticalAlign: 'bottom',
+  height: '38px',
+  border: '1px solid rgba(34, 36, 38, 0.15)',
+  background: '#fff',
+  margin: '0 4px',
+  borderRadius: '4px',
+};
 
 const ColorSelection = ({
   colors,
@@ -14,6 +24,7 @@ const ColorSelection = ({
   custom,
   name,
   onChange,
+  disabled,
 }) => {
   // Track the user-entered custom color and whether it is valid or not
   const [customColor, setCustomColor] = useState(value);
@@ -37,27 +48,31 @@ const ColorSelection = ({
     if (isValid) {
       onChange(e, { name, value: fixedValue });
     }
-  }, [setCustomColor, setCustomColorError, onChange]);
+  }, [name, setCustomColor, setCustomColorError, onChange]);
+
+  const handleCustomColorChangeDebounced = useDebounce(handleCustomColorChange);
 
   return (
-    <Segment>
+    <>
       {custom
         ? (
-          <Input
-            labelPosition="right"
-            value={customColor}
-            error={customColorError}
-            onChange={handleCustomColorChange}
-          >
-            <input type="text" style={{ width: 'auto' }} />
-            <Button
-              attached="right"
-              style={{ backgroundColor: customColorError ? '#ffffff' : customColor, color: '#ffffff', marginRight: '4px' }}
-              value={customColor}
-              icon={customColor === value ? 'checkmark' : 'circle outline'}
-              onClick={handleClick}
+          <>
+            <input
+              type="color"
+              value={customColorError ? '#ffffff' : customColor}
+              style={colorInputStyles}
+              disabled={disabled}
+              onChange={e => handleCustomColorChangeDebounced(e, { value: e.target.value })}
             />
-          </Input>
+            <Input
+              value={customColor}
+              error={customColorError}
+              onChange={handleCustomColorChange}
+              disabled={disabled}
+            >
+              <input type="text" style={{ width: 'auto', marginRight: '4px' }} disabled={disabled} />
+            </Input>
+          </>
         ) : null
       }
       {colors.map(color => (
@@ -68,24 +83,28 @@ const ColorSelection = ({
           circular
           icon={color === value ? 'checkmark' : 'circle outline'}
           onClick={handleClick}
+          disabled={disabled}
         />
       ))}
-    </Segment>
+    </>
   );
 };
 
 ColorSelection.propTypes = {
-  colors: PropTypes.arrayOf(PropTypes.string).isRequired,
+  colors: PropTypes.arrayOf(PropTypes.string),
   value: PropTypes.string,
   custom: PropTypes.bool,
   name: PropTypes.string,
   onChange: PropTypes.func.isRequired,
+  disabled: PropTypes.bool,
 };
 
 ColorSelection.defaultProps = {
   value: undefined,
   custom: false,
   name: undefined,
+  colors: [],
+  disabled: false,
 };
 
 export default ColorSelection;

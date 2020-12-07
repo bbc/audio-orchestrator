@@ -815,7 +815,7 @@
     "@babel/types" "^7.4.4"
     esutils "^2.0.2"
 
-"@babel/runtime@^7.12.1", "@babel/runtime@^7.6.3", "@babel/runtime@^7.8.4":
+"@babel/runtime@^7.1.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.6.3", "@babel/runtime@^7.8.4":
   version "7.12.5"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@babel/runtime/-/runtime-7.12.5.tgz#410e7e487441e1b360c29be715d870d9b985882e"
   integrity sha1-QQ5+SHRB4bNgwpvnFdhw2bmFiC4=
@@ -876,12 +876,12 @@
     weak-map "^1.0.5"
     winston "^2.4.0"
 
-"@bbc/bbcat-orchestration-template@^0.15.5":
-  version "0.15.5"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.15.5.tgz#c0ed6dd018d5030345f2fc3fdb288f570a446a77"
-  integrity sha1-wO1t0BjVAwNF8vw/2yiPVwpEanc=
+"@bbc/bbcat-orchestration-template@^0.16.0":
+  version "0.16.0"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.16.0.tgz#4cebcc5c8709b3a0dc602c2522095ef5174cf9c9"
+  integrity sha1-TOvMXIcJs6DcYCwlIgle9RdM+ck=
   dependencies:
-    "@bbc/bbcat-orchestration" "^0.10.1"
+    "@bbc/bbcat-orchestration" "^0.11.0"
     "@hot-loader/react-dom" "^16.11.0"
     bowser "^2.9.0"
     classnames "^2.2.6"
@@ -892,6 +892,7 @@
     prop-types "^15.7.2"
     qrcodejs "^1.0.0"
     react "^16.12.0"
+    react-css-transition-replace "^4.0.2"
     react-dom "^16.12.0"
     react-hot-loader "^4.12.19"
     react-redux "^7.1.3"
@@ -901,10 +902,10 @@
     uuid "^3.3.2"
     whatwg-fetch "^3.0.0"
 
-"@bbc/bbcat-orchestration@^0.10.1":
-  version "0.10.1"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration/-/@bbc/bbcat-orchestration-0.10.1.tgz#abe3dc488b9019d0f70e1a7d1cce2de6277c6fb4"
-  integrity sha1-q+PcSIuQGdD3Dhp9HM4t5id8b7Q=
+"@bbc/bbcat-orchestration@^0.11.0":
+  version "0.11.0"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration/-/@bbc/bbcat-orchestration-0.11.0.tgz#ce5b5033ebd750b07e909cac0641c95b470fd08f"
+  integrity sha1-zltQM+vXULB+kJysBkHJW0cP0I8=
   dependencies:
     "@bbc/bbcat-orchestration-bbcat" "^0.2.0"
     "@bbc/bbcat-orchestration-cloud-sync-client" "^2.2.2"
@@ -2285,6 +2286,13 @@ doctrine@^3.0.0:
   integrity sha1-rd6+rXKmV023g2OdyHoSF3OXOWE=
   dependencies:
     esutils "^2.0.2"
+
+dom-helpers@^3.3.1:
+  version "3.4.0"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/dom-helpers/-/dom-helpers-3.4.0.tgz#e9b369700f959f62ecde5a6babde4bccd9169af8"
+  integrity sha1-6bNpcA+Vn2Ls3lprq95LzNkWmvg=
+  dependencies:
+    "@babel/runtime" "^7.1.2"
 
 dom-walk@^0.1.0:
   version "0.1.2"
@@ -5064,6 +5072,14 @@ range-parser@~1.2.1:
   version "1.2.1"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/range-parser/-/range-parser-1.2.1.tgz#3cf37023d199e1c24d1a55b84800c2f3e6468031"
   integrity sha1-PPNwI9GZ4cJNGlW4SADC8+ZGgDE=
+
+react-css-transition-replace@^4.0.2:
+  version "4.0.2"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/react-css-transition-replace/-/react-css-transition-replace-4.0.2.tgz#a2076f2e0dbd25cec9ac7950d2bf15044d329eeb"
+  integrity sha1-ogdvLg29Jc7JrHlQ0r8VBE0ynus=
+  dependencies:
+    dom-helpers "^3.3.1"
+    prop-types "^15.7.2"
 
 react-dom@^16.12.0:
   version "16.14.0"

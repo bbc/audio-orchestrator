@@ -30,7 +30,7 @@ const ConfirmDeleteButton = ({
     } else {
       onClose();
     }
-  }, [open]);
+  }, [open, onOpen, onClose]);
 
   const handleOpen = () => {
     setOpen(!disabled);

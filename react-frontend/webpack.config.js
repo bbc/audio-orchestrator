@@ -58,6 +58,7 @@ module.exports = (env, { mode = 'development' }) => ({
     alias: {
       Components: path.resolve(__dirname, 'src/Components'),
       Lib: path.resolve(__dirname, 'src/lib'),
+      Actions: path.resolve(__dirname, 'src/actions'),
     },
   },
   plugins: [

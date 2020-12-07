@@ -1,0 +1,20 @@
+.bcob-range-preview-container {
+  position: relative;
+  display: flex;
+  min-width: 100px;
+  width: 100%;
+  height: 8px;
+  margin: 15px 0; /* height + margin to sum to 38px semantic ui input height */
+  overflow: hidden;
+  border: 1px solid rgba(34, 36, 38, 0.15);
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+
+.bcob-range-preview-inner {
+  position: absolute;
+  height: 8px;
+  background: #2185d0; /* semantic-ui primary blue */
+  min-width: 1px;
+}
+

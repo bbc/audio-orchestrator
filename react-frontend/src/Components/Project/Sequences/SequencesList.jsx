@@ -35,7 +35,7 @@ const SequencesList = ({
     if (sequenceId !== otherSequenceId) {
       onSwapSequenceOrder(sequenceId, otherSequenceId);
     }
-  }, [sequencesList]);
+  }, [sequencesList, onSwapSequenceOrder]);
 
   return (
     <Card.Group stackable doubling itemsPerRow={2}>
