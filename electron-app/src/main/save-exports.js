@@ -9,7 +9,7 @@ import {
 } from 'electron';
 
 export const openInFolder = (e, outputPath) => {
-  shell.showItemInFolder(outputPath);
+  shell.openPath(outputPath);
 };
 
 export const saveExportToDownloads = (e, exportDir) => {

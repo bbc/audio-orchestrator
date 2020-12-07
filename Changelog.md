@@ -3,14 +3,14 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
-# `0.19.0`
+# `0.19.1`
 _2020-12-07_
 
  * Support authoring and displaying timed images and coloured lighting effects attached to audio objects. These are authored as a new behaviour type.
  * Use a graphical colour picker.
  * Add an option to enable play/pause control on aux devices.
- * Update external dependencies.
  * Various small fixes to the application template layout.
+ * Update external dependencies, including Electron framework.
 
 # `0.18.0`
 _2020-08-18_
