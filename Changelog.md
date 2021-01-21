@@ -3,8 +3,16 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.19.2`
+_2021-01-21_
+
+ * Fix problem where no windows were opened on app launch
+ * Upgrade external dependencies
+
 # `0.19.1`
 _2020-12-07_
+
+**This version does not run properly under some circumstances, please use `0.19.2` instead.**
 
  * Support authoring and displaying timed images and coloured lighting effects attached to audio objects. These are authored as a new behaviour type.
  * Use a graphical colour picker.
