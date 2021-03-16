@@ -4,6 +4,8 @@ import { getLogger } from 'bbcat-orchestration-builder-logging';
 
 const logger = getLogger('export-audio');
 
+const imageDirName = 'images';
+
 const getImagesFromSequences = (sequences) => {
   const usedImageIds = new Set();
   sequences.forEach(({ objects = [] } = {}) => {
@@ -15,6 +17,7 @@ const getImagesFromSequences = (sequences) => {
       items.forEach(({ imageId }) => usedImageIds.add(imageId));
     });
   });
+  return usedImageIds;
 };
 
 /**
@@ -35,8 +38,13 @@ const collectImageFiles = (args) => {
   const usedImageIds = new Set(getImagesFromSequences(sequences));
   usedImageIds.add(settings.playerImageId);
 
-  // Promise that resolves once all files have been copied
-  return Promise.all(
+  logger.debug(`Collecting ${usedImageIds.size} image files`);
+
+  const imageOutputDir = path.join(outputDir, imageDirName);
+
+  // Resolves once all files have been copied
+  // TODO should probably serialise the copies rather than starting all at the same time.
+  return fse.ensureDir(imageOutputDir).then(() => Promise.all(
     Object.values(images || {})
       .filter(({ imageId }) => usedImageIds.has(imageId))
       .map(({ imageId }) => {
@@ -50,8 +58,14 @@ const collectImageFiles = (args) => {
           return null;
         }
 
-        const imageUrl = path.join('images', `${imageId}${path.extname(filePath)}`);
-        const imageOutputPath = path.join(outputDir, imageUrl);
+        // Construct a filename based on the UUID and original extension
+        const imageFileName = `${imageId}${path.extname(filePath)}`;
+
+        // The URL written to the sequence.json file (always uses forward slash)
+        const imageUrl = [imageDirName, imageFileName].join('/');
+
+        // The filesystem path used to copy the file into the output directory
+        const imageOutputPath = path.join(imageOutputDir, imageFileName);
 
         return fse.copy(filePath, imageOutputPath)
           .then(() => ({ imageId, imageUrl }))
@@ -60,7 +74,7 @@ const collectImageFiles = (args) => {
             return null;
           });
       }),
-  ).then((results) => {
+  )).then((results) => {
     const imageUrls = {};
     results.filter(r => r !== null).forEach(({ imageId, imageUrl }) => {
       imageUrls[imageId] = imageUrl;
