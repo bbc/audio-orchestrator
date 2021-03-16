@@ -17,6 +17,7 @@ const DEFAULT_SETTINGS = {
   playerImageAltText: '',
   compressorRatio: 2,
   compressorThreshold: 0,
+  fadeOutDuration: 0,
   accentColour: '#006def',
   enableDebugUI: true,
   enableTutorial: false,

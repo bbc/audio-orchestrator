@@ -59,6 +59,16 @@ const migrations = {
     // overwrite the images object
     store.set('images', newImages);
   },
+  '0.19.5': (store) => {
+    // Add fadeOutDuration to project settings
+    const settings = store.get('settings');
+    if (settings) {
+      store.set('settings', {
+        ...settings,
+        fadeOutDuration: settings.fadeOutDuration || 0,
+      });
+    }
+  },
 };
 
 export default migrations;

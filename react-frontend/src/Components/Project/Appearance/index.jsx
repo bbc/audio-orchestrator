@@ -81,6 +81,7 @@ class Appearance extends React.Component {
       accentColour,
       compressorRatio,
       compressorThreshold,
+      fadeOutDuration,
       playerImageId,
       playerImageAltText,
       onReplaceCoverImage,
@@ -200,7 +201,7 @@ class Appearance extends React.Component {
           />
 
           <Header content="Audio compression" subheader="Audio compression is applied to the output of aux devices (set the threshold to 0 to disable compression)." />
-          <Form.Group widths="equal">
+          <Form.Group widths="3">
             <Form.Input
               label="Compressor ratio"
               placeholder="Set the ratio (between 1 and 20)"
@@ -219,6 +220,21 @@ class Appearance extends React.Component {
               max="0"
               name="compressorThreshold"
               defaultValue={compressorThreshold}
+              onBlur={this.handleBlur}
+            />
+          </Form.Group>
+
+          <Header content="Object fade out" subheader="Set the duration of the fade out that is applied when an object is no longer allocated to a device." />
+          <Form.Group widths="3">
+            <Form.Input
+              label="Fade duration (seconds)"
+              placeholder="Set the fade duration (between 0.0 and 5.0 seconds)"
+              type="number"
+              min="0.0"
+              max="5.0"
+              step="0.1"
+              name="fadeOutDuration"
+              defaultValue={fadeOutDuration}
               onBlur={this.handleBlur}
             />
           </Form.Group>
@@ -241,6 +257,7 @@ Appearance.propTypes = {
   enablePlayPauseOnAux: PropTypes.bool,
   compressorRatio: PropTypes.number,
   compressorThreshold: PropTypes.number,
+  fadeOutDuration: PropTypes.number,
   accentColour: PropTypes.string,
   playerImageId: PropTypes.string,
   playerImageAltText: PropTypes.string,
@@ -260,6 +277,7 @@ Appearance.defaultProps = {
   enablePlayPauseOnAux: undefined,
   compressorRatio: undefined,
   compressorThreshold: undefined,
+  fadeOutDuration: undefined,
   accentColour: undefined,
   playerImageId: undefined,
   playerImageAltText: undefined,
@@ -283,6 +301,7 @@ const mapStateToProps = (state, { projectId }) => {
     enablePlayPauseOnAux,
     compressorRatio,
     compressorThreshold,
+    fadeOutDuration,
     playerImageId,
     playerImageAltText,
   } = settings;
@@ -299,6 +318,7 @@ const mapStateToProps = (state, { projectId }) => {
     enableCalibration,
     compressorRatio,
     compressorThreshold,
+    fadeOutDuration,
     playerImageId,
     playerImageAltText,
     enablePlayPauseOnAux,

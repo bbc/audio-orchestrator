@@ -72,6 +72,10 @@ const templateConfiguration = (sequences, controls, settings, imageUrls) => {
     configuration.MDO_COMPRESSOR_THRESHOLD = settings.compressorThreshold;
   }
 
+  if (!Number.isNaN(settings.fadeOutDuration)) {
+    configuration.OBJECT_FADE_OUT_DURATION = settings.fadeOutDuration;
+  }
+
   if (settings.playerImageId && settings.playerImageId in imageUrls) {
     configuration.PLAYER_IMAGE_URL = imageUrls[settings.playerImageId];
     configuration.TEXT_PLAYER_IMAGE_ALT = settings.playerImageAltText;
