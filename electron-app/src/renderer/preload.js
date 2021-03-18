@@ -27,4 +27,5 @@ contextBridge.exposeInMainWorld('projectStoreFunctions', {
 contextBridge.exposeInMainWorld('miscFunctions', {
   openCredits: () => ipcRenderer.invoke('open-credits'),
   openUrl: url => ipcRenderer.invoke('open-url', url),
+  getPlatformInfo: () => ipcRenderer.invoke('get-platform-info'),
 });

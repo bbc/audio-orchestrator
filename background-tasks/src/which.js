@@ -13,7 +13,6 @@ const realpath = promisify(realpathCB);
 const searchPath = [
   path.join(os.homedir(), 'audio-orchestrator-ffmpeg', 'bin'),
   path.join(os.homedir(), 'bbcat-orchestration-builder-ffmpeg', 'bin'),
-  process.env.PATH,
   '/usr/local/bin',
   '/usr/bin',
 ];
@@ -34,19 +33,30 @@ const which = (name) => {
     return Promise.resolve(results[name]);
   }
 
-  return execFile('/usr/bin/which', [name], {
-    env: {
-      ...process.env,
-      PATH: searchPath.join(':'),
-    },
-  })
+  const whichExec = os.platform() === 'win32' ? 'where.exe' : '/usr/bin/which';
+
+  const whichEnv = {
+    ...process.env,
+  };
+
+  // On Windows, the first (lexicographical) variant of PATH is used.
+  // See: https://github.com/nodejs/node/issues/20605
+  if (os.platform() === 'win32') {
+    whichEnv.Path = [...searchPath, process.env.Path].join(path.delimiter);
+  } else {
+    whichEnv.PATH = [...searchPath, process.env.PATH].join(path.delimiter);
+  }
+
+  return execFile(whichExec, [name], { env: whichEnv })
     .then(({ stdout }) => {
-      logger.silly(`which ${name} returned ${stdout}`);
-      return stdout.trim();
+      logger.silly(`${whichExec} ${name} returned ${stdout}`);
+
+      const lines = stdout.split('\n').map(l => l.trim());
+      return lines[0];
     })
     .then(execPath => realpath(execPath))
     .then((realExecPath) => {
-      logger.silly(`realpath on which result for ${name} returned ${realExecPath}`);
+      logger.silly(`realpath on result for ${name} returned ${realExecPath}`);
       results[name] = realExecPath;
       return realExecPath;
     })

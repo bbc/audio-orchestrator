@@ -15,7 +15,7 @@ The software is currently distributed to BBC staff and external users (subject t
     * the [library](https://github.com/bbc/bbcat-orchestration/) for handling audio rendering and communication between devices in the template, and
     * the [docs](https://github.com/bbc/bbcat-orchestration-docs/).
 
-_Audio Orchestrator_ requires `ffmpeg` and `ffprobe` to be available in the system path. Both are most easily installed with [homebrew](https://brew.sh) by running `brew install ffmpeg`. If installing them manually ensure the binaries are placed in `~/audio-orchestrator-ffmpeg/bin`, and see the [installation instructions](https://bbc.github.io/bbcat-orchestration-docs/installation/) for more details.
+_Audio Orchestrator_ requires `ffmpeg` and `ffprobe` to be available in the system path or a specific location in your home directory. For a manual installation, place the binaries in `~/audio-orchestrator-ffmpeg/bin` on macOS and `%HOME%\audio-orchestrator-ffmpeg\bin` on Windows. See the [installation instructions](https://bbc.github.io/bbcat-orchestration-docs/installation/) for more details.
 
 # Architecture overview
 
@@ -55,13 +55,21 @@ Run a development version of the app:
 yarn dev
 ```
 
-Build the `.dmg` installer:
+Build the installers:
 
 ```
 yarn dist
 ```
 
-Building the installer may require a valid Apple development certificate in your keychain. When it is built, the installer can be found in `electron-app/dist/mac`.
+The results can be found in `electron-app/dist/`:
+
+* macOS DMG installer disk image
+  * Intel 64-bit: `BBC R&D Audio Orchestrator-{version}.dmg`
+  * ARM (M1) 64-bit:: `BBC R&D Audio Orchestrator-{version}-arm64.dmg`
+* Windows NSIS installer executable
+  * Intel 64-bit: `BBC R&D Audio Orchestrator Setup {version}.exe`
+
+Building the installer for macOS will use an Apple development certificate if there is one in your keychain; otherwise code signing will be skipped. The app is however not notarised by Apple, so will still require administrator approval to run.
 
 ## Repository structure
 

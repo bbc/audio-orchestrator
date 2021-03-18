@@ -1,6 +1,7 @@
 import { electronLogger as logger, addLogFileTransport } from 'bbcat-orchestration-builder-logging';
 import backgroundTasks from 'bbcat-orchestration-builder-background-tasks';
 import path from 'path';
+import os from 'os';
 import { URL } from 'url';
 import {
   app,
@@ -144,6 +145,13 @@ const registerIpcHandlers = () => {
       shell.openExternal(url);
     }
   });
+
+  // Get information about the platform we are running on
+  ipcMain.handle('get-platform-info', () => Promise.resolve({
+    platform: os.platform(),
+    sep: path.sep,
+    delimiter: path.delimiter,
+  }));
 
   // Handlers for saving exports:
   ipcMain.handle('open-in-folder', openInFolder);

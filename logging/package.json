@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-logging",
-  "version": "0.19.9",
+  "version": "0.19.10",
   "description": "Provides a global logging module for use throughout the application components.",
   "main": "src/index.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",

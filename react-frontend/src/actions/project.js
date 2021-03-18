@@ -20,20 +20,35 @@ const fileService = new FileService(window.API_URL || 'http://localhost:8000');
 // this session as a convenient way to access the project by id.
 const projects = {};
 
+// TODO requesting actual platform info asynchronously "It's probably OK?"
+// but could be race condition
+let pathSep = '/';
+// let platform = 'darwin';
+window.miscFunctions.getPlatformInfo().then((info) => {
+  pathSep = info.sep;
+  // platform = info.platform;
+});
+
 /**
  * helper function, replaces relative paths by prepending given absolute path
- * TODO: POSIX-style path specific
  */
 const replaceRelativePath = (path, basePath) => {
-  if (typeof path !== 'string' || path.startsWith('/')) {
+  // If it looks like an absolute path, or not a string, return it as is
+  if (typeof path !== 'string' || path.startsWith('/') || path.includes(':\\')) {
     return path;
   }
 
-  return `${basePath}/${path}`;
+  // Normalise relative path to use current platform's path separator
+  let relativePath = path;
+  relativePath = relativePath.split('\\').join(pathSep);
+  relativePath = relativePath.split('/').join(pathSep);
+
+  // Prepend the base path
+  return [basePath, relativePath].join(pathSep);
 };
 
 const removeBasePath = (path, basePath) => {
-  const basePathWithSlash = `${basePath}/`;
+  const basePathWithSlash = `${basePath}${pathSep}`;
   // return original path if it isn't defined, or doesn't start with the base path
   if (typeof path !== 'string' || !path.startsWith(basePathWithSlash)) {
     return path;

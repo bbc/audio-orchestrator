@@ -31,5 +31,12 @@
         "arm64"
       ]
     }
+  },
+  "nsis": {
+    "oneClick": "false",
+    "allowToChangeInstallationDirectory": true
+  },
+  "win": {
+    "target": ["nsis"]
   }
 }

@@ -23,17 +23,21 @@ class FileStore {
   }
 
   registerFile(fileId, filePath, fileType = 'audio') {
-    // Check the file has an absolute path.
     if (!path.isAbsolute(filePath)) {
-      throw new Error(`File ${fileId} does not have an absolute path.`);
+      // TODO at least log a warning here - the file will be marked as missing because the path may
+      // not exist anyway. Most likely this is because it was an absolute path on a different
+      // platform (e.g. starting with 'C:\' instead of '/').
+
+      // throw new Error(`File ${fileId} does not have an absolute path.`);
     }
 
     // Create the file object.
     // If the file was already registered, it will be replaced (and previous results discarded).
+    const normalizedPath = path.normalize(filePath);
     if (fileType === 'audio') {
-      this.files[fileId] = new AudioFile(fileId, path.normalize(filePath));
+      this.files[fileId] = new AudioFile(fileId, normalizedPath);
     } else if (fileType === 'image') {
-      this.files[fileId] = new ImageFile(fileId, path.normalize(filePath));
+      this.files[fileId] = new ImageFile(fileId, normalizedPath);
     } else {
       throw new Error(`Unknown file type ${fileType}`);
     }
