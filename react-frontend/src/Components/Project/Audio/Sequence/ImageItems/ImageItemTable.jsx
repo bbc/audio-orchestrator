@@ -78,12 +78,14 @@ const ImageItemTable = ({
   const handleAddItem = () => {
     const lastImageItem = imageItems[imageItems.length - 1];
 
+    const start = lastImageItem ? lastImageItem.start + lastImageItem.duration : 0;
+
     onChange([
       ...imageItems,
       {
         itemId: uuidv4(),
-        start: lastImageItem ? lastImageItem.start + lastImageItem.duration : 0,
-        duration: 1,
+        start,
+        duration: Math.min(1, Math.max(0, sequenceDuration - start)),
         priority: 1,
       },
     ]);
@@ -108,17 +110,17 @@ const ImageItemTable = ({
 
   return (
     <>
-      <Table basic="very">
+      <Table basic="very" unstackable>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell content="Image" collapsing />
             <Table.HeaderCell content="Effect" collapsing />
             <Table.HeaderCell collapsing>
-              Start time
+              Start time (seconds)
               {' '}
               <Icon name="sort numeric ascending" onClick={handleSortByStartTime} />
             </Table.HeaderCell>
-            <Table.HeaderCell content="End time" collapsing />
+            <Table.HeaderCell content="End time (seconds)" collapsing />
             <Table.HeaderCell />
             <Table.HeaderCell collapsing />
           </Table.Row>

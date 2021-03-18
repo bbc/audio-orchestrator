@@ -33,6 +33,10 @@ const helpLinks = {
         link: 'https://bbc.github.io/bbcat-orchestration-docs/custom-behaviours/',
         description: 'Custom behaviours',
       },
+      {
+        link: 'https://bbc.github.io/bbcat-orchestration-docs/image-behaviour/',
+        description: 'Images and effects behaviour',
+      },
     ],
   },
   presentation: {

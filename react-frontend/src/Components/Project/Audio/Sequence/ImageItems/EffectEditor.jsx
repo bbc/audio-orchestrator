@@ -69,7 +69,7 @@ const EffectEditor = ({
           </Table.Cell>
         </Table.Row>
         <Table.Row>
-          <Table.Cell content="Color" />
+          <Table.Cell content="Colour" />
           <Table.Cell>
             <ColorSelection
               value={color}

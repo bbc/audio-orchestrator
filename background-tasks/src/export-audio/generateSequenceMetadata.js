@@ -32,7 +32,7 @@ const getAudioItems = (object, files, baseUrl, sequenceId) => {
   }));
 };
 
-const getImageEffectsItems = (object, imageUrls) => {
+const getImageEffectsItems = (object, imageUrls, imageAltTexts) => {
   const { objectNumber, objectBehaviours = [] } = object;
   const { behaviourParameters = {} } = objectBehaviours
     .find(b => b.behaviourType === 'imageEffects') || {};
@@ -49,10 +49,10 @@ const getImageEffectsItems = (object, imageUrls) => {
       // For now, use object number as proxy for priority; as priority cannot be edited for
       // individual items.
       priority: objectNumber,
-      alt: undefined, // TODO
+      alt: imageAltTexts[imageId],
       effect,
     },
-  }));
+  })).filter(item => item.source.src !== undefined || item.source.effect !== undefined);
 };
 
 /**
@@ -68,7 +68,7 @@ const getImageEffectsItems = (object, imageUrls) => {
  * @param {String} settings.baseUrl
  * @param {Object} files
  */
-const generateSequenceMetatata = (
+const generateSequenceMetadata = (
   {
     sequenceId,
     loop = false,
@@ -78,6 +78,7 @@ const generateSequenceMetatata = (
   settings,
   files,
   imageUrls,
+  imageAltTexts,
 ) => {
   const { baseUrl } = settings;
 
@@ -93,10 +94,10 @@ const generateSequenceMetatata = (
         .filter(behaviour => behaviour.behaviourType !== 'imageEffects'),
       items: [
         ...getAudioItems(object, files, baseUrl, sequenceId),
-        ...getImageEffectsItems(object, imageUrls),
+        ...getImageEffectsItems(object, imageUrls, imageAltTexts),
       ],
     })),
   };
 };
 
-export default generateSequenceMetatata;
+export default generateSequenceMetadata;

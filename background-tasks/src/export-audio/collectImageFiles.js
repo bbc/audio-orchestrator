@@ -47,7 +47,7 @@ const collectImageFiles = (args) => {
   return fse.ensureDir(imageOutputDir).then(() => Promise.all(
     Object.values(images || {})
       .filter(({ imageId }) => usedImageIds.has(imageId))
-      .map(({ imageId }) => {
+      .map(({ imageId, imageAlt }) => {
         const {
           filePath,
           probe,
@@ -68,7 +68,7 @@ const collectImageFiles = (args) => {
         const imageOutputPath = path.join(imageOutputDir, imageFileName);
 
         return fse.copy(filePath, imageOutputPath)
-          .then(() => ({ imageId, imageUrl }))
+          .then(() => ({ imageId, imageUrl, imageAlt }))
           .catch((e) => {
             logger.warn(`Could not copy image ${imageUrl}: ${e}`);
             return null;
@@ -76,13 +76,16 @@ const collectImageFiles = (args) => {
       }),
   )).then((results) => {
     const imageUrls = {};
-    results.filter(r => r !== null).forEach(({ imageId, imageUrl }) => {
+    const imageAltTexts = {};
+    results.filter(r => r !== null).forEach(({ imageId, imageUrl, imageAlt }) => {
       imageUrls[imageId] = imageUrl;
+      imageAltTexts[imageId] = imageAlt;
     });
 
     return {
       ...args,
       imageUrls,
+      imageAltTexts,
     };
   });
 };

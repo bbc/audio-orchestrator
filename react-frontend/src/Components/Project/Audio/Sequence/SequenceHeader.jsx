@@ -29,7 +29,7 @@ const SequenceHeader = ({
           Add audio files to this sequence.
           <Header.Subheader>
             <List bulleted style={{ textAlign: 'left', display: 'inline-block' }}>
-              <List.Item content="There must be one continuous mono .wav file for each object." />
+              <List.Item content="There must be one continuous mono or stereo .wav file for each object." />
               <List.Item content="All files must be the same length." />
               <List.Item content="Filenames must start wih ascending numbers, e.g. 01_example.wav." />
             </List>
