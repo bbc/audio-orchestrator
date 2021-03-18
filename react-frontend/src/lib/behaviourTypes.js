@@ -7,6 +7,7 @@ export const behaviourTypes = [
   'preferredIf',
   'allowedIf',
   'prohibitedIf',
+  'gainAdjustmentIf',
   'exclusive',
   'onChange',
   // Not supported anymore; replaced by fixed/presets
@@ -97,6 +98,29 @@ export const behaviourTypeDetails = {
         type: 'conditionsList',
         defaultValue: [],
       },
+    ],
+  },
+  gainAdjustmentIf: {
+    displayName: 'Gain adjustment if',
+    description: 'The gain of this object will be adjusted on any device to which it is currently allocated that fulfils all of the conditions added to this behaviour',
+    multiple: true,
+    color: 'teal',
+    parameters: [
+      {
+        name: 'gainAdjust',
+        displayName: 'Gain adjustment',
+        description: 'Adjust the object\'s gain by this value on each device that matches the conditions.',
+        type: 'gain',
+        defaultValue: 0.0,
+      },
+      {
+        name: 'conditions',
+        displayName: 'Conditions',
+        description: '',
+        type: 'conditionsList',
+        defaultValue: [],
+      },
+
     ],
   },
   exclusive: {

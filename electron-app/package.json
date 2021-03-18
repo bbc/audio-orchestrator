@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-electron-app",
-  "version": "0.19.5",
+  "version": "0.19.6",
   "description": "Electron desktop application for generating orchestrated audio applications.",
   "main": "bin/main/main.js",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
@@ -39,6 +39,7 @@
     "build-background-tasks": "(cd ../background-tasks/ && yarn build)",
     "clean": "rm -rf ./dist/ ./bin/",
     "dev": "concurrently \"(cd ../react-frontend && yarn dev)\" \"(yarn build-background-tasks && yarn build-main && NODE_ENV=development electron .)\"",
+    "debug": "concurrently \"(cd ../react-frontend && yarn dev)\" \"(yarn build-background-tasks && yarn build-main && NODE_ENV=development electron --inspect=9229 .)\"",
     "test": "echo no tests defined.",
     "lint": "eslint src/",
     "credits": "license-to-fail && node ./scripts/credits.js",

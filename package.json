@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "(cd electron-app && yarn dev)",
+    "debug": "(cd electron-app && yarn debug)",
     "build": "(cd electron-app && yarn build)",
     "dist": "(cd electron-app && yarn dist)",
     "bump": "node scripts/bump.js && git add */package.json",

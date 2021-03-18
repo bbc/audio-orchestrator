@@ -17,6 +17,7 @@ import sessionProperties from './sessionProperties';
 import EnumInput from '../EnumInput';
 import ListOfEnumInput from '../ListOfEnumInput';
 import ListOfEnumWithAdditionInput from '../ListOfEnumWithAdditionInput';
+import ModuloInput from '../ModuloInput';
 
 const operatorOptions = operators.map(({ name, displayName }) => ({
   key: name,
@@ -205,7 +206,7 @@ class ConditionInput extends React.PureComponent {
       newValue.value = undefined;
     }
 
-    // if the property was changed, reset the operator and value
+    // if the operator was changed, reset the value
     if (fieldName === 'operator' && newValue.operator !== value.operator) {
       newValue.value = undefined;
     }
@@ -298,6 +299,9 @@ class ConditionInput extends React.PureComponent {
             break;
           case 'number':
             valueInputProps.type = 'number';
+            if (operator === 'modulo') {
+              ValueInputComponent = ModuloInput;
+            }
             break;
           case 'string':
           default:

@@ -1,3 +1,5 @@
+import React from 'react';
+
 // Based on bbcat-orchestration/src/allocation-algorithm/behaviours/conditionals.js
 const operators = [
   {
@@ -37,8 +39,17 @@ const operators = [
     allowedTypes: ['number', 'string', 'enum', 'object'],
   },
   {
-    name: 'moduloIsZero',
-    displayName: 'Modulo is zero',
+    name: 'modulo',
+    displayName: (
+      <span>
+        Every N
+        <sup>th</sup>
+        {' '}
+        value
+      </span>
+    ),
+    // technically the value is stored as an array of (modulus, remainder), but is treated as a pair
+    // so a single 'value' edited with two input fields, rather than the multi-selection for arrays
     valueIsArray: false,
     allowedTypes: ['number'],
   },

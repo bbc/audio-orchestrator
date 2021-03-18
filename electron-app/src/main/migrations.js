@@ -1,4 +1,5 @@
 import path from 'path';
+import { electronLogger as logger } from 'bbcat-orchestration-builder-logging';
 
 // Project file migrations
 // * The keys used in the migrations object represent the versions being migrated to.
@@ -12,10 +13,12 @@ const migrations = {
     // This is the first migration; it will be applied to any project file that does not have a
     // version set by the electron-store package. As we are now using electron-store migrations,
     // the old project store version is no longer required.
+    logger.info('running migration: 0.16.0, removing _PROJECT_STORE_VERSION property.');
     store.delete('_PROJECT_STORE_VERSION');
   },
   '0.16.1': (store) => {
     // Add playerImageAltText property to project settings
+    logger.info('running migration: 0.16.1, add playerImageAltText to project settings.');
     const settings = store.get('settings');
     if (settings) {
       store.set('settings', {
@@ -26,6 +29,7 @@ const migrations = {
   },
   '0.18.3': (store) => {
     // Add imageIndex, imageFilename, imageAlt properties to images
+    logger.info('running migration: 0.18.3, add imageIndex, imageFilename, imageAlt properties to images.');
     const images = store.get('images', {});
     const settings = store.get('settings', {});
     const { playerImageId, playerImageAltText } = settings;
@@ -61,6 +65,7 @@ const migrations = {
   },
   '0.19.5': (store) => {
     // Add fadeOutDuration to project settings
+    logger.info('running migration: 0.19.5, add fadeOutDuration to project settings.');
     const settings = store.get('settings');
     if (settings) {
       store.set('settings', {
@@ -68,6 +73,53 @@ const migrations = {
         fadeOutDuration: settings.fadeOutDuration || 0,
       });
     }
+  },
+  '0.19.6': (store) => {
+    // Replace moduloIsZero (modulus) conditions with modulo ([modulus, offset])
+    logger.info('running migration: 0.19.6, replace moduloIsZero with modulo conditional operator.');
+    const sequenceIds = store.get('sequenceIds', []);
+    sequenceIds.forEach((sequenceId) => {
+      const objectsKey = `sequences.${sequenceId}.objects`;
+      const objects = store.get(objectsKey, {});
+      const newObjects = {};
+      Object.entries(objects).forEach(([k, object]) => {
+        const newBehaviours = (object.objectBehaviours || []).map((behaviour) => {
+          const { behaviourType, behaviourParameters = {} } = behaviour;
+          if (['allowedIf', 'preferredIf', 'prohibitedIf'].includes(behaviourType)) {
+            const { conditions = [] } = behaviourParameters;
+            return {
+              ...behaviour,
+              behaviourParameters: {
+                ...behaviourParameters,
+                conditions: conditions.map((condition) => {
+                  if (condition.operator === 'moduloIsZero') {
+                    if (Array.isArray(condition.value)) {
+                      return condition;
+                    }
+
+                    return {
+                      ...condition,
+                      operator: 'modulo',
+                      value: [condition.value, condition.value],
+                    };
+                  }
+                  return condition;
+                }),
+              },
+            };
+          }
+
+          // return other behaviour types unchanged
+          return behaviour;
+        });
+        newObjects[k] = {
+          ...object,
+          objectBehaviours: newBehaviours,
+        };
+      });
+
+      store.set(objectsKey, newObjects);
+    });
   },
 };
 

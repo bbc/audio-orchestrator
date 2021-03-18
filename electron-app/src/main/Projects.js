@@ -53,6 +53,7 @@ const getProjectStore = (realProjectPath, create = false) => {
       // TODO can also add a schema to validate
       migrations: migrationsWithNewerVersionCheck,
       projectVersion,
+      accessPropertiesByDotNotation: false,
     });
     openProjectStores[realProjectPath] = projectStore;
   }
