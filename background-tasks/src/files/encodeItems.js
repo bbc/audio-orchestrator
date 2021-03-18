@@ -91,8 +91,11 @@ const encodeItem = ({
   };
 
   // Get the input name without extension, create the item name by appending the zero-padded index.
+  // Remove non-alphanumeric (and -/_) characters in the file name.
+  // TODO a better sanitisation might use the object number but don't want to rely on getting it
+  // from the filename here to not have that kind of parsing in two places.
   const { name } = path.parse(filePath);
-  const outputName = `${name}_${zeroPad(index, 6)}`;
+  const outputName = `${name.replace(/[^0-9A-Za-z._-]+/g, '')}_${zeroPad(index, 6)}`;
 
   // TODO the original encode-media script appends silence to the end of each segment using a
   // -i silence.wav -filter_complex [0:a] concat=n=2:v=0:a=1, possibly to deal with issues in the
