@@ -7,7 +7,7 @@ const sanitize = (s) => s.replace('<', '&lt;').replace('>', '&gt;');
 // Get information for all production dependencies, starting at electron-app because it imports
 // all the other packages.
 const getCreditInfo = () => new Promise((resolve, reject) => {
-    licenseChecker.init({
+  licenseChecker.init({
     start: path.join(__dirname, '..'),
     production: true,
   }, (err, result) => {
@@ -55,8 +55,12 @@ const writeCreditsFile = (info) => {
         console.warn(`${name} (${licenses}): ${licenseFile}`);
       }
 
-      return formatCredits({ name, repository, licenses, publisher, licenseText });
+      return formatCredits({
+        name, repository, licenses, publisher, licenseText,
+      });
     }).join('\n');
+
+  const { version } = JSON.parse(fs.readFileSync(path.resolve(__dirname, path.join('..', 'package.json')), 'utf-8'));
 
   const creditsPage = `<DOCTYPE html>
   <html>
@@ -72,8 +76,9 @@ const writeCreditsFile = (info) => {
   </head>
   <body>
     <h1>About Audio Orchestrator from BBC R&D</h1>
+    <p>Version ${version}</p>
     <p><img src="bbcrd-logo.svg" width="120" alt="BBC Research and Development" /></p>
-    <p>Audio Orchestrator was developed at BBC R&amp;D by Kristian Hentschel, with contributions from Jon Francombe, Danial Haddadi, and Emma Young. Find out more on <a href="https://www.bbc.co.uk/makerbox/tools/audio-orchestrator" target="_blank">BBC MakerBox</a>.
+    <p>Audio Orchestrator was developed at BBC R&amp;D by Kristian Hentschel, with contributions from Jon Francombe, Danial Haddadi, Emma Young, and Sonal Tandon. Find out more on <a href="https://www.bbc.co.uk/makerbox/tools/audio-orchestrator" target="_blank">BBC MakerBox</a>.
     <h2>Open source licences</h2>
     <p>This is a list of open-source components used to create this software. Click on the package name to see licence information.</p>
     <ul>

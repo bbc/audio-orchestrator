@@ -194,7 +194,7 @@ class Appearance extends React.Component {
           />
 
           <Form.Checkbox
-            label="Show Play and Pause buttons on auxiliary devices"
+            label="Show Play and Pause buttons on aux devices"
             name="enablePlayPauseOnAux"
             defaultChecked={enablePlayPauseOnAux}
             onChange={this.handleChange}

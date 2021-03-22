@@ -3,11 +3,22 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.20.0` (public release)
+_2021-03-22_
+
+  * Add new `gainAdjustmentIf` behaviour (total adjustment limited to +12dB per object in the allocation algorithm).
+  * Replace `moduloIsZero` conditional operator with `modulo` and support an offset.
+  * Allow configuring the object fade-out duration on the Appearance page.
+  * Various small fixes in image authoring and exporting.
+  * Experimental builds for Windows and Apple M1 Macs.
+  * Upgraded to Electron version 12.0, and upgrade other external dependencies.
+  * Upgraded the orchestration template, including displaying the number of devices in the status bar and several features only available by editing the exported index.html: a per-sequence title and image, a list of sequence destinations displayed with thumbnails and titles, and automatic transitions once a minimum number of aux devices have been connected.
+
 # `0.19.2`
 _2021-01-21_
 
- * Fix problem where no windows were opened on app launch
- * Upgrade external dependencies
+ * Fix problem where no windows were opened on app launch.
+ * Upgrade external dependencies.
 
 # `0.19.1`
 _2020-12-07_
@@ -20,7 +31,7 @@ _2020-12-07_
  * Various small fixes to the application template layout.
  * Update external dependencies, including Electron framework.
 
-# `0.18.0`
+# `0.18.0` (public release)
 _2020-08-18_
 
  * Encode and play objects imported as stereo .wav files, to avoid a problem where left and right channels could be allocated to different devices.
