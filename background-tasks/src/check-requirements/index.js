@@ -11,7 +11,7 @@ const execFile = promisify(execFileCB);
 const checkFfmpeg = () => which('ffmpeg')
   .then(path => execFile(path, ['-version']))
   .then(({ stdout }) => {
-    const matches = stdout.match(/ffmpeg version ([0-9.]*)/);
+    const matches = stdout.match(/ffmpeg version [n]*([0-9.]*)/);
 
     if (!matches || matches.length < 2) {
       throw new Error('ffmpeg was found but does not appear to work (ffmpeg -version does not output in expected format).');

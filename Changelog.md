@@ -3,6 +3,10 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.20.1` (public release)
+
+  * Accept ffmpeg versions of the form `n4.4-tag` too, to support alternative available Windows builds.
+
 # `0.20.0` (public release)
 _2021-03-22_
 

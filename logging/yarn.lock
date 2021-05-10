@@ -78,9 +78,9 @@ fast-safe-stringify@^2.0.4:
   integrity sha1-EkqohYmSYfaK7bQqfAgN6dpgh0M=
 
 fecha@^4.2.0:
-  version "4.2.0"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/fecha/-/fecha-4.2.0.tgz#3ffb6395453e3f3efff850404f0a59b6747f5f41"
-  integrity sha1-P/tjlUU+Pz7/+FBATwpZtnR/X0E=
+  version "4.2.1"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/fecha/-/fecha-4.2.1.tgz#0a83ad8f86ef62a091e22bb5a039cd03d23eecce"
+  integrity sha1-CoOtj4bvYqCR4iu1oDnNA9I+7M4=
 
 fn.name@1.x.x:
   version "1.1.0"

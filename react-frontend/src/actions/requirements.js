@@ -18,7 +18,7 @@ export const requestCheckRequirements = () => (dispatch) => {
         console.log('requirements complete, but unsuccessful', result);
         // TODO make this a richer error message (not using setAppError)?
         dispatch(setAppError(
-          `The required audio encoding and analysis tools (ffmpeg and ffprobe) were not found in the default locations (/usr/bin, /usr/local/bin). See the installation instructions in the documentation for more information and guidance. [Details: ${errors.join(' ')}]`,
+          `The required audio encoding and analysis tools (ffmpeg and ffprobe) were not found in the default locations. See the installation instructions in the documentation for more information and guidance. [Details: ${errors.join(' ')}]`,
           'https://bbc.github.io/bbcat-orchestration-docs/error-messages/required-audio-encoding-tools-were-not-found/',
         ));
       }
