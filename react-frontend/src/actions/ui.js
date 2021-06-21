@@ -18,6 +18,12 @@ export const openSequencePage = (projectId, sequenceId) => ({
   sequenceId,
 });
 
+export const openMonitoringPage = (projectId, sequenceId) => ({
+  type: 'UI_OPEN_MONITORING_PAGE',
+  projectId,
+  sequenceId,
+});
+
 export const closeSequencePage = () => ({
   type: 'UI_CLOSE_SEQUENCE_PAGE',
 });

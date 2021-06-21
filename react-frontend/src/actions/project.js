@@ -165,6 +165,17 @@ export const loadControls = projectId => (dispatch) => {
   dispatch({ type: 'SET_PROJECT_CONTROLS_LIST', projectId, controlsList });
 };
 
+export const loadMonitoringSetups = projectId => (dispatch) => {
+  const {
+    savedMonitoringSetups,
+    currentMonitoringSetup,
+  } = projects[projectId];
+
+  dispatch({ type: 'SET_PROJECT_SAVED_MONITORING_SETUPS', projectId, savedMonitoringSetups });
+  dispatch({ type: 'SET_PROJECT_CURRENT_MONITORING_SETUP', projectId, currentMonitoringSetup });
+};
+
+
 export const setProjectImagesLoading = (projectId, imagesLoading) => ({
   type: 'SET_PROJECT_IMAGES_LOADING',
   projectId,
@@ -214,6 +225,9 @@ const openedProject = projectId => (dispatch) => {
 
   // Get the controls for the UI
   dispatch(loadControls(projectId));
+
+  // Load saved monitoring state
+  dispatch(loadMonitoringSetups(projectId));
 
   // Move onto the project page
   dispatch(openProjectPage(projectId));
@@ -1354,4 +1368,43 @@ export const setImageAlt = (projectId, imageId, imageAlt) => (dispatch) => {
   project.images = updatedImages;
 
   dispatch(loadImages(projectId));
+};
+
+/**
+ * Action creator, replaces all the saved monitoring setups in the project
+ */
+export const setSavedMonitoringSetups = (projectId, savedMonitoringSetups) => (dispatch) => {
+  const project = projects[projectId];
+  project.savedMonitoringSetups = savedMonitoringSetups;
+
+  dispatch(loadMonitoringSetups(projectId));
+};
+
+/**
+ * Action creator, adds a saved monitoring setup to the project
+ */
+export const addSavedMonitoringSetup = (projectId, devices, name) => (dispatch) => {
+  const project = projects[projectId];
+  const { savedMonitoringSetups } = project;
+
+  project.savedMonitoringSetups = [
+    ...savedMonitoringSetups,
+    {
+      name,
+      id: uuidv4(),
+      devices,
+    },
+  ];
+
+  dispatch(loadMonitoringSetups(projectId));
+};
+
+/**
+ * Action creator, replaces the current monitoring setup in the project
+ */
+export const setCurrentMonitoringSetup = (projectId, currentMonitoringSetup) => (dispatch) => {
+  const project = projects[projectId];
+  project.currentMonitoringSetup = currentMonitoringSetup;
+
+  dispatch(loadMonitoringSetups(projectId));
 };

@@ -1,6 +1,6 @@
 {
   "name": "bbcat-orchestration-builder-react-frontend",
-  "version": "0.20.1",
+  "version": "0.21.0-dev.1",
   "description": "Graphical user interface for generating orchestrated audio applications.",
   "repository": "https://github.com/bbc/bbcat-orchestration-builder",
   "author": "Kristian Hentschel <Kristian.Hentschel@bbc.co.uk>",
@@ -8,6 +8,7 @@
   "private": true,
   "dependencies": {
     "@reduxjs/toolkit": "^1.5.0",
+    "@bbc/bbcat-orchestration": "^0.11.0",
     "classnames": "^2.2.6",
     "events": "^3.1.0",
     "prop-types": "^15.7.2",

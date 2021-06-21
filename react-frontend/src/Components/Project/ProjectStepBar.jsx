@@ -16,6 +16,7 @@ import {
   PAGE_PROJECT_OBJECTS,
   PAGE_PROJECT_PRESENTATION,
   PAGE_PROJECT_EXPORT,
+  PAGE_PROJECT_MONITORING,
 } from '../../reducers/UIReducer';
 
 const steps = [
@@ -36,6 +37,12 @@ const steps = [
     icon: 'file audio outline',
     title: 'Audio',
     // description: 'Import audio and define where objects are rendered',
+  },
+  {
+    key: PAGE_PROJECT_MONITORING,
+    icon: 'headphones',
+    title: 'Monitoring',
+    // description: ,
   },
   {
     key: PAGE_PROJECT_PRESENTATION,

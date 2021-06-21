@@ -23,6 +23,13 @@ contextBridge.exposeInMainWorld('projectStoreFunctions', {
   openProject: projectId => ipcRenderer.invoke('project-open', projectId),
 });
 
+// For monitoring system
+contextBridge.exposeInMainWorld('monitoringFunctions', {
+  sendOSC: (OSCMessages, portNumber) => ipcRenderer.invoke('monitoring-send-osc', OSCMessages, portNumber),
+  getOSCSettings: () => ipcRenderer.invoke('monitoring-get-osc-settings'),
+  setOSCSettings: settings => ipcRenderer.invoke('monitoring-set-osc-settings', settings),
+});
+
 // Other methods
 contextBridge.exposeInMainWorld('miscFunctions', {
   openCredits: () => ipcRenderer.invoke('open-credits'),

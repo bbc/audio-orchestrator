@@ -11,28 +11,33 @@ import {
   Icon,
   Button,
 } from 'semantic-ui-react';
-import ProjectsList from './ProjectsList';
 
 import {
   requestListProjects,
   checkFileOpen,
   requestCreateProject,
   requestOpenProject,
-} from '../../actions/project';
-
+} from 'Actions/project';
 import {
   requestCheckRequirements,
-} from '../../actions/requirements';
+} from 'Actions/requirements';
+import {
+  requestGetOSCSettings,
+} from 'Actions/monitoring';
+
+import ProjectsList from './ProjectsList';
 
 class Home extends React.Component {
   componentDidMount() {
     const {
       onRequestCheckRequirements,
       onRequestListProjects,
+      onRequestGetOSCSettings,
       onCheckFileOpen,
     } = this.props;
     onRequestCheckRequirements();
     onRequestListProjects();
+    onRequestGetOSCSettings();
     onCheckFileOpen();
   }
 
@@ -90,6 +95,7 @@ class Home extends React.Component {
 Home.propTypes = {
   onRequestCheckRequirements: PropTypes.func.isRequired,
   onRequestListProjects: PropTypes.func.isRequired,
+  onRequestGetOSCSettings: PropTypes.func.isRequired,
   onCheckFileOpen: PropTypes.func.isRequired,
   onOpenProject: PropTypes.func.isRequired,
   onCreateProject: PropTypes.func.isRequired,
@@ -109,6 +115,7 @@ const mapDispatchToProps = dispatch => ({
   // TODO actually, open a modal to enter a name first?
   onCreateProject: () => dispatch(requestCreateProject()),
   onRequestListProjects: () => dispatch(requestListProjects()),
+  onRequestGetOSCSettings: () => dispatch(requestGetOSCSettings()),
   onCheckFileOpen: () => dispatch(checkFileOpen()),
   onRequestCheckRequirements: () => dispatch(requestCheckRequirements()),
 });

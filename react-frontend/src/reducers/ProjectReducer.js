@@ -278,6 +278,14 @@ const ProjectReducer = (state = initialState, action) => {
         controlParameters: action.controlParameters,
         controlBehaviours: action.controlBehaviours,
       });
+    case 'SET_PROJECT_SAVED_MONITORING_SETUPS':
+      return updateProject(state, action.projectId, {
+        savedMonitoringSetups: action.savedMonitoringSetups,
+      });
+    case 'SET_PROJECT_CURRENT_MONITORING_SETUP':
+      return updateProject(state, action.projectId, {
+        currentMonitoringSetup: action.currentMonitoringSetup,
+      });
     case 'DELETE_PROJECT':
       return {
         ...state,

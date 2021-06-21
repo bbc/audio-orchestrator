@@ -7,12 +7,12 @@ import {
   Tab,
   Menu,
 } from 'semantic-ui-react';
+import {
+  openSequencePage,
+} from 'Actions/ui';
 import PageTitleBar from '../../PageTitleBar';
 
 import Sequence from './Sequence';
-import {
-  openSequencePage,
-} from '../../../actions/ui';
 
 const Audio = ({
   currentProjectId,

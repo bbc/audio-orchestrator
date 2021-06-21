@@ -69,6 +69,21 @@ class Project {
     data.lastOpened = store.get('lastOpened', '');
     data.settings = store.get('settings', DEFAULT_SETTINGS);
     data.images = store.get('images', {});
+    data.savedMonitoringSetups = store.get('savedMonitoringSetups', []);
+    data.currentMonitoringSetup = store.get('currentMonitoringSetup', {
+      name: 'current setup',
+      id: uuidv4(),
+      devices: [
+        {
+          deviceId: uuidv4(),
+          deviceType: 'desktop',
+          displayName: 'Desktop/laptop',
+          joiningNumber: 1,
+          switchedOn: true,
+          controlValues: null,
+        },
+      ],
+    });
 
     // get controls listed in controlIds
     data.controls = {};
@@ -451,6 +466,50 @@ class Project {
     Object.values(this.sequences).forEach(sequence => sequence.handleDeleteControl(controlId));
 
     this.updateControlsList();
+  }
+
+  /**
+   * Gets the current monitoring setup.
+   *
+   * @returns {Object}
+   */
+  get currentMonitoringSetup() {
+    const { currentMonitoringSetup } = this.data;
+    return currentMonitoringSetup;
+  }
+
+  /**
+   * Sets the current monitoring setup.
+   *
+   * @param {Object} setup
+   */
+  set currentMonitoringSetup(currentMonitoringSetup) {
+    const { store, data } = this;
+
+    data.currentMonitoringSetup = currentMonitoringSetup;
+    store.set('currentMonitoringSetup', currentMonitoringSetup);
+  }
+
+  /**
+   * Gets the saved monitoring setups.
+   *
+   * @returns {Array<Object>}
+   */
+  get savedMonitoringSetups() {
+    const { savedMonitoringSetups } = this.data;
+    return savedMonitoringSetups;
+  }
+
+  /**
+   * Sets the saved monitoring setups.
+   *
+   * @param {Array<Object>} setups
+   */
+  set savedMonitoringSetups(savedMonitoringSetups) {
+    const { store, data } = this;
+
+    data.savedMonitoringSetups = savedMonitoringSetups;
+    store.set('savedMonitoringSetups', savedMonitoringSetups);
   }
 
   /**

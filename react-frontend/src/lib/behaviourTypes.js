@@ -234,3 +234,10 @@ export const behaviourTypeDetails = {
     ],
   },
 };
+
+export const deviceTypes = [
+  { value: 'desktop', displayName: 'Desktop/laptop', icon: 'desktop' },
+  { value: 'mobile', displayName: 'Mobile', icon: 'mobile' },
+  { value: 'tablet', displayName: 'Tablet', icon: 'tablet alternate' },
+  // { value: 'tv', displayName: 'TV' },
+];

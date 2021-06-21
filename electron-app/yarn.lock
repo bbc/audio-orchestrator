@@ -935,7 +935,7 @@
     uuid "^3.3.2"
     whatwg-fetch "^3.0.0"
 
-"@bbc/bbcat-orchestration@^0.11.3":
+"@bbc/bbcat-orchestration@^0.11.0", "@bbc/bbcat-orchestration@^0.11.3":
   version "0.11.3"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration/-/@bbc/bbcat-orchestration-0.11.3.tgz#498b459875792031e666077070791e3e4bc5c157"
   integrity sha1-SYtFmHV5IDHmZgdwcHkePkvFwVc=
@@ -1561,6 +1561,11 @@ binaryextensions@^4.15.0:
   version "4.15.0"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/binaryextensions/-/binaryextensions-4.15.0.tgz#c63a502e0078ff1b0e9b00a9f74d3c2b0f8bd32e"
   integrity sha1-xjpQLgB4/xsOmwCp9008Kw+L0y4=
+
+binpack@~0:
+  version "0.1.0"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/binpack/-/binpack-0.1.0.tgz#bd3d0974c3f2a0446e17df4f60b55a72a205a97e"
+  integrity sha1-vT0JdMPyoERuF99PYLVacqIFqX4=
 
 bl@^1.2.1:
   version "1.2.3"
@@ -4519,6 +4524,13 @@ os-tmpdir@^1.0.0, os-tmpdir@~1.0.2:
   version "1.0.2"
   resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/os-tmpdir/-/os-tmpdir-1.0.2.tgz#bbe67406c79aa85c5cfec766fe5734555dfa1274"
   integrity sha1-u+Z0BseaqFxc/sdm/lc0VV36EnQ=
+
+osc-min@^1.1.2:
+  version "1.1.2"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/osc-min/-/osc-min-1.1.2.tgz#3dcaff10f804c39b7080cf4c10fd7a4103cd9037"
+  integrity sha1-Pcr/EPgEw5twgM9MEP16QQPNkDc=
+  dependencies:
+    binpack "~0"
 
 osenv@^0.1.4:
   version "0.1.5"

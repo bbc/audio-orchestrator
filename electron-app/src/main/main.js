@@ -23,6 +23,11 @@ import {
   listProjects,
   removeRecentProjectById,
 } from './Projects';
+import {
+  sendOSC,
+  getOSCSettings,
+  setOSCSettings,
+} from './Monitoring';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -66,20 +71,21 @@ function createWindow() {
   });
 
   // TODO: install devTools - currently not working so commented out
-  // if (devMode) {
-  //   /* eslint-disable-next-line global-require */
-  //   const {
-  //     default: installExtension,
-  //     REACT_DEVELOPER_TOOLS,
-  //     REDUX_DEVTOOLS,
-  //   } = require('electron-devtools-installer');
-  //   installExtension(REACT_DEVELOPER_TOOLS)
-  //     .then(name => logger.info(`Added Extension:  ${name}`))
-  //     .catch(err => logger.warn('An error occurred: ', err));
-  //   installExtension(REDUX_DEVTOOLS)
-  //     .then(name => logger.info(`Added Extension:  ${name}`))
-  //     .catch(err => logger.warn('An error occurred: ', err));
-  // }
+  if (devMode) {
+  // eslint-disable-next-line global-require
+    const {
+      default: installExtension,
+      REACT_DEVELOPER_TOOLS,
+      REDUX_DEVTOOLS,
+    // eslint-disable-next-line global-require
+    } = require('electron-devtools-installer');
+    installExtension(REACT_DEVELOPER_TOOLS)
+      .then(name => logger.info(`Added Extension:  ${name}`))
+      .catch(err => logger.warn('An error occurred: ', err));
+    installExtension(REDUX_DEVTOOLS)
+      .then(name => logger.info(`Added Extension:  ${name}`))
+      .catch(err => logger.warn('An error occurred: ', err));
+  }
 
   if (devMode) {
     // load the user interface hosted by webpack-dev-server
@@ -152,6 +158,9 @@ const registerIpcHandlers = () => {
     sep: path.sep,
     delimiter: path.delimiter,
   }));
+  ipcMain.handle('monitoring-send-osc', (e, OSCMessages, portNumber) => sendOSC(OSCMessages, portNumber));
+  ipcMain.handle('monitoring-get-osc-settings', () => getOSCSettings());
+  ipcMain.handle('monitoring-set-osc-settings', (e, settings) => setOSCSettings(settings));
 
   // Handlers for saving exports:
   ipcMain.handle('open-in-folder', openInFolder);

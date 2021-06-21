@@ -10,27 +10,34 @@ const InlineHelpPopup = ({
   content,
   children,
   className,
-}) => (
-  <Popup
-    inverted
-    basic
-    position="top center"
-    content={content}
-    trigger={(
-      <span className={className}>
-        {children}
-      </span>
-    )}
-  />
-);
+}) => {
+  if (!content) {
+    return children;
+  }
+
+  return (
+    <Popup
+      inverted
+      basic
+      position="top center"
+      content={content}
+      trigger={(
+        <span className={className}>
+          {children}
+        </span>
+      )}
+    />
+  );
+};
 
 InlineHelpPopup.propTypes = {
-  content: PropTypes.string.isRequired,
+  content: PropTypes.string,
   children: PropTypes.node.isRequired,
   className: PropTypes.string,
 };
 
 InlineHelpPopup.defaultProps = {
+  content: null,
   className: undefined,
 };
 

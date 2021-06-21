@@ -11,6 +11,7 @@ import {
   Button,
 } from 'semantic-ui-react';
 import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
+import { deviceTypes } from 'Lib/behaviourTypes';
 import operators from './operators';
 import deviceProperties from './deviceProperties';
 import sessionProperties from './sessionProperties';
@@ -150,12 +151,7 @@ const getPropertyTypeAndOperators = (property, {
     // based on template use of bowser getPlatform().type values here:
     // https://github.com/lancedikson/bowser/blob/master/src/constants.js#L86
     result.type = 'enum';
-    result.allowedValues = [
-      { value: 'tablet', displayName: 'Tablet' },
-      { value: 'mobile', displayName: 'Mobile' },
-      { value: 'desktop', displayName: 'Desktop/laptop' },
-      // { value: 'tv', displayName: 'TV' },
-    ];
+    result.allowedValues = deviceTypes;
   }
 
   // Set allowedOperators based on the allowed types defined in operators.js

@@ -6,6 +6,7 @@ export const PAGE_PROJECT = 'project';
 export const PAGE_PROJECT_SEQUENCES = 'sequences';
 export const PAGE_PROJECT_CONTROLS = 'controls';
 export const PAGE_PROJECT_OBJECTS = 'objects';
+export const PAGE_PROJECT_MONITORING = 'monitoring';
 export const PAGE_PROJECT_PRESENTATION = 'presentation';
 export const PAGE_PROJECT_EXPORT = 'export';
 
@@ -49,6 +50,14 @@ const UIReducer = (state = initialState, action) => {
         currentSequenceId: action.sequenceId,
         sequenceAudioConfirmation: null,
         sequenceAudioError: null,
+      };
+    case 'UI_OPEN_MONITORING_PAGE':
+      return {
+        ...state,
+        currentPage: PAGE_PROJECT,
+        currentProjectPage: PAGE_PROJECT_MONITORING,
+        currentProjectId: action.projectId,
+        currentSequenceId: action.sequenceId,
       };
     case 'UI_CONFIRM_SEQUENCE_AUDIO_REPLACED':
       return {

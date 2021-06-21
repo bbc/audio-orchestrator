@@ -27,3 +27,12 @@ export const setRecentProject = (projectId, projectFilePath, name) => {
 export const removeRecentProject = (projectFilePath) => {
   settingsStore.set('recentProjects', getRecentProjects().filter(p => p.projectFilePath !== projectFilePath));
 };
+
+export const getOSCSettings = () => settingsStore.get('OSCSettings', null);
+
+export const setOSCSettings = ({ portNumber, format }) => {
+  settingsStore.set('OSCSettings', {
+    portNumber,
+    format,
+  });
+};

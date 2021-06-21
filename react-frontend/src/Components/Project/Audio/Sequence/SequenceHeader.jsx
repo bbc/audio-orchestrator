@@ -4,23 +4,35 @@ import { connect } from 'react-redux';
 import {
   Button,
   Segment,
-  Container,
   Icon,
   Header,
   Label,
   List,
+  Menu,
 } from 'semantic-ui-react';
 
 import {
   requestReplaceAllAudioFiles,
-} from '../../../../actions/project';
+} from 'Actions/project';
+import {
+  openMonitoringPage,
+} from 'Actions/ui';
+import { useObjects } from 'Components/Project/Monitoring/helpers';
+import ConnectToDAWButton from 'Components/Project/Monitoring/ConnectToDAWButton';
+import PlayPauseButtons from 'Components/Project/Monitoring/PlayPauseButtons';
+import RunAlgorithmButton from 'Components/Project/Monitoring/RunAlgorithmButton';
 
 const SequenceHeader = ({
   haveFiles,
   onReplaceAudioFiles,
+  onOpenMonitoring,
   sequenceAudioError,
   sequenceAudioConfirmation,
+  projectId,
+  sequenceId,
 }) => {
+  // To pass as a prop to connect to DAW button
+  const objects = useObjects(projectId, sequenceId);
   if (!haveFiles) {
     return (
       <Segment placeholder>
@@ -38,7 +50,7 @@ const SequenceHeader = ({
         <Button
           primary
           labelPosition="left"
-          icon="plus"
+          icon="open folder"
           content="Add audio files"
           onClick={onReplaceAudioFiles}
         />
@@ -47,27 +59,57 @@ const SequenceHeader = ({
   }
 
   return (
-    <Container>
-      <Button
-        primary
-        labelPosition="left"
-        icon="refresh"
-        content="Replace all audio files"
-        onClick={onReplaceAudioFiles}
-      />
+    <Menu secondary>
+      <Menu.Item>
+        <Button
+          primary
+          labelPosition="left"
+          icon="open folder"
+          content="Replace all audio files"
+          onClick={onReplaceAudioFiles}
+        />
 
-      { (sequenceAudioError || sequenceAudioConfirmation)
-        ? (
-          <Label
-            basic
-            color={sequenceAudioError ? 'red' : 'green'}
-            content={sequenceAudioError || sequenceAudioConfirmation}
-            icon={sequenceAudioError ? 'exclamation' : 'checkmark'}
+        {(sequenceAudioError || sequenceAudioConfirmation)
+          ? (
+            <Label
+              basic
+              color={sequenceAudioError ? 'red' : 'green'}
+              content={sequenceAudioError || sequenceAudioConfirmation}
+              icon={sequenceAudioError ? 'exclamation' : 'checkmark'}
+            />
+          )
+          : null
+        }
+      </Menu.Item>
+      <Menu.Menu position="right">
+        <Menu.Item>
+          <ConnectToDAWButton
+            objects={objects}
+            projectId={projectId}
           />
-        )
-        : null
-      }
-    </Container>
+        </Menu.Item>
+        <Menu.Item>
+          <Button.Group basic>
+            <PlayPauseButtons />
+            <RunAlgorithmButton
+              projectId={projectId}
+              currentSequenceId={sequenceId}
+            />
+          </Button.Group>
+        </Menu.Item>
+        <Menu.Item>
+          <Button
+            compact
+            basic
+            icon="headphones"
+            className="icon"
+            content="Monitoring"
+            labelPosition="left"
+            onClick={onOpenMonitoring}
+          />
+        </Menu.Item>
+      </Menu.Menu>
+    </Menu>
   );
 };
 
@@ -76,6 +118,9 @@ SequenceHeader.propTypes = {
   sequenceAudioError: PropTypes.string,
   sequenceAudioConfirmation: PropTypes.string,
   onReplaceAudioFiles: PropTypes.func.isRequired,
+  onOpenMonitoring: PropTypes.func.isRequired,
+  projectId: PropTypes.string.isRequired,
+  sequenceId: PropTypes.string.isRequired,
 };
 
 SequenceHeader.defaultProps = {
@@ -99,11 +144,14 @@ const mapStateToProps = ({ Project, UI }, { projectId, sequenceId }) => {
     haveFiles: (filesList && filesList.length > 0),
     sequenceAudioConfirmation,
     sequenceAudioError,
+    projectId,
+    sequenceId,
   };
 };
 
 const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
   onReplaceAudioFiles: () => dispatch(requestReplaceAllAudioFiles(projectId, sequenceId)),
+  onOpenMonitoring: () => dispatch(openMonitoringPage(projectId, sequenceId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SequenceHeader);
