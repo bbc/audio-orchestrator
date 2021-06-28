@@ -20,7 +20,8 @@ import {
   deleteAllDevices,
 } from './helpers';
 import ConnectToDAWButton from './ConnectToDAWButton';
-import DeviceSetupModal from './DeviceSetupModal';
+import SaveSetupModal from './SaveSetupModal';
+import ManageSetupsModal from './ManageSetupsModal';
 import { presetMonitoringSetups } from './presetDeviceSetups';
 
 const MonitoringToolbar = ({
@@ -30,11 +31,18 @@ const MonitoringToolbar = ({
   // Set constants for required properties in state
   const currentSetup = useCurrentSetup(projectId);
   const objects = useObjects(projectId, currentSequenceId);
+
   // Set a savedSetups constant to be the list of savedSetups in redux state
   // concatenated with the presets
   const savedSetups = useSavedSetups(projectId).concat(presetMonitoringSetups);
+
   // Create a shorthand for useDispatch
   const dispatch = useDispatch();
+
+  // Modals for managing and saving the device setups
+  const [manageSetupsOpen, setManageSetupsOpen] = useState(false);
+  const [saveSetupOpen, setSaveSetupOpen] = useState(false);
+
   const savedSetupOptions = savedSetups.map(savedSetup => ({
     key: savedSetup.id,
     text: savedSetup.name,
@@ -54,13 +62,19 @@ const MonitoringToolbar = ({
       ));
     },
   }));
-  const [deviceSetupModalOpen, setDeviceSetupModalOpen] = useState(false);
+
   return (
     <>
-      { deviceSetupModalOpen && (
-        <DeviceSetupModal
-          onClose={(() => { setDeviceSetupModalOpen(false); })}
+      { saveSetupOpen && (
+        <SaveSetupModal
+          onClose={(() => { setSaveSetupOpen(false); })}
           setup={currentSetup}
+          projectId={projectId}
+        />
+      )}
+      { manageSetupsOpen && (
+        <ManageSetupsModal
+          onClose={(() => { setManageSetupsOpen(false); })}
           projectId={projectId}
         />
       )}
@@ -83,16 +97,6 @@ const MonitoringToolbar = ({
           <Menu.Item>
             <Button.Group basic size="small">
               <InlineHelpPopup
-                content="Save this device setup or delete other setups."
-                className="ui buttons"
-              >
-                <Button
-                  icon="save"
-                  className="icon"
-                  onClick={() => setDeviceSetupModalOpen(true)}
-                />
-              </InlineHelpPopup>
-              <InlineHelpPopup
                 content="Load device setup."
                 className="ui buttons"
               >
@@ -110,6 +114,26 @@ const MonitoringToolbar = ({
                       fitted
                     />
                   )}
+                />
+              </InlineHelpPopup>
+              <InlineHelpPopup
+                content="Save this device setup."
+                className="ui buttons"
+              >
+                <Button
+                  icon="save"
+                  className="icon"
+                  onClick={() => setSaveSetupOpen(true)}
+                />
+              </InlineHelpPopup>
+              <InlineHelpPopup
+                content="View or delete saved device setups."
+                className="ui buttons"
+              >
+                <Button
+                  icon="bars"
+                  className="icon"
+                  onClick={() => setManageSetupsOpen(true)}
                 />
               </InlineHelpPopup>
             </Button.Group>

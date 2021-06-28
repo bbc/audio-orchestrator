@@ -19,7 +19,7 @@ const makeMultipleDevices = (firstJoiningNumber, lastJoiningNumber, deviceType, 
 
 export const presetMonitoringSetups = [
   {
-    name: '(Preset) 3: Desktop/laptop, Mobile, Mobile',
+    name: '(Preset) 3: Desktop/laptop main with 2 aux mobiles',
     id: uuidv4(),
     devices: [
       makeDevice(1, 'desktop', 'Desktop/Laptop'),
@@ -28,7 +28,7 @@ export const presetMonitoringSetups = [
     ],
   },
   {
-    name: '(Preset) 5: Mobile, Mobile, Tablet, Mobile, Tablet',
+    name: '(Preset) 5: Mobile main with 4 mobile and tablet aux devices',
     id: uuidv4(),
     devices: [
       makeDevice(1, 'mobile', 'Mobile'),
@@ -39,7 +39,7 @@ export const presetMonitoringSetups = [
     ],
   },
   {
-    name: '(Preset) 30: Desktop/laptop, Mobile, Mobile, Mobile, Mobile, Mobile, Mobile...',
+    name: '(Preset) 30: Desktop/laptop main with 29 aux mobiles',
     id: uuidv4(),
     devices: [
       makeDevice(1, 'desktop', 'Desktop/Laptop'),
