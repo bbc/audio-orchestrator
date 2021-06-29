@@ -8,7 +8,7 @@ import {
 } from 'semantic-ui-react';
 import { setSequenceSetting } from '../../../actions/project';
 
-class SequenceSettingsNew extends React.Component {
+class SequenceSettings extends React.Component {
   constructor(props) {
     super(props);
 
@@ -38,6 +38,7 @@ class SequenceSettingsNew extends React.Component {
       loop,
       skippable,
       hold,
+      instructions,
     } = this.props;
 
     return (
@@ -66,18 +67,26 @@ class SequenceSettingsNew extends React.Component {
               disabled={loop}
             />
           </List.Item>
+          <List.Item>
+            <Checkbox
+              label="Show connection instructions during this sequence"
+              checked={instructions}
+              onChange={() => this.handleChange('instructions', !instructions)}
+            />
+          </List.Item>
         </List>
       </Container>
     );
   }
 }
 
-SequenceSettingsNew.propTypes = {
+SequenceSettings.propTypes = {
 // projectId: PropTypes.string.isRequired,
 // sequenceId: PropTypes.string.isRequired,
   loop: PropTypes.bool.isRequired,
-  skippable: PropTypes.bool.isRequired,
   hold: PropTypes.bool.isRequired,
+  skippable: PropTypes.bool.isRequired,
+  instructions: PropTypes.bool.isRequired,
   onChangeSetting: PropTypes.func.isRequired,
 };
 
@@ -87,12 +96,14 @@ const mapStateToProps = (state, { projectId, sequenceId }) => {
     loop,
     skippable,
     hold,
+    instructions,
   } = sequences[sequenceId];
 
   return {
     loop,
     skippable,
     hold,
+    instructions,
     sequencesList,
   };
 };
@@ -101,4 +112,4 @@ const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
   onChangeSetting: (key, value) => dispatch(setSequenceSetting(projectId, sequenceId, key, value)),
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SequenceSettingsNew);
+export default connect(mapStateToProps, mapDispatchToProps)(SequenceSettings);

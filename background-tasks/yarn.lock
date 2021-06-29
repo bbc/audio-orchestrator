@@ -918,10 +918,10 @@
     weak-map "^1.0.5"
     winston "^2.4.0"
 
-"@bbc/bbcat-orchestration-template@^0.16.4":
-  version "0.16.4"
-  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.16.4.tgz#e8e2cb769d52a4fb29e29221cceccb5e53489db3"
-  integrity sha1-6OLLdp1SpPsp4pIhzOzLXlNInbM=
+"@bbc/bbcat-orchestration-template@^0.16.5":
+  version "0.16.5"
+  resolved "https://artifactory.virt.ch.bbc.co.uk:443/artifactory/api/npm/npm/@bbc/bbcat-orchestration-template/-/@bbc/bbcat-orchestration-template-0.16.5.tgz#21be5b468d7b1ade84a01d47e668badb4e5242f4"
+  integrity sha1-Ib5bRo17Gt6EoB1H5mi6205SQvQ=
   dependencies:
     "@bbc/bbcat-orchestration" "^0.11.3"
     "@hot-loader/react-dom" "^16.11.0"

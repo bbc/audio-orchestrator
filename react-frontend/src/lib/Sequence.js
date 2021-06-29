@@ -22,6 +22,7 @@ class SequenceSettings {
       outPoints,
       hold,
       skippable,
+      instructions,
       next,
       choicesOpen,
       settingsOpen,
@@ -33,6 +34,7 @@ class SequenceSettings {
     data.outPoints = outPoints || [];
     data.hold = !!hold;
     data.skippable = !!skippable;
+    data.instructions = !!instructions;
     data.next = next || [];
     data.choicesOpen = choicesOpen || false;
     data.settingsOpen = settingsOpen || false;
@@ -60,6 +62,8 @@ class SequenceSettings {
   get hold() { return this.data.hold; }
 
   get skippable() { return this.data.skippable; }
+
+  get instructions() { return this.data.instructions; }
 
   get next() { return this.data.next; }
 
@@ -104,6 +108,12 @@ class SequenceSettings {
     this.saveToStore();
   }
 
+  set instructions(instructions) {
+    const { data } = this;
+    data.instructions = instructions;
+    this.saveToStore();
+  }
+
   set next(next) {
     const { data } = this;
     data.next = next;
@@ -133,6 +143,7 @@ class SequenceSettings {
       outPoints,
       hold,
       skippable,
+      instructions,
       next,
       choicesOpen,
       settingsOpen,
@@ -145,6 +156,7 @@ class SequenceSettings {
       outPoints,
       hold,
       skippable,
+      instructions,
       next,
       choicesOpen,
       settingsOpen,

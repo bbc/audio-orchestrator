@@ -15,6 +15,7 @@ const templateConfiguration = (sequences, controls, settings, imageUrls) => {
       name,
       hold,
       skippable,
+      instructions,
       next,
     }) => ({
       name, // for template code readability only
@@ -22,6 +23,7 @@ const templateConfiguration = (sequences, controls, settings, imageUrls) => {
       url: `${settings.baseUrl}/${sequenceId}/sequence.json`,
       hold,
       skippable,
+      instructions,
       next: next.map(option => ({
         contentId: formatContentId(option.sequenceId),
         label: option.label,

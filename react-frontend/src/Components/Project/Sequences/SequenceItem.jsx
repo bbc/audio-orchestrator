@@ -150,7 +150,7 @@ class SequenceItem extends React.Component {
               </b>
             </Accordion.Title>
             <Accordion.Content active={settingsOpen}>
-              <Card.Meta content="Settings determine how and when the user can move between sequences." />
+              <Card.Meta content="Settings determine how the sequence is displayed and when playback will move to the next sequence." />
               <br />
               <SequenceSettings sequenceId={sequenceId} projectId={projectId} />
             </Accordion.Content>
