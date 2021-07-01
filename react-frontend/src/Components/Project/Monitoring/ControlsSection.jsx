@@ -48,9 +48,11 @@ const ControlsSection = ({
       .map(sequence => sequence.name);
 
     currentSetup.forEach((device) => {
+      // Find out if the control is allowed to be shown on the current device; have to convert
+      // deviceIsMain boolean to string because control behaviour list is stored as strings.
       const deviceIsMain = device.joiningNumber === 1;
       const availableOnDevice = findConditionPropertyValues(controls[controlId], 'device.deviceIsMain')
-        .includes(deviceIsMain);
+        .includes(`${deviceIsMain}`);
 
       // Set popup content to a falsy value to not show any popup.
       let popupContent = null;
@@ -64,7 +66,7 @@ const ControlsSection = ({
 
       statusPerDevice.push({
         device,
-        hidden: availableOnDevice,
+        hidden: !availableOnDevice,
         disabled: !availableInSequence,
         popupContent,
       });
