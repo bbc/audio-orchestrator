@@ -11,6 +11,7 @@ const allocationAlgorithm = new DefaultAllocationAlgorithm({ saveSteps: false })
 const initialState = {
   connectedToDAW: false,
   connectedToDAWOnce: false,
+  isPlaying: false,
   OSCSettings: {},
   muteDevices: [],
   soloDevices: [],
@@ -137,6 +138,11 @@ const reducer = (state = initialState, action) => {
       );
       return {
         ...state,
+      };
+    case 'SET_DAW_IS_PLAYING':
+      return {
+        ...state,
+        isPlaying: action.isPlaying,
       };
     default:
       return state;

@@ -81,7 +81,7 @@ const DAWSettingsModal = ({
         <br />
         <Checkbox
           radio
-          label="Use MIEM Matrix Router VST plugin"
+          label="Use MIEM Matrix Router VST plug-in"
           name={MIEM_MATRIX_L_R}
           checked={format === MIEM_MATRIX_L_R}
           onChange={handleFormatChange}

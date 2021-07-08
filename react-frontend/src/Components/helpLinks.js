@@ -39,6 +39,14 @@ const helpLinks = {
       },
     ],
   },
+  monitoring: {
+    links: [
+      {
+        link: 'https://bbc.github.io/bbcat-orchestration-docs/monitoring/',
+        description: 'Monitoring your experience',
+      },
+    ],
+  },
   presentation: {
     links: [
       {

@@ -14,3 +14,8 @@
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
+
+/* custom class for label details that are a different color */
+.ui.label .labelDetailRed {
+  color: #db2828 !important;
+}

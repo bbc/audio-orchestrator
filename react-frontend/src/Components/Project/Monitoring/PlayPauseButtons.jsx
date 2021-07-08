@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Button } from 'semantic-ui-react';
-import { sendOSCPlayPause } from 'Actions/monitoring';
+import { sendOSCPlayPause, setDAWIsPlaying } from 'Actions/monitoring';
 import InlineHelpPopup from 'Components/InlineHelpPopup';
 import { REAPER } from 'Lib/OSC';
 import { useOSCFormat, useConnectedToDAW } from './helpers';
@@ -12,9 +12,8 @@ const PlayPauseButtons = () => {
   const connectedToDAW = useConnectedToDAW();
   // Create a shorthand for useDispatch
   const dispatch = useDispatch();
-  // Use local state to store whether it is currently playing or not
-  // (means that if the user manually plays in REAPER, we will not change the icon)
-  const [isPlaying, setIsPlaying] = useState(false);
+  const isPlaying = useSelector(state => state.Monitoring.isPlaying);
+  const setIsPlaying = newIsPlaying => dispatch(setDAWIsPlaying(newIsPlaying));
   return (
     <InlineHelpPopup
       content="Control audio playback when connected to REAPER."

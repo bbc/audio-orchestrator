@@ -635,15 +635,27 @@ class Project {
   /**
    * Validates images by checking if any of them have error flags set
    */
-  validateImages() {
-    const { images } = this.data;
-    const valid = Object.values(images).every(({ error }) => !error);
+  validateTitleImage() {
+    const { images, settings } = this.data;
 
-    const message = valid ? null : 'Image file is missing; the default will be used.';
+    const { playerImageId } = settings;
+
+    let message = null;
+    let valid = true;
+
+    if (!playerImageId) {
+      message = 'No title image is set; the default will be used.';
+    } else {
+      const image = images[playerImageId];
+      if (!image || image.error) {
+        valid = false;
+        message = 'Title image file is missing.';
+      }
+    }
 
     return {
-      key: 'images',
-      title: 'Image file',
+      key: 'title-image',
+      title: 'Title image file',
       message,
       warning: !valid,
       error: false,
@@ -662,13 +674,13 @@ class Project {
     const { data } = this;
     const { sequences } = data;
 
+    // TODO: Validate controls and object behaviours and image files other than the title image
     return [
       this.validatePresentationSettings(),
+      this.validateTitleImage(),
       this.validateAdvancedSettings(),
-      this.validateImages(),
       ...Object.keys(sequences).map(sequenceId => sequences[sequenceId].validate()),
     ];
-    // TODO: Validate controls and object behaviours
   }
 }
 

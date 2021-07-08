@@ -109,3 +109,8 @@ export const turnOSCMsgsOnOff = (switchedOnStatus, objects, currentSetup) => ({
   objects,
   currentSetup,
 });
+
+export const setDAWIsPlaying = isPlaying => ({
+  type: 'SET_DAW_IS_PLAYING',
+  isPlaying,
+});

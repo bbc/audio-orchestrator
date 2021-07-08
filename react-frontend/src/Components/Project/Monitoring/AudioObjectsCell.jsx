@@ -2,11 +2,17 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {
   Table,
+  List,
   Label,
 } from 'semantic-ui-react';
 
 const formatGain = (linearGain) => {
   const logGain = 20 * Math.log10(linearGain);
+
+  if (logGain === -Infinity) {
+    return '−Inf dB';
+  }
+
   return `${logGain < 0 ? '−' : '+'}${Math.abs(Math.round(logGain))} dB`;
 };
 
@@ -17,20 +23,18 @@ const AudioObjectsCell = ({
     verticalAlign="top"
     width={1}
   >
-    <Table basic="very" compact style={{ whiteSpace: 'nowrap' }}>
-      <Table.Body>
-        {allocatedObjects.map(({ objectId, objectGain }) => (
-          <Table.Row key={objectId}>
-            <Table.Cell>
-              <Label basic>
-                {objectId}
-                {objectGain !== 1 && <Label.Detail content={formatGain(objectGain)} />}
-              </Label>
-            </Table.Cell>
-          </Table.Row>
-        ))}
-      </Table.Body>
-    </Table>
+    <List>
+      {allocatedObjects.map(({ objectId, objectGain }) => (
+        <List.Item key={objectId}>
+          <List.Content>
+            <Label basic>
+              {objectId}
+              {objectGain !== 1 && <Label.Detail className="labelDetailRed" content={formatGain(objectGain)} />}
+            </Label>
+          </List.Content>
+        </List.Item>
+      ))}
+    </List>
   </Table.Cell>
 );
 

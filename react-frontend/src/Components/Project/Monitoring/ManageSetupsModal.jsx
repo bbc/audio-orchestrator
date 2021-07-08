@@ -56,6 +56,12 @@ const ManageSetupsModal = ({
                 </Table.Cell>
               </Table.Row>
             ))}
+          </Table.Body>
+        </Table>
+      </Modal.Content>
+      <Modal.Content>
+        <Table basic="very">
+          <Table.Body>
             <Table.Row key="presets">
               <Table.HeaderCell colSpan="2" content="Preset setups" />
             </Table.Row>
