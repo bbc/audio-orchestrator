@@ -3,6 +3,16 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.21.0` (public release)
+_2021-07-22_
+
+  * Add a monitoring page for checking object allocations with virtual device setups, and control DAW rendering, as well as additional controls for this on the audio page.
+  * When checking if image files are present, only warn on the export page if the current title image is missing.
+  * Add a flag to the sequence settings to show the connection instructions on the main screen while it is active.
+  * Fix a problem in the allocation algorithm where the `anyOf` conditional operator in custom behaviours did not work with boolean properties (like `deviceIsMain`).
+  * Show a prompt on aux devices if calibration mode is available.
+  * Upgrade external dependencies (Electron 13.1.4)
+
 # `0.20.1` (public release)
 
   * Accept ffmpeg versions of the form `n4.4-tag` too, to support alternative available Windows builds.
