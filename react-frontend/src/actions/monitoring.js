@@ -98,7 +98,7 @@ export const runAlgorithmWithExportedMetadata = (
   // Create session metadata
   const session = {
     currentContentId: currentSequenceId,
-    numDevices: devices.length,
+    numDevices: exportedDevices.length,
   };
   return runAlgorithm(exportedObjects, exportedDevices, session, objects, devices);
 };
