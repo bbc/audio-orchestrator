@@ -49,7 +49,7 @@ const copyEncodedAudioFiles = (args) => {
             type,
             duration,
           }) => {
-            const relativeSourcePath = relativePath.replace(/\/manifest.mpd/, '');
+            const relativeSourcePath = path.dirname(relativePath);
             const sourcePath = path.join(encodedItemsBasePath, relativeSourcePath);
             const destPath = path.join(sequenceDestPath, relativeSourcePath);
 

@@ -122,39 +122,50 @@ const encodeItem = ({
           // For buffers only a single output file is generated, just add the extension to the name.
           resultItem.relativePath = outputName + BUFFER_EXTENSION;
 
-          return [
-            ...inputArgs,
-            ...bufferArgs,
-            path.join(encodedItemsBasePath, resultItem.relativePath),
-          ];
+          return {
+            ffmpegCwd: encodedItemsBasePath,
+            ffmpegArgs: [
+              ...inputArgs,
+              ...bufferArgs,
+              path.join(encodedItemsBasePath, resultItem.relativePath),
+            ],
+          };
         case 'dash':
           // For DASH streams, two outputs (with and without segment headers) are required to
           // support all browsers. Both are stored in the same directory, using different naming
           // schemes for manifests and segments, but generated from a single ffmpeg command.
           resultItem.relativePath = path.join(outputName, 'manifest.mpd');
           resultItem.relativePathSafari = path.join(outputName, 'manifest-safari.mpd');
-          return [
-            ...inputArgs,
-            ...[ // generate and append a segment's length of silence
-              '-t', segmentDuration(sampleRate),
-              '-f', 'lavfi',
-              '-i', `anullsrc=channel_layout=${numChannels === 1 ? 'mono' : 'stereo'}:sample_rate=${sampleRate}`,
-              '-filter_complex', '[0:a][1:a]concat=n=2:v=0:a=1,asplit=2[outa][outb]',
+          return {
+            ffmpegCwd: path.join(encodedItemsBasePath, outputName),
+            ffmpegArgs: [
+              ...inputArgs,
+              ...[ // generate and append a segment's length of silence
+                '-t', segmentDuration(sampleRate),
+                '-f', 'lavfi',
+                '-i', `anullsrc=channel_layout=${numChannels === 1 ? 'mono' : 'stereo'}:sample_rate=${sampleRate}`,
+                '-filter_complex', '[0:a][1:a]concat=n=2:v=0:a=1,asplit=2[outa][outb]',
+              ],
+              '-map', '[outa]',
+              ...dashArgs(sampleRate),
+              path.join(encodedItemsBasePath, resultItem.relativePath),
+              '-map', '[outb]',
+              ...sarafiDashArgs(sampleRate),
+              path.join(encodedItemsBasePath, outputName, SAFARI_SEGMENT_NAMES),
             ],
-            '-map', '[outa]',
-            ...dashArgs(sampleRate),
-            path.join(encodedItemsBasePath, resultItem.relativePath),
-            '-map', '[outb]',
-            ...sarafiDashArgs(sampleRate),
-            path.join(encodedItemsBasePath, outputName, SAFARI_SEGMENT_NAMES),
-          ];
+          };
         default:
           throw new Error(`Unknown item type ${type}`);
       }
     })
-    .then(ffmpegArgs => which('ffmpeg').then((ffmpegPath) => {
+    .then(({
+      ffmpegArgs,
+      ffmpegCwd,
+    }) => which('ffmpeg').then((ffmpegPath) => {
       if (LOG_FFMPEG) logger.silly(`encode: ${ffmpegPath} ${ffmpegArgs.join(' ')}`);
-      return execFile(ffmpegPath, ffmpegArgs)
+      // Setting CWD because on Windows, DASH segments end up there instead of next to the manifest
+      // path specified.
+      return execFile(ffmpegPath, ffmpegArgs, { cwd: ffmpegCwd })
         .catch((error) => {
           logger.error(`ffmpeg failed (${error}) arguments were: ${ffmpegArgs.join(' ')}`);
           throw error;

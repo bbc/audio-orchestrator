@@ -15,6 +15,7 @@ const searchPath = [
   path.join(os.homedir(), 'bbcat-orchestration-builder-ffmpeg', 'bin'),
   '/usr/local/bin',
   '/usr/bin',
+  '/opt/homebrew/bin',
 ];
 
 const results = {};

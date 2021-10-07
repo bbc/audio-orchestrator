@@ -8,7 +8,7 @@ jest.mock('../../src/which', () => jest.fn(name => Promise.resolve(name)));
 
 // child_process.execFile as a CPS function wrapping the promise based mockExecFile.
 jest.mock('child_process', () => ({
-  execFile: (file, args, cb) => { // TODO - different from definition used in detectItems tests!
+  execFile: (file, args, options, cb) => { // TODO - different from definition used in detectItems tests!
     mockExecFile(file, args)
       .then((result) => { cb(null, result); })
       .catch((err) => { cb(err, null); });

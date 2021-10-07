@@ -3,7 +3,16 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
-# `0.21.0` (public release)
+# `0.21.2` (public release)
+
+  * Fix a problem on Windows where DASH streams were not included in the export.
+  * Fix a problem on newer versions of macOS where `ffmpeg` is not found if installed with homebrew.
+
+# `0.21.1` (public release)
+
+  * Fix a problem with the monitoring system where the number of connected devices did not update correctly when some devices are switched off.
+
+# `0.21.0`
 _2021-07-22_
 
   * Add a monitoring page for checking object allocations with virtual device setups, and control DAW rendering, as well as additional controls for this on the audio page.
