@@ -23,7 +23,7 @@ _Audio Orchestrator_ is implemented in the [Electron](https://www.electronjs.org
 
 ![Architecture overview](docs/OrchestratorArchitecture_KH_2020-05-27.png)
 
-_NB the update service shown in the diagram is not yet implemented._
+_NB the update service shown in the diagram was not implemented._
 
 # Development
 
@@ -34,13 +34,10 @@ You'll need:
   * [Node.js](https://nodejs.org/en/) (version 12+ recommended)
   * [yarn](https://classic.yarnpkg.com/lang/en/) (notes may be for 1.x)
 
-Configure yarn to use your developer certificate and install packages from the R&D Artifactory service instead of npm ([more details on confluence](https://confluence.dev.bbc.co.uk/display/audioteam/bbcat-orchestration+libraries+and+tools)):
+Log in to the GitHub packages NPM registry using a personal access token with at least the `read:packages` permission as the password ([GitHub docs](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry)):
 
 ```
-export CERTIFICATE_FILENAME=/path/to/your/cert
-yarn config set cert -- "$(openssl pkcs12 -in $CERTIFICATE_FILENAME -nodes -clcerts -nokeys | LC_ALL=C sed '/^Bag Attributes:/d; /^subject=.*CN=BBC FMT Greenhouse - Root/,$d')"
-yarn config set key -- "$(openssl pkcs12 -in $CERTIFICATE_FILENAME -nodes -nocerts)"
-yarn config set registry https://artifactory.virt.ch.bbc.co.uk/artifactory/api/npm/npm 
+npm login --registry https://npm.pkg.github.com --scope @bbc
 ```
 
 Install the dependencies:
@@ -55,6 +52,8 @@ Run a development version of the app:
 yarn dev
 ```
 
+Stop the development server with `CTRL-C`.
+
 Build the installers:
 
 ```
@@ -64,8 +63,7 @@ yarn dist
 The results can be found in `electron-app/dist/`:
 
 * macOS DMG installer disk image
-  * Intel 64-bit: `BBC R&D Audio Orchestrator-{version}.dmg`
-  * ARM (M1) 64-bit:: `BBC R&D Audio Orchestrator-{version}-arm64.dmg`
+  * Intel/ARM universal binary: `BBC R&D Audio Orchestrator-{version}.dmg`
 * Windows NSIS installer executable
   * Intel 64-bit: `BBC R&D Audio Orchestrator Setup {version}.exe`
 

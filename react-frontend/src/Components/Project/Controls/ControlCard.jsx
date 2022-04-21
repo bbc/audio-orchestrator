@@ -117,7 +117,7 @@ ControlCard.propTypes = {
     name: PropTypes.string,
   })).isRequired,
   controlBehaviours: PropTypes.arrayOf(PropTypes.shape({
-    behaviourId: PropTypes.behaviourId,
+    behaviourId: PropTypes.string,
     behaviourType: PropTypes.string,
     behaviourParameters: PropTypes.shape({}),
   })).isRequired,

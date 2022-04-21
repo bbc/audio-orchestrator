@@ -1408,3 +1408,21 @@ export const setCurrentMonitoringSetup = (projectId, currentMonitoringSetup) => 
 
   dispatch(loadMonitoringSetups(projectId));
 };
+
+/**
+ *
+ */
+export const selectCustomTemplatePath = projectId => (dispatch) => {
+  const { exportFunctions } = window;
+
+  const { settings } = projects[projectId];
+
+  exportFunctions.selectCustomTemplatePath(settings.customTemplatePath)
+    .then((filePath) => {
+      dispatch(setProjectSetting(projectId, 'customTemplatePath', filePath));
+    })
+    .catch((err) => {
+      dispatch(setAppWarning('Selected template directory is not valid. Expected to find a dist/ folder and a package.json. Have you installed and built the template?'));
+      console.error(err);
+    });
+};

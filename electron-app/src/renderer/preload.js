@@ -5,6 +5,7 @@ contextBridge.exposeInMainWorld('exportFunctions', {
   openInFolder: (...args) => ipcRenderer.invoke('open-in-folder', ...args),
   saveExportAs: (...args) => ipcRenderer.invoke('save-export-as', ...args),
   saveExportToDownloads: (...args) => ipcRenderer.invoke('save-export-to-downloads', ...args),
+  selectCustomTemplatePath: (...args) => ipcRenderer.invoke('select-custom-template-path', ...args),
 });
 
 // For accessing background services (previously HTTP API)

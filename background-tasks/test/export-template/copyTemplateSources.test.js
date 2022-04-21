@@ -1,8 +1,13 @@
+import path from 'path';
 import fse from 'fs-extra';
 import copyTemplateSources from '../../src/export-template/copyTemplateSources';
 
 jest.mock('fs-extra', () => ({
-  readdir: jest.fn(() => Promise.resolve([])),
+  readdir: jest.fn(() => Promise.resolve([
+      'node_modules',
+      'audio',
+      'dist',
+  ])),
   copy: jest.fn(() => Promise.resolve()),
 }));
 
@@ -32,8 +37,7 @@ describe('copyTemplateSources', () => {
     const mockFiles = [
       'node_modules',
       'audio',
-      'index.html',
-      'bundle.js',
+      'dist',
     ];
 
     fse.readdir.mockResolvedValueOnce(mockFiles);
@@ -42,11 +46,12 @@ describe('copyTemplateSources', () => {
       .then(() => {
         expect(fse.readdir).toHaveBeenCalledTimes(1);
 
+        // should copy everything except node_modules and audio
         expect(fse.copy).toHaveBeenCalledTimes(mockFiles.length - 2);
 
         mockFiles.forEach((f) => {
           const from = expect.stringContaining(f);
-          const to = `${args.outputDir}/${f}`;
+          const to = path.join(args.outputDir, f);
 
           if (f !== 'node_modules' && f !== 'audio') {
             expect(fse.copy).toHaveBeenCalledWith(from, to);
@@ -56,4 +61,28 @@ describe('copyTemplateSources', () => {
         });
       });
   });
+
+  it('uses a custom template path if provided', () => {
+    const customTemplatePath = '/dev/null/custom-template-path';
+    const args = {
+      outputDir: '/dev/null',
+      settings: {
+        customTemplatePath,
+      },
+    };
+
+    const mockFiles = [
+      'dist',
+    ];
+
+    fse.readdir.mockResolvedValueOnce(mockFiles);
+    return copyTemplateSources(args)
+      .then(() => {
+        mockFiles.forEach((f) => {
+          const from = path.join(customTemplatePath, f);
+          const to = path.join(args.outputDir, f);
+          expect(fse.copy).toHaveBeenCalledWith(from, to);
+        });
+      });
+  })
 });

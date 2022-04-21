@@ -121,6 +121,16 @@ const migrations = {
       store.set(objectsKey, newObjects);
     });
   },
+  '0.22.0': (store) => {
+    logger.info('running migration: 0.22.0, add syncEndpointType to project settings.');
+    const settings = store.get('settings');
+    if (settings) {
+      store.set('settings', {
+        ...settings,
+        syncEndpointType: settings.syncEndpointType || 'cloud-sync',
+      });
+    }
+  },
 };
 
 export default migrations;

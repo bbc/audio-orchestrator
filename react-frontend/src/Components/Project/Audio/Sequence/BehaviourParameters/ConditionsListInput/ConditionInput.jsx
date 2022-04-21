@@ -385,8 +385,8 @@ ConditionInput.propTypes = {
     controlParameters: PropTypes.shape({}),
   })).isRequired,
   sequencesList: PropTypes.arrayOf(PropTypes.shape({
-    sequenceId: PropTypes.String,
-    name: PropTypes.String,
+    sequenceId: PropTypes.string,
+    name: PropTypes.string,
   })).isRequired,
   objectsList: PropTypes.arrayOf(PropTypes.shape({
     objectNumber: PropTypes.number,

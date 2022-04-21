@@ -18,10 +18,10 @@ pipeline {
   stages {
     stage ("Setup") {
       steps {
-        withBBCRDJavascriptArtifactory {
-          sh "yarn config set registry \"https://artifactory.virt.ch.bbc.co.uk/artifactory/api/npm/npm\""
+# WithBBCRDJavascriptArtifactory {
+# sh "yarn config set registry \"https://artifactory.virt.ch.bbc.co.uk/artifactory/api/npm/npm\""
           sh "ELECTRON_SKIP_BINARY_DOWNLOAD=1 yarn --skip-integrity-check --non-interactive --no-progress install"
-        }
+# }
       }
     }
     stage ("Lint") {

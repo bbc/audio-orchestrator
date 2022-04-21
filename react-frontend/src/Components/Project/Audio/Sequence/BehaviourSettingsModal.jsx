@@ -151,12 +151,12 @@ BehaviourSettingsModal.propTypes = {
   onClose: PropTypes.func.isRequired,
   // onDelete: PropTypes.func.isRequired,
   sequencesList: PropTypes.arrayOf(PropTypes.shape({
-    sequenceId: PropTypes.String,
-    name: PropTypes.String,
+    sequenceId: PropTypes.string,
+    name: PropTypes.string,
   })).isRequired,
   objectsList: PropTypes.arrayOf(PropTypes.shape({
     objectNumber: PropTypes.number,
-    label: PropTypes.String,
+    label: PropTypes.string,
   })).isRequired,
   controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   sequenceDuration: PropTypes.number.isRequired,

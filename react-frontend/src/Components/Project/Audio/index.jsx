@@ -67,8 +67,8 @@ Audio.propTypes = {
   currentProjectId: PropTypes.string.isRequired,
   currentSequenceId: PropTypes.string,
   sequencesList: PropTypes.arrayOf(PropTypes.shape({
-    sequenceId: PropTypes.String,
-    name: PropTypes.String,
+    sequenceId: PropTypes.string,
+    name: PropTypes.string,
   })).isRequired,
   onOpenSequence: PropTypes.func.isRequired,
 };

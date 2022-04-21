@@ -52,7 +52,10 @@ const RangeInput = ({
 };
 
 RangeInput.propTypes = {
-  value: PropTypes.arrayOf(PropTypes.any).isRequired,
+  value: PropTypes.arrayOf(PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.number,
+  ])).isRequired,
   onChange: PropTypes.func.isRequired,
 };
 

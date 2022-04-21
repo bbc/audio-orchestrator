@@ -6,14 +6,14 @@
     "./credits.html",
     "./bbcrd-logo.svg",
     "./bin/**/*",
-    "!**/node_modules/@bbc/bbcat-*/src/**/*",
-    "**/node_modules/@bbc/bbcat-orchestration-template/dist/**/*"
+    "!**/node_modules/@bbc/audio-orchestration-template/src/**/*",
+    "**/node_modules/@bbc/audio-orchestration-template/dist/**/*"
   ],
   "asar": {
     "smartUnpack": false
   },
   "asarUnpack": [
-    "**/node_modules/@bbc/bbcat-orchestration-template/**/*"
+    "**/node_modules/@bbc/audio-orchestration-template/dist/**/*"
   ],
   "removePackageScripts": false,
   "dmg": {

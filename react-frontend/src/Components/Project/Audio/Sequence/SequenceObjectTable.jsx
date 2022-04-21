@@ -303,7 +303,10 @@ SequenceObjectTable.propTypes = {
   filesLoading: PropTypes.bool.isRequired,
   filesLoadingCompleted: PropTypes.number,
   filesLoadingTotal: PropTypes.number,
-  objectsList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  objectsList: PropTypes.arrayOf(PropTypes.shape({
+    objectNumber: PropTypes.number.isRequired,
+    label: PropTypes.string.isRequired,
+  })).isRequired,
   objects: PropTypes.shape({
     fileId: PropTypes.string,
   }).isRequired,
@@ -313,8 +316,8 @@ SequenceObjectTable.propTypes = {
   onReplaceObjectBehaviourParameters: PropTypes.func.isRequired,
   onDeleteObject: PropTypes.func.isRequired,
   sequencesList: PropTypes.arrayOf(PropTypes.shape({
-    sequenceId: PropTypes.String,
-    name: PropTypes.String,
+    sequenceId: PropTypes.string,
+    name: PropTypes.string,
   })).isRequired,
   controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   images: PropTypes.shape({}).isRequired,

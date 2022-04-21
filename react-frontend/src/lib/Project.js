@@ -20,9 +20,10 @@ const DEFAULT_SETTINGS = {
   fadeOutDuration: 0,
   accentColour: '#006def',
   enableDebugUI: true,
-  enableTutorial: false,
   enableCalibration: false,
+  syncEndpointType: 'cloud-sync',
   cloudSyncHostname: 'cloudsync.virt.ch.bbc.co.uk',
+  customTemplatePath: undefined,
 };
 
 /**

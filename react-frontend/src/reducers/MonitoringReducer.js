@@ -1,4 +1,4 @@
-import DefaultAllocationAlgorithm from '@bbc/bbcat-orchestration/src/allocation-algorithm/DefaultAllocationAlgorithm';
+import { allocation } from '@bbc/audio-orchestration-core';
 import {
   sendOSCMsgs,
   sendOSCMsgsTurnAllTracksOn,
@@ -6,7 +6,7 @@ import {
   setOSCSettings,
 } from 'Lib/OSC';
 
-const allocationAlgorithm = new DefaultAllocationAlgorithm({ saveSteps: false });
+const allocationAlgorithm = new allocation.DefaultAllocationAlgorithm({ saveSteps: false });
 
 const initialState = {
   connectedToDAW: false,

@@ -14,6 +14,7 @@ import {
   openInFolder,
   saveExportAs,
   saveExportToDownloads,
+  selectCustomTemplatePath,
 } from './save-exports';
 import backgroundTasksRouter from './backgroundTasksRouter';
 import {
@@ -166,6 +167,7 @@ const registerIpcHandlers = () => {
   ipcMain.handle('open-in-folder', openInFolder);
   ipcMain.handle('save-export-as', saveExportAs);
   ipcMain.handle('save-export-to-downloads', saveExportToDownloads);
+  ipcMain.handle('select-custom-template-path', selectCustomTemplatePath);
 
   // Handlers for background tasks API
   ipcMain.handle('background-tasks-get', (e, p) => backgroundTasksRouter.get(p));

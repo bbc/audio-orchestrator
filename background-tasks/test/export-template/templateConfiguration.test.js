@@ -42,17 +42,33 @@ describe('templateConfiguration', () => {
       sequences,
       controls,
       {
+        syncEndpointType: 'cloud-sync',
         cloudSyncHostname: 'localhost',
       },
     ));
+    const result3 = JSON.parse(templateConfiguration(
+      sequences,
+      controls,
+      {
+        syncEndpointType: 'peerjs',
+      },
+    ));
 
-    // for result1, no cloudsync_endpoint was given so it should not be set.
-    expect(result1.CLOUDSYNC_ENDPOINT).toBe(undefined);
+    // for result1, no settings were given
+    expect(result1.SYNC_ENDPOINT).toEqual({});
 
     // for result2, an endpoint of 'localhost' was given, so it should be set to that.
     expect(result2).toEqual(expect.objectContaining({
-      CLOUDSYNC_ENDPOINT: {
+      SYNC_ENDPOINT: {
+        type: 'cloud-sync',
         hostname: 'localhost',
+      },
+    }));
+
+    // for result3, the type was set to peerjs.
+    expect(result3).toEqual(expect.objectContaining({
+      SYNC_ENDPOINT: {
+        type: 'peerjs',
       },
     }));
   });
@@ -105,14 +121,12 @@ describe('templateConfiguration', () => {
     const sequences = [];
 
     const settings = {
-      enableTutorial: true,
       enableDebugUI: true,
     };
 
     const result = JSON.parse(templateConfiguration(sequences, controls, settings));
 
     expect(result).toEqual(expect.objectContaining({
-      ENABLE_TUTORIAL: settings.enableTutorial,
       DEBUG_UI: settings.enableDebugUI,
     }));
   });

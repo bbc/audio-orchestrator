@@ -3,6 +3,11 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.22.0` (public release)
+  * Replace artifactory with github package registry and switch to the new open-source `audio-orchestration` repository for template and library.
+  * Add advanced export settings to use a custom template, and to switch between cloud-sync and peer-sync adapters.
+  * Upgrade external dependencies (Electron 18.0.3).
+
 # `0.21.2` (public release)
 
   * Fix a problem on Windows where DASH streams were not included in the export.

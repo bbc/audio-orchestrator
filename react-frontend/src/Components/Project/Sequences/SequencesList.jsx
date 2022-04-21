@@ -66,7 +66,9 @@ const SequencesList = ({
 };
 
 SequencesList.propTypes = {
-  sequencesList: PropTypes.arrayOf(PropTypes.object).isRequired,
+  sequencesList: PropTypes.arrayOf(PropTypes.shape({
+    sequenceId: PropTypes.string.isRequired,
+  })).isRequired,
   onOpenSequence: PropTypes.func.isRequired,
   onDeleteSequence: PropTypes.func.isRequired,
   onSwapSequenceOrder: PropTypes.func.isRequired,

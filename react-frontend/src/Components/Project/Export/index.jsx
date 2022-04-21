@@ -34,6 +34,7 @@ const Export = ({
   onOpenProjectPage,
   canExport,
   onExport,
+  haveCustomTemplatePath,
 }) => (
   <Container>
     <PageTitleBar
@@ -105,6 +106,7 @@ const Export = ({
       content="Export settings"
       subheader="The advanced settings can usually be left at their default values. They may be needed for publishing the exported application more widely."
     />
+
     <AdvancedSettings projectId={projectId} />
 
     <Header content="Export" />
@@ -112,6 +114,10 @@ const Export = ({
       ? <Message error header="Not ready to export" content="You must fix the errors highlighted above before you can preview or export the project." icon="delete" />
       : null
     }
+
+    { haveCustomTemplatePath
+      && <Message info header="Custom template configured" content="You are currently using a custom template for the prototype application. Check or reset this setting in the advanced export settings above if it does not work." />}
+
     <Button
       primary
       disabled={!canExport}
@@ -154,19 +160,21 @@ Export.propTypes = {
     projectPage: PropTypes.string,
   })).isRequired,
   onStartPreview: PropTypes.func.isRequired,
-  canExport: PropTypes.bool,
+  canExport: PropTypes.bool.isRequired,
+  haveCustomTemplatePath: PropTypes.bool.isRequired,
   onOpenSequencePage: PropTypes.func.isRequired,
   onOpenProjectPage: PropTypes.func.isRequired,
   onExport: PropTypes.func.isRequired,
 };
 
-Export.defaultProps = {
-  canExport: false,
-};
-
 const mapStateToProps = ({ Project }, { projectId }) => {
   const project = Project.projects[projectId] || {};
-  const { sequencesList, sequences, reviewItems } = project;
+  const {
+    sequencesList,
+    sequences,
+    reviewItems,
+    settings,
+  } = project;
 
   return {
     itemsTaskIds: sequencesList
@@ -177,6 +185,7 @@ const mapStateToProps = ({ Project }, { projectId }) => {
       .filter(taskId => !!taskId),
     reviewItems,
     canExport: reviewItems.every(({ error }) => !error),
+    haveCustomTemplatePath: !!settings.customTemplatePath,
   };
 };
 

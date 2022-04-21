@@ -8,7 +8,7 @@ const templateConfiguration = (sequences, controls, settings, imageUrls) => {
 
   const configuration = {
     JOIN_URL: settings.joiningLink,
-    LOCAL_SESSION_ID_PREFIX: 'bbcat-orchestration-template',
+    LOCAL_SESSION_ID_PREFIX: 'audio-orchestrator',
     INITIAL_CONTENT_ID: formatContentId(introSequence.sequenceId),
     SEQUENCE_URLS: sequences.map(({
       sequenceId,
@@ -44,14 +44,21 @@ const templateConfiguration = (sequences, controls, settings, imageUrls) => {
       controlParameters,
       controlBehaviours,
     })),
+    SHOW_BBC_FOOTER: true,
   };
 
-  if (settings.cloudSyncHostname) {
-    configuration.CLOUDSYNC_ENDPOINT = { hostname: settings.cloudSyncHostname };
+  configuration.SYNC_ENDPOINT = {
+    type: settings.syncEndpointType,
+  };
 
-    const port = parseInt(settings.cloudSyncPort, 10);
-    if (!Number.isNaN(port)) {
-      configuration.CLOUDSYNC_ENDPOINT.port = port;
+  if (settings.syncEndpointType === 'cloud-sync') {
+    if (settings.cloudSyncHostname) {
+      configuration.SYNC_ENDPOINT.hostname = settings.cloudSyncHostname;
+
+      const port = parseInt(settings.cloudSyncPort, 10);
+      if (!Number.isNaN(port)) {
+        configuration.SYNC_ENDPOINT.port = port;
+      }
     }
   }
 
@@ -63,7 +70,6 @@ const templateConfiguration = (sequences, controls, settings, imageUrls) => {
   configuration.ACCENT_COLOUR = settings.accentColour;
 
   configuration.DEBUG_UI = settings.enableDebugUI;
-  configuration.ENABLE_TUTORIAL = settings.enableTutorial;
   configuration.ENABLE_PLAY_PAUSE_ON_AUX = settings.enablePlayPauseOnAux;
 
   if (!Number.isNaN(settings.compressorRatio)) {
@@ -80,7 +86,10 @@ const templateConfiguration = (sequences, controls, settings, imageUrls) => {
 
   if (settings.playerImageId && settings.playerImageId in imageUrls) {
     configuration.PLAYER_IMAGE_URL = imageUrls[settings.playerImageId];
-    configuration.TEXT_PLAYER_IMAGE_ALT = settings.playerImageAltText;
+    configuration.PLAYER_IMAGE_ALT = settings.playerImageAltText;
+  } else {
+    configuration.PLAYER_IMAGE_URL = 'images/orchestrator-default-image.jpg';
+    configuration.PLAYER_IMAGE_ALT = 'Audio Orchestrator default image';
   }
 
   if (settings.enableCalibration) {

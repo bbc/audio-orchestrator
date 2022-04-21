@@ -31,7 +31,11 @@ const ProjectsList = ({
 };
 
 ProjectsList.propTypes = {
-  projects: PropTypes.arrayOf(PropTypes.object).isRequired,
+  projects: PropTypes.arrayOf(PropTypes.shape({
+    projectId: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    lastOpened: PropTypes.string.isRequired,
+  })).isRequired,
 };
 
 export default ProjectsList;

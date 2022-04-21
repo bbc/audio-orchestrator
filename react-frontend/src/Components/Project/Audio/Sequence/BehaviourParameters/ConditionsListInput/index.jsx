@@ -101,8 +101,8 @@ ConditionsListInput.propTypes = {
   value: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   onChange: PropTypes.func.isRequired,
   sequencesList: PropTypes.arrayOf(PropTypes.shape({
-    sequenceId: PropTypes.String,
-    name: PropTypes.String,
+    sequenceId: PropTypes.string,
+    name: PropTypes.string,
   })).isRequired,
   objectsList: PropTypes.arrayOf(PropTypes.shape({
     objectNumber: PropTypes.number,

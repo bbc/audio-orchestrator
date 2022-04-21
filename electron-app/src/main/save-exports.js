@@ -45,3 +45,29 @@ export const saveExportAs = (e, exportDir) => {
       throw err;
     });
 };
+
+export const selectCustomTemplatePath = (e, defaultPath) => dialog.showOpenDialog(
+  BrowserWindow.fromWebContents(e.sender),
+  {
+    title: 'Select template directory',
+    message: 'Choose the directory that contains package.json, src, and dist.',
+    properties: [
+      'openDirectory',
+    ],
+    defaultPath,
+  },
+)
+  .then(({ filePaths }) => {
+    const filePath = filePaths[0];
+    if (filePath === undefined) {
+      return undefined;
+    }
+
+    const expectedContents = ['package.json', 'dist'];
+    return fse.readdir(filePath).then((files) => {
+      if (!expectedContents.every(name => files.includes(name))) {
+        throw new Error('Expected files not present in custom template dir.');
+      }
+      return filePath;
+    });
+  });
