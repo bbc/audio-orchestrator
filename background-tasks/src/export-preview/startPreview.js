@@ -31,6 +31,17 @@ const selectHost = () => new Promise((resolve) => {
   // Prefer Ipv4 interfaces if multiple external interfaces are connected; select the first one.
   const externalIPv4Addresses = externalAddresses.filter(({ family }) => (family === 'IPv4'));
   if (externalIPv4Addresses.length >= 1) {
+    logger.debug(`Found multiple IPv4 addresses: ${externalIPv4Addresses.map(a => a.address).join(', ')}`);
+
+    // Try to find an address in the standard local network space
+    // This is mainly for coporate machines that may be on multiple networks / VPNs.
+    const preferredAddress = externalIPv4Addresses.find(a => a.address.startsWith('192.'));
+    if (preferredAddress) {
+      resolve(preferredAddress.address);
+      return;
+    }
+
+    // otherwise return the first one
     resolve(externalIPv4Addresses[0].address);
     return;
   }

@@ -90,8 +90,10 @@ To create a release build and the `.dmg` installer run the `yarn dist` task. As 
 
 The versions of all packages in this repo should be kept in sync by running the `yarn bump` script at the top level to apply the same version change across all packages. Generally, we increment the patch version for every PR, and increment the minor version for new releases (NB this is not strictly compatible with semantic versioning).
 
-## Team
+## Status
 
-_Audio Orchestrator_ is developed in the BBC R&D Audio Team ([confluence](https://confluence.dev.bbc.co.uk/display/audioteam/)), as part of the _Audio Device Orchestration_ workstream contributing to the _Novel Audience Experiences_ programme.
+_Audio Orchestrator_ was originally developed in the BBC R&D Audio Team ([confluence](https://confluence.dev.bbc.co.uk/display/audioteam/)) by Kristian Hentschel with contributions from Jon Francombe, Emma Young, Danial Haddadi, and Sonal Tandon between 2019 and 2022. Further feature updates are not planned as the associated R&D workstream has been retired.
 
-Email [Kristian.Hentschel@bbc.co.uk](mailto:kristian.hentschel@bbc.co.uk) or [Jon.Francombe@bbc.co.uk](mailto:jon.francombe@bbc.co.uk) or find us on Slack (`#audio-orchestration` in the BBC R&D space).
+The application is distributed to external partners by the [BBC Makerbox team](mailto:makerbox@bbc.co.uk). Prospective users should be directed to request access through the [Audio Orchestrator page on MakerBox](https://www.bbc.co.uk/makerbox/tools/audio-orchestrator) where they will be asked to review terms and conditions before being emailed a download link by the team.
+
+For development enquiries, contact [Kristian Hentschel](mailto:kristian.hentschel@bbc.co.uk) on slack or email.

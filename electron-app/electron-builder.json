@@ -29,7 +29,8 @@
       "arch": [
         "x64"
       ]
-    }
+    },
+    "identity": null,
   },
   "nsis": {
     "oneClick": "false",

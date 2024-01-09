@@ -71,23 +71,6 @@ function createWindow() {
     },
   });
 
-  // TODO: install devTools - currently not working so commented out
-  if (devMode) {
-  // eslint-disable-next-line global-require
-    const {
-      default: installExtension,
-      REACT_DEVELOPER_TOOLS,
-      REDUX_DEVTOOLS,
-    // eslint-disable-next-line global-require
-    } = require('electron-devtools-installer');
-    installExtension(REACT_DEVELOPER_TOOLS)
-      .then(name => logger.info(`Added Extension:  ${name}`))
-      .catch(err => logger.warn('An error occurred: ', err));
-    installExtension(REDUX_DEVTOOLS)
-      .then(name => logger.info(`Added Extension:  ${name}`))
-      .catch(err => logger.warn('An error occurred: ', err));
-  }
-
   if (devMode) {
     // load the user interface hosted by webpack-dev-server
     win.loadURL('http://localhost:8080');

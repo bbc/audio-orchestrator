@@ -47,7 +47,7 @@ BehaviourParameters.propTypes = {
     name: PropTypes.string,
   })).isRequired,
   objectsList: PropTypes.arrayOf(PropTypes.shape({
-    objectNumber: PropTypes.oneOfType(PropTypes.number, PropTypes.string),
+    objectNumber: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     label: PropTypes.string,
   })).isRequired,
   controls: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
