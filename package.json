@@ -20,11 +20,7 @@
   ],
   "version": "0.0.0",
   "devDependencies": {
-    "pre-commit": "^1.2.2"
+    "lefthook": "1.9.2"
   },
-  "pre-commit": [
-    "lint",
-    "credits"
-  ],
   "dependencies": {}
 }

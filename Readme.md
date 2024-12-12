@@ -4,12 +4,10 @@ _Audio Orchestrator_ is a desktop application for prototyping orchestrated audio
 
 Create a project, import audio files, and author metadata for audio objects, sequence destinations, and user controls to define the experience; then start a preview with real devices on your local network or export a web application bundle to host it on a server.
 
-The software is currently distributed to BBC staff and external users (subject to a licence agreement) via [BBC Connected Studio MakerBox](https://www.bbc.co.uk/makerbox).
+The software was distributed to BBC staff and external users (subject to a licence agreement) via [MakerBox](https://www.bbc.co.uk/makerbox) from 2018-2024. It is currently only available to BBC staff by emailing [Kristian Hentschel](mailto:kristian.hentschel@bbc.co.uk); third-parties may require a bespoke agreement.
 
  * Preview an [example project](https://orchestrator-demos.virt.ch.bbc.co.uk/getting-started-with-orchestration) made with it.
  * [Read the user guide](https://bbc.github.io/bbcat-orchestration-docs).
- * [Request access to use _Audio Orchestrator_](https://www.bbc.co.uk/makerbox/tools/audio-orchestrator).
- * [Join the community](https://makerbox-discourse.tools.bbc.co.uk/c/immersive/audio-orchestrator).
  * See also these related repositories:
     * the [template](https://github.com/bbc/bbcat-orchestration-template/) application used for the preview and export,
     * the [library](https://github.com/bbc/bbcat-orchestration/) for handling audio rendering and communication between devices in the template, and
@@ -86,14 +84,10 @@ The development version (`yarn dev`) builds the `background-tasks`, `electron-ap
 
 The [Changelog](./Changelog.md) and [GitHub Releases]() are updated manually, usually on minor version increments (e.g. `0.17.0` to `0.18.0`). We create a Github release linked to a git tag for that version.
 
-To create a release build and the `.dmg` installer run the `yarn dist` task. As the tool is currently distributed through MakerBox, upload the dmg to Dropbox and notify the team in the `#makerbox-orchestrator` channel.
+To create a release build and the `.dmg` installer run the `yarn dist` task.
 
 The versions of all packages in this repo should be kept in sync by running the `yarn bump` script at the top level to apply the same version change across all packages. Generally, we increment the patch version for every PR, and increment the minor version for new releases (NB this is not strictly compatible with semantic versioning).
 
 ## Status
 
 _Audio Orchestrator_ was originally developed in the BBC R&D Audio Team ([confluence](https://confluence.dev.bbc.co.uk/display/audioteam/)) by Kristian Hentschel with contributions from Jon Francombe, Emma Young, Danial Haddadi, and Sonal Tandon between 2019 and 2022. Further feature updates are not planned as the associated R&D workstream has been retired.
-
-The application is distributed to external partners by the [BBC Makerbox team](mailto:makerbox@bbc.co.uk). Prospective users should be directed to request access through the [Audio Orchestrator page on MakerBox](https://www.bbc.co.uk/makerbox/tools/audio-orchestrator) where they will be asked to review terms and conditions before being emailed a download link by the team.
-
-For development enquiries, contact [Kristian Hentschel](mailto:kristian.hentschel@bbc.co.uk) on slack or email.

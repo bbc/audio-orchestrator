@@ -21,7 +21,7 @@ const copyEncodedAudioFiles = (args) => {
     .then(() => fse.ensureDir(audioOutputDir))
     .then(() => Promise.all(sequences.map(({ sequenceId }) => {
       // Create empty output directory for the sequence
-      logger.debug('about to create sequence output dir', audioOutputDir, sequenceId);
+      logger.debug(`about to create sequence output dir ${audioOutputDir}, ${sequenceId}`);
       return Promise.resolve().then(
         () => fse.emptyDir(sequenceOutputDir(audioOutputDir, sequenceId)),
       );
