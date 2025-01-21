@@ -1,4 +1,15 @@
 /**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*//**
  * constants
  */
 export const REAPER = 'REAPER';
@@ -9,7 +20,7 @@ export const defaultOSCSettings = {
   format: REAPER,
 };
 
-export const setOSCSettings = settings => window.monitoringFunctions.setOSCSettings(settings);
+export const setOSCSettings = (settings) => window.monitoringFunctions.setOSCSettings(settings);
 
 /**
  * Functions to create OSC message objects and send them over UDP
@@ -58,8 +69,8 @@ const convertAlgorithmOutput = (
       if (!muteDevices.includes(deviceId)) {
         convertedAlgorithmOutput.objectsAllocatedByDevice[deviceId] = {
           deviceJoiningNumber: currentSetup
-            .find(device => device.deviceId === deviceId).joiningNumber,
-          audioObjects: algorithmOutput.allocations[deviceId].map((object => ({
+            .find((device) => device.deviceId === deviceId).joiningNumber,
+          audioObjects: algorithmOutput.allocations[deviceId].map(((object) => ({
             objectNumber: parseInt(object.objectId, 10),
             objectGain: object.objectGain,
           }
@@ -74,8 +85,8 @@ const convertAlgorithmOutput = (
       if (soloDevices.includes(deviceId)) {
         convertedAlgorithmOutput.objectsAllocatedByDevice[deviceId] = {
           deviceJoiningNumber: currentSetup
-            .find(device => (device.deviceId === deviceId)).joiningNumber,
-          audioObjects: algorithmOutput.allocations[deviceId].map((object => ({
+            .find((device) => (device.deviceId === deviceId)).joiningNumber,
+          audioObjects: algorithmOutput.allocations[deviceId].map(((object) => ({
             objectNumber: parseInt(object.objectId, 10),
             objectGain: object.objectGain,
           }
@@ -91,7 +102,7 @@ const convertAlgorithmOutput = (
   }
   // Create a list of all the object numbers in the current sequence
   if (objects) {
-    Object.values(objects).forEach(object => (
+    Object.values(objects).forEach((object) => (
       convertedAlgorithmOutput.allObjectNumbers.push(object.objectNumber)
     ));
   }
@@ -106,12 +117,12 @@ const convertAlgorithmOutput = (
   // Create an array of object numbers to mute
   if (convertedAlgorithmOutput.allObjectNumbers) {
     convertedAlgorithmOutput.objectNumbersToMute = convertedAlgorithmOutput.allObjectNumbers
-      .filter(number => !convertedAlgorithmOutput.objectNumbersToUnmute.includes(number));
+      .filter((number) => !convertedAlgorithmOutput.objectNumbersToUnmute.includes(number));
   }
   // Create an array of object numbers to unsolo
   if (convertedAlgorithmOutput.allObjectNumbers) {
     convertedAlgorithmOutput.objectNumbersToUnsolo = convertedAlgorithmOutput.allObjectNumbers
-      .filter(number => !convertedAlgorithmOutput.objectNumbersToSolo.includes(number));
+      .filter((number) => !convertedAlgorithmOutput.objectNumbersToSolo.includes(number));
   }
   return convertedAlgorithmOutput;
 };
@@ -181,7 +192,7 @@ export const createArrayOfOSCMessages = (
           OSCMessagesToSend.push(convertObjectToOSCMIEM(input - 1, 1, 1.0));
         });
         // Then mute all other inputs - could just mute objectNumbersToMute though
-        const tracksToTurnOff = range(1, 64).filter(number => !convertedAlgorithmOutput
+        const tracksToTurnOff = range(1, 64).filter((number) => !convertedAlgorithmOutput
           .objectNumbersToUnmute.includes(number));
         tracksToTurnOff.forEach((input) => {
           OSCMessagesToSend.push(convertObjectToOSCMIEM(input - 1, 0, 0.0));
@@ -193,7 +204,7 @@ export const createArrayOfOSCMessages = (
           OSCMessagesToSend.push(convertObjectToOSCMIEM(input - 1, 0, 1.0));
           OSCMessagesToSend.push(convertObjectToOSCMIEM(input - 1, 1, 1.0));
         });
-        const tracksToTurnOff = range(1, 64).filter(number => !convertedAlgorithmOutput
+        const tracksToTurnOff = range(1, 64).filter((number) => !convertedAlgorithmOutput
           .objectNumbersToSolo.includes(number));
         tracksToTurnOff.forEach((input) => {
           OSCMessagesToSend.push(convertObjectToOSCMIEM(input - 1, 0, 0.0));

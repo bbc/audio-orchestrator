@@ -1,9 +1,24 @@
 {
   "extends": "eslint-config-airbnb-base",
   "rules": {
-    "arrow-parens": [2, "as-needed", { "requireForBlockBody": true }]
+    "arrow-parens": [2, "as-needed", { "requireForBlockBody": true }],
   },
-  "env": {
-    "browser": true
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": "latest"
   },
+  "settings": {
+    "import/resolver": {
+      "alias": {
+        "map": [
+          // these are relative to the per-package config, so looks like an extra .. from top level
+          ["#logging", "../logging/src/index.js"],
+          ["#background-tasks", "../background-tasks/src/index.js"],
+          ["#Components", "../react-frontend/src/Components"],
+          ["#Lib", "../react-frontend/src/lib"],
+          ["#Actions", "../react-frontend/src/actions"]
+        ]
+      }
+    }
+  }
 }

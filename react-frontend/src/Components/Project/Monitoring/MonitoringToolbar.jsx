@@ -6,28 +6,28 @@ import {
 } from 'semantic-ui-react';
 import {
   setCurrentMonitoringSetup,
-} from 'Actions/project';
-import { deviceTypes } from 'Lib/behaviourTypes';
-import InlineHelpPopup from 'Components/InlineHelpPopup';
-import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
-import RunAlgorithmButton from './RunAlgorithmButton';
-import PlayPauseButtons from './PlayPauseButtons';
+} from '#Actions/project.js';
+import { deviceTypes } from '#Lib/behaviourTypes.js';
+import InlineHelpPopup from '#Components/InlineHelpPopup.jsx';
+import ConfirmDeleteButton from '#Components/ConfirmDeleteButton.jsx';
+import RunAlgorithmButton from './RunAlgorithmButton.jsx';
+import PlayPauseButtons from './PlayPauseButtons.jsx';
 import {
   useCurrentSetup,
   useSavedSetups,
   useObjects,
   addDeviceToMonitoringSetup,
   deleteAllDevices,
-} from './helpers';
-import ConnectToDAWButton from './ConnectToDAWButton';
-import SaveSetupModal from './SaveSetupModal';
-import ManageSetupsModal from './ManageSetupsModal';
-import { presetMonitoringSetups } from './presetDeviceSetups';
+} from './helpers.js';
+import ConnectToDAWButton from './ConnectToDAWButton.jsx';
+import SaveSetupModal from './SaveSetupModal.jsx';
+import ManageSetupsModal from './ManageSetupsModal.jsx';
+import { presetMonitoringSetups } from './presetDeviceSetups.js';
 
-const MonitoringToolbar = ({
+function MonitoringToolbar({
   projectId,
   currentSequenceId,
-}) => {
+}) {
   // Set constants for required properties in state
   const currentSetup = useCurrentSetup(projectId);
   const objects = useObjects(projectId, currentSequenceId);
@@ -43,12 +43,12 @@ const MonitoringToolbar = ({
   const [manageSetupsOpen, setManageSetupsOpen] = useState(false);
   const [saveSetupOpen, setSaveSetupOpen] = useState(false);
 
-  const savedSetupOptions = savedSetups.map(savedSetup => ({
+  const savedSetupOptions = savedSetups.map((savedSetup) => ({
     key: savedSetup.id,
     text: savedSetup.name,
     onClick: () => { dispatch(setCurrentMonitoringSetup(projectId, savedSetup)); },
   }));
-  const addDeviceOptions = deviceTypes.map(option => ({
+  const addDeviceOptions = deviceTypes.map((option) => ({
     key: option.value,
     text: option.displayName,
     onClick: () => {
@@ -179,7 +179,7 @@ const MonitoringToolbar = ({
       </Menu>
     </>
   );
-};
+}
 
 MonitoringToolbar.propTypes = {
   projectId: PropTypes.string.isRequired,

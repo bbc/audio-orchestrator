@@ -3,26 +3,26 @@ import PropTypes from 'prop-types';
 import {
   Table,
 } from 'semantic-ui-react';
-import InlineHelpPopup from 'Components/InlineHelpPopup';
+import InlineHelpPopup from '#Components/InlineHelpPopup.jsx';
 import {
   useCurrentSetup, useControls, useControlsList, useSequencesList,
-} from './helpers';
-import ControlsCell from './ControlsCell';
+} from './helpers.js';
+import ControlsCell from './ControlsCell.jsx';
 
 const findConditionPropertyValues = (control, property) => {
   const { controlBehaviours = [] } = control;
   const behaviour = controlBehaviours.find(({ behaviourType }) => behaviourType === 'allowedIf') || {};
   const { behaviourParameters = {} } = behaviour;
   const { conditions = [] } = behaviourParameters;
-  const { value = [] } = conditions.find(condition => condition.property === property) || {};
+  const { value = [] } = conditions.find((condition) => condition.property === property) || {};
 
   return value;
 };
 
-const ControlsSection = ({
+function ControlsSection({
   projectId,
   sequenceId,
-}) => {
+}) {
   const currentSetup = useCurrentSetup(projectId);
   const controls = useControls(projectId);
   const controlsList = useControlsList(projectId);
@@ -44,8 +44,8 @@ const ControlsSection = ({
     const prohibitedSequenceIds = findConditionPropertyValues(controls[controlId], 'session.currentContentId');
     const availableInSequence = !prohibitedSequenceIds.includes(sequenceId);
     const allowedSequenceNames = sequencesList
-      .filter(sequence => !prohibitedSequenceIds.includes(sequence.sequenceId))
-      .map(sequence => sequence.name);
+      .filter((sequence) => !prohibitedSequenceIds.includes(sequence.sequenceId))
+      .map((sequence) => sequence.name);
 
     currentSetup.forEach((device) => {
       // Find out if the control is allowed to be shown on the current device; have to convert
@@ -105,11 +105,10 @@ const ControlsSection = ({
             </Table.Cell>
           ))}
         </Table.Row>
-      ))
-      }
+      ))}
     </>
   );
-};
+}
 
 ControlsSection.propTypes = {
   projectId: PropTypes.string.isRequired,

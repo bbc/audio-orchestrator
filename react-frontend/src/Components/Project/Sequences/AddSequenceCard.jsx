@@ -10,30 +10,32 @@ import {
 
 import {
   requestAddSequence,
-} from '../../../actions/project';
+} from '#Actions/project.js';
 
 // TODO: Ideally would like this to look like the controls equivalent
 // But can't use placeholder as it's too tall?
-const AddSequenceCard = ({
+function AddSequenceCard({
   onAddSequence,
-}) => (
-  <Card>
-    <Card.Content
-      style={{ flexGrow: 0 }}
-      textAlign="center"
-      extra
-    >
-      <Segment
-        placeholder
-        style={{ height: '100%', minHeight: '12em' }}
+}) {
+  return (
+    <Card>
+      <Card.Content
+        style={{ flexGrow: 0 }}
         textAlign="center"
+        extra
       >
-        <Header content="More sequences" subheader="You can add as many sequences as you need." />
-        <Button primary icon="plus" content="Add sequence" onClick={onAddSequence} labelPosition="left" />
-      </Segment>
-    </Card.Content>
-  </Card>
-);
+        <Segment
+          placeholder
+          style={{ height: '100%', minHeight: '12em' }}
+          textAlign="center"
+        >
+          <Header content="More sequences" subheader="You can add as many sequences as you need." />
+          <Button primary icon="plus" content="Add sequence" onClick={onAddSequence} labelPosition="left" />
+        </Segment>
+      </Card.Content>
+    </Card>
+  );
+}
 
 AddSequenceCard.propTypes = {
   onAddSequence: PropTypes.func.isRequired,

@@ -1,14 +1,14 @@
 {
   "extends": [
-    "../.eslintrc",
+    "../.eslintrc"
   ],
   "rules": {
     "import/no-extraneous-dependencies": 1,
-    "import/no-unresolved": 1,
+    "import/extensions": ["error", "always"]
   },
   "settings": {
     "import/core-modules": [
-      'electron',
-    ],
+      "electron"
+    ]
   }
 }

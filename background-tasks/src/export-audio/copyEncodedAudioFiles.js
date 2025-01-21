@@ -1,10 +1,23 @@
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import path from 'path';
 import fse from 'fs-extra';
-import mapSeries from 'async/mapSeries';
-import { getLogger } from 'bbcat-orchestration-builder-logging';
-import generateSequenceMetadata from './generateSequenceMetadata';
-import { headerlessDashManifest, safariDashManifest } from './dashManifests';
-import { segmentDuration } from '../encodingConfig';
+import mapSeries from 'async/mapSeries.js';
+import { getLogger } from '#logging';
+import generateSequenceMetadata from './generateSequenceMetadata.js';
+import { headerlessDashManifest, safariDashManifest } from './dashManifests.js';
+import { segmentDuration } from '../encodingConfig.js';
 
 const logger = getLogger('export-audio');
 
@@ -70,7 +83,11 @@ const copyEncodedAudioFiles = (args) => {
               tasks.push(cb => fse.writeFile(
                 path.join(sequenceDestPath, relativePath),
                 headerlessDashManifest(
-                  relativeSourcePath, sequenceUrl, paddedDuration, sampleRate, numChannels,
+                  relativeSourcePath,
+                  sequenceUrl,
+                  paddedDuration,
+                  sampleRate,
+                  numChannels,
                 ),
                 cb,
               ));
@@ -78,7 +95,11 @@ const copyEncodedAudioFiles = (args) => {
               tasks.push(cb => fse.writeFile(
                 path.join(sequenceDestPath, relativePathSafari),
                 safariDashManifest(
-                  relativeSourcePath, sequenceUrl, paddedDuration, sampleRate, numChannels,
+                  relativeSourcePath,
+                  sequenceUrl,
+                  paddedDuration,
+                  sampleRate,
+                  numChannels,
                 ),
                 cb,
               ));
@@ -88,7 +109,11 @@ const copyEncodedAudioFiles = (args) => {
 
         // Generate sequence metadata file with paths to audio files
         const sequenceMetadata = generateSequenceMetadata(
-          sequence, settings, files, imageUrls, imageAltTexts,
+          sequence,
+          settings,
+          files,
+          imageUrls,
+          imageAltTexts,
         );
         tasks.push(cb => fse.writeFile(
           path.join(sequenceOutputDir(audioOutputDir, sequenceId), 'sequence.json'),

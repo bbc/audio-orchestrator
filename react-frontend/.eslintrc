@@ -2,13 +2,20 @@
   "extends": [
     "../.eslintrc",
     "eslint-config-airbnb",
-    "plugin:react-hooks/recommended",
+    "plugin:react-hooks/recommended"
   ],
-  "settings": {
-    "import/resolver": "webpack",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": "latest"
   },
   "rules": {
-    "react/jsx-curly-brace-presence": "off",
-    "react/destructuring-assignment": "off"
+    "react/jsx-curly-brace-presence": 0,
+    "react/destructuring-assignment": 0,
+    "react/jsx-props-no-spreading": 1,
+    "default-param-last": 0,
+    "import/extensions": ["error", "ignorePackages"]
+  },
+  "env": {
+    "browser": true
   }
 }

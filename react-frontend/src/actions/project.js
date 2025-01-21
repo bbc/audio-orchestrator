@@ -1,8 +1,21 @@
-import uuidv4 from 'uuid/v4';
-import ProjectStore from 'Lib/IpcProjectStore';
-import Project from 'Lib/Project';
-import FileService from 'Lib/FileService';
-import Behaviours from 'Lib/Behaviours';
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+import { v4 as uuidv4 } from 'uuid';
+import ProjectStore from '#Lib/IpcProjectStore.js';
+import Project from '#Lib/Project.js';
+import FileService from '#Lib/FileService.js';
+import Behaviours from '#Lib/Behaviours.js';
 import {
   setTaskProgress,
   openProjectPage,
@@ -11,7 +24,7 @@ import {
   setSequenceAudioError,
   setAppWarning,
   setAppError,
-} from './ui';
+} from './ui.js';
 
 // Project store is the interface to the persistent project data accessed by projectId.
 const fileService = new FileService(window.API_URL || 'http://localhost:8000');
@@ -127,7 +140,7 @@ const loadSequenceSettings = (projectId, sequenceId) => {
 /**
  * Internal action, updates the UI with all sequence information for the project.
  */
-const loadSequences = projectId => (dispatch) => {
+const loadSequences = (projectId) => (dispatch) => {
   const { sequencesList } = projects[projectId];
 
   sequencesList.forEach(({
@@ -153,7 +166,7 @@ export const loadControl = (projectId, controlId) => (dispatch) => {
   });
 };
 
-export const loadControls = projectId => (dispatch) => {
+export const loadControls = (projectId) => (dispatch) => {
   const { controlsList } = projects[projectId];
 
   controlsList.forEach(({
@@ -165,7 +178,7 @@ export const loadControls = projectId => (dispatch) => {
   dispatch({ type: 'SET_PROJECT_CONTROLS_LIST', projectId, controlsList });
 };
 
-export const loadMonitoringSetups = projectId => (dispatch) => {
+export const loadMonitoringSetups = (projectId) => (dispatch) => {
   const {
     savedMonitoringSetups,
     currentMonitoringSetup,
@@ -175,14 +188,13 @@ export const loadMonitoringSetups = projectId => (dispatch) => {
   dispatch({ type: 'SET_PROJECT_CURRENT_MONITORING_SETUP', projectId, currentMonitoringSetup });
 };
 
-
 export const setProjectImagesLoading = (projectId, imagesLoading) => ({
   type: 'SET_PROJECT_IMAGES_LOADING',
   projectId,
   imagesLoading,
 });
 
-export const loadImages = projectId => (dispatch) => {
+export const loadImages = (projectId) => (dispatch) => {
   const { images, projectBasePath } = projects[projectId];
 
   const imagesWithAbsolutePaths = {};
@@ -200,7 +212,7 @@ export const loadImages = projectId => (dispatch) => {
   });
 };
 
-export const validateProject = projectId => ({
+export const validateProject = (projectId) => ({
   type: 'SET_PROJECT_REVIEW_ITEMS',
   projectId,
   reviewItems: projects[projectId].validate(),
@@ -211,7 +223,7 @@ export const validateProject = projectId => ({
  *
  * For use by other actions in this file only so not exported.
  */
-const openedProject = projectId => (dispatch) => {
+const openedProject = (projectId) => (dispatch) => {
   const { name, settings } = projects[projectId];
 
   // Set the project name for use in UI
@@ -415,7 +427,8 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
     .then((result) => {
       // update error messages based on result
       dispatch(setFileProperties(
-        projectId, sequenceId,
+        projectId,
+        sequenceId,
         result.map(({ success, fileId }) => ({
           fileId,
           error: success ? null : 'File is missing.',
@@ -460,7 +473,8 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
       });
 
       dispatch(setFileProperties(
-        projectId, sequenceId,
+        projectId,
+        sequenceId,
         augmentedProbeResults.map(({
           success,
           fileId,
@@ -507,7 +521,8 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
     .then((itemsResults) => {
       // Update error messages and items information.
       dispatch(setFileProperties(
-        projectId, sequenceId,
+        projectId,
+        sequenceId,
         itemsResults.map(({ success, fileId, items }) => ({
           fileId,
           error: success ? null : 'Analysis failed, file may not be readable by items analysis script.',
@@ -554,7 +569,8 @@ export const analyseAllFiles = (projectId, sequenceId) => (dispatch) => {
       // store the results in project store
       // TODO: this should not be a dispatch as state does not need to be updated
       dispatch(setFileProperties(
-        projectId, sequenceId,
+        projectId,
+        sequenceId,
         encodeResults.map(({
           success,
           fileId,
@@ -580,7 +596,6 @@ const checkAndAddImageFiles = (projectId, imagesToAdd = null) => (dispatch) => {
   const project = projects[projectId];
   const { projectBasePath } = project;
   const { images: currentProjectImages } = project;
-
 
   // Run a check on either:
   // - all images already in the project (when opening the project); or
@@ -628,7 +643,10 @@ const checkAndAddImageFiles = (projectId, imagesToAdd = null) => (dispatch) => {
 
       // Probe the remaining image files:
       return createTaskWithProgress(
-        dispatch, probeAll, probeTaskId, createResult.filter(({ success }) => success),
+        dispatch,
+        probeAll,
+        probeTaskId,
+        createResult.filter(({ success }) => success),
       );
     })
     .then((probeResult) => {
@@ -720,7 +738,7 @@ export const requestCreateProject = () => (dispatch) => {
 /**
  * Action creator, adds a sequence to the project and reloads the sequence data.
  */
-export const requestAddSequence = projectId => (dispatch) => {
+export const requestAddSequence = (projectId) => (dispatch) => {
   const project = projects[projectId];
   project.addSequence();
   dispatch(loadSequences(projectId));
@@ -747,11 +765,10 @@ export const requestSetIntroSequence = (projectId, sequenceId) => (dispatch) => 
   dispatch(validateProject(projectId));
 };
 
-
 /**
  * Delete the project from the state.
  */
-const deleteProject = projectId => ({
+const deleteProject = (projectId) => ({
   type: 'PROJECT_DELETE_PROJECT',
   projectId,
 });
@@ -759,7 +776,7 @@ const deleteProject = projectId => ({
 /**
  * Action creator, deletes a project.
  */
-export const requestDeleteProject = projectId => (dispatch) => {
+export const requestDeleteProject = (projectId) => (dispatch) => {
   if (!projectId) {
     console.error(`Cannot delete project without a projectId (got ${projectId})`);
     return;
@@ -826,7 +843,7 @@ export const swapSequenceOrder = (projectId, sequenceId, otherSequenceId) => (di
   dispatch(loadSequences(projectId));
 };
 
-const fileNameToObjectNumber = name => parseInt(name, 10) || null;
+const fileNameToObjectNumber = (name) => parseInt(name, 10) || null;
 
 /**
  * Attempt to link objects to files. Update project store with results.
@@ -904,7 +921,7 @@ const matchObjectsToFiles = (projectId, sequenceId) => {
 
   // update project with modified objects
   sequence.objects = newObjects;
-  sequence.objectsList = Object.keys(newObjects).map(objectNumber => ({
+  sequence.objectsList = Object.keys(newObjects).map((objectNumber) => ({
     objectNumber: Number(objectNumber),
     label: newObjects[objectNumber].label,
   }));
@@ -933,7 +950,7 @@ const matchObjectsToFiles = (projectId, sequenceId) => {
  */
 const initialiseSequenceFiles = (projectId, sequenceId, newFiles) => (dispatch) => {
   // assign a unique ID to each file
-  const filesWithIds = newFiles.map(file => ({ ...file, fileId: uuidv4() }));
+  const filesWithIds = newFiles.map((file) => ({ ...file, fileId: uuidv4() }));
 
   const project = projects[projectId];
   const { projectBasePath } = project;
@@ -982,6 +999,8 @@ const initialiseSequenceFiles = (projectId, sequenceId, newFiles) => (dispatch) 
  * those selected.
  */
 export const requestReplaceAllAudioFiles = (projectId, sequenceId) => (dispatch) => {
+  const { exportFunctions } = window;
+
   new Promise((resolve, reject) => {
     const input = document.createElement('input');
     input.type = 'file';
@@ -1008,13 +1027,12 @@ export const requestReplaceAllAudioFiles = (projectId, sequenceId) => (dispatch)
     const files = [];
 
     // Take the FileList and reduce it to a plain array of file names and paths only.
-    // In electron, the path is populated with the absolute path to the file. In the browser, path
-    // will be undefined. In that case, a file upload to a server may need to be triggered.
     for (let i = 0; i < fileList.length; i += 1) {
       const file = fileList[i];
+
       files.push({
         name: file.name,
-        path: file.path,
+        path: exportFunctions.getPathForFile(file),
       });
     }
 
@@ -1047,14 +1065,14 @@ export const deleteObject = (projectId, sequenceId, objectNumber) => (dispatch) 
     const newFiles = { ...sequence.files };
     delete newFiles[fileId];
     sequence.files = newFiles;
-    sequence.filesList = sequence.filesList.filter(f => f.fileId !== fileId);
+    sequence.filesList = sequence.filesList.filter((f) => f.fileId !== fileId);
   }
 
   // remove object from sequence objects, and objects list.
   const newObjects = { ...sequence.objects };
   delete newObjects[objectNumber];
   sequence.objects = newObjects;
-  sequence.objectsList = sequence.objectsList.filter(o => o.objectNumber !== objectNumber);
+  sequence.objectsList = sequence.objectsList.filter((o) => o.objectNumber !== objectNumber);
 
   // ensure objects and files are still consistent, and reload both.
   matchObjectsToFiles(projectId, sequenceId);
@@ -1063,9 +1081,7 @@ export const deleteObject = (projectId, sequenceId, objectNumber) => (dispatch) 
   dispatch(validateProject(projectId));
 };
 
-export const setObjectPanning = (
-  projectId, sequenceId, objectNumber, panning,
-) => (dispatch) => {
+export const setObjectPanning = (projectId, sequenceId, objectNumber, panning) => (dispatch) => {
   const project = projects[projectId];
   const sequence = project.sequences[sequenceId];
   const { objects, files } = sequence;
@@ -1139,7 +1155,10 @@ export const addObjectBehaviour = (
 };
 
 export const deleteObjectBehaviour = (
-  projectId, sequenceId, objectNumber, deleteBehaviourId,
+  projectId,
+  sequenceId,
+  objectNumber,
+  deleteBehaviourId,
 ) => (dispatch) => {
   // get the original sequence and object
   const project = projects[projectId];
@@ -1164,7 +1183,11 @@ export const deleteObjectBehaviour = (
 };
 
 export const replaceObjectBehaviourParameters = (
-  projectId, sequenceId, objectNumber, behaviourId, behaviourParameters,
+  projectId,
+  sequenceId,
+  objectNumber,
+  behaviourId,
+  behaviourParameters,
 ) => (dispatch) => {
   // get the original sequence and object
   const project = projects[projectId];
@@ -1307,7 +1330,7 @@ const selectImageFiles = (projectId, multiple = false) => {
       // By using the imageId of an image already in the project, the existing image record will
       // be replaced with this one.
       const duplicate = Object.values(currentProjectImages)
-        .find(image => image.imagePath === imagePath);
+        .find((image) => image.imagePath === imagePath);
       const imageId = duplicate ? duplicate.imageId : uuidv4();
 
       // Assemble the new image object, including incrementing an index to ensure new images end
@@ -1328,7 +1351,7 @@ const selectImageFiles = (projectId, multiple = false) => {
  * opens a file-open dialogue and if an image is selected, replaces the project's player image;
  * deleting the link to the previous image as well.
  */
-export const requestReplaceProjectPlayerImage = projectId => (dispatch) => {
+export const requestReplaceProjectPlayerImage = (projectId) => (dispatch) => {
   selectImageFiles(projectId, false)
     .then((newImages) => {
       const newPlayerImageId = Object.keys(newImages)[0];
@@ -1345,7 +1368,7 @@ export const requestReplaceProjectPlayerImage = projectId => (dispatch) => {
 /**
  * opens a file-open dialogue and adds any selected images to the project.
  */
-export const requestAddImages = projectId => (dispatch) => {
+export const requestAddImages = (projectId) => (dispatch) => {
   selectImageFiles(projectId, true)
     .then((newImages) => {
       dispatch(checkAndAddImageFiles(projectId, newImages));
@@ -1412,7 +1435,7 @@ export const setCurrentMonitoringSetup = (projectId, currentMonitoringSetup) => 
 /**
  *
  */
-export const selectCustomTemplatePath = projectId => (dispatch) => {
+export const selectCustomTemplatePath = (projectId) => (dispatch) => {
   const { exportFunctions } = window;
 
   const { settings } = projects[projectId];

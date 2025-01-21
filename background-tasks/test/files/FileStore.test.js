@@ -1,7 +1,9 @@
-import FileStore from '../../src/files/FileStore';
-import processFiles from '../../src/files/processFiles';
+import { jest } from '@jest/globals';
 
-jest.mock('../../src/files/processFiles', () => jest.fn(() => Promise.resolve()));
+jest.unstable_mockModule('../../src/files/processFiles.js', () => ({ default: jest.fn(() => Promise.resolve()) }));
+
+const { default: processFiles } = await import('../../src/files/processFiles.js');
+const { default: FileStore } = await import('../../src/files/FileStore.js');
 
 beforeEach(() => {
   jest.clearAllMocks();

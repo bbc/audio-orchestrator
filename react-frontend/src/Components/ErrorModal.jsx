@@ -6,19 +6,20 @@ import {
   Button,
 } from 'semantic-ui-react';
 
-const ErrorModal = ({
+function ErrorModal({
   content,
   link,
-}) => (
-  <Modal
-    open={!!content}
-    closeOnEscape={false}
-    closeOnDimmerClick={false}
-  >
-    <Header icon="close" content="Error" />
-    <Modal.Content>
-      <p>{content}</p>
-      { link && (
+}) {
+  return (
+    <Modal
+      open={!!content}
+      closeOnEscape={false}
+      closeOnDimmerClick={false}
+    >
+      <Header icon="close" content="Error" />
+      <Modal.Content>
+        <p>{content}</p>
+        { link && (
         <p>
           <Button
             primary
@@ -28,12 +29,12 @@ const ErrorModal = ({
             onClick={() => { window.miscFunctions.openUrl(link); }}
           />
         </p>
-      )}
-      <p>Please try again after restarting the application or contact the authors for support.</p>
-    </Modal.Content>
-  </Modal>
-
-);
+        )}
+        <p>Please try again after restarting the application or contact the authors for support.</p>
+      </Modal.Content>
+    </Modal>
+  );
+}
 
 ErrorModal.propTypes = {
   content: PropTypes.string,

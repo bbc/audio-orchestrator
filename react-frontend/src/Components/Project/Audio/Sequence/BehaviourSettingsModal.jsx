@@ -6,11 +6,12 @@ import {
   Label,
   Header,
 } from 'semantic-ui-react';
-import Behaviours from 'Lib/Behaviours';
-import BehaviourParameters from './BehaviourParameters';
+import Behaviours from '#Lib/Behaviours.js';
+import BehaviourParameters from './BehaviourParameters/index.jsx';
 
 const validateBehaviourParameters = (
-  parameterDefinitions, parameterValues,
+  parameterDefinitions,
+  parameterValues,
 ) => parameterDefinitions.every(({ name, type, defaultValue }) => {
   const value = parameterValues[name];
   switch (type) {
@@ -19,11 +20,11 @@ const validateBehaviourParameters = (
     case 'object':
       return value !== defaultValue;
     case 'conditionsList':
-      return value.every(condition => !!condition.property
+      return value.every((condition) => !!condition.property
         && condition.operator !== undefined
         && condition.value !== undefined);
     case 'imageItems':
-      return value.every(item => item.start !== undefined && !Number.isNaN(item.start)
+      return value.every((item) => item.start !== undefined && !Number.isNaN(item.start)
         && item.duration !== undefined && !Number.isNaN(item.duration));
     default:
       // assume parameters of unknown type are always valid
@@ -31,7 +32,7 @@ const validateBehaviourParameters = (
   }
 });
 
-const BehaviourSettingsModal = ({
+function BehaviourSettingsModal({
   contents,
   onChange,
   onClose,
@@ -42,7 +43,7 @@ const BehaviourSettingsModal = ({
   images,
   imagesLoading,
   onAddImages,
-}) => {
+}) {
   const {
     objectNumbers,
     edit,
@@ -137,7 +138,7 @@ const BehaviourSettingsModal = ({
       </Modal.Actions>
     </Modal>
   );
-};
+}
 
 BehaviourSettingsModal.propTypes = {
   contents: PropTypes.shape({

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import {
   Button,
 } from 'semantic-ui-react';
-import ConditionInput from './ConditionInput';
+import ConditionInput from './ConditionInput.jsx';
 
 class ConditionsListInput extends React.PureComponent {
   constructor(props) {
@@ -55,7 +55,7 @@ class ConditionsListInput extends React.PureComponent {
     const { value, onChange } = this.props;
 
     onChange(e, {
-      value: value.filter(v => v.conditionId !== conditionId),
+      value: value.filter((v) => v.conditionId !== conditionId),
     });
   }
 
@@ -84,7 +84,7 @@ class ConditionsListInput extends React.PureComponent {
               value: conditionValue,
               invertCondition,
             }}
-            onDelete={e => this.handleDelete(e, conditionId)}
+            onDelete={(e) => this.handleDelete(e, conditionId)}
             onChange={(e, data) => this.handleConditionChange(e, { ...data, conditionId })}
             sequencesList={sequencesList}
             objectsList={objectsList}

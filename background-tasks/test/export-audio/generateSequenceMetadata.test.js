@@ -1,4 +1,6 @@
-import generateSequenceMetadata from '../../src/export-audio/generateSequenceMetadata';
+import { jest } from '@jest/globals';
+
+const { default: generateSequenceMetadata } = await import('../../src/export-audio/generateSequenceMetadata.js');
 
 beforeEach(() => {
   jest.clearAllMocks();

@@ -1,5 +1,7 @@
-import mapLimit from 'async/mapLimit';
-import processFiles from '../../src/files/processFiles';
+import { createRequire } from 'node:module';
+import { jest } from '@jest/globals';
+
+const require = createRequire(import.meta.url);
 
 jest.mock('async/mapLimit', () => jest.fn(
   (args, concurrency, fn) => Promise.all(args.map(arg => new Promise((resolve, reject) => {
@@ -10,14 +12,16 @@ jest.mock('async/mapLimit', () => jest.fn(
   }))),
 ));
 
+const mapLimit = require('async/mapLimit.js');
+
+const { default: processFiles } = await import('../../src/files/processFiles.js');
+
 beforeEach(() => {
   jest.clearAllMocks();
 });
 
 describe('processFiles', () => {
-  it('calls mapLimit', () => processFiles(
-    () => {}, [], () => {},
-  )
+  it('calls mapLimit', () => processFiles(() => {}, [], () => {})
     .then(({ result }) => {
       expect(result).toHaveLength(0);
       expect(mapLimit).toHaveBeenCalledTimes(1);

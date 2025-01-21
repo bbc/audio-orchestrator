@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import {
   Dropdown,
 } from 'semantic-ui-react';
-import controlTypes from './controlTypes';
+import controlTypes from './controlTypes.js';
 
 const AddControlButton = React.memo(({
   onAddControl,

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import {
   Button,
   Table,
@@ -9,11 +9,11 @@ import {
   Header,
   Icon,
 } from 'semantic-ui-react';
-import ImageFileList from './ImageFileList';
-import EffectEditor from './EffectEditor';
-import ImageItemRow from './ImageItemRow';
+import ImageFileList from './ImageFileList.jsx';
+import EffectEditor from './EffectEditor.jsx';
+import ImageItemRow from './ImageItemRow.jsx';
 
-const ImageItemTable = ({
+function ImageItemTable({
   imageItems,
   imagesList,
   sequenceDuration,
@@ -21,15 +21,15 @@ const ImageItemTable = ({
   imagesLoading,
   onChange,
   onAddImages,
-}) => {
+}) {
   const [imageSelectionItemId, setImageSelectionItemId] = useState(null);
   const [effectEditorItemId, setEffectEditorItemId] = useState(null);
 
   const selectedImageId = (imageItems
-    .find(item => item.itemId === imageSelectionItemId) || {}).imageId;
+    .find((item) => item.itemId === imageSelectionItemId) || {}).imageId;
 
   const selectedEffect = (imageItems
-    .find(item => item.itemId === effectEditorItemId) || {}).effect;
+    .find((item) => item.itemId === effectEditorItemId) || {}).effect;
 
   const handleOpenImageSelection = (itemId) => {
     setImageSelectionItemId(itemId);
@@ -92,7 +92,7 @@ const ImageItemTable = ({
   };
 
   const handleDeleteItem = (itemId) => {
-    onChange(imageItems.filter(item => item.itemId !== itemId));
+    onChange(imageItems.filter((item) => item.itemId !== itemId));
   };
 
   const handleSortByStartTime = () => {
@@ -126,7 +126,7 @@ const ImageItemTable = ({
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {imageItems.map(item => (
+          {imageItems.map((item) => (
             <ImageItemRow
               key={item.itemId}
               items={imageItems}
@@ -135,7 +135,7 @@ const ImageItemTable = ({
               imagesLoading={imagesLoading}
               onReplaceImage={() => handleOpenImageSelection(item.itemId)}
               onReplaceEffect={() => handleOpenEffectEditor(item.itemId)}
-              onChange={value => handleChangeItem(item.itemId, value)}
+              onChange={(value) => handleChangeItem(item.itemId, value)}
               sequenceDuration={sequenceDuration}
               onDelete={() => handleDeleteItem(item.itemId)}
             />
@@ -199,7 +199,7 @@ const ImageItemTable = ({
       <Button icon="plus" primary content="Add item" labelPosition="left" onClick={handleAddItem} />
     </>
   );
-};
+}
 
 ImageItemTable.propTypes = {
   imageItems: PropTypes.arrayOf(PropTypes.shape({

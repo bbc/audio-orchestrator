@@ -4,13 +4,13 @@ import {
   Card,
   Button,
 } from 'semantic-ui-react';
-import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
-import InlineHelpPopup from 'Components/InlineHelpPopup';
-import EditableText from '../EditableText';
-import ControlBehavioursDevices from './ControlBehavioursDevices';
-import ControlBehavioursSequences from './ControlBehavioursSequences';
-import controlSettingsComponents from './controlSettingsComponents';
-import controlTypes from './controlTypes';
+import ConfirmDeleteButton from '#Components/ConfirmDeleteButton.jsx';
+import InlineHelpPopup from '#Components/InlineHelpPopup.jsx';
+import EditableText from '../EditableText.jsx';
+import ControlBehavioursDevices from './ControlBehavioursDevices.jsx';
+import ControlBehavioursSequences from './ControlBehavioursSequences.jsx';
+import controlSettingsComponents from './controlSettingsComponents.js';
+import controlTypes from './controlTypes.js';
 
 class ControlCard extends React.PureComponent {
   render() {
@@ -68,7 +68,7 @@ class ControlCard extends React.PureComponent {
             <EditableText
               value={controlName}
               name="controlName"
-              onChange={value => onChange('controlName', value)}
+              onChange={(value) => onChange('controlName', value)}
             />
           </Card.Header>
           {controlTypeDisplayName}

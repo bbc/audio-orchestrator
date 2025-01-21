@@ -1,3 +1,16 @@
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
@@ -34,14 +47,14 @@ export const useDebounce = (fn, timeout = 300) => {
   };
 };
 
-export const useProjectId = () => useSelector(state => state.UI.currentProjectId);
+export const useProjectId = () => useSelector((state) => state.UI.currentProjectId);
 
 // shortcut for accessing the currently open project.
 // calls the selector function with the project or undefined if none is open.
 // if a selector is not give, returns the entire project.
 export const useProject = (selector) => {
   const projectId = useProjectId();
-  const project = useSelector(state => state.Project.projects[projectId]);
+  const project = useSelector((state) => state.Project.projects[projectId]);
 
   if (!selector) {
     return project;

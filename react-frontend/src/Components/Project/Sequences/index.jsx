@@ -4,22 +4,24 @@ import {
   Container,
   Divider,
 } from 'semantic-ui-react';
-import SequencesList from './SequencesList';
-import PageTitleBar from '../../PageTitleBar';
+import SequencesList from './SequencesList.jsx';
+import PageTitleBar from '../../PageTitleBar.jsx';
 
-const Sequences = ({
+function Sequences({
   projectId,
-}) => (
-  <Container>
-    <PageTitleBar
-      title="Sequences"
-      shortDescription="Each sequence is an independent section of content."
-      helpId="sequences"
-    />
-    <SequencesList projectId={projectId} />
-    <Divider hidden />
-  </Container>
-);
+}) {
+  return (
+    <Container>
+      <PageTitleBar
+        title="Sequences"
+        shortDescription="Each sequence is an independent section of content."
+        helpId="sequences"
+      />
+      <SequencesList projectId={projectId} />
+      <Divider hidden />
+    </Container>
+  );
+}
 
 Sequences.propTypes = {
   projectId: PropTypes.string.isRequired,

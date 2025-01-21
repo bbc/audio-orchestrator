@@ -7,11 +7,11 @@ import {
   Placeholder,
 } from 'semantic-ui-react';
 
-const ImagePreview = ({
+function ImagePreview({
   imagePath,
   error,
   loading,
-}) => {
+}) {
   if (loading) {
     return (
       <Placeholder>
@@ -38,7 +38,7 @@ const ImagePreview = ({
   }
 
   return null;
-};
+}
 
 ImagePreview.propTypes = {
   imagePath: PropTypes.string,

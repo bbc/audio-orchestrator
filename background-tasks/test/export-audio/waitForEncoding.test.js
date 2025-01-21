@@ -1,4 +1,6 @@
-import waitForEncoding from '../../src/export-audio/waitForEncoding';
+import { jest } from '@jest/globals';
+
+const { default: waitForEncoding } = await import('../../src/export-audio/waitForEncoding.js');
 
 beforeEach(() => {
   jest.clearAllMocks();

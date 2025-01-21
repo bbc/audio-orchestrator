@@ -1,10 +1,15 @@
-import fse from 'fs-extra';
-import removeUnusedTemplateFiles from '../../src/export-distribution/removeUnusedTemplateFiles';
+import { createRequire } from 'node:module';
+import { jest } from '@jest/globals';
 
 jest.mock('fs-extra', () => ({
   readdir: jest.fn(() => Promise.resolve([])),
   remove: jest.fn(() => Promise.resolve()),
 }));
+
+const require = createRequire(import.meta.url);
+const fse = require('fs-extra');
+
+const { default: removeUnusedTemplateFiles } = await import('../../src/export-distribution/removeUnusedTemplateFiles.js');
 
 beforeEach(() => {
   jest.clearAllMocks();

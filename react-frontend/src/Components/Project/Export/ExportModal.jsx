@@ -10,10 +10,10 @@ import {
 import {
   requestCancelExport,
   requestOpenInFolder,
-} from '../../../actions/export';
-import QRCode from './QRCode';
+} from '#Actions/export.js';
+import QRCode from './QRCode.jsx';
 
-const ExportModal = ({
+function ExportModal({
   title,
   stepTitle,
   error,
@@ -25,7 +25,7 @@ const ExportModal = ({
   outputPath,
   cancelExport,
   openInFolder,
-}) => {
+}) {
   let progressDescription = stepTitle;
   const preview = (title === 'preview');
   let intro = 'This might take a moment, please stand by.';
@@ -61,28 +61,23 @@ const ExportModal = ({
       <Modal.Actions>
         { complete && preview
           ? <Button labelPosition="left" icon="stop" negative content="Stop preview" onClick={cancelExport} />
-          : null
-        }
+          : null}
         { complete && preview
           ? <Button primary labelPosition="left" icon="external" content="Open in browser" onClick={() => window.miscFunctions.openUrl(outputPath)} />
-          : null
-        }
+          : null}
         { complete && !preview
           ? <Button labelPosition="left" icon="external" content="Show in folder" onClick={() => openInFolder(outputPath)} />
-          : null
-        }
+          : null}
         { running
           ? <Button negative primary content="Cancel" onClick={cancelExport} />
-          : null
-        }
+          : null}
         { (!running && !preview) || error
           ? <Button primary content="Close" onClick={cancelExport} />
-          : null
-        }
+          : null}
       </Modal.Actions>
     </Modal>
   );
-};
+}
 
 ExportModal.propTypes = {
   title: PropTypes.string.isRequired,
@@ -107,9 +102,9 @@ const mapStateToProps = ({ Export }) => ({
   ...Export,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   cancelExport: () => dispatch(requestCancelExport()),
-  openInFolder: path => dispatch(requestOpenInFolder(path)),
+  openInFolder: (path) => dispatch(requestOpenInFolder(path)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExportModal);

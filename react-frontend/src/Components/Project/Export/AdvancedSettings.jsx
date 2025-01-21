@@ -8,11 +8,11 @@ import {
   Button,
 } from 'semantic-ui-react';
 
-import ButtonGroupToggle from 'Components/Project/Controls/ButtonGroupToggle';
+import ButtonGroupToggle from '#Components/Project/Controls/ButtonGroupToggle.jsx';
 import {
   setProjectSetting,
   selectCustomTemplatePath,
-} from '../../../actions/project';
+} from '#Actions/project.js';
 
 const syncEndpointTypeValues = [
   {

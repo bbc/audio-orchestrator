@@ -6,17 +6,17 @@ import {
   Icon,
   Accordion,
 } from 'semantic-ui-react';
-import DeviceHeader from './DeviceHeader';
-import ControlsSection from './ControlsSection';
-import AudioObjectsRow from './AudioObjectsRow';
+import DeviceHeader from './DeviceHeader.jsx';
+import ControlsSection from './ControlsSection.jsx';
+import AudioObjectsRow from './AudioObjectsRow.jsx';
 import {
   useCurrentSetup,
-} from './helpers';
+} from './helpers.js';
 
-const MonitoringTable = ({
+function MonitoringTable({
   projectId,
   sequenceId,
-}) => {
+}) {
   const [controlsOpen, setControlsOpen] = useState(true);
 
   const currentSetup = useCurrentSetup(projectId);
@@ -53,7 +53,7 @@ const MonitoringTable = ({
       </Table.Body>
     </Table>
   );
-};
+}
 
 MonitoringTable.propTypes = {
   projectId: PropTypes.string.isRequired,

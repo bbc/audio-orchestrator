@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Table,
 } from 'semantic-ui-react';
-import ButtonGroupToggle from 'Components/Project/Controls/ButtonGroupToggle';
+import ButtonGroupToggle from '#Components/Project/Controls/ButtonGroupToggle.jsx';
 
 const ToggleTableInput = React.memo(({
   allowedValues,
@@ -23,7 +23,7 @@ const ToggleTableInput = React.memo(({
       {
         name,
         value: [
-          ...value.filter(v => v !== rowValue),
+          ...value.filter((v) => v !== rowValue),
           ...(on ? [rowValue] : []),
         ],
       },

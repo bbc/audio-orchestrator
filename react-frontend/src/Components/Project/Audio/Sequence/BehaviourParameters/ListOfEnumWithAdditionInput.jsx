@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import ListOfEnumInput from './ListOfEnumInput';
+import ListOfEnumInput from './ListOfEnumInput.jsx';
 
 class ListOfEnumWithAdditionInput extends React.Component {
   constructor(props) {
@@ -44,14 +44,14 @@ class ListOfEnumWithAdditionInput extends React.Component {
     const { additions } = this.state;
 
     const missingValues = value
-      .filter(v => !allowedValues.find(a => a.value === v));
+      .filter((v) => !allowedValues.find((a) => a.value === v));
 
     const unselectedAdditions = additions
-      .filter(a => !value.includes(a));
+      .filter((a) => !value.includes(a));
 
     const allowedValuesWithAdditions = [
       ...allowedValues,
-      ...[...missingValues, ...unselectedAdditions].map(a => ({
+      ...[...missingValues, ...unselectedAdditions].map((a) => ({
         value: a,
         displayName: a,
       })),

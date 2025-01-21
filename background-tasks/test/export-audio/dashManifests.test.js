@@ -1,8 +1,9 @@
+import { jest } from '@jest/globals';
 import {
   dashManifest,
   safariDashManifest,
   headerlessDashManifest,
-} from '../../src/export-audio/dashManifests';
+} from '../../src/export-audio/dashManifests.js';
 
 beforeEach(() => {
   jest.clearAllMocks();

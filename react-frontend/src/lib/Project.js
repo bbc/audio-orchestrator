@@ -1,10 +1,23 @@
-import uuidv4 from 'uuid/v4';
-import Sequence from './Sequence';
-import Control from './Control';
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+import { v4 as uuidv4 } from 'uuid';
+import Sequence from './Sequence.js';
+import Control from './Control.js';
 import {
   PAGE_PROJECT_PRESENTATION,
   // PAGE_PROJECT_EXPORT,
-} from '../reducers/UIReducer';
+} from '../reducers/UIReducer.js';
 
 const DEFAULT_BASE_URL = 'audio';
 
@@ -42,7 +55,7 @@ const isUrl = (str) => {
 /**
  * Helper for validating cloud-sync hostname in advanced project settings
  */
-const isHostname = str => str && isUrl(`wss://${str}`) && !str.includes('/') && !str.includes(':');
+const isHostname = (str) => str && isUrl(`wss://${str}`) && !str.includes('/') && !str.includes(':');
 
 /**
  * Class representing an open project.
@@ -131,6 +144,17 @@ class Project {
   get name() { return this.data.name; }
 
   /**
+   * Changes the project name.
+   *
+   * @param {string} name
+   */
+  set name(name) {
+    const { store, data } = this;
+    data.name = name;
+    store.set('name', name);
+  }
+
+  /**
    * Gets the path to the directory where the project file is stored.
    *
    * @returns {string}
@@ -169,7 +193,7 @@ class Project {
     // Remove any controls that have been deleted
     // Then get the extra data for the remaining controlIds
     return controlIds
-      .filter(controlId => controlId in controls)
+      .filter((controlId) => controlId in controls)
       .map((controlId) => {
         const { controlType, controlName } = this.controls[controlId];
 
@@ -221,7 +245,6 @@ class Project {
     }
   }
 
-
   /**
    * Gets the sequences object, individual sequences are accessed using the sequenceId as the key.
    *
@@ -251,6 +274,16 @@ class Project {
   }
 
   /**
+   * Replaces the project settings object.
+   * @param {Object} settings
+   */
+  set settings(settings) {
+    const { store, data } = this;
+    data.settings = settings;
+    store.set('settings', settings);
+  }
+
+  /**
    * Gets the project images as an object indexed by imageId.
    *
    * @returns {Object}
@@ -260,27 +293,6 @@ class Project {
     return {
       ...images,
     };
-  }
-
-  /**
-   * Changes the project name.
-   *
-   * @param {string} name
-   */
-  set name(name) {
-    const { store, data } = this;
-    data.name = name;
-    store.set('name', name);
-  }
-
-  /**
-   * Replaces the project settings object.
-   * @param {Object} settings
-   */
-  set settings(settings) {
-    const { store, data } = this;
-    data.settings = settings;
-    store.set('settings', settings);
   }
 
   /**
@@ -363,8 +375,8 @@ class Project {
     Object.keys(sequences).forEach((k) => {
       const sequence = sequences[k];
       const { next } = sequence.settings;
-      if (next.some(choice => choice.sequenceId === sequenceId)) {
-        sequence.settings.next = next.filter(choice => choice.sequenceId !== sequenceId);
+      if (next.some((choice) => choice.sequenceId === sequenceId)) {
+        sequence.settings.next = next.filter((choice) => choice.sequenceId !== sequenceId);
       }
     });
 
@@ -372,7 +384,7 @@ class Project {
     const sequence = sequences[sequenceId];
     sequence.delete();
     delete sequences[sequenceId];
-    data.sequenceIds = sequenceIds.filter(s => s !== sequenceId);
+    data.sequenceIds = sequenceIds.filter((s) => s !== sequenceId);
     this.updateSequencesList();
   }
 
@@ -464,7 +476,7 @@ class Project {
     delete controls[controlId];
 
     // also remove any object behaviours that rely on this control
-    Object.values(this.sequences).forEach(sequence => sequence.handleDeleteControl(controlId));
+    Object.values(this.sequences).forEach((sequence) => sequence.handleDeleteControl(controlId));
 
     this.updateControlsList();
   }
@@ -521,8 +533,8 @@ class Project {
     const { sequences, controls } = data;
 
     // delete all sequences
-    Object.keys(sequences).forEach(sequenceId => this.deleteSequence(sequenceId));
-    Object.keys(controls).forEach(controlId => this.deleteControl(controlId));
+    Object.keys(sequences).forEach((sequenceId) => this.deleteSequence(sequenceId));
+    Object.keys(controls).forEach((controlId) => this.deleteControl(controlId));
 
     // delete project keys from the store
     store.delete('name');
@@ -680,7 +692,7 @@ class Project {
       this.validatePresentationSettings(),
       this.validateTitleImage(),
       this.validateAdvancedSettings(),
-      ...Object.keys(sequences).map(sequenceId => sequences[sequenceId].validate()),
+      ...Object.keys(sequences).map((sequenceId) => sequences[sequenceId].validate()),
     ];
   }
 }

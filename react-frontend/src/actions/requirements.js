@@ -1,7 +1,20 @@
-import RequirementsService from '../lib/RequirementsService';
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+import RequirementsService from '#Lib/RequirementsService.js';
 import {
   setAppError,
-} from './ui';
+} from './ui.js';
 
 const requirementsService = new RequirementsService();
 
@@ -14,7 +27,7 @@ export const requestCheckRequirements = () => (dispatch) => {
     },
     onComplete: ({ result }) => {
       if (!result.success) {
-        const errors = result.results.filter(r => r.error).map(r => r.error);
+        const errors = result.results.filter((r) => r.error).map((r) => r.error);
         console.log('requirements complete, but unsuccessful', result);
         // TODO make this a richer error message (not using setAppError)?
         dispatch(setAppError(

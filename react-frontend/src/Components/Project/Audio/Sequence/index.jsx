@@ -1,17 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import SequenceHeader from './SequenceHeader';
-import SequenceObjectTable from './SequenceObjectTable';
+import SequenceHeader from './SequenceHeader.jsx';
+import SequenceObjectTable from './SequenceObjectTable.jsx';
 
-const Sequence = ({
+function Sequence({
   sequenceId,
   projectId,
-}) => (
-  <div>
-    <SequenceHeader {...{ sequenceId, projectId }} />
-    <SequenceObjectTable {...{ sequenceId, projectId }} />
-  </div>
-);
+}) {
+  return (
+    <div>
+      <SequenceHeader {...{ sequenceId, projectId }} />
+      <SequenceObjectTable {...{ sequenceId, projectId }} />
+    </div>
+  );
+}
 
 Sequence.propTypes = {
   projectId: PropTypes.string.isRequired,

@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import BehaviourParameter from './BehaviourParameter';
+import BehaviourParameter from './BehaviourParameter.jsx';
 
-const BehaviourParameters = ({
+function BehaviourParameters({
   parameters,
   values,
   onChange,
@@ -14,29 +14,31 @@ const BehaviourParameters = ({
   images,
   imagesLoading,
   onAddImages,
-}) => (
-  <>
-    {parameters.map(parameter => (
-      <BehaviourParameter
-        key={parameter.name}
-        {...parameter}
-        value={values[parameter.name]}
-        onChange={(e, data) => onChange(e, {
-          name: parameter.name,
-          value: data.value,
-        })}
-        sequencesList={sequencesList}
-        objectsList={objectsList}
-        controls={controls}
-        controlId={controlId}
-        sequenceDuration={sequenceDuration}
-        images={images}
-        imagesLoading={imagesLoading}
-        onAddImages={onAddImages}
-      />
-    ))}
-  </>
-);
+}) {
+  return (
+    <>
+      {parameters.map((parameter) => (
+        <BehaviourParameter
+          key={parameter.name}
+          {...parameter}
+          value={values[parameter.name]}
+          onChange={(e, data) => onChange(e, {
+            name: parameter.name,
+            value: data.value,
+          })}
+          sequencesList={sequencesList}
+          objectsList={objectsList}
+          controls={controls}
+          controlId={controlId}
+          sequenceDuration={sequenceDuration}
+          images={images}
+          imagesLoading={imagesLoading}
+          onAddImages={onAddImages}
+        />
+      ))}
+    </>
+  );
+}
 
 BehaviourParameters.propTypes = {
   parameters: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

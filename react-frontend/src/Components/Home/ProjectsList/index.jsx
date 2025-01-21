@@ -5,11 +5,11 @@ import {
   Table,
 } from 'semantic-ui-react';
 
-import ProjectItem from './ProjectItem';
+import ProjectItem from './ProjectItem.jsx';
 
-const ProjectsList = ({
+function ProjectsList({
   projects,
-}) => {
+}) {
   if (projects.length === 0) {
     return null;
   }
@@ -28,7 +28,7 @@ const ProjectsList = ({
       </Table.Body>
     </Table>
   );
-};
+}
 
 ProjectsList.propTypes = {
   projects: PropTypes.arrayOf(PropTypes.shape({

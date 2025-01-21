@@ -9,9 +9,6 @@ import {
   Message,
   Container,
 } from 'semantic-ui-react';
-import ObjectHeader from './ObjectHeader';
-import ObjectRow from './ObjectRow';
-import BehaviourSettingsModal from './BehaviourSettingsModal';
 import {
   setObjectPanning,
   deleteObject,
@@ -19,9 +16,12 @@ import {
   deleteObjectBehaviour,
   replaceObjectBehaviourParameters,
   requestAddImages,
-} from '../../../../actions/project';
+} from '#Actions/project.js';
+import ObjectHeader from './ObjectHeader.jsx';
+import ObjectRow from './ObjectRow.jsx';
+import BehaviourSettingsModal from './BehaviourSettingsModal.jsx';
 
-const SequenceObjectTable = ({
+function SequenceObjectTable({
   files,
   filesLoading,
   filesLoadingCompleted,
@@ -38,7 +38,7 @@ const SequenceObjectTable = ({
   images,
   imagesLoading,
   onAddImages,
-}) => {
+}) {
   // Remember which object rows are currently highlighted (selected)
   const [highlightedObjects, setHighlightedObjects] = useState([]);
 
@@ -46,7 +46,7 @@ const SequenceObjectTable = ({
   useEffect(() => {
     // filtered list only contains those object numbers that also exist in objectsList
     const filteredHighlightedObjects = highlightedObjects.filter(
-      objectNumber => objectsList.find(o => o.objectNumber === objectNumber),
+      (objectNumber) => objectsList.find((o) => o.objectNumber === objectNumber),
     );
 
     // Only update the state if there was a change, to avoid infinite render loop
@@ -54,7 +54,6 @@ const SequenceObjectTable = ({
       setHighlightedObjects(filteredHighlightedObjects);
     }
   }, [objectsList, objects, highlightedObjects]);
-
 
   // Determine the state of the select-all checkbox
   const allChecked = highlightedObjects.length > 0
@@ -74,7 +73,7 @@ const SequenceObjectTable = ({
   const toggleHighlight = (objectNumber) => {
     const highlighted = highlightedObjects.indexOf(objectNumber) !== -1;
     setHighlightedObjects([
-      ...highlightedObjects.filter(h => h !== objectNumber),
+      ...highlightedObjects.filter((h) => h !== objectNumber),
       ...(highlighted ? [] : [objectNumber]),
     ]);
   };
@@ -93,14 +92,14 @@ const SequenceObjectTable = ({
 
     if (edit) {
       // Replace the parameters for an existing behaviourId
-      objectNumbers.forEach(objectNumber => onReplaceObjectBehaviourParameters(
+      objectNumbers.forEach((objectNumber) => onReplaceObjectBehaviourParameters(
         objectNumber,
         behaviourId,
         behaviourParameters,
       ));
     } else {
       // Add a new behaviour of the given type and parameters
-      objectNumbers.forEach(objectNumber => onAddObjectBehaviour(
+      objectNumbers.forEach((objectNumber) => onAddObjectBehaviour(
         objectNumber,
         behaviourType,
         behaviourParameters,
@@ -131,7 +130,7 @@ const SequenceObjectTable = ({
       });
     } else {
       // no parameters, so add the behaviour immediately.
-      objectNumbers.forEach(objectNumber => onAddObjectBehaviour(
+      objectNumbers.forEach((objectNumber) => onAddObjectBehaviour(
         objectNumber,
         behaviourType,
         behaviourParameters,
@@ -142,7 +141,7 @@ const SequenceObjectTable = ({
   const handleEditBehaviour = (objectNumber, behaviourId) => {
     // find the behaviour and its parameters
     const behaviour = objects[objectNumber].objectBehaviours.find(
-      b => b.behaviourId === behaviourId,
+      (b) => b.behaviourId === behaviourId,
     );
     if (!behaviour) {
       // TODO - silently failing if the behaviour was not found - better than crashing though!
@@ -165,7 +164,7 @@ const SequenceObjectTable = ({
 
   // Handle deleting multiple selected objects
   const deleteHighlighted = () => {
-    highlightedObjects.forEach(objectNumber => onDeleteObject(objectNumber));
+    highlightedObjects.forEach((objectNumber) => onDeleteObject(objectNumber));
   };
 
   // Handle adding a behaviour to the selected objects (from button above the table)
@@ -220,8 +219,7 @@ const SequenceObjectTable = ({
       <Dimmer active={filesLoading} inverted verticalAlign="top">
         { !filesLoadingTotal
           ? <Loader indeterminate inline="centered" content="Checking audio files..." />
-          : <Loader inline="centered" content={`Checking audio files (${filesLoadingCompleted}/${filesLoadingTotal})`} />
-        }
+          : <Loader inline="centered" content={`Checking audio files (${filesLoadingCompleted}/${filesLoadingTotal})`} />}
       </Dimmer>
 
       { behaviourSettingsContents && (
@@ -248,8 +246,7 @@ const SequenceObjectTable = ({
               {'Not all objects have an associated audio file. Check that all audio files have been added and are named starting with their object number.'}
             </Message>
           )
-          : null
-        }
+          : null}
       </Container>
 
       <Container>
@@ -294,7 +291,7 @@ const SequenceObjectTable = ({
       </Container>
     </div>
   );
-};
+}
 
 SequenceObjectTable.propTypes = {
   files: PropTypes.shape({
@@ -389,7 +386,9 @@ const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
     behaviourId,
   )),
   onReplaceObjectBehaviourParameters: (
-    objectNumber, behaviourId, behaviourParameters,
+    objectNumber,
+    behaviourId,
+    behaviourParameters,
   ) => dispatch(replaceObjectBehaviourParameters(
     projectId,
     sequenceId,
@@ -397,7 +396,7 @@ const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
     behaviourId,
     behaviourParameters,
   )),
-  onDeleteObject: objectNumber => dispatch(deleteObject(
+  onDeleteObject: (objectNumber) => dispatch(deleteObject(
     projectId,
     sequenceId,
     objectNumber,

@@ -1,0 +1,6 @@
+{
+  "collectCoverageFrom": [
+    "src/**/*.js"
+  ],
+  "transform": {}
+}

@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { hot } from 'react-hot-loader/root';
 
 import {
   Message,
@@ -13,14 +12,13 @@ import 'semantic-ui-css/semantic.min.css';
 // styles overriding some semantic-ui styles
 import './main.css';
 
+import Project from '#Components/Project/index.jsx';
+import Home from '#Components/Home/index.jsx';
 import {
   clearAppWarning,
-} from './actions/ui';
-
-import Project from './Components/Project';
-import Home from './Components/Home';
-import ErrorModal from './Components/ErrorModal';
-import WarningModal from './Components/WarningModal';
+} from '#Actions/ui.js';
+import ErrorModal from '#Components/ErrorModal.jsx';
+import WarningModal from '#Components/WarningModal.jsx';
 
 const getCurrentPageComponent = (currentPage) => {
   switch (currentPage) {
@@ -35,7 +33,7 @@ const getCurrentPageComponent = (currentPage) => {
   }
 };
 
-const App = ({
+function App({
   currentPage,
   currentProjectId,
   onCloseWarning,
@@ -43,7 +41,7 @@ const App = ({
   errorLink,
   warning,
   warningLink,
-}) => {
+}) {
   const Page = getCurrentPageComponent(currentPage);
   return (
     <div>
@@ -52,7 +50,7 @@ const App = ({
       <WarningModal content={warning} link={warningLink} onClose={onCloseWarning} />
     </div>
   );
-};
+}
 
 App.propTypes = {
   currentPage: PropTypes.string.isRequired,
@@ -81,8 +79,8 @@ const mapStateToProps = ({ UI }) => ({
   warningLink: UI.warningLink,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   onCloseWarning: () => dispatch(clearAppWarning()),
 });
 
-export default hot(connect(mapStateToProps, mapDispatchToProps)(App));
+export default connect(mapStateToProps, mapDispatchToProps)(App);

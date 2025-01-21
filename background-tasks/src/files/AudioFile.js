@@ -1,10 +1,23 @@
-import path from 'path';
-import { getLogger } from 'bbcat-orchestration-builder-logging';
+/**
+Copyright (C) 2025, BBC R&D
 
-import checkFileExists from './checkFileExists';
-import probeFile from './probeFile';
-import detectItems from './detectItems';
-import encodeItems from './encodeItems';
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+import path from 'path';
+import { getLogger } from '#logging';
+
+import checkFileExists from './checkFileExists.js';
+import probeFile from './probeFile.js';
+import detectItems from './detectItems.js';
+import encodeItems from './encodeItems.js';
 
 const logger = getLogger('audio-file');
 
@@ -128,7 +141,10 @@ class AudioFile {
       .then(() => this.exists())
       .then(() => this.detectItems())
       .then(({ items }) => encodeItems(
-        this.filePath, items, this.data.probe.sampleRate, this.data.probe.numChannels,
+        this.filePath,
+        items,
+        this.data.probe.sampleRate,
+        this.data.probe.numChannels,
       ))
       .then(({ encodedItems, encodedItemsBasePath }) => {
         this.data.encodedItems = encodedItems;

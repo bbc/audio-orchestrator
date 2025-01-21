@@ -6,19 +6,19 @@ import {
   Segment,
   Grid,
 } from 'semantic-ui-react';
-import ImageDetails from 'Components/ImageDetails';
-import ImageEffectButton from './ImageEffectButton';
+import ImageDetails from '#Components/ImageDetails.jsx';
+import ImageEffectButton from './ImageEffectButton.jsx';
 
 const imagesPerPage = 3 * 9; // 9 per row at max window width
 
-const ImageFileList = ({
+function ImageFileList({
   images,
   imagesList,
   imagesLoading,
   onAddImages,
   selectedImageId,
   onSelectImage,
-}) => {
+}) {
   const numPages = Math.ceil(imagesList.length / imagesPerPage);
   const selectedImageIndex = useMemo(
     () => imagesList.indexOf(selectedImageId),
@@ -29,7 +29,7 @@ const ImageFileList = ({
 
   const currentPageImages = imagesList
     .slice(page * imagesPerPage, (page + 1) * imagesPerPage)
-    .map(imageId => images[imageId]);
+    .map((imageId) => images[imageId]);
 
   return (
     <Grid>
@@ -86,7 +86,7 @@ const ImageFileList = ({
       </Grid.Column>
     </Grid>
   );
-};
+}
 
 ImageFileList.propTypes = {
   images: PropTypes.shape({}).isRequired,

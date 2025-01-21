@@ -8,15 +8,15 @@ import {
   Icon,
   Divider,
 } from 'semantic-ui-react';
-import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
-import InlineHelpPopup from 'Components/InlineHelpPopup';
-import EditableText from '../EditableText';
-import SequenceSettings from './SequenceSettings';
-import SequenceChoices from './SequenceChoices';
+import ConfirmDeleteButton from '#Components/ConfirmDeleteButton.jsx';
+import InlineHelpPopup from '#Components/InlineHelpPopup.jsx';
 import {
   setSequenceSetting,
   requestSetIntroSequence,
-} from '../../../actions/project';
+} from '#Actions/project.js';
+import EditableText from '../EditableText.jsx';
+import SequenceSettings from './SequenceSettings.jsx';
+import SequenceChoices from './SequenceChoices.jsx';
 
 // TODO: The EditableText is very large when it's clicked
 // NOTE: Must not allow deleting the initial sequence; or edit lib/Project to assign a new initial
@@ -58,8 +58,7 @@ class SequenceItem extends React.Component {
             <InlineHelpPopup
               content={isIntro
                 ? 'Use as entry point (select this option on another sequence to change which sequence plays when the experience starts).'
-                : 'Use as entry point (select this option to play this sequence when the experience starts).'
-              }
+                : 'Use as entry point (select this option to play this sequence when the experience starts).'}
               className="ui buttons"
             >
               <Button
@@ -201,7 +200,7 @@ const mapStateToProps = (state, { projectId, sequenceId }) => {
 };
 
 const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
-  onSetName: name => dispatch(setSequenceSetting(projectId, sequenceId, 'name', name)),
+  onSetName: (name) => dispatch(setSequenceSetting(projectId, sequenceId, 'name', name)),
   onChangeSetting: (key, value) => dispatch(setSequenceSetting(projectId, sequenceId, key, value)),
   onSetIntro: () => dispatch(requestSetIntroSequence(projectId, sequenceId)),
 });

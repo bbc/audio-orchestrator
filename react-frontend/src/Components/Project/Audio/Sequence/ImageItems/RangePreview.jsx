@@ -2,31 +2,29 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './RangePreview.css';
 
-const RangePreview = ({
+function RangePreview({
   min,
   max,
   start,
   end,
-}) => {
-  const valid = [min, max, start, end].every(d => d !== undefined && !Number.isNaN(d));
+}) {
+  const valid = [min, max, start, end].every((d) => d !== undefined && !Number.isNaN(d));
   const width = (end - start) / (max - min);
   const left = (start - min) / (max - min);
   return (
-    <>
-      <div className="bcob-range-preview-container">
-        {valid && (
-          <div
-            className="bcob-range-preview-inner"
-            style={{
-              width: `${width * 100}%`,
-              left: `${left * 100}%`,
-            }}
-          />
-        )}
-      </div>
-    </>
+    <div className="bcob-range-preview-container">
+      {valid && (
+      <div
+        className="bcob-range-preview-inner"
+        style={{
+          width: `${width * 100}%`,
+          left: `${left * 100}%`,
+        }}
+      />
+      )}
+    </div>
   );
-};
+}
 
 RangePreview.propTypes = {
   min: PropTypes.number,

@@ -1,14 +1,17 @@
-const path = require('path');
-const fs = require('fs');
-const licenseChecker = require('license-checker');
+import path from 'node:path';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import * as licenseChecker from 'license-checker-rseidelsohn';
 
-const sanitize = (s) => s.replace('<', '&lt;').replace('>', '&gt;');
+const sanitize = s => s.replace('<', '&lt;').replace('>', '&gt;');
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Get information for all production dependencies, starting at electron-app because it imports
 // all the other packages.
 const getCreditInfo = () => new Promise((resolve, reject) => {
   licenseChecker.init({
-    start: path.join(__dirname, '..'),
+    start: path.resolve(__dirname, '..'),
     production: true,
   }, (err, result) => {
     if (err) reject(err);
@@ -41,7 +44,7 @@ const formatCredits = ({ name, repository, licenses, publisher, licenseText }) =
 const writeCreditsFile = (info) => {
   const hiddenDepPrefixes = [
     '@bbc/bbcat-orchestration',
-    'bbcat-orchestration-builder',
+    '@bbc/audio-orchestrator',
   ];
   const credits = Object.entries(info)
     .filter(([name]) => !hiddenDepPrefixes.some(s => name.startsWith(s)))
@@ -65,7 +68,7 @@ const writeCreditsFile = (info) => {
   const creditsPage = `<DOCTYPE html>
   <html>
   <head>
-    <title>BBC R&amp;D Audio Orchestrator</title>
+    <title>Audio Orchestrator</title>
     <style type="text/css">
       body { font-family: sans-serif; }
       ul { list-style: none; padding: 0; }
@@ -75,12 +78,20 @@ const writeCreditsFile = (info) => {
     </style>
   </head>
   <body>
-    <h1>About Audio Orchestrator from BBC R&D</h1>
-    <p>Version ${version}</p>
-    <p><img src="bbcrd-logo.svg" width="120" alt="BBC Research and Development" /></p>
+    <h1>About Audio Orchestrator</h1>
+    <p><b>Version ${version}</b></p>
+    <p><b>Copyright BBC R&amp;D, 2025</b></p>
+    <p>https://www.bbc.co.uk/opensource/projects/project/audio-orchestrator</p>
+    <p>https://github.com/bbc/audio-orchestrator</p>
+    <h2>Licence information</h2>
+    <p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
+    <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
+    <p>You should have received a copy of the GNU General Public License along with this program. If not, see: https://www.gnu.org/licenses/.</p>
+
+    <h2>Acknowledgements</h2>
     <p>Audio Orchestrator was developed at BBC R&amp;D by Kristian Hentschel, with contributions from Jon Francombe, Danial Haddadi, Emma Young, and Sonal Tandon.
-    <h2>Open source licences</h2>
-    <p>This is a list of open-source components used to create this software. Click on the package name to see licence information.</p>
+    <p>The Audio Orchestrator icon is derived from a photo by Spencer Imbrock on Unsplash.</p>
+    <p>Below is a list of open-source components used to create this software. Click on the package name to see licence information.</p>
     <ul>
       ${credits}
     </ul>
@@ -88,7 +99,7 @@ const writeCreditsFile = (info) => {
   </html>`;
 
   return new Promise((resolve, reject) => {
-    fs.writeFile(path.join(__dirname, '..', 'credits.html'), creditsPage, (err) => {
+    fs.writeFile(path.join(__dirname, '../electron-app', 'credits.html'), creditsPage, (err) => {
       if (err) reject(err);
       resolve();
     });

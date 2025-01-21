@@ -5,38 +5,40 @@ import {
   Table,
   Header,
 } from 'semantic-ui-react';
-import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
+import ConfirmDeleteButton from '#Components/ConfirmDeleteButton.jsx';
 import {
   requestOpenProject,
   requestDeleteProject,
-} from '../../../actions/project';
+} from '#Actions/project.js';
 
-const ProjectItem = ({
+function ProjectItem({
   name,
   lastOpened,
   onOpen,
   onDelete,
-}) => (
-  <Table.Row>
-    <Table.Cell>
-      <Header
-        style={{ cursor: 'pointer' }}
-        tabIndex="0"
-        onClick={onOpen}
-        onKeyPress={(e) => {
-          if (e.key === 'Enter') {
-            onOpen();
-          }
-        }}
-        content={name}
-        subheader={`Last opened ${new Date(Date.parse(lastOpened)).toLocaleDateString()}`}
-      />
-    </Table.Cell>
-    <Table.Cell collapsing>
-      <ConfirmDeleteButton type="from list of recent projects" onDelete={onDelete} small />
-    </Table.Cell>
-  </Table.Row>
-);
+}) {
+  return (
+    <Table.Row>
+      <Table.Cell>
+        <Header
+          style={{ cursor: 'pointer' }}
+          tabIndex="0"
+          onClick={onOpen}
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              onOpen();
+            }
+          }}
+          content={name}
+          subheader={`Last opened ${new Date(Date.parse(lastOpened)).toLocaleDateString()}`}
+        />
+      </Table.Cell>
+      <Table.Cell collapsing>
+        <ConfirmDeleteButton type="from list of recent projects" onDelete={onDelete} small />
+      </Table.Cell>
+    </Table.Row>
+  );
+}
 
 ProjectItem.propTypes = {
   name: PropTypes.string.isRequired,

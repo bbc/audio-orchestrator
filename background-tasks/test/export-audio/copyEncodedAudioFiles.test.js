@@ -1,10 +1,7 @@
-import fse from 'fs-extra';
-import copyEncodedAudioFiles from '../../src/export-audio/copyEncodedAudioFiles';
-import generateSequenceMetadata from '../../src/export-audio/generateSequenceMetadata';
-import {
-  headerlessDashManifest,
-  safariDashManifest,
-} from '../../src/export-audio/dashManifests';
+import { createRequire } from 'node:module';
+import { jest } from '@jest/globals';
+
+const require = createRequire(import.meta.url);
 
 jest.mock('fs-extra', () => ({
   emptyDir: jest.fn(() => Promise.resolve()),
@@ -13,8 +10,21 @@ jest.mock('fs-extra', () => ({
   copy: jest.fn((source, dest, options, cb) => (cb ? cb() : Promise.resolve())),
 }));
 
-jest.mock('../../src/export-audio/generateSequenceMetadata');
-jest.mock('../../src/export-audio/dashManifests');
+jest.unstable_mockModule('../../src/export-audio/generateSequenceMetadata.js', () => ({ default: jest.fn() }));
+jest.unstable_mockModule('../../src/export-audio/dashManifests.js', () => ({
+  headerlessDashManifest: jest.fn(),
+  safariDashManifest: jest.fn(),
+}));
+
+const { default: copyEncodedAudioFiles } = await import('../../src/export-audio/copyEncodedAudioFiles.js');
+const { default: generateSequenceMetadata } = await import('../../src/export-audio/generateSequenceMetadata.js');
+
+const fse = require('fs-extra');
+
+const {
+  headerlessDashManifest,
+  safariDashManifest,
+} = await import('../../src/export-audio/dashManifests.js');
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -33,7 +43,7 @@ const sequences = [
 
 const fileStore = ({
   getFile: () => ({ probe: { sampleRate: 44100 } }),
-})
+});
 
 const settings = {};
 
@@ -65,31 +75,25 @@ describe('copyEncodedAudioFiles', () => {
     }),
   ).resolves.toEqual(expect.anything()));
 
-  it('generates dash and safari manifests', () => {
-    return copyEncodedAudioFiles({
-      sequences, settings, files, outputDir, fileStore,
-    })
-      .then(() => {
-        expect(headerlessDashManifest).toHaveBeenCalledTimes(1);
-        expect(safariDashManifest).toHaveBeenCalledTimes(1);
-      });
-  });
+  it('generates dash and safari manifests', () => copyEncodedAudioFiles({
+    sequences, settings, files, outputDir, fileStore,
+  })
+    .then(() => {
+      expect(headerlessDashManifest).toHaveBeenCalledTimes(1);
+      expect(safariDashManifest).toHaveBeenCalledTimes(1);
+    }));
 
-  it('calls copy once per item', () => {
-    return copyEncodedAudioFiles({
-      sequences, settings, files, outputDir, fileStore,
-    })
-      .then(() => {
-        expect(fse.copy).toHaveBeenCalledTimes(2);
-      });
-  });
+  it('calls copy once per item', () => copyEncodedAudioFiles({
+    sequences, settings, files, outputDir, fileStore,
+  })
+    .then(() => {
+      expect(fse.copy).toHaveBeenCalledTimes(2);
+    }));
 
-  it('generates a seqeunce metadata file', () => {
-    return copyEncodedAudioFiles({
-      sequences, settings, files, outputDir, fileStore,
-    })
-      .then(() => {
-        expect(generateSequenceMetadata).toHaveBeenCalledTimes(1);
-      });
-  });
+  it('generates a seqeunce metadata file', () => copyEncodedAudioFiles({
+    sequences, settings, files, outputDir, fileStore,
+  })
+    .then(() => {
+      expect(generateSequenceMetadata).toHaveBeenCalledTimes(1);
+    }));
 });

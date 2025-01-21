@@ -1,168 +1,22 @@
-import getExportObjectBehaviours from './getExportObjectBehaviours';
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+import getExportObjectBehaviours from './getExportObjectBehaviours.js';
+import SequenceSettings from './SequenceSettings.js';
 
 import {
   PAGE_PROJECT_SEQUENCES,
-} from '../reducers/UIReducer';
-
-class SequenceSettings {
-  constructor(store, sequenceId) {
-    this.data = {};
-    this.store = store;
-    this.sequenceId = sequenceId;
-
-    this.loadFromStore();
-  }
-
-  loadFromStore() {
-    const { store, data, sequenceId } = this;
-    const {
-      name,
-      isIntro,
-      loop,
-      outPoints,
-      hold,
-      skippable,
-      instructions,
-      next,
-      choicesOpen,
-      settingsOpen,
-    } = store.get(`sequences.${sequenceId}.settings`, {});
-
-    data.name = name || '';
-    data.isIntro = !!isIntro;
-    data.loop = !!loop;
-    data.outPoints = outPoints || [];
-    data.hold = !!hold;
-    data.skippable = !!skippable;
-    data.instructions = !!instructions;
-    data.next = next || [];
-    data.choicesOpen = choicesOpen || false;
-    data.settingsOpen = settingsOpen || false;
-  }
-
-  saveToStore() {
-    const { store, data, sequenceId } = this;
-
-    store.set(`sequences.${sequenceId}.settings`, data);
-  }
-
-  delete() {
-    const { store, sequenceId } = this;
-    store.delete(`sequences.${sequenceId}.settings`);
-  }
-
-  get name() { return this.data.name; }
-
-  get isIntro() { return this.data.isIntro; }
-
-  get loop() { return this.data.loop; }
-
-  get outPoints() { return this.data.outPoints; }
-
-  get hold() { return this.data.hold; }
-
-  get skippable() { return this.data.skippable; }
-
-  get instructions() { return this.data.instructions; }
-
-  get next() { return this.data.next; }
-
-  get choicesOpen() { return this.data.choicesOpen; }
-
-  get settingsOpen() { return this.data.settingsOpen; }
-
-
-  set name(name) {
-    const { data } = this;
-    data.name = name;
-    this.saveToStore();
-  }
-
-  set isIntro(isIntro) {
-    const { data } = this;
-    data.isIntro = isIntro;
-    this.saveToStore();
-  }
-
-  set loop(loop) {
-    const { data } = this;
-    data.loop = loop;
-    this.saveToStore();
-  }
-
-  set outPoints(outPoints) {
-    const { data } = this;
-    data.outPoints = outPoints;
-    this.saveToStore();
-  }
-
-  set hold(hold) {
-    const { data } = this;
-    data.hold = hold;
-    this.saveToStore();
-  }
-
-  set skippable(skippable) {
-    const { data } = this;
-    data.skippable = skippable;
-    this.saveToStore();
-  }
-
-  set instructions(instructions) {
-    const { data } = this;
-    data.instructions = instructions;
-    this.saveToStore();
-  }
-
-  set next(next) {
-    const { data } = this;
-    data.next = next;
-    this.saveToStore();
-  }
-
-  set choicesOpen(choicesOpen) {
-    const { data } = this;
-    data.choicesOpen = choicesOpen;
-    this.saveToStore();
-  }
-
-  set settingsOpen(settingsOpen) {
-    const { data } = this;
-    data.settingsOpen = settingsOpen;
-    this.saveToStore();
-  }
-
-  /**
-   * return the sequence settings required for exporting as a plain object.
-   */
-  getExportData() {
-    const {
-      name,
-      isIntro,
-      loop,
-      outPoints,
-      hold,
-      skippable,
-      instructions,
-      next,
-      choicesOpen,
-      settingsOpen,
-    } = this;
-
-    return {
-      name,
-      isIntro,
-      loop,
-      outPoints,
-      hold,
-      skippable,
-      instructions,
-      next,
-      choicesOpen,
-      settingsOpen,
-    };
-  }
-}
+} from '../reducers/UIReducer.js';
 
 /**
  * Class representing a sequence.
@@ -205,18 +59,10 @@ class Sequence {
       `sequences.${sequenceId}.objects`,
       `sequences.${sequenceId}.filesList`,
       `sequences.${sequenceId}.files`,
-    ].forEach(key => store.delete(key));
+    ].forEach((key) => store.delete(key));
   }
 
   get filesList() { return this.data.filesList; }
-
-  get files() { return this.data.files; }
-
-  get objectsList() { return this.data.objectsList; }
-
-  get objects() { return this.data.objects; }
-
-  get settings() { return this.data.settings; }
 
   set filesList(filesList) {
     const { store, sequenceId, data } = this;
@@ -224,11 +70,15 @@ class Sequence {
     store.set(`sequences.${sequenceId}.filesList`, filesList);
   }
 
+  get files() { return this.data.files; }
+
   set files(files) {
     const { store, sequenceId, data } = this;
     data.files = files;
     store.set(`sequences.${sequenceId}.files`, files);
   }
+
+  get objectsList() { return this.data.objectsList; }
 
   set objectsList(objectsList) {
     const { store, sequenceId, data } = this;
@@ -236,11 +86,15 @@ class Sequence {
     store.set(`sequences.${sequenceId}.objectsList`, objectsList);
   }
 
+  get objects() { return this.data.objects; }
+
   set objects(objects) {
     const { store, sequenceId, data } = this;
     data.objects = objects;
     store.set(`sequences.${sequenceId}.objects`, objects);
   }
+
+  get settings() { return this.data.settings; }
 
   /**
    * return the sequence data required for exporting as a plain object, with all settings included
@@ -309,7 +163,7 @@ class Sequence {
     const allObjectsHaveFiles = objectsList
       .every(({ objectNumber }) => !!objects[objectNumber].fileId);
     const allFilesAreGood = filesList.every(({ fileId }) => !files[fileId].error);
-    const choicesAreGood = next.every(choice => !!choice.label && !!choice.sequenceId);
+    const choicesAreGood = next.every((choice) => !!choice.label && !!choice.sequenceId);
 
     if (numFilesAdded === 0) {
       message = 'No audio files have been added.';

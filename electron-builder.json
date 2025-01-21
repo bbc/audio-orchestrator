@@ -1,0 +1,62 @@
+{
+  "appId": "uk.co.bbc.rd.audio-orchestrator",
+  "copyright": "Copyright © 2025 BBC R&D",
+  "productName": "Audio Orchestrator",
+  "files": [
+    "./electron-app/credits.html",
+    "./electron-app/src/**/*",
+    "./logging/src/**/*",
+    "./background-tasks/src/**/*",
+    "./react-frontend/dist/**/*",
+    "!**/node_modules/@bbc/audio-orchestration-template/src/**/*",
+    "**/node_modules/@bbc/audio-orchestration-template/dist/**/*"
+  ],
+  "asar": {
+    "smartUnpack": false
+  },
+  "asarUnpack": [
+    "**/node_modules/@bbc/audio-orchestration-template/dist/**/*"
+  ],
+  "removePackageScripts": true,
+  "extraResources": [
+    "./electron-app/build/**/*"
+  ],
+  "extraFiles": [
+    {
+      "from": "./COPYING",
+      "to": "COPYING-Audio-Orchestrator.txt"
+    },
+    {
+      "from": "./LICENSE",
+      "to": "LICENSE-Audio-Orchestrator.txt"
+    },
+    {
+      "from": "./electron-app/credits.html",
+      "to": "Credits-Audio-Orchestrator.html"
+    }
+  ],
+  "dmg": {
+    "icon": null
+  },
+  "mac": {
+    "hardenedRuntime": true,
+    "entitlements": "build/entitlements.mac.plist",
+    "entitlementsInherit": "build/entitlements.mac.plist",
+    "gatekeeperAssess": false,
+    "target": {
+      "target": "dmg",
+      "arch": [
+        "x64",
+        "arm64"
+      ]
+    },
+    "identity": null
+  },
+  "nsis": {
+    "oneClick": "false",
+    "allowToChangeInstallationDirectory": true
+  },
+  "win": {
+    "target": ["nsis"]
+  }
+}

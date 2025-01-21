@@ -1,4 +1,17 @@
-import { ipcRenderer, contextBridge } from 'electron';
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+const { ipcRenderer, contextBridge, webUtils } = require('electron'); // ESM imports are not supported in renderer process
 
 // To trigger moving and opening exported files
 contextBridge.exposeInMainWorld('exportFunctions', {
@@ -6,6 +19,7 @@ contextBridge.exposeInMainWorld('exportFunctions', {
   saveExportAs: (...args) => ipcRenderer.invoke('save-export-as', ...args),
   saveExportToDownloads: (...args) => ipcRenderer.invoke('save-export-to-downloads', ...args),
   selectCustomTemplatePath: (...args) => ipcRenderer.invoke('select-custom-template-path', ...args),
+  getPathForFile: file => webUtils.getPathForFile(file),
 });
 
 // For accessing background services (previously HTTP API)

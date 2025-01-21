@@ -2,16 +2,16 @@ import React from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
-import InlineHelpPopup from 'Components/InlineHelpPopup';
-import { runAlgorithmWithExportedMetadata } from 'Actions/monitoring';
+import InlineHelpPopup from '#Components/InlineHelpPopup.jsx';
+import { runAlgorithmWithExportedMetadata } from '#Actions/monitoring.js';
 import {
   useControls, useObjectsList, useCurrentSetup, useObjects,
-} from './helpers';
+} from './helpers.js';
 
-const RunAlgorithmButton = ({
+function RunAlgorithmButton({
   projectId,
   currentSequenceId,
-}) => {
+}) {
   const objectsList = useObjectsList(projectId, currentSequenceId);
   const objects = useObjects(projectId, currentSequenceId);
   const controls = useControls(projectId);
@@ -37,7 +37,7 @@ const RunAlgorithmButton = ({
       />
     </InlineHelpPopup>
   );
-};
+}
 
 RunAlgorithmButton.propTypes = {
   projectId: PropTypes.string.isRequired,

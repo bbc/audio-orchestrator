@@ -6,7 +6,7 @@ import {
   Checkbox,
   List,
 } from 'semantic-ui-react';
-import { setSequenceSetting } from '../../../actions/project';
+import { setSequenceSetting } from '#Actions/project.js';
 
 class SequenceSettings extends React.Component {
   constructor(props) {

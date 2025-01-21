@@ -3,12 +3,12 @@ import PropTypes from 'prop-types';
 import {
   Card,
 } from 'semantic-ui-react';
-import ButtonGroupToggle from './ButtonGroupToggle';
+import ButtonGroupToggle from './ButtonGroupToggle.jsx';
 import {
   makeBehavioursWithAllowedDevices,
   getDevicesAllowed,
   devicesOptions,
-} from './controlBehaviourHelpers';
+} from './controlBehaviourHelpers.js';
 
 class ControlBehavioursDevices extends React.PureComponent {
   constructor(props) {

@@ -92,4 +92,5 @@ typings/
 .dynamodb/
 
 builds/
-bbcat-orchestration-builder.log
+audio-orchestrator.log
+.fake-dep-root

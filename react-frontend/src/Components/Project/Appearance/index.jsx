@@ -9,14 +9,13 @@ import {
   Card,
   Segment,
 } from 'semantic-ui-react';
-import PageTitleBar from '../../PageTitleBar';
-import ImagePreview from '../../ImagePreview';
-import ColorSelection from './ColorSelection';
-
 import {
   setProjectSetting,
   requestReplaceProjectPlayerImage,
-} from '../../../actions/project';
+} from '#Actions/project.js';
+import PageTitleBar from '../../PageTitleBar.jsx';
+import ImagePreview from '../../ImagePreview.jsx';
+import ColorSelection from './ColorSelection.jsx';
 
 const colors = [
   '#006def',
@@ -151,8 +150,7 @@ class Appearance extends React.Component {
           <Card>
             { playerImageId
               ? <ImagePreview projectId={projectId} imageId={playerImageId} />
-              : <Card.Content content="No image selected." />
-            }
+              : <Card.Content content="No image selected." />}
 
             { playerImageId && (
               <Card.Content extra>

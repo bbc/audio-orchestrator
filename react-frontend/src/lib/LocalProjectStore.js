@@ -1,4 +1,17 @@
-import uuidv4 from 'uuid/v4';
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+import { v4 as uuidv4 } from 'uuid';
 
 const CURRENT_PROJECT_STORE_VERSION = 1;
 const Storage = window.localStorage;
@@ -100,8 +113,8 @@ class LocalProjectStore {
 
     return Promise.resolve(
       projectIds
-        .filter(projectId => !!Storage.getItem(`projects.${projectId}.lastOpened`))
-        .map(projectId => ({
+        .filter((projectId) => !!Storage.getItem(`projects.${projectId}.lastOpened`))
+        .map((projectId) => ({
           projectId,
           lastOpened: JSON.parse(Storage.getItem(`projects.${projectId}.lastOpened`)),
           name: JSON.parse(Storage.getItem(`projects.${projectId}.name`)),
@@ -115,7 +128,7 @@ class LocalProjectStore {
    */
   static deleteProject(projectId) {
     const projectIds = JSON.parse(Storage.getItem('projectIds')) || [];
-    Storage.setItem('projectIds', JSON.stringify(projectIds.filter(p => p !== projectId)));
+    Storage.setItem('projectIds', JSON.stringify(projectIds.filter((p) => p !== projectId)));
     Storage.removeItem(`projects.${projectId}._PROJECT_STORE_VERSION`);
   }
 
@@ -150,7 +163,7 @@ class LocalProjectStore {
 
       // copy each key into the store
       Object.keys(dump)
-        .filter(key => key.startsWith(`projects.${projectId}.`))
+        .filter((key) => key.startsWith(`projects.${projectId}.`))
         .forEach((key) => {
           const newKey = key.replace(`projects.${projectId}.`, `projects.${newProjectId}.`);
           Storage.setItem(newKey, JSON.stringify(dump[key]));

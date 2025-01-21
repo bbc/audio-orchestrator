@@ -1,4 +1,17 @@
-import { behaviourTypes, behaviourTypeDetails } from './behaviourTypes';
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+import { behaviourTypes, behaviourTypeDetails } from './behaviourTypes.js';
 
 class Behaviours {
   /**
@@ -12,7 +25,7 @@ class Behaviours {
       const [, controlId] = behaviourType.split(':');
 
       // find the control
-      const control = controls.find(c => c.controlId === controlId) || {};
+      const control = controls.find((c) => c.controlId === controlId) || {};
 
       const { controlType } = control;
 
@@ -54,7 +67,7 @@ class Behaviours {
     const details = [
       ...controls.map(({ controlId }) => `control:${controlId}`),
       ...behaviourTypes,
-    ].map(behaviourType => Behaviours.getDetails(behaviourType, controls));
+    ].map((behaviourType) => Behaviours.getDetails(behaviourType, controls));
 
     if (!includeFixed) {
       return details.filter(({ fixed }) => !fixed);
@@ -84,7 +97,7 @@ class Behaviours {
     // Combine the data from the objectBehaviours with the data from the details
     // The original behaviour has e.g. behaviourId, behaviourType, behaviourParameters.
     // The behaviour details add e.g. displayName, parameters, color, fixed (see behaviourTypes.js).
-    const annotatedBehaviours = objectBehaviours.map(behaviour => ({
+    const annotatedBehaviours = objectBehaviours.map((behaviour) => ({
       ...behaviour,
       ...Behaviours.getDetails(behaviour.behaviourType),
     }));

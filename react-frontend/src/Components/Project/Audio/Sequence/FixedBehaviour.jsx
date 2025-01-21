@@ -4,9 +4,9 @@ import {
   Dropdown,
   Popup,
 } from 'semantic-ui-react';
-import Behaviours from 'Lib/Behaviours';
+import Behaviours from '#Lib/Behaviours.js';
 
-const getParameterOptions = parameter => parameter.allowedValues.map(({
+const getParameterOptions = (parameter) => parameter.allowedValues.map(({
   value,
   displayName,
 }) => ({
@@ -15,11 +15,11 @@ const getParameterOptions = parameter => parameter.allowedValues.map(({
   text: displayName,
 }));
 
-const FixedBehaviour = ({
+function FixedBehaviour({
   behaviourType,
   behaviourParameters,
   onChange,
-}) => {
+}) {
   const {
     description,
     parameters,
@@ -28,7 +28,7 @@ const FixedBehaviour = ({
 
   const parameter = parameters[0]; // TODO assuming there is only one parameter
   const value = behaviourParameters[parameter.name];
-  const valueText = (parameter.allowedValues.find(av => av.value === value) || {}).displayName;
+  const valueText = (parameter.allowedValues.find((av) => av.value === value) || {}).displayName;
 
   const handleChange = (e, data) => {
     onChange({
@@ -54,7 +54,7 @@ const FixedBehaviour = ({
       )}
     />
   );
-};
+}
 
 FixedBehaviour.propTypes = {
   behaviourType: PropTypes.string.isRequired,

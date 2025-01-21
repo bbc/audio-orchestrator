@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Button } from 'semantic-ui-react';
-import { turnOSCMsgsOnOff } from 'Actions/monitoring';
+import { turnOSCMsgsOnOff } from '#Actions/monitoring.js';
 import {
   useConnectedToDAW,
   useConnectedToDAWOnce,
   useCurrentSetup,
   useOSCPortNumber,
-} from './helpers';
-import DAWSettingsModal from './DAWSettingsModal';
+} from './helpers.js';
+import DAWSettingsModal from './DAWSettingsModal.jsx';
 
-const ConnectToDAWButton = ({
+function ConnectToDAWButton({
   objects,
   projectId,
-}) => {
+}) {
   const dispatch = useDispatch();
   const connectedToDAW = useConnectedToDAW();
   const connectedToDAWOnce = useConnectedToDAWOnce();
@@ -64,7 +64,7 @@ const ConnectToDAWButton = ({
       </Button.Group>
     </>
   );
-};
+}
 
 ConnectToDAWButton.propTypes = {
   objects: PropTypes.shape({}).isRequired,

@@ -1,20 +1,41 @@
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+import fs from 'node:fs/promises';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { v4 as uuidv4 } from 'uuid';
-import { electronLogger as logger } from 'bbcat-orchestration-builder-logging';
 import fse from 'fs-extra';
-import path from 'path';
 import ElectronStore from 'electron-store';
 import semver from 'semver';
 import {
   dialog,
   BrowserWindow,
 } from 'electron';
+import { electronLogger as logger } from '#logging';
 import {
   getRecentProjects,
   setRecentProject,
   removeRecentProject,
-} from './settings';
-import migrations from './migrations';
-import { version as projectVersion } from '../../package.json';
+} from './settings.js';
+import migrations from './migrations.js';
+
+const { version: projectVersion } = JSON.parse(await fs.readFile(
+  path.join(
+    path.dirname(fileURLToPath(import.meta.url)),
+    '../../../package.json',
+  ),
+));
 
 const migrationsWithNewerVersionCheck = {
   [`<= ${projectVersion}`]: (store) => {

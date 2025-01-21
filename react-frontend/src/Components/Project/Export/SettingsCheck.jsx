@@ -6,14 +6,14 @@ import {
   Button,
 } from 'semantic-ui-react';
 
-const SettingsCheck = ({
+function SettingsCheck({
   title,
   message,
   error,
   warning,
   onReview,
   editIcon,
-}) => {
+}) {
   const valid = !warning && !error;
   const invalidIcon = error ? 'delete' : 'exclamation';
   return (
@@ -26,12 +26,11 @@ const SettingsCheck = ({
       <Table.Cell>
         {!valid && !!onReview
           ? <Button icon={editIcon} onClick={onReview} />
-          : null
-        }
+          : null}
       </Table.Cell>
     </Table.Row>
   );
-};
+}
 
 SettingsCheck.propTypes = {
   title: PropTypes.string.isRequired,

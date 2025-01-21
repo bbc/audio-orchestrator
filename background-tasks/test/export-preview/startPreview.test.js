@@ -1,8 +1,5 @@
+import { jest } from '@jest/globals';
 import os from 'os';
-import net from 'net';
-import http from 'http';
-import serveStatic from 'serve-static';
-import startPreview from '../../src/export-preview/startPreview';
 
 jest.mock('fs-extra', () => ({
   ensureDir: jest.fn(() => {}),
@@ -24,24 +21,35 @@ class MockServer {
     cb(this);
   }
 
+  // eslint-disable-next-line class-methods-use-this
   address() {
     return { port: 1234, address: 'mock-address' };
   }
 
+  // eslint-disable-next-line class-methods-use-this
   close() {}
 }
 
-jest.mock('net', () => ({
-  createServer: jest.fn(() => new MockServer()),
+jest.unstable_mockModule('net', () => ({
+  default: {
+    createServer: jest.fn(() => new MockServer()),
+  },
 }));
 
-jest.mock('http', () => ({
-  createServer: jest.fn(() => new MockServer()),
+jest.unstable_mockModule('http', () => ({
+  default: {
+    createServer: jest.fn(() => new MockServer()),
+  },
 }));
 
 jest.mock('finalhandler');
 
 jest.mock('serve-static');
+
+const { default: startPreview } = await import('../../src/export-preview/startPreview.js');
+const { default: net } = await import('net');
+const { default: http } = await import('http');
+const { default: serveStatic } = await import('serve-static');
 
 beforeEach(() => {
   jest.clearAllMocks();

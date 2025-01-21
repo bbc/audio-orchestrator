@@ -1,8 +1,21 @@
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import {
   ENCODE_BITRATE,
   SAFARI_SEGMENT_MEDIA,
   segmentDuration,
-} from '../encodingConfig';
+} from '../encodingConfig.js';
 
 /**
  * Formats a time in seconds as a presentation timestamp used in DASH manifests.
@@ -28,7 +41,12 @@ function formatPT(seconds) {
  * @returns {string} the content of the compiled manifest
  */
 export const dashManifest = (
-  outputName, baseUrl, duration, sampleRate, numChannels, segmentTemplateAttributes,
+  outputName,
+  baseUrl,
+  duration,
+  sampleRate,
+  numChannels,
+  segmentTemplateAttributes,
 ) => {
   const minBufferTime = formatPT(2 * segmentDuration(sampleRate));
   const durationPT = formatPT(duration);
@@ -61,7 +79,11 @@ export const dashManifest = (
 };
 
 export const safariDashManifest = (
-  outputName, baseUrl, duration, sampleRate, numChannels,
+  outputName,
+  baseUrl,
+  duration,
+  sampleRate,
+  numChannels,
 ) => dashManifest(
   outputName,
   baseUrl,
@@ -72,7 +94,11 @@ export const safariDashManifest = (
 );
 
 export const headerlessDashManifest = (
-  outputName, baseUrl, duration, sampleRate, numChannels,
+  outputName,
+  baseUrl,
+  duration,
+  sampleRate,
+  numChannels,
 ) => dashManifest(
   outputName,
   baseUrl,

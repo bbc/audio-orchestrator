@@ -1,6 +1,10 @@
-import exportDistribution from '../../src/export-distribution';
+import { jest } from '@jest/globals';
 
-jest.mock('../../src/runExportSteps', () => jest.fn((steps, args) => Promise.resolve(args)));
+jest.unstable_mockModule('../../src/runExportSteps.js', () => ({
+  default: jest.fn((steps, args) => Promise.resolve(args)),
+}));
+
+const { default: exportDistribution } = await import('../../src/export-distribution/index.js');
 
 beforeEach(() => {
   jest.clearAllMocks();

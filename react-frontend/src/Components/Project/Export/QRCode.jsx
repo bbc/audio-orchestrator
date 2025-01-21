@@ -1,35 +1,36 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import QRCode from 'qrcodejs/qrcode';
+import QRCode from 'qrcode';
 
-class QRCodeContainer extends React.PureComponent {
-  componentDidMount() {
-    this.generateQRCode();
-  }
+// this.qrcode = new QRCode(this.ref, {
+//   text: url,
+//   width: 128,
+//   height: 128,
+//   colorDark: '#000',
+//   colorLight: '#fff',
+//   correctLevel: QRCode.CorrectLevel.M,
+// });
 
-  generateQRCode() {
-    const { url } = this.props;
-
-    this.qrcode = new QRCode(this.ref, {
-      text: url,
+function QRCodeContainer({
+  url,
+}) {
+  const [QRCodeUrl, setQRCodeUrl] = useState('');
+  useEffect(() => {
+    (async () => setQRCodeUrl(await QRCode.toDataURL(url, {
+      errorCorrectionLevel: 'M',
       width: 128,
-      height: 128,
-      colorDark: '#000',
-      colorLight: '#fff',
-      correctLevel: QRCode.CorrectLevel.M,
-    });
+    })))();
+  }, [url, setQRCodeUrl]);
+
+  if (!QRCodeUrl) {
+    return null;
   }
 
-  render() {
-    return (
-      <div style={{ textAlign: 'center' }}>
-        <div
-          style={{ display: 'inline-block' }}
-          ref={(r) => { this.ref = r; }}
-        />
-      </div>
-    );
-  }
+  return (
+    <div style={{ textAlign: 'center' }}>
+      <img src={QRCodeUrl} alt="QR Code" width="128" height="128" />
+    </div>
+  );
 }
 
 QRCodeContainer.propTypes = {

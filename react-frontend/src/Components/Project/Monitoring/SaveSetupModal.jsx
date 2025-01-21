@@ -9,8 +9,8 @@ import {
 } from 'semantic-ui-react';
 import {
   addSavedMonitoringSetup,
-} from 'Actions/project';
-import { deviceTypes } from 'Lib/behaviourTypes';
+} from '#Actions/project.js';
+import { deviceTypes } from '#Lib/behaviourTypes.js';
 
 const MAX_DEVICES_SHOWN = 25;
 const MAX_DEVICES_NAMED = 8;
@@ -27,11 +27,11 @@ const formatSetupName = (setup) => {
   ].join('');
 };
 
-const SaveSetupModal = ({
+function SaveSetupModal({
   onClose,
   setup,
   projectId,
-}) => {
+}) {
   // state and handlers for naming a device setup
   const [deviceSetupName, setDeviceSetupName] = useState(formatSetupName(setup));
   const handleNameChange = (e, data) => {
@@ -86,8 +86,7 @@ const SaveSetupModal = ({
       </Modal.Actions>
     </Modal>
   );
-};
-
+}
 
 SaveSetupModal.propTypes = {
   onClose: PropTypes.func.isRequired,

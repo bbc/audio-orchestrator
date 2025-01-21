@@ -3,11 +3,11 @@ import PropTypes from 'prop-types';
 import {
   Card,
 } from 'semantic-ui-react';
-import ListOfEnumInput from '../Audio/Sequence/BehaviourParameters/ListOfEnumInput';
+import ListOfEnumInput from '../Audio/Sequence/BehaviourParameters/ListOfEnumInput.jsx';
 import {
   getSequenceIdsAllowed,
   makeBehavioursWithDisallowedSequenceIds,
-} from './controlBehaviourHelpers';
+} from './controlBehaviourHelpers.js';
 
 class ControlBehavioursSequences extends React.PureComponent {
   constructor(props) {
@@ -24,10 +24,12 @@ class ControlBehavioursSequences extends React.PureComponent {
       onChange,
     } = this.props;
 
-    onChange('controlBehaviours',
+    onChange(
+      'controlBehaviours',
       makeBehavioursWithDisallowedSequenceIds(controlBehaviours, sequencesList
         .filter(({ sequenceId }) => !value.includes(sequenceId))
-        .map(({ sequenceId }) => sequenceId)));
+        .map(({ sequenceId }) => sequenceId)),
+    );
   }
 
   render() {

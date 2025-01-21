@@ -26,7 +26,7 @@ const effectShapes = {
   ),
 };
 
-const ImageEffectButton = ({
+function ImageEffectButton({
   src,
   title,
   loading,
@@ -34,31 +34,33 @@ const ImageEffectButton = ({
   selected,
   large,
   effect,
-}) => (
-  <button
-    type="button"
-    className={classnames(
-      'bcob-image-effect-button',
-      {
-        selected,
-        large,
-      },
-    )}
-    disabled={loading}
-    title={title}
-    onClick={onClick}
-  >
-    {!loading && src && <img src={src} alt="" />}
-    {effect && (
+}) {
+  return (
+    <button
+      type="button"
+      className={classnames(
+        'bcob-image-effect-button',
+        {
+          selected,
+          large,
+        },
+      )}
+      disabled={loading}
+      title={title}
+      onClick={onClick}
+    >
+      {!loading && src && <img src={src} alt="" />}
+      {effect && (
       <div
         className={classnames('effect', effect.name)}
         style={{ backgroundColor: effect.color }}
       >
         { effectShapes[effect.name] }
       </div>
-    )}
-  </button>
-);
+      )}
+    </button>
+  );
+}
 
 ImageEffectButton.propTypes = {
   src: PropTypes.string,

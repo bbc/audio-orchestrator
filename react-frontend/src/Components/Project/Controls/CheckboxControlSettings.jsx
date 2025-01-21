@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 import {
   Card,
   Checkbox,
@@ -9,7 +9,7 @@ import {
   Table,
   Header,
 } from 'semantic-ui-react';
-import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
+import ConfirmDeleteButton from '#Components/ConfirmDeleteButton.jsx';
 
 class CheckboxControlSettings extends React.PureComponent {
   constructor(props) {
@@ -43,7 +43,7 @@ class CheckboxControlSettings extends React.PureComponent {
     // current prop value.
     if (controlType === 'checkbox') {
       // always remove this value first to make sure no duplicates are added
-      const filteredDefaultValues = defaultValues.filter(d => d !== optionValue);
+      const filteredDefaultValues = defaultValues.filter((d) => d !== optionValue);
       if (checked) {
         // The click would have checked it, so add it to the list
         onChange('controlDefaultValues', [...filteredDefaultValues, optionValue]);
@@ -119,12 +119,12 @@ class CheckboxControlSettings extends React.PureComponent {
     // Update the options list, removing the option with a value matching the name
     onChange('controlParameters', {
       ...parameters,
-      options: options.filter(o => o.value !== optionValue),
+      options: options.filter((o) => o.value !== optionValue),
     });
 
     // Also remove the deleted option value from the defaultValue if it was included
-    if (defaultValues.includes(d => d !== optionValue)) {
-      onChange('controlDefaultValues', defaultValues.filter(d => d !== optionValue));
+    if (defaultValues.includes((d) => d !== optionValue)) {
+      onChange('controlDefaultValues', defaultValues.filter((d) => d !== optionValue));
     }
   }
 

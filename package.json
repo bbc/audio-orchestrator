@@ -1,26 +1,134 @@
 {
-  "name": "bbcat-orchestration-builder",
+  "name": "@bbc/audio-orchestrator",
+  "description": "Audio Orchestrator is an production tool for prototyping multi-device audio experiences.",
+  "repository": "https://github.com/bbc/audio-orchestrator",
+  "version": "0.23.0",
+  "author": "BBC R&D",
+  "license": "GPL-3.0-or-later",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0"
+  },
   "scripts": {
-    "dev": "(cd electron-app && yarn dev)",
-    "debug": "(cd electron-app && yarn debug)",
-    "build": "(cd electron-app && yarn build)",
-    "dist": "(cd electron-app && yarn dist)",
-    "bump": "node scripts/bump.js && git add */package.json",
-    "postinstall": "(cd logging && yarn install) && (cd background-tasks && yarn install) && (cd react-frontend && yarn install) && (cd electron-app && yarn install)",
-    "lint": "(cd background-tasks && yarn lint) && (cd electron-app && yarn lint) && (cd react-frontend && yarn lint) && (cd logging && yarn lint)",
-    "test": "(cd background-tasks && yarn test) && (cd electron-app && yarn test) && (cd react-frontend && yarn test) && (cd logging && yarn test)",
-    "credits": "(cd electron-app && yarn credits) && git add electron-app/credits.html"
+    "build:react-frontend": "(cd react-frontend && webpack --mode production)",
+    "credits": "node scripts/credits.mjs",
+    "dev": "concurrently \"npm run dev:react-frontend\" \"NODE_ENV=development electron --inspect=9229 .\"",
+    "dev:react-frontend": "(cd react-frontend && webpack-dev-server --hot --host 0.0.0.0 --mode development)",
+    "dist": "(npm run build:react-frontend && electron-builder --config electron-builder.json --mac --win)",
+    "lint": "npm run lint:background-tasks && npm run lint:react-frontend && npm run lint:electron-app && npm run lint:logging",
+    "lint:background-tasks": "cd background-tasks && eslint src test",
+    "lint:electron-app": "cd electron-app && eslint src",
+    "lint:logging": "cd logging && eslint src",
+    "lint:react-frontend": "cd react-frontend && eslint src --ext .jsx",
+    "postinstall": "electron-builder install-app-deps",
+    "test": "npm run test:background-tasks",
+    "test:background-tasks": "(cd background-tasks && node --experimental-vm-modules ../node_modules/jest/bin/jest --watchAll)",
+    "add-notices": " ESLINT_USE_FLAT_CONFIG=true eslint --config .eslintrc.notice.mjs . --fix"
   },
-  "packages": [
-    "background-tasks",
-    "electron-app",
-    "react-frontend",
-    "logging"
-  ],
-  "version": "0.0.0",
+  "type": "module",
+  "main": "electron-app/src/main/main.js",
+  "imports": {
+    "#logging": "./logging/src/index.js",
+    "#background-tasks": "./background-tasks/src/index.js",
+    "#Components/*": "./react-frontend/src/Components/*",
+    "#Lib/*": "./react-frontend/src/lib/*",
+    "#Actions/*": "./react-frontend/src/actions/*"
+  },
+  "dependencies": {
+    "@bbc/audio-orchestration-core": "^0.1.0",
+    "@bbc/audio-orchestration-template": "^0.1.0",
+    "@reduxjs/toolkit": "^1.5.0",
+    "async": "^3.0.1",
+    "classnames": "^2.2.6",
+    "electron-store": "^5.1.1",
+    "events": "^3.1.0",
+    "ffprobe-client": "^1.1.2",
+    "finalhandler": "^1.1.2",
+    "fs-extra": "^7.0.1",
+    "osc-min": "^1.1.2",
+    "prop-types": "^15.7.2",
+    "qrcode": "^1.5.4",
+    "react": "^16.13.0",
+    "react-dom": "^16.13.0",
+    "react-redux": "^7.2.0",
+    "react-refresh": "^0.10.0",
+    "redux": "^4.0.1",
+    "redux-thunk": "^2.3.0",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^0.88.2",
+    "semver": "^7.3.2",
+    "semver-compare": "^1.0.0",
+    "serve-static": "^1.14.1",
+    "uuid": "^7.0.3",
+    "winston": "^3.2.1"
+  },
   "devDependencies": {
-    "lefthook": "1.9.2"
+    "@babel/core": "^7.12.3",
+    "@babel/preset-env": "^7.12.1",
+    "@babel/preset-react": "^7.0.0",
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
+    "babel-loader": "^9.2.1",
+    "clean-webpack-plugin": "^4.0.0",
+    "concurrently": "^5.3.0",
+    "css-loader": "^7.1.2",
+    "css-minimizer-webpack-plugin": "^7.0.0",
+    "electron": "33.3.0",
+    "electron-builder": "^26.0.0-alpha.8",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-import-resolver-alias": "^1.1.2",
+    "eslint-plugin-jest": "^28.10.0",
+    "eslint-plugin-notice": "^1.0.0",
+    "exports-loader": "^5.0.0",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^5.6.3",
+    "jest": "30.0.0-alpha.6",
+    "lefthook": "1.9.2",
+    "license-checker-rseidelsohn": "^4.4.2",
+    "license-to-fail": "^4.0.0",
+    "mini-css-extract-plugin": "^2.9.2",
+    "string-replace-loader": "^3.1.0",
+    "style-loader": "^4.0.0",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.0"
   },
-  "dependencies": {}
+  "license-to-fail": {
+    "allowedLicenses": [
+      "MIT",
+      "ISC",
+      "BSD",
+      "Apache",
+      "zlib",
+      "WTFPL"
+    ],
+    "ignoreDevDependencies": true,
+    "allowedPackages": [
+      {
+        "name": "@bbc/audio-orchestration-bbcat-js",
+        "reason": "BBC Software, previously published at bbc/bbcat-js"
+      },
+      {
+        "name": "@bbc/audio-orchestration-cloud-sync-client",
+        "reason": "BBC Software, previously published at 2IMMERSE/cloud-sync"
+      },
+      {
+        "name": "@bbc/audio-orchestration-template",
+        "reason": "BBC Software"
+      },
+      {
+        "name": "@bbc/audio-orchestration-core",
+        "reason": "BBC Software"
+      },
+      {
+        "name": "cycle",
+        "reason": "Souce code comment states that code is in public-domain"
+      },
+      {
+        "name": "weak-map",
+        "reason": "package.json and Readme state it is released under Apache 2.0"
+      }
+    ]
+  }
 }

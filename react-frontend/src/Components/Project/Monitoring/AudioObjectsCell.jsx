@@ -16,27 +16,29 @@ const formatGain = (linearGain) => {
   return `${logGain < 0 ? '−' : '+'}${Math.abs(Math.round(logGain))} dB`;
 };
 
-const AudioObjectsCell = ({
+function AudioObjectsCell({
   allocatedObjects,
-}) => (
-  <Table.Cell
-    verticalAlign="top"
-    width={1}
-  >
-    <List>
-      {allocatedObjects.map(({ objectId, objectGain }) => (
-        <List.Item key={objectId}>
-          <List.Content>
-            <Label basic>
-              {objectId}
-              {objectGain !== 1 && <Label.Detail className="labelDetailRed" content={formatGain(objectGain)} />}
-            </Label>
-          </List.Content>
-        </List.Item>
-      ))}
-    </List>
-  </Table.Cell>
-);
+}) {
+  return (
+    <Table.Cell
+      verticalAlign="top"
+      width={1}
+    >
+      <List>
+        {allocatedObjects.map(({ objectId, objectGain }) => (
+          <List.Item key={objectId}>
+            <List.Content>
+              <Label basic>
+                {objectId}
+                {objectGain !== 1 && <Label.Detail className="labelDetailRed" content={formatGain(objectGain)} />}
+              </Label>
+            </List.Content>
+          </List.Item>
+        ))}
+      </List>
+    </Table.Cell>
+  );
+}
 
 AudioObjectsCell.propTypes = {
   allocatedObjects: PropTypes.arrayOf(PropTypes.shape({

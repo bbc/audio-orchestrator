@@ -4,19 +4,19 @@ import PropTypes from 'prop-types';
 import {
   Table,
 } from 'semantic-ui-react';
-import { setCurrentMonitoringSetup } from 'Actions/project';
-import DeviceHeaderCell from './DeviceHeaderCell';
+import { setCurrentMonitoringSetup } from '#Actions/project.js';
+import DeviceHeaderCell from './DeviceHeaderCell.jsx';
 import {
   useCurrentSetup,
   useMuteDevices,
   useSoloDevices,
   useObjects,
-} from './helpers';
+} from './helpers.js';
 
-const DeviceHeader = ({
+function DeviceHeader({
   projectId,
   sequenceId,
-}) => {
+}) {
   const currentSetup = useCurrentSetup(projectId);
   const objects = useObjects(projectId, sequenceId);
   const muteDevices = useMuteDevices();
@@ -31,7 +31,7 @@ const DeviceHeader = ({
     <Table.Row>
       <Table.HeaderCell />
       {/* Remaining header row, where a new header cell is rendered for each device */}
-      {currentSetup.map(device => (
+      {currentSetup.map((device) => (
         <DeviceHeaderCell
           key={device.deviceId}
           onChangeSetup={handleChangeSetup}
@@ -44,7 +44,7 @@ const DeviceHeader = ({
       ))}
     </Table.Row>
   );
-};
+}
 
 DeviceHeader.propTypes = {
   projectId: PropTypes.string.isRequired,

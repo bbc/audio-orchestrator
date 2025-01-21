@@ -1,4 +1,6 @@
-import checkSequencesAreValid from '../../src/export-audio/checkSequencesAreValid';
+import { jest } from '@jest/globals';
+
+const { default: checkSequencesAreValid } = await import('../../src/export-audio/checkSequencesAreValid.js');
 
 beforeEach(() => {
   jest.clearAllMocks();

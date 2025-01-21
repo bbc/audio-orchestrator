@@ -1,4 +1,6 @@
-import ProgressReporter from '../src/progressReporter';
+import { jest } from '@jest/globals';
+
+const { default: ProgressReporter } = await import('../src/progressReporter.js');
 
 const setup = (numSteps) => {
   const mockOnProgress = jest.fn(() => {});
@@ -13,7 +15,6 @@ describe('ProgressReporter', () => {
 
     expect(mockOnProgress).toHaveBeenCalledTimes(1);
   });
-
 
   it('advances a task starting at 0', () => {
     const { mockOnProgress, pr } = setup(4);

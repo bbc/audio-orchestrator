@@ -5,8 +5,8 @@ import {
   Table,
   Label,
 } from 'semantic-ui-react';
-import ColorSelection from 'Components/Project/Appearance/ColorSelection';
-import ImageEffectButton from './ImageEffectButton';
+import ColorSelection from '#Components/Project/Appearance/ColorSelection.jsx';
+import ImageEffectButton from './ImageEffectButton.jsx';
 
 const effectTypes = [
   {
@@ -30,10 +30,10 @@ const defaultEffect = {
   repeat: 'infinite',
 };
 
-const EffectEditor = ({
+function EffectEditor({
   effect,
   onChange,
-}) => {
+}) {
   const handleChange = (properties) => {
     onChange({
       ...(effect || defaultEffect),
@@ -133,7 +133,7 @@ const EffectEditor = ({
       </Table.Body>
     </Table>
   );
-};
+}
 
 EffectEditor.propTypes = {
   onChange: PropTypes.func.isRequired,

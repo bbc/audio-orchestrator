@@ -8,7 +8,7 @@ import {
 
 import {
   openProjectPage,
-} from '../../actions/ui';
+} from '#Actions/ui.js';
 
 import {
   PAGE_PROJECT_SEQUENCES,
@@ -17,7 +17,7 @@ import {
   PAGE_PROJECT_PRESENTATION,
   PAGE_PROJECT_EXPORT,
   PAGE_PROJECT_MONITORING,
-} from '../../reducers/UIReducer';
+} from '../../reducers/UIReducer.js';
 
 const steps = [
   {
@@ -57,22 +57,24 @@ const steps = [
   },
 ];
 
-const ProjectStepBar = ({
+function ProjectStepBar({
   currentProjectPage,
   projectId,
   setCurrentPage,
-}) => (
-  <Step.Group
-    fluid
-    attached="bottom"
-    widths={steps.length}
-    items={steps.map(s => ({
-      ...s,
-      onClick: () => setCurrentPage(projectId, s.key),
-      active: s.key === currentProjectPage,
-    }))}
-  />
-);
+}) {
+  return (
+    <Step.Group
+      fluid
+      attached="bottom"
+      widths={steps.length}
+      items={steps.map((s) => ({
+        ...s,
+        onClick: () => setCurrentPage(projectId, s.key),
+        active: s.key === currentProjectPage,
+      }))}
+    />
+  );
+}
 
 ProjectStepBar.propTypes = {
   projectId: PropTypes.string.isRequired,
@@ -89,7 +91,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   setCurrentPage: (projectId, page) => dispatch(openProjectPage(projectId, page)),
 });
 

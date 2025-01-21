@@ -9,17 +9,17 @@ import {
 } from 'semantic-ui-react';
 import {
   openSequencePage,
-} from 'Actions/ui';
-import PageTitleBar from '../../PageTitleBar';
+} from '#Actions/ui.js';
+import PageTitleBar from '../../PageTitleBar.jsx';
 
-import Sequence from './Sequence';
+import Sequence from './Sequence/index.jsx';
 
-const Audio = ({
+function Audio({
   currentProjectId,
   currentSequenceId,
   sequencesList,
   onOpenSequence,
-}) => {
+}) {
   const tabPanes = sequencesList.map(({ name, sequenceId }) => ({
     sequenceId,
     menuItem: <Menu.Item key={sequenceId} content={name} />,
@@ -53,11 +53,10 @@ const Audio = ({
       />
       { sequencesList.length === 0
         ? <Message>No sequences in this project; create them on the Sequences page.</Message>
-        : null
-      }
+        : null}
     </Container>
   );
-};
+}
 
 Audio.defaultProps = {
   currentSequenceId: null,
@@ -95,7 +94,7 @@ const mapStateToProps = (state) => {
 };
 
 const mapDispatchToProps = (dispatch, { projectId }) => ({
-  onOpenSequence: sequenceId => dispatch(openSequencePage(projectId, sequenceId)),
+  onOpenSequence: (sequenceId) => dispatch(openSequencePage(projectId, sequenceId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Audio);

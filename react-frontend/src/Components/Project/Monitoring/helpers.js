@@ -1,91 +1,104 @@
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import { useSelector } from 'react-redux';
-import uuidv4 from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 /**
  * Functions to take things from Redux state
  */
 export const useControls = (projectId) => {
-  const controls = useSelector(state => state.Project.projects[projectId].controls);
+  const controls = useSelector((state) => state.Project.projects[projectId].controls);
   return controls;
 };
 
 export const useControlsList = (projectId) => {
-  const controlsList = useSelector(state => state.Project.projects[projectId].controlsList);
+  const controlsList = useSelector((state) => state.Project.projects[projectId].controlsList);
   return controlsList;
 };
 
 export const useSequencesList = (projectId) => {
-  const sequencesList = useSelector(state => state.Project.projects[projectId].sequencesList);
+  const sequencesList = useSelector((state) => state.Project.projects[projectId].sequencesList);
   return sequencesList;
 };
 
 export const useObjectsList = (projectId, currentSequenceId) => {
   const objectsList = useSelector(
-    state => state.Project.projects[projectId].sequences[currentSequenceId].objectsList,
+    (state) => state.Project.projects[projectId].sequences[currentSequenceId].objectsList,
   );
   return objectsList;
 };
 
 export const useObjects = (projectId, currentSequenceId) => {
   const objects = useSelector(
-    state => state.Project.projects[projectId].sequences[currentSequenceId].objects,
+    (state) => state.Project.projects[projectId].sequences[currentSequenceId].objects,
   );
   return objects;
 };
 
 export const useCurrentSetup = (projectId) => {
   const currentSetup = useSelector(
-    state => (state.Project.projects[projectId] || {}).currentMonitoringSetup,
+    (state) => (state.Project.projects[projectId] || {}).currentMonitoringSetup,
   ) || [];
   const currentSetupDevices = currentSetup.devices || [];
   return currentSetupDevices;
 };
 
 export const useMuteDevices = () => {
-  const muteDevices = useSelector(state => state.Monitoring.muteDevices);
+  const muteDevices = useSelector((state) => state.Monitoring.muteDevices);
   return muteDevices;
 };
 
 export const useSoloDevices = () => {
-  const soloDevices = useSelector(state => state.Monitoring.soloDevices);
+  const soloDevices = useSelector((state) => state.Monitoring.soloDevices);
   return soloDevices;
 };
 
 export const useAlgorithmResults = () => {
-  const algorithmResults = useSelector(state => state.Monitoring.previousResults);
+  const algorithmResults = useSelector((state) => state.Monitoring.previousResults);
   return algorithmResults;
 };
 
 export const useSavedSetups = (projectId) => {
   const savedSetups = useSelector(
-    state => (state.Project.projects[projectId] || {}).savedMonitoringSetups || [],
+    (state) => (state.Project.projects[projectId] || {}).savedMonitoringSetups || [],
   );
   return savedSetups;
 };
 
 export const useConnectedToDAW = () => {
-  const connectedToDAW = useSelector(state => state.Monitoring.connectedToDAW);
+  const connectedToDAW = useSelector((state) => state.Monitoring.connectedToDAW);
   return connectedToDAW;
 };
 
 export const useConnectedToDAWOnce = () => {
-  const connectedToDAWOnce = useSelector(state => state.Monitoring.connectedToDAWOnce);
+  const connectedToDAWOnce = useSelector((state) => state.Monitoring.connectedToDAWOnce);
   return connectedToDAWOnce;
 };
 
 export const useOSCPortNumber = () => {
-  const portNumber = useSelector(state => state.Monitoring.OSCSettings.portNumber);
+  const portNumber = useSelector((state) => state.Monitoring.OSCSettings.portNumber);
   return portNumber;
 };
 
 export const useOSCFormat = () => {
-  const OSCFormat = useSelector(state => state.Monitoring.OSCSettings.format);
+  const OSCFormat = useSelector((state) => state.Monitoring.OSCSettings.format);
   return OSCFormat;
 };
 
 export const useCurrentSequenceId = (projectId) => {
-  let currentSequenceId = useSelector(state => state.UI.currentSequenceId);
-  const sequencesList = useSelector(state => state.Project.projects[projectId].sequencesList);
+  let currentSequenceId = useSelector((state) => state.UI.currentSequenceId);
+  const sequencesList = useSelector((state) => state.Project.projects[projectId].sequencesList);
   // If currentSequenceId is null (no tab has been opened in the audio page, or the sequence
   // that was open has been deleted) then use the first sequence in sequencesList
   const defaultSequenceId = ((sequencesList || [])[0] || {}).sequenceId;
@@ -104,7 +117,7 @@ export const getDefaultOrCurrentControlValues = (controls, device, controlId) =>
 
 export const getDeviceCurrentNumber = (device, currentSetup) => (
   currentSetup.filter((
-    d => (
+    (d) => (
       d.switchedOn === true
       && d.joiningNumber <= device.joiningNumber
     )

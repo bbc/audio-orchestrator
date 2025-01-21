@@ -4,9 +4,9 @@ import {
   Input,
   Button,
 } from 'semantic-ui-react';
-import { useDebounce } from 'Components/utils';
+import { useDebounce } from '#Components/utils.js';
 
-const isValidColor = c => /#[0-9a-fA-F]{6}/.test(c);
+const isValidColor = (c) => /#[0-9a-fA-F]{6}/.test(c);
 
 const colorInputStyles = {
   display: 'inline-block',
@@ -18,14 +18,14 @@ const colorInputStyles = {
   borderRadius: '4px',
 };
 
-const ColorSelection = ({
+function ColorSelection({
   colors,
   value,
   custom,
   name,
   onChange,
   disabled,
-}) => {
+}) {
   // Track the user-entered custom color and whether it is valid or not
   const [customColor, setCustomColor] = useState(value);
   const [customColorError, setCustomColorError] = useState(!isValidColor(value));
@@ -62,7 +62,7 @@ const ColorSelection = ({
               value={customColorError ? '#ffffff' : customColor}
               style={colorInputStyles}
               disabled={disabled}
-              onChange={e => handleCustomColorChangeDebounced(e, { value: e.target.value })}
+              onChange={(e) => handleCustomColorChangeDebounced(e, { value: e.target.value })}
             />
             <Input
               value={customColor}
@@ -73,9 +73,8 @@ const ColorSelection = ({
               <input type="text" style={{ width: 'auto', marginRight: '4px' }} disabled={disabled} />
             </Input>
           </>
-        ) : null
-      }
-      {colors.map(color => (
+        ) : null}
+      {colors.map((color) => (
         <Button
           style={{ backgroundColor: color, color: '#ffffff' }}
           key={color}
@@ -88,7 +87,7 @@ const ColorSelection = ({
       ))}
     </>
   );
-};
+}
 
 ColorSelection.propTypes = {
   colors: PropTypes.arrayOf(PropTypes.string),

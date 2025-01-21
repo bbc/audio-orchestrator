@@ -13,7 +13,7 @@ import {
   requestExportAudio,
   requestExportTemplate,
   requestExportDistribution,
-} from '../../../actions/export';
+} from '#Actions/export.js';
 
 class ExportTypeSelection extends React.Component {
   constructor(props) {
@@ -120,10 +120,10 @@ ExportTypeSelection.defaultProps = {
 
 const mapStateToProps = () => ({ });
 
-const mapDispatchToProps = dispatch => ({
-  onExportAudio: projectId => dispatch(requestExportAudio(projectId)),
-  onExportTemplate: projectId => dispatch(requestExportTemplate(projectId)),
-  onExportDistribution: projectId => dispatch(requestExportDistribution(projectId)),
+const mapDispatchToProps = (dispatch) => ({
+  onExportAudio: (projectId) => dispatch(requestExportAudio(projectId)),
+  onExportTemplate: (projectId) => dispatch(requestExportTemplate(projectId)),
+  onExportDistribution: (projectId) => dispatch(requestExportDistribution(projectId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ExportTypeSelection);

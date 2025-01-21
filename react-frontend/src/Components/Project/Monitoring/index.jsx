@@ -7,16 +7,16 @@ import {
   Tab,
   Message,
 } from 'semantic-ui-react';
-import { resetAlgorithmResults } from 'Actions/monitoring';
-import { openMonitoringPage } from 'Actions/ui';
-import PageTitleBar from '../../PageTitleBar';
-import MonitoringTable from './MonitoringTable';
-import MonitoringToolbar from './MonitoringToolbar';
-import { useSequencesList, useCurrentSequenceId } from './helpers';
+import { resetAlgorithmResults } from '#Actions/monitoring.js';
+import { openMonitoringPage } from '#Actions/ui.js';
+import PageTitleBar from '../../PageTitleBar.jsx';
+import MonitoringTable from './MonitoringTable.jsx';
+import MonitoringToolbar from './MonitoringToolbar.jsx';
+import { useSequencesList, useCurrentSequenceId } from './helpers.js';
 
-const Monitoring = ({
+function Monitoring({
   projectId,
-}) => {
+}) {
   const dispatch = useDispatch();
   const sequencesList = useSequencesList(projectId);
   // Find the currentSequenceId, which is the ID for the sequence that is open in the audio page
@@ -52,7 +52,7 @@ const Monitoring = ({
       { sequencesList.length === 0 && <Message content="There are no sequences to monitor; create them on the Sequences page." />}
     </Container>
   );
-};
+}
 
 Monitoring.propTypes = {
   projectId: PropTypes.string.isRequired,

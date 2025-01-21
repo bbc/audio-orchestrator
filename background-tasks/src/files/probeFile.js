@@ -1,6 +1,17 @@
-// import { analyseLogger as logger } from 'bbcat-orchestration-builder-logging';
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/// import { analyseLogger as logger } from '#logging';
 import ffprobe from 'ffprobe-client';
-import which from '../which';
+import which from '../which.js';
 
 const TIME_DECIMALS = 2;
 const roundTime = t => parseFloat(parseFloat(t).toFixed(TIME_DECIMALS));

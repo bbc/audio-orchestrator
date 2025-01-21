@@ -3,9 +3,13 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.23.0`
+  * Reorganise the repository and build scripts in preparation for open source release
+  
 # `0.22.2`
   _2024-12-12_
   * Update external dependencies (Electron 33, etc.); fixing `node-gyp` build issues with Python 3.12
+
 # `0.22.1`
   _2024-01-09_
 

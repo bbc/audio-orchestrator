@@ -1,5 +1,7 @@
-import ffprobe from 'ffprobe-client';
-import probeFile from '../../src/files/probeFile';
+import { createRequire } from 'node:module';
+import { jest } from '@jest/globals';
+
+const require = createRequire(import.meta.url);
 
 jest.mock('../../src/which', () => jest.fn(name => Promise.resolve(name)));
 
@@ -13,6 +15,10 @@ const mockProbeResults = {
 };
 
 jest.mock('ffprobe-client', () => jest.fn(() => Promise.resolve(mockProbeResults)));
+
+const { default: probeFile } = await import('../../src/files/probeFile.js');
+
+const ffprobe = require('ffprobe-client');
 
 beforeEach(() => {
   jest.clearAllMocks();

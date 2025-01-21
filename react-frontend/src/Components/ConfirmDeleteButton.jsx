@@ -5,7 +5,7 @@ import {
   Popup,
 } from 'semantic-ui-react';
 
-const ConfirmDeleteButton = ({
+function ConfirmDeleteButton({
   onDelete,
   type,
   name,
@@ -21,7 +21,7 @@ const ConfirmDeleteButton = ({
   onFocus,
   onMouseLeave,
   onMouseEnter,
-}) => {
+}) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -84,7 +84,7 @@ const ConfirmDeleteButton = ({
       </Popup.Content>
     </Popup>
   );
-};
+}
 
 ConfirmDeleteButton.propTypes = {
   type: PropTypes.string.isRequired,

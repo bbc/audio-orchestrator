@@ -1,6 +1,10 @@
-import exportAudio from '../../src/export-audio';
+import { jest } from '@jest/globals';
 
-jest.mock('../../src/runExportSteps', () => jest.fn((steps, args) => Promise.resolve(args)));
+jest.unstable_mockModule('../../src/runExportSteps.js', () => ({
+  default: jest.fn((steps, args) => Promise.resolve(args)),
+}));
+
+const { default: exportAudio } = await import('../../src/export-audio/index.js');
 
 beforeEach(() => {
   jest.clearAllMocks();

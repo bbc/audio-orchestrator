@@ -1,12 +1,16 @@
-import exportTemplate from '../../src/export-template';
-import runExportSteps from '../../src/runExportSteps';
+import { jest } from '@jest/globals';
 
-jest.mock('../../src/runExportSteps', () => jest.fn((steps, args) => Promise.resolve(args)));
+jest.unstable_mockModule('../../src/runExportSteps.js', () => ({
+  default: jest.fn((steps, args) => Promise.resolve(args)),
+}));
 
 jest.mock('fs-extra', () => ({
   ensureDir: jest.fn(() => Promise.resolve()),
   remove: jest.fn(() => Promise.resolve()),
 }));
+
+const { default: exportTemplate } = await import('../../src/export-template/index.js');
+const { default: runExportSteps } = await import('../../src/runExportSteps.js');
 
 beforeEach(() => {
   jest.clearAllMocks();

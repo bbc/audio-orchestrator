@@ -1,21 +1,26 @@
-const webpack = require('webpack');
-const path = require('path');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
-const { version } = require('./package.json');
+import path from 'node:path';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import webpack from 'webpack';
+import { CleanWebpackPlugin } from 'clean-webpack-plugin';
+import HtmlWebpackPlugin from 'html-webpack-plugin';
+import MiniCssExtractPlugin from 'mini-css-extract-plugin';
+import CSSMinimizerWebpackPlugin from 'css-minimizer-webpack-plugin';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import ReactRefreshWebpackPlugin from '@pmmmwh/react-refresh-webpack-plugin';
 
+const dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const { version } = JSON.parse(fs.readFileSync(path.join(dirname, '../package.json')));
 const versionSuffix = process.env.BBCAT_ORCHESTRATION_BUILDER_VERSION_SUFFIX;
 
-module.exports = (env, { mode = 'development' }) => ({
+export default (env, { mode = 'development' }) => ({
   devtool: 'source-map',
-  entry: [
-    path.resolve(__dirname, 'src/index.js'),
-  ],
+  target: 'web',
+  entry: './src/index.js',
   output: {
-    filename: 'bundle.[hash].js',
-    path: path.resolve(__dirname, 'dist'),
+    filename: 'bundle.[contenthash].js',
+    path: path.resolve(dirname, 'dist'),
   },
   module: {
     rules: [
@@ -27,7 +32,7 @@ module.exports = (env, { mode = 'development' }) => ({
           {
             loader: 'string-replace-loader',
             options: {
-              search: '@import url\(.*fonts\.googleapis\.com.*\);',
+              search: '@import url\\(.*fonts\\.googleapis\\.com.*\\);',
               replace: '',
               flags: 'g',
             },
@@ -35,31 +40,19 @@ module.exports = (env, { mode = 'development' }) => ({
         ],
       },
       {
-        test: /\.(png|eot|ttf|woff|woff2|svg)$/,
-        loader: 'url-loader',
-        options: {
-          limit: 1000,
-        },
-      },
-      {
         test: [/\.jsx?$/],
         exclude: [/node_modules/],
         loader: 'babel-loader',
-      },
-      {
-        test: require.resolve('qrcodejs/qrcode'),
-        use: 'exports-loader?QRCode',
+        options: {
+          plugins: [mode === 'development' && 'react-refresh/babel'].filter(Boolean),
+        },
       },
     ],
   },
   resolve: {
     symlinks: false,
     extensions: ['.js', '.jsx'],
-    alias: {
-      Components: path.resolve(__dirname, 'src/Components'),
-      Lib: path.resolve(__dirname, 'src/lib'),
-      Actions: path.resolve(__dirname, 'src/actions'),
-    },
+    fullySpecified: false,
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -68,16 +61,19 @@ module.exports = (env, { mode = 'development' }) => ({
     }),
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
-      template: path.resolve(__dirname, 'src/index.html'),
+      template: path.resolve(dirname, 'src/index.html'),
     }),
     new MiniCssExtractPlugin({
-      filename: '[name].[hash].css',
-      chunkFilename: '[id].[hash].css',
+      filename: '[name].[contenthash].css',
+      chunkFilename: '[id].[contenthash].css',
     }),
-  ],
+    mode === 'development' && new ReactRefreshWebpackPlugin({
+      esModule: true,
+    }),
+  ].filter(Boolean),
   optimization: {
     minimizer: [
-      new OptimizeCSSAssetsPlugin({}),
+      new CSSMinimizerWebpackPlugin({}),
     ],
   },
 });

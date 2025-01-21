@@ -1,8 +1,19 @@
-/* eslint-disable import/prefer-default-export */
-import { defaultOSCSettings } from 'Lib/OSC';
+/**
+Copyright (C) 2025, BBC R&D
 
-import getExportObjectBehaviours from 'Lib/getExportObjectBehaviours';
-import { getDefaultOrCurrentControlValues, getDeviceCurrentNumber } from '../Components/Project/Monitoring/helpers';
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*//* eslint-disable import/prefer-default-export */
+import { defaultOSCSettings } from '#Lib/OSC.js';
+
+import getExportObjectBehaviours from '#Lib/getExportObjectBehaviours.js';
+import { getDefaultOrCurrentControlValues, getDeviceCurrentNumber } from '#Components/Project/Monitoring/helpers.js';
 
 export const muteSoloDevice = (deviceId, muteDevices, soloDevices, objects, currentSetup) => ({
   type: 'MUTE_SOLO_DEVICE',
@@ -25,17 +36,17 @@ export const requestGetOSCSettings = () => (dispatch) => {
   });
 };
 
-export const setOSCFormat = format => ({
+export const setOSCFormat = (format) => ({
   type: 'SET_OSC_FORMAT',
   format,
 });
 
-export const setOSCPortNumber = portNumber => ({
+export const setOSCPortNumber = (portNumber) => ({
   type: 'SET_OSC_PORT_NUMBER',
   portNumber,
 });
 
-export const sendOSCPlayPause = action => ({
+export const sendOSCPlayPause = (action) => ({
   type: 'SEND_OSC_PLAY_PAUSE',
   action,
 });
@@ -61,7 +72,11 @@ export const runAlgorithm = (
 });
 
 export const runAlgorithmWithExportedMetadata = (
-  objectsList, objects, controls, devices, currentSequenceId,
+  objectsList,
+  objects,
+  controls,
+  devices,
+  currentSequenceId,
 ) => {
   // Put object metadata in right format for algorithm
   const exportedObjects = objectsList.map(({ objectNumber }) => {
@@ -110,7 +125,7 @@ export const turnOSCMsgsOnOff = (switchedOnStatus, objects, currentSetup) => ({
   currentSetup,
 });
 
-export const setDAWIsPlaying = isPlaying => ({
+export const setDAWIsPlaying = (isPlaying) => ({
   type: 'SET_DAW_IS_PLAYING',
   isPlaying,
 });

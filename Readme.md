@@ -4,90 +4,81 @@ _Audio Orchestrator_ is a desktop application for prototyping orchestrated audio
 
 Create a project, import audio files, and author metadata for audio objects, sequence destinations, and user controls to define the experience; then start a preview with real devices on your local network or export a web application bundle to host it on a server.
 
-The software was distributed to BBC staff and external users (subject to a licence agreement) via [MakerBox](https://www.bbc.co.uk/makerbox) from 2018-2024. It is currently only available to BBC staff by emailing [Kristian Hentschel](mailto:kristian.hentschel@bbc.co.uk); third-parties may require a bespoke agreement.
-
- * Preview an [example project](https://orchestrator-demos.virt.ch.bbc.co.uk/getting-started-with-orchestration) made with it.
- * [Read the user guide](https://bbc.github.io/bbcat-orchestration-docs).
- * See also these related repositories:
-    * the [template](https://github.com/bbc/bbcat-orchestration-template/) application used for the preview and export,
-    * the [library](https://github.com/bbc/bbcat-orchestration/) for handling audio rendering and communication between devices in the template, and
-    * the [docs](https://github.com/bbc/bbcat-orchestration-docs/).
+ * [**Download** the latest release](https://github.com/bbc/audio-orchestrator/releases).
+ * [**Read** the user guide](https://bbc.github.io/bbcat-orchestration-docs).
+ * [**Build** on the template application and client libraries](https://github.com/bbc/audio-orchestration).
 
 _Audio Orchestrator_ requires `ffmpeg` and `ffprobe` to be available in the system path or a specific location in your home directory. For a manual installation, place the binaries in `~/audio-orchestrator-ffmpeg/bin` on macOS and `%HOME%\audio-orchestrator-ffmpeg\bin` on Windows. See the [installation instructions](https://bbc.github.io/bbcat-orchestration-docs/installation/) for more details.
 
+**NB** _Audio Orchestrator_ by default uses a synchronisation service currently hosted by the BBC, which may go away without warning in the future. We recommend replacing this with your own server. There are [some notes on running a self-hosted cloud-sync server](https://github.com/bbc/audio-orchestration/issues/64).
+
 # Architecture overview
 
-_Audio Orchestrator_ is implemented in the [Electron](https://www.electronjs.org/) framework, using [React](https://reactjs.org/) for the front-end, and providing a background task service that accesses the file systems and spawns media analysis and encoding child processes. Communication between Electron's two processes (main and renderer) is done via IPC channels.
+_Audio Orchestrator_ is an [_Electron_](https://www.electronjs.org/) app, using a _React_ app built with _webpack_ for the user interface (in the "renderer" process), and managing background tasks to facilitate file access, media analysis and encoding, and the preview server (in the "main" process).
 
-![Architecture overview](docs/OrchestratorArchitecture_KH_2020-05-27.png)
-
-_NB the update service shown in the diagram was not implemented._
+![Architecture overview](./docs/OrchestratorArchitecture_KH_2025-01-17.drawio.png)
 
 # Development
 
+Development requires a macOS (or possibly Linux) environment. The instructions have only been tested on macOS (on an Apple Silicon machine with macOS Sequoia). The build however produces installers for both Windows (x86) and macOS (x86 and arm64).
+
 ## Getting started
 
-You'll need:
+1. Ensure you have [Node.js](https://nodejs.org/en/) version 20.x+ installed.
 
-  * [Node.js](https://nodejs.org/en/) (version 12+ recommended)
-  * [yarn](https://classic.yarnpkg.com/lang/en/) (notes may be for 1.x)
+```
+node -v # e.g., v20.9.0
+```
 
-Log in to the GitHub packages NPM registry using a personal access token with at least the `read:packages` permission as the password ([GitHub docs](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-npm-registry)):
+2. Log in to the GitHub packages NPM registry. Create a [personal access token (classic)](https://github.com/settings/tokens) with only the `read:packages` permission, then log in using your GitHub username and the token as the password:
 
 ```
 npm login --registry https://npm.pkg.github.com --scope @bbc
 ```
 
-Install the dependencies:
+**Install the dependencies:**
 
 ```
-yarn install # runs yarn install in each package directory
+npm install
 ```
 
-Run a development version of the app:
+This will install packages from npm to `node_modules/` and then download the required binaries for Electron.
+
+**Start a development version of the app:**
 
 ```
-yarn dev
+npm run dev
 ```
 
-Stop the development server with `CTRL-C`.
+During development runs, a local server is started on port 8080 to host the `react-frontend`; make sure this port is not used for anything else or the Electron window will show something else or just a white screen. Changes to the frontend source code should be reflected immediately. The app needs to be restarted for changes to the background tasks or electron app to take effect.
 
-Build the installers:
+**Build the installers for distribution:**
 
 ```
-yarn dist
+npm run dist
 ```
 
-The results can be found in `electron-app/dist/`:
-
-* macOS DMG installer disk image
-  * Intel/ARM universal binary: `BBC R&D Audio Orchestrator-{version}.dmg`
-* Windows NSIS installer executable
-  * Intel 64-bit: `BBC R&D Audio Orchestrator Setup {version}.exe`
-
-Building the installer for macOS will use an Apple development certificate if there is one in your keychain; otherwise code signing will be skipped. The app is however not notarised by Apple, so will still require administrator approval to run.
+The outputs are written to the `./dist/` folder.
 
 ## Repository structure
 
-The packages are designed to be used together to build the Electron app. The current structure looks like this:
+All dependencies and scripts are listed in the single `package.json` at the top level of this repository. The relevant folders are:
 
   * `react-frontend/`: The user interface, written with _React_ and _Redux_, interacting with electron APIs through globals set in a preload script.
-  * `background-tasks/`: Tasks interacting with subprocesses and the file system, used by the `electron-app` to provide a REST API to the `react-frontend`.
-  * `electron-app/`: The `electron-app` bundling and configuring all the other components to create a standalone desktop application.
-  * `logging/`: A common logging module for server-side packages based on `winston`.
-
-Running `yarn install` at the top level installs dependencies for all of these packages. References between them are expressed using the link syntax (e.g. `link:../logging`) in `package.json` files. We do not use any special monorepo management scripts such as _lerna_ or _yarn workspaces_.
-
-The development version (`yarn dev`) builds the `background-tasks`, `electron-app`, and `logging` packages; and runs a development server for the `react-frontend`. Changes to the frontend source code are automatically reflected after a few seconds, but you may need to reload the page (CMD-R in the electron app). Changes to the other packages require the `yarn dev` command to be run again (CTRL-C in the terminal session to stop it). _NB the frontend development server runs on port 8080; make sure this is not used by something else._
+  * `background-tasks/`: Tasks interacting with subprocesses and the file system, used by the `electron-app` to provide system operations that can be called from the `react-frontend`.
+  * `electron-app/`: The `electron-app`, bundling and configuring all the other components to create a standalone desktop application.
+  * `logging/`: A common logging module used by the `background-tasks` and `electron-app` components.
 
 ## Releases and versions
 
-The [Changelog](./Changelog.md) and [GitHub Releases]() are updated manually, usually on minor version increments (e.g. `0.17.0` to `0.18.0`). We create a Github release linked to a git tag for that version.
+The [Changelog](./Changelog.md) and [GitHub Releases](https://github.com/bbc/audio-orchestrator/releases) are updated manually, usually on minor version increments (e.g. `0.17.0` to `0.18.0`). We create a Github release linked to a git tag for that version.
 
-To create a release build and the `.dmg` installer run the `yarn dist` task.
+To create a release build run the `npm run dist` task. Attach these files to the release on GitHub:
 
-The versions of all packages in this repo should be kept in sync by running the `yarn bump` script at the top level to apply the same version change across all packages. Generally, we increment the patch version for every PR, and increment the minor version for new releases (NB this is not strictly compatible with semantic versioning).
+- `dist/Audio Orchestrator-<version>.dmg`
+- `dist/Audio Orchestrator-<version>-arm64.dmg`
+- `dist/Audio Orchestrator Setup <version>.exe`
 
-## Status
+## History
 
-_Audio Orchestrator_ was originally developed in the BBC R&D Audio Team ([confluence](https://confluence.dev.bbc.co.uk/display/audioteam/)) by Kristian Hentschel with contributions from Jon Francombe, Emma Young, Danial Haddadi, and Sonal Tandon between 2019 and 2022. Further feature updates are not planned as the associated R&D workstream has been retired.
+_Audio Orchestrator_ was originally developed in the [BBC R&D](https://www.bbc.co.uk/rd/) Audio Team by Kristian Hentschel with contributions from Jon Francombe, Emma Young, Danial Haddadi, and Sonal Tandon between 2019 and 2022. It was distributed through the BBC _Connected Studio MakerBox_, and to several public pilots on [BBC Taster](https://www.bbc.co.uk/taster/). The software is now available to interested members of the community through this Audio Orchestrator open source repository, but will not see significant further development from the BBC.

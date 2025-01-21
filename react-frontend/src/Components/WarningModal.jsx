@@ -6,20 +6,21 @@ import {
   Button,
 } from 'semantic-ui-react';
 
-const WarningModal = ({
+function WarningModal({
   content,
   link,
   onClose,
-}) => (
-  <Modal
-    open={!!content}
-    onClose={onClose}
-    closeIcon
-  >
-    <Header icon="delete" content="Error" />
-    <Modal.Content>
-      <p>{content}</p>
-      { link && (
+}) {
+  return (
+    <Modal
+      open={!!content}
+      onClose={onClose}
+      closeIcon
+    >
+      <Header icon="delete" content="Error" />
+      <Modal.Content>
+        <p>{content}</p>
+        { link && (
         <p>
           <Button
             primary
@@ -29,14 +30,15 @@ const WarningModal = ({
             onClick={() => { window.miscFunctions.openUrl(link); }}
           />
         </p>
-      )}
-    </Modal.Content>
+        )}
+      </Modal.Content>
 
-    <Modal.Actions>
-      <Button content="Close" onClick={onClose} />
-    </Modal.Actions>
-  </Modal>
-);
+      <Modal.Actions>
+        <Button content="Close" onClick={onClose} />
+      </Modal.Actions>
+    </Modal>
+  );
+}
 
 WarningModal.propTypes = {
   content: PropTypes.string,

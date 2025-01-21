@@ -1,6 +1,17 @@
-// TODO this might need to be in the same file to avoid circular import; for now we import this
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/// TODO this might need to be in the same file to avoid circular import; for now we import this
 // method directly instead of including it in the Behaviour class.
-import Behaviours from 'Lib/Behaviours';
+import Behaviours from '#Lib/Behaviours.js';
 
 // Translates the object behaviour list used in the project file and for authoring, to the metadata
 // exported for use with the library. Primarily replaces fixed and control behaviours with lower
@@ -77,7 +88,7 @@ const getExportObjectBehaviours = (objectBehaviours, controls = {}) => {
         exportBehaviours.push({
           behaviourType: 'prohibitedIf',
           behaviourParameters: {
-            conditions: conditions.map(condition => ({
+            conditions: conditions.map((condition) => ({
               ...condition,
               invertCondition: !condition.invertCondition,
             })),

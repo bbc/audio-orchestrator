@@ -10,7 +10,7 @@ const EnumInput = React.memo(({
   onChange,
   name,
 }) => {
-  const options = allowedValues.map(v => ({
+  const options = allowedValues.map((v) => ({
     key: v.value,
     text: v.displayName,
     value: v.value,

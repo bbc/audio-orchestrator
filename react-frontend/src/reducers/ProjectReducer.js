@@ -1,3 +1,16 @@
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 const initialState = {
   projectsList: [],
   projectsListLoading: false,
@@ -54,7 +67,6 @@ const fileDefaults = {
   probe: null,
   items: null,
 };
-
 
 // Convenience method for updating nested properties in a specific project.
 const updateProject = (state, projectId, update) => ({
@@ -167,44 +179,54 @@ const ProjectReducer = (state = initialState, action) => {
       });
     case 'SET_PROJECT_NAME':
       return updateProject(
-        state, action.projectId,
+        state,
+        action.projectId,
         { name: action.name },
       );
     case 'SET_PROJECT_SETTINGS':
       return updateProject(
-        state, action.projectId,
+        state,
+        action.projectId,
         { settings: action.settings },
       );
     case 'SET_PROJECT_IMAGES_LOADING':
       return updateProject(
-        state, action.projectId,
+        state,
+        action.projectId,
         { imagesLoading: action.imagesLoading },
       );
     case 'SET_PROJECT_IMAGES':
       return updateProject(
-        state, action.projectId,
+        state,
+        action.projectId,
         { images: action.images },
       );
     case 'SET_PROJECT_REVIEW_ITEMS':
       return updateProject(state, action.projectId, { reviewItems: action.reviewItems });
     case 'SET_PROJECT_SEQUENCES_LIST_LOADING':
       return updateProject(
-        state, action.projectId,
+        state,
+        action.projectId,
         { sequencesListLoading: action.loading },
       );
     case 'SET_PROJECT_SEQUENCES_LIST':
       return updateProject(
-        state, action.projectId,
+        state,
+        action.projectId,
         { sequencesList: action.sequencesList },
       );
     case 'SET_PROJECT_SEQUENCE_LOADING':
       return updateSequence(
-        state, action.projectId, action.sequenceId,
+        state,
+        action.projectId,
+        action.sequenceId,
         { loading: action.loading },
       );
     case 'SET_PROJECT_SEQUENCE_INFO':
       return updateSequence(
-        state, action.projectId, action.sequenceId,
+        state,
+        action.projectId,
+        action.sequenceId,
         {
           name: action.name,
           isIntro: action.isIntro,
@@ -219,7 +241,9 @@ const ProjectReducer = (state = initialState, action) => {
       );
     case 'CLEAR_PROJECT_SEQUENCE_TASKS':
       return updateSequence(
-        state, action.projectId, action.sequenceId,
+        state,
+        action.projectId,
+        action.sequenceId,
         {
           probeTaskId: null,
           itemsTaskId: null,
@@ -228,7 +252,9 @@ const ProjectReducer = (state = initialState, action) => {
       );
     case 'SET_PROJECT_SEQUENCE_FILES_LOADING':
       return updateSequence(
-        state, action.projectId, action.sequenceId,
+        state,
+        action.projectId,
+        action.sequenceId,
         {
           filesLoading: action.loading,
           filesTaskId: action.taskId,
@@ -236,7 +262,9 @@ const ProjectReducer = (state = initialState, action) => {
       );
     case 'SET_PROJECT_SEQUENCE_FILES':
       return updateSequence(
-        state, action.projectId, action.sequenceId,
+        state,
+        action.projectId,
+        action.sequenceId,
         {
           filesList: action.filesList,
           files: action.files,
@@ -244,7 +272,9 @@ const ProjectReducer = (state = initialState, action) => {
       );
     case 'SET_PROJECT_SEQUENCE_OBJECTS':
       return updateSequence(
-        state, action.projectId, action.sequenceId,
+        state,
+        action.projectId,
+        action.sequenceId,
         {
           objectsList: action.objectsList,
           objects: action.objects,
@@ -252,17 +282,23 @@ const ProjectReducer = (state = initialState, action) => {
       );
     case 'SET_PROJECT_SEQUENCE_PROBE_TASK':
       return updateSequence(
-        state, action.projectId, action.sequenceId,
+        state,
+        action.projectId,
+        action.sequenceId,
         { probeTaskId: action.taskId },
       );
     case 'SET_PROJECT_SEQUENCE_ITEMS_TASK':
       return updateSequence(
-        state, action.projectId, action.sequenceId,
+        state,
+        action.projectId,
+        action.sequenceId,
         { itemsTaskId: action.taskId },
       );
     case 'SET_PROJECT_SEQUENCE_ENCODE_TASK':
       return updateSequence(
-        state, action.projectId, action.sequenceId,
+        state,
+        action.projectId,
+        action.sequenceId,
         { encodeTaskId: action.taskId },
       );
     case 'SET_PROJECT_SEQUENCE_FILE_PROPERTIES':

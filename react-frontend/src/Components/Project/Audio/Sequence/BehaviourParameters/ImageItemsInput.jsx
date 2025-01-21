@@ -1,15 +1,15 @@
 import React, { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import ImageItemTable from '../ImageItems/ImageItemTable';
+import ImageItemTable from '../ImageItems/ImageItemTable.jsx';
 
-const ImageItemsInput = ({
+function ImageItemsInput({
   value,
   onChange,
   sequenceDuration,
   images,
   imagesLoading,
   onAddImages,
-}) => {
+}) {
   const imagesList = useMemo(
     () => Object.keys(images).sort((a, b) => images[b].imageIndex - images[a].imageIndex),
     [images],
@@ -18,7 +18,7 @@ const ImageItemsInput = ({
   return (
     <ImageItemTable
       imageItems={value}
-      onChange={newValue => onChange(null, { value: newValue })}
+      onChange={(newValue) => onChange(null, { value: newValue })}
       sequenceDuration={sequenceDuration}
       images={images}
       imagesList={imagesList}
@@ -26,7 +26,7 @@ const ImageItemsInput = ({
       onAddImages={onAddImages}
     />
   );
-};
+}
 
 ImageItemsInput.propTypes = {
   value: PropTypes.arrayOf(PropTypes.shape({

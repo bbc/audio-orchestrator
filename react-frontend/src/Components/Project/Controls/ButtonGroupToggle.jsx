@@ -19,7 +19,7 @@ const ButtonGroupToggle = React.memo(({
         color={optionValue === value && color ? color : undefined}
         icon={optionValue === value ? 'dot circle outline' : 'circle outline'}
         content={displayName}
-        onClick={e => onChange(e, { name, value: optionValue })}
+        onClick={(e) => onChange(e, { name, value: optionValue })}
       />
     ))}
   </Button.Group>

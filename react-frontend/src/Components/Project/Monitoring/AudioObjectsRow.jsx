@@ -4,10 +4,10 @@ import {
   Table,
   Header,
 } from 'semantic-ui-react';
-import { useCurrentSetup, useAlgorithmResults } from './helpers';
-import AudioObjectsCell from './AudioObjectsCell';
+import { useCurrentSetup, useAlgorithmResults } from './helpers.js';
+import AudioObjectsCell from './AudioObjectsCell.jsx';
 
-const AudioObjectsRow = ({ projectId }) => {
+function AudioObjectsRow({ projectId }) {
   const currentSetup = useCurrentSetup(projectId);
   const { allocations } = useAlgorithmResults();
   return (
@@ -20,7 +20,7 @@ const AudioObjectsRow = ({ projectId }) => {
       ))}
     </Table.Row>
   );
-};
+}
 
 AudioObjectsRow.propTypes = {
   projectId: PropTypes.string.isRequired,

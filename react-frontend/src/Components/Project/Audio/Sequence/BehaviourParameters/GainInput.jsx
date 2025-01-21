@@ -5,12 +5,12 @@ import {
 } from 'semantic-ui-react';
 
 // helper to validate that the input string is a valid number
-const stringIsNumber = value => !Number.isNaN(parseFloat(value));
+const stringIsNumber = (value) => !Number.isNaN(parseFloat(value));
 
-const GainInput = ({
+function GainInput({
   value,
   onChange,
-}) => {
+}) {
   const [error, setError] = useState();
 
   const handleChange = (e, data) => {
@@ -40,7 +40,7 @@ const GainInput = ({
       onChange={handleChange}
     />
   );
-};
+}
 
 GainInput.propTypes = {
   value: PropTypes.number.isRequired,

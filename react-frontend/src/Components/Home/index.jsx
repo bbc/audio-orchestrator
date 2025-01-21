@@ -17,15 +17,15 @@ import {
   checkFileOpen,
   requestCreateProject,
   requestOpenProject,
-} from 'Actions/project';
+} from '#Actions/project.js';
 import {
   requestCheckRequirements,
-} from 'Actions/requirements';
+} from '#Actions/requirements.js';
 import {
   requestGetOSCSettings,
-} from 'Actions/monitoring';
+} from '#Actions/monitoring.js';
 
-import ProjectsList from './ProjectsList';
+import ProjectsList from './ProjectsList/index.jsx';
 
 class Home extends React.Component {
   componentDidMount() {
@@ -62,8 +62,7 @@ class Home extends React.Component {
         <Segment placeholder>
           { allowFileOpen
             ? <Divider vertical content="or" />
-            : null
-          }
+            : null}
           <Grid columns={2} textAlign="center">
             <Grid.Column>
               <Header icon>
@@ -82,8 +81,7 @@ class Home extends React.Component {
                   <Button primary content="Open" labelPosition="left" icon="folder open outline" onClick={onOpenProject} />
                 </Grid.Column>
               )
-              : null
-            }
+              : null}
           </Grid>
         </Segment>
         <ProjectsList projects={projectsList} loading={projectsListLoading} />
@@ -104,13 +102,13 @@ Home.propTypes = {
   projectsListLoading: PropTypes.bool.isRequired,
 };
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   allowFileOpen: state.Project.allowFileOpen,
   projectsListLoading: state.Project.projectsListLoading,
   projectsList: state.Project.projectsList,
 });
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   onOpenProject: () => dispatch(requestOpenProject()),
   // TODO actually, open a modal to enter a name first?
   onCreateProject: () => dispatch(requestCreateProject()),

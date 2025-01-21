@@ -1,8 +1,19 @@
-import { electronLogger as logger, addLogFileTransport } from 'bbcat-orchestration-builder-logging';
-import backgroundTasks from 'bbcat-orchestration-builder-background-tasks';
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import path from 'path';
 import os from 'os';
-import { URL } from 'url';
+import { URL, fileURLToPath } from 'url';
 import {
   app,
   BrowserWindow,
@@ -10,25 +21,29 @@ import {
   shell,
   session,
 } from 'electron';
+import { electronLogger as logger, addLogFileTransport } from '#logging';
+import backgroundTasks from '#background-tasks';
 import {
   openInFolder,
   saveExportAs,
   saveExportToDownloads,
   selectCustomTemplatePath,
-} from './save-exports';
-import backgroundTasksRouter from './backgroundTasksRouter';
+} from './save-exports.js';
+import backgroundTasksRouter from './backgroundTasksRouter.js';
 import {
   openProject,
   createProject,
   saveProject,
   listProjects,
   removeRecentProjectById,
-} from './Projects';
+} from './Projects.js';
 import {
   sendOSC,
   getOSCSettings,
   setOSCSettings,
-} from './Monitoring';
+} from './Monitoring.js';
+
+const dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -52,7 +67,7 @@ const defaultWebPreferences = {
 };
 
 // define log file path
-const logFilePath = path.join(app.getPath('userData'), 'bbcat-orchestration-builder.log');
+const logFilePath = path.join(app.getPath('userData'), 'audio-orchestrator.log');
 addLogFileTransport(logFilePath);
 logger.silly(`Logging to ${logFilePath}`);
 
@@ -67,19 +82,22 @@ function createWindow() {
     height: 1024,
     webPreferences: {
       ...defaultWebPreferences,
-      preload: path.resolve(__dirname, '../renderer/preload.js'),
+      preload: path.resolve(dirname, '../renderer/preload.js'),
     },
   });
 
   if (devMode) {
-    // load the user interface hosted by webpack-dev-server
-    win.loadURL('http://localhost:8080');
+    setTimeout(() => {
+      // load the user interface hosted by webpack-dev-server (after delay to give webpack some
+      // time to start up)
+      win.loadURL('http://localhost:8080');
 
-    // Open the DevTools.
-    win.webContents.openDevTools();
+      // Open the DevTools.
+      win.webContents.openDevTools();
+    }, 1000);
   } else {
     // load the webpack-generated user interface index.html
-    win.loadFile('node_modules/bbcat-orchestration-builder-react-frontend/dist/index.html');
+    win.loadFile('./react-frontend/dist/index.html');
   }
 
   // Emitted when the window is closed.
@@ -105,7 +123,7 @@ const createCreditsWindow = () => {
     },
   });
 
-  creditsWin.loadFile('credits.html');
+  creditsWin.loadFile('./electron-app/credits.html');
 
   creditsWin.on('closed', () => {
     creditsWin = null;

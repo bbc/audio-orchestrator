@@ -4,25 +4,23 @@ import { connect } from 'react-redux';
 import {
   Card,
 } from 'semantic-ui-react';
-import SequenceItem from './SequenceItem';
-import AddSequenceCard from './AddSequenceCard';
-
 import {
   openSequencePage,
-} from '../../../actions/ui';
-
+} from '#Actions/ui.js';
 import {
   requestDeleteSequence,
   swapSequenceOrder,
-} from '../../../actions/project';
+} from '#Actions/project.js';
+import SequenceItem from './SequenceItem.jsx';
+import AddSequenceCard from './AddSequenceCard.jsx';
 
-const SequencesList = ({
+function SequencesList({
   sequencesList,
   onOpenSequence,
   onDeleteSequence,
   projectId,
   onSwapSequenceOrder,
-}) => {
+}) {
   const handleMoveSequence = useCallback((i, direction) => {
     const {
       sequenceId,
@@ -63,7 +61,7 @@ const SequencesList = ({
       <AddSequenceCard projectId={projectId} />
     </Card.Group>
   );
-};
+}
 
 SequencesList.propTypes = {
   sequencesList: PropTypes.arrayOf(PropTypes.shape({
@@ -86,10 +84,11 @@ const mapStateToProps = (state, { projectId }) => {
 };
 
 const mapDispatchToProps = (dispatch, { projectId }) => ({
-  onOpenSequence: sequenceId => dispatch(openSequencePage(projectId, sequenceId)),
-  onDeleteSequence: sequenceId => dispatch(requestDeleteSequence(projectId, sequenceId)),
+  onOpenSequence: (sequenceId) => dispatch(openSequencePage(projectId, sequenceId)),
+  onDeleteSequence: (sequenceId) => dispatch(requestDeleteSequence(projectId, sequenceId)),
   onSwapSequenceOrder: (
-    sequenceId, otherSequenceId,
+    sequenceId,
+    otherSequenceId,
   ) => dispatch(swapSequenceOrder(projectId, sequenceId, otherSequenceId)),
 });
 

@@ -8,16 +8,16 @@ import {
   Message,
   Placeholder,
 } from 'semantic-ui-react';
-import { setImageAlt } from 'Actions/project';
-import { useProjectId, useProject } from 'Components/utils';
-import EditableText from 'Components/Project/EditableText';
+import { setImageAlt } from '#Actions/project.js';
+import { useProjectId, useProject } from '#Components/utils.js';
+import EditableText from '#Components/Project/EditableText.jsx';
 
-const ImageDetails = ({
+function ImageDetails({
   imageId,
-}) => {
+}) {
   // TODO check if it makes sense to access state and dispatch here rather than in a parent.
   const projectId = useProjectId();
-  const [imagesLoading, images] = useProject(project => [project.imagesLoading, project.images]);
+  const [imagesLoading, images] = useProject((project) => [project.imagesLoading, project.images]);
 
   const dispatch = useDispatch();
 
@@ -33,8 +33,7 @@ const ImageDetails = ({
     <Card>
       { imagesLoading
         ? <Placeholder.Image square />
-        : <Image wrapped src={`file://${imagePath}`} ui={false} />
-      }
+        : <Image wrapped src={`file://${imagePath}`} ui={false} />}
       <Card.Content>
         { !imagesLoading && error && (
           <Message negative content={error} />
@@ -46,14 +45,14 @@ const ImageDetails = ({
           <Form.Input label="Alternative text">
             <EditableText
               value={imageAlt || ''}
-              onChange={value => dispatch(setImageAlt(projectId, imageId, value))}
+              onChange={(value) => dispatch(setImageAlt(projectId, imageId, value))}
             />
           </Form.Input>
         </Form>
       </Card.Content>
     </Card>
   );
-};
+}
 
 ImageDetails.propTypes = {
   imageId: PropTypes.string.isRequired,

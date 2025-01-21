@@ -1,7 +1,20 @@
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 import path from 'path';
-import processFiles from './processFiles';
-import AudioFile from './AudioFile';
-import ImageFile from './ImageFile';
+import processFiles from './processFiles.js';
+import AudioFile from './AudioFile.js';
+import ImageFile from './ImageFile.js';
 
 /**
  * @class
@@ -23,12 +36,12 @@ class FileStore {
   }
 
   registerFile(fileId, filePath, fileType = 'audio') {
-    if (!path.isAbsolute(filePath)) {
+    if (!filePath || !path.isAbsolute(filePath)) {
       // TODO at least log a warning here - the file will be marked as missing because the path may
       // not exist anyway. Most likely this is because it was an absolute path on a different
       // platform (e.g. starting with 'C:\' instead of '/').
 
-      // throw new Error(`File ${fileId} does not have an absolute path.`);
+      throw new Error(`File ${fileId} does not have an absolute path.`);
     }
 
     // Create the file object.
@@ -62,7 +75,8 @@ class FileStore {
   detectItems(files, onProgress) {
     return processFiles(
       ({ fileId, items }) => this.getFile(fileId).detectItems(items),
-      files, onProgress,
+      files,
+      onProgress,
     );
   }
 
@@ -71,7 +85,8 @@ class FileStore {
       ({
         fileId, encodedItems, encodedItemsBasePath,
       }) => this.getFile(fileId).encode(encodedItems, encodedItemsBasePath),
-      files, onProgress,
+      files,
+      onProgress,
     );
   }
 }

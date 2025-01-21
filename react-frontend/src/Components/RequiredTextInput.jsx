@@ -17,6 +17,21 @@ class RequiredTextInput extends React.Component {
     this.handleKeyUp = this.handleKeyUp.bind(this);
   }
 
+  // focus() {
+  //   if (this.inputRef) this.inputRef.focus();
+  // }
+
+  // select() {
+  //   if (this.inputRef) this.inputRef.select();
+  // }
+
+  handleKeyUp(e) {
+    const { onKeyUp } = this.props;
+    this.validate();
+
+    if (onKeyUp) onKeyUp(e, e);
+  }
+
   validate() {
     if (this.inputRef) {
       // TODO: hack, accessing undocumented properties of <Input /> to get at the value
@@ -27,21 +42,6 @@ class RequiredTextInput extends React.Component {
         console.error('could not validate, could not access current value of Input component.');
       }
     }
-  }
-
-  focus() {
-    if (this.inputRef) this.inputRef.focus();
-  }
-
-  select() {
-    if (this.inputRef) this.inputRef.select();
-  }
-
-  handleKeyUp(e) {
-    const { onKeyUp } = this.props;
-    this.validate();
-
-    if (onKeyUp) onKeyUp(e, e);
   }
 
   render() {

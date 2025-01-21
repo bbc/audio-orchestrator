@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {
   Dropdown,
 } from 'semantic-ui-react';
-import Behaviours from 'Lib/Behaviours';
+import Behaviours from '#Lib/Behaviours.js';
 
 // TODO: Using the click handler instead of onChange does not allow adding a behaviour using the
 // keyboard, but fixes a bug where behaviours were added when the dropdown lost focus.

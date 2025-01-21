@@ -7,18 +7,18 @@ import {
   Message,
   Divider,
 } from 'semantic-ui-react';
-import { runAlgorithmWithExportedMetadata } from 'Actions/monitoring';
-import Sequences from './Sequences';
-import Controls from './Controls';
-import Audio from './Audio';
-import Monitoring from './Monitoring';
-import Appearance from './Appearance';
-import Export from './Export';
-import ProjectStepBar from './ProjectStepBar';
-import SaveIndicator from './SaveIndicator';
+import { runAlgorithmWithExportedMetadata } from '#Actions/monitoring.js';
 import {
   closeProject,
-} from '../../actions/project';
+} from '#Actions/project.js';
+import Sequences from './Sequences/index.jsx';
+import Controls from './Controls/index.jsx';
+import Audio from './Audio/index.jsx';
+import Monitoring from './Monitoring/index.jsx';
+import Appearance from './Appearance/index.jsx';
+import Export from './Export/index.jsx';
+import ProjectStepBar from './ProjectStepBar.jsx';
+import SaveIndicator from './SaveIndicator.jsx';
 import {
   PAGE_PROJECT_SEQUENCES,
   PAGE_PROJECT_CONTROLS,
@@ -26,10 +26,10 @@ import {
   PAGE_PROJECT_MONITORING,
   PAGE_PROJECT_PRESENTATION,
   PAGE_PROJECT_EXPORT,
-} from '../../reducers/UIReducer';
+} from '../../reducers/UIReducer.js';
 import {
   useControls, useObjectsList, useCurrentSetup, useObjects, useCurrentSequenceId,
-} from './Monitoring/helpers';
+} from './Monitoring/helpers.js';
 
 // Define the mapping from the currentProjectPage strings to the react components to render
 const projectPageComponents = {
@@ -41,13 +41,13 @@ const projectPageComponents = {
   [PAGE_PROJECT_EXPORT]: Export,
 };
 
-const Project = ({
+function Project({
   projectId,
   onClose,
   name,
   currentProjectPage,
   saveCount,
-}) => {
+}) {
   const ProjectPage = projectPageComponents[currentProjectPage];
   // Re-run the algorithm (and send OSC messages) whenever something is changed
   const currentSequenceId = useCurrentSequenceId(projectId);
@@ -82,7 +82,7 @@ const Project = ({
         )}
     </Container>
   );
-};
+}
 
 Project.propTypes = {
   projectId: PropTypes.string.isRequired,

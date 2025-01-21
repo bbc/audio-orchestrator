@@ -6,10 +6,10 @@ import {
   // Button,
 } from 'semantic-ui-react';
 
-import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
-import AddBehaviourButton from './AddBehaviourButton';
+import ConfirmDeleteButton from '#Components/ConfirmDeleteButton.jsx';
+import AddBehaviourButton from './AddBehaviourButton.jsx';
 
-const ObjectHeader = ({
+function ObjectHeader({
   indeterminate,
   checked,
   usedBehaviourTypes,
@@ -17,7 +17,7 @@ const ObjectHeader = ({
   onToggleAllHighlights,
   onDeleteHighlighted,
   onAddBehaviourToHighlighted,
-}) => {
+}) {
   const actionsEnabled = checked || indeterminate;
 
   return (
@@ -55,8 +55,7 @@ const ObjectHeader = ({
       </Table.Row>
     </Table.Header>
   );
-};
-
+}
 
 //          <Button
 //            disabled={!actionsEnabled}
@@ -85,7 +84,6 @@ const ObjectHeader = ({
 //            primary
 //            compact
 //          />
-
 
 ObjectHeader.propTypes = {
   indeterminate: PropTypes.bool,

@@ -6,11 +6,11 @@ import {
 
 // Wrapping contents in a <span class="ui buttons"> to enable mouse events for the popup even when
 // the button is disabled, .
-const InlineHelpPopup = ({
+function InlineHelpPopup({
   content,
   children,
   className,
-}) => {
+}) {
   if (!content) {
     return children;
   }
@@ -28,7 +28,7 @@ const InlineHelpPopup = ({
       )}
     />
   );
-};
+}
 
 InlineHelpPopup.propTypes = {
   content: PropTypes.string,

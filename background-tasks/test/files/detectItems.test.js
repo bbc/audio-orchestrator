@@ -1,10 +1,10 @@
-import detectItems from '../../src/files/detectItems';
+import { jest } from '@jest/globals';
 
 // mockExecFile as a jest mock function to easily change resolved values for
 const mockExecFile = jest.fn(() => Promise.resolve({ stdout: '', stderr: '' }));
 
 // child_process.execFile as a CPS function wrapping the promise based mockExecFile.
-jest.mock('child_process', () => ({
+jest.unstable_mockModule('child_process', () => ({
   execFile: (file, args, options, cb) => {
     mockExecFile(file, args, options)
       .then((result) => { cb(null, result); })
@@ -13,6 +13,8 @@ jest.mock('child_process', () => ({
 }));
 
 jest.mock('../../src/which', () => jest.fn(name => Promise.resolve(name)));
+
+const { default: detectItems } = await import('../../src/files/detectItems.js');
 
 beforeEach(() => {
   jest.clearAllMocks();

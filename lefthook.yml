@@ -1,6 +1,6 @@
 pre-commit:
   commands:
     lint:
-      run: yarn lint
+      run: npm run lint
     credits:
-      run: yarn credits
+      run: npm run credits

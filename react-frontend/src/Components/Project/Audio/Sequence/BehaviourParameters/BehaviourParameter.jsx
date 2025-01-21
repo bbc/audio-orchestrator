@@ -5,13 +5,13 @@ import {
   Header,
   Segment,
 } from 'semantic-ui-react';
-import GainInput from './GainInput';
-import ConditionsListInput from './ConditionsListInput';
-import EnumInput from './EnumInput';
-import ListOfEnumInput from './ListOfEnumInput';
-import ControlValuesInput from './ControlValuesInput';
-import ObjectInput from './ObjectInput';
-import ImageItemsInput from './ImageItemsInput';
+import GainInput from './GainInput.jsx';
+import ConditionsListInput from './ConditionsListInput/index.jsx';
+import EnumInput from './EnumInput.jsx';
+import ListOfEnumInput from './ListOfEnumInput.jsx';
+import ControlValuesInput from './ControlValuesInput.jsx';
+import ObjectInput from './ObjectInput.jsx';
+import ImageItemsInput from './ImageItemsInput.jsx';
 
 const inputComponents = {
   gain: GainInput,
@@ -23,7 +23,7 @@ const inputComponents = {
   imageItems: ImageItemsInput,
 };
 
-const BehaviourParameter = ({
+function BehaviourParameter({
   name,
   displayName,
   description,
@@ -39,7 +39,7 @@ const BehaviourParameter = ({
   images,
   imagesLoading,
   onAddImages,
-}) => {
+}) {
   // If the type is not registered, use a standard text input
   const InputComponent = inputComponents[type] || Input;
 
@@ -61,7 +61,7 @@ const BehaviourParameter = ({
       />
     </Segment>
   );
-};
+}
 
 BehaviourParameter.propTypes = {
   onChange: PropTypes.func.isRequired,

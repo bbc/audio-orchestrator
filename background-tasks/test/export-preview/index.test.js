@@ -1,6 +1,8 @@
-import exportPreview from '../../src/export-preview';
+import { jest } from '@jest/globals';
 
-jest.mock('../../src/runExportSteps', () => jest.fn((steps, args) => Promise.resolve(args)));
+jest.unstable_mockModule('../../src/runExportSteps.js', () => ({ default: jest.fn((steps, args) => Promise.resolve(args)) }));
+
+const { default: exportPreview } = await import('../../src/export-preview/index.js');
 
 beforeEach(() => {
   jest.clearAllMocks();

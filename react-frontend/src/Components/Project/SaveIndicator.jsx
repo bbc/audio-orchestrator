@@ -14,9 +14,9 @@ const savedStyle = {
   transition: 'opacity 2s linear',
 };
 
-const SaveIndicator = ({
+function SaveIndicator({
   count,
-}) => {
+}) {
   const saved = count === 0;
 
   return (
@@ -28,7 +28,7 @@ const SaveIndicator = ({
       { saved ? 'Saved' : 'Saving...' }
     </Menu.Item>
   );
-};
+}
 
 SaveIndicator.propTypes = {
   count: PropTypes.number.isRequired,

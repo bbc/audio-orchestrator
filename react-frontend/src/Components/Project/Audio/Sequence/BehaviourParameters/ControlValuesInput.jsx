@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Message } from 'semantic-ui-react';
-import ToggleTableInput from './ToggleTableInput';
-import RangeInput from './RangeInput';
+import ToggleTableInput from './ToggleTableInput.jsx';
+import RangeInput from './RangeInput.jsx';
 
 const ControlValuesInput = React.memo(({
   value,
@@ -13,7 +13,7 @@ const ControlValuesInput = React.memo(({
   controlId,
   controls,
 }) => {
-  const control = controls.find(c => c.controlId === controlId) || {};
+  const control = controls.find((c) => c.controlId === controlId) || {};
   const {
     controlType,
     controlName,
@@ -21,7 +21,7 @@ const ControlValuesInput = React.memo(({
   } = control;
 
   if (controlType === 'checkbox' || controlType === 'radio') {
-    const allowedValues = (controlParameters.options || []).map(option => ({
+    const allowedValues = (controlParameters.options || []).map((option) => ({
       value: option.value,
       displayName: option.label,
     }));

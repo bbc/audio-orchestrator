@@ -1,4 +1,4 @@
-import backgroundTasks from '../src';
+const { default: backgroundTasks } = await import('../src/index.js');
 
 describe('background-tasks', () => {
   it('exists', () => {

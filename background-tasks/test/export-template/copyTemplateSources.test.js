@@ -1,15 +1,21 @@
+import { createRequire } from 'node:module';
+import { jest } from '@jest/globals';
 import path from 'path';
-import fse from 'fs-extra';
-import copyTemplateSources from '../../src/export-template/copyTemplateSources';
+
+const require = createRequire(import.meta.url);
 
 jest.mock('fs-extra', () => ({
   readdir: jest.fn(() => Promise.resolve([
-      'node_modules',
-      'audio',
-      'dist',
+    'node_modules',
+    'audio',
+    'dist',
   ])),
   copy: jest.fn(() => Promise.resolve()),
 }));
+
+const fse = require('fs-extra');
+
+const { default: copyTemplateSources } = await import('../../src/export-template/copyTemplateSources.js');
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -84,5 +90,5 @@ describe('copyTemplateSources', () => {
           expect(fse.copy).toHaveBeenCalledWith(from, to);
         });
       });
-  })
+  });
 });

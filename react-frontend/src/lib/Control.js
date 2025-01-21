@@ -1,4 +1,15 @@
 /**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*//**
  * Class representing a control.
  */
 class Control {
@@ -43,19 +54,13 @@ class Control {
 
   get controlName() { return this.data.controlName; }
 
-  get controlType() { return this.data.controlType; }
-
-  get controlDefaultValues() { return this.data.controlDefaultValues; }
-
-  get controlParameters() { return this.data.controlParameters; }
-
-  get controlBehaviours() { return this.data.controlBehaviours; }
-
   set controlName(controlName) {
     const { store, controlId, data } = this;
     data.controlName = controlName;
     store.set(`controls.${controlId}`, data);
   }
+
+  get controlType() { return this.data.controlType; }
 
   set controlType(controlType) {
     const { store, controlId, data } = this;
@@ -63,17 +68,23 @@ class Control {
     store.set(`controls.${controlId}`, data);
   }
 
+  get controlDefaultValues() { return this.data.controlDefaultValues; }
+
   set controlDefaultValues(controlDefaultValues) {
     const { store, controlId, data } = this;
     data.controlDefaultValues = controlDefaultValues;
     store.set(`controls.${controlId}`, data);
   }
 
+  get controlParameters() { return this.data.controlParameters; }
+
   set controlParameters(controlParameters) {
     const { store, controlId, data } = this;
     data.controlParameters = controlParameters;
     store.set(`controls.${controlId}`, data);
   }
+
+  get controlBehaviours() { return this.data.controlBehaviours; }
 
   set controlBehaviours(controlBehaviours) {
     const { store, controlId, data } = this;

@@ -1,7 +1,20 @@
-import Project from '../lib/Project';
+/**
+Copyright (C) 2025, BBC R&D
 
-import ExportService from '../lib/ExportService';
-import ProjectStore from '../lib/IpcProjectStore';
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+import Project from '#Lib/Project.js';
+
+import ExportService from '#Lib/ExportService.js';
+import ProjectStore from '#Lib/IpcProjectStore.js';
 
 const exportService = new ExportService();
 
@@ -15,7 +28,7 @@ const { exportFunctions } = window;
 
 /* --- private basic action creators --- */
 
-const startExport = title => ({
+const startExport = (title) => ({
   type: 'EXPORT_START',
   title,
 });
@@ -24,12 +37,12 @@ const closeExport = () => ({
   type: 'EXPORT_CLOSE',
 });
 
-const failExport = error => ({
+const failExport = (error) => ({
   type: 'EXPORT_FAIL',
   error,
 });
 
-const completeExport = outputPath => ({
+const completeExport = (outputPath) => ({
   type: 'EXPORT_COMPLETE',
   outputPath,
 });
@@ -67,7 +80,7 @@ const waitForExportTask = (dispatch, task, args) => {
   return new Promise((resolve, reject) => {
     task(args, {
       onProgress: ({ completed, total, currentStep }) => {
-        dispatch(setExportProgress((100 * completed / total) || 0, currentStep));
+        dispatch(setExportProgress((100 * (completed / total)) || 0, currentStep));
       },
       onComplete: ({ result }) => {
         resolve({ result });
@@ -83,7 +96,7 @@ const waitForExportTask = (dispatch, task, args) => {
   });
 };
 
-export const requestExportAudio = projectId => (dispatch) => {
+export const requestExportAudio = (projectId) => (dispatch) => {
   dispatch(startExport('audio'));
 
   // Get the project information from the store
@@ -110,7 +123,7 @@ export const requestExportAudio = projectId => (dispatch) => {
     });
 };
 
-export const requestExportTemplate = projectId => (dispatch) => {
+export const requestExportTemplate = (projectId) => (dispatch) => {
   dispatch(startExport('template source'));
 
   ProjectStore.openProject(projectId)
@@ -127,7 +140,7 @@ export const requestExportTemplate = projectId => (dispatch) => {
         images,
       };
     })
-    .then(args => waitForExportTask(
+    .then((args) => waitForExportTask(
       dispatch,
       exportTemplate,
       args,
@@ -146,7 +159,7 @@ export const requestExportTemplate = projectId => (dispatch) => {
     });
 };
 
-export const requestExportDistribution = projectId => (dispatch) => {
+export const requestExportDistribution = (projectId) => (dispatch) => {
   dispatch(startExport('built distribution'));
 
   ProjectStore.openProject(projectId)
@@ -163,7 +176,7 @@ export const requestExportDistribution = projectId => (dispatch) => {
         images,
       };
     })
-    .then(args => waitForExportTask(
+    .then((args) => waitForExportTask(
       dispatch,
       exportDistribution,
       args,
@@ -182,7 +195,7 @@ export const requestExportDistribution = projectId => (dispatch) => {
     });
 };
 
-export const requestStartPreview = projectId => (dispatch) => {
+export const requestStartPreview = (projectId) => (dispatch) => {
   dispatch(startExport('preview'));
 
   ProjectStore.openProject(projectId)
@@ -199,7 +212,7 @@ export const requestStartPreview = projectId => (dispatch) => {
         images,
       };
     })
-    .then(args => waitForExportTask(
+    .then((args) => waitForExportTask(
       dispatch,
       startPreview,
       args,
@@ -214,6 +227,6 @@ export const requestStartPreview = projectId => (dispatch) => {
     });
 };
 
-export const requestOpenInFolder = outputPath => () => {
+export const requestOpenInFolder = (outputPath) => () => {
   exportFunctions.openInFolder(outputPath);
 };

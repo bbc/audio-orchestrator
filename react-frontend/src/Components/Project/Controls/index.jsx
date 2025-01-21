@@ -8,15 +8,15 @@ import {
   Header,
   Icon,
 } from 'semantic-ui-react';
-import AddControlButton from './AddControlButton';
-import ControlCard from './ControlCard';
 import {
   addControl,
   deleteControl,
   replaceControlProperty,
   swapControlOrder,
-} from '../../../actions/project';
-import PageTitleBar from '../../PageTitleBar';
+} from '#Actions/project.js';
+import AddControlButton from './AddControlButton.jsx';
+import ControlCard from './ControlCard.jsx';
+import PageTitleBar from '../../PageTitleBar.jsx';
 
 class Controls extends React.PureComponent {
   constructor(props) {
@@ -97,8 +97,7 @@ class Controls extends React.PureComponent {
               </Header>
               <AddControlButton onAddControl={onAddControl} />
             </Segment>
-          )
-        }
+          )}
       </Container>
     );
   }
@@ -133,16 +132,22 @@ const mapStateToProps = ({ Project }, { projectId }) => {
 };
 
 const mapDispatchToProps = (dispatch, { projectId }) => ({
-  onAddControl: (type, name, parameters, defaultValues) => dispatch(addControl(
-    projectId, type, name, parameters, defaultValues,
-  )),
-  onChangeControl: (controlId, name, value) => dispatch(replaceControlProperty(
-    projectId, controlId, name, value,
-  )),
-  onSwapControlOrder: (controlId, otherControlId) => dispatch(swapControlOrder(
-    projectId, controlId, otherControlId,
-  )),
-  onDeleteControl: controlId => dispatch(deleteControl(projectId, controlId)),
+  onAddControl: (
+    type,
+    name,
+    parameters,
+    defaultValues,
+  ) => dispatch(addControl(projectId, type, name, parameters, defaultValues)),
+  onChangeControl: (
+    controlId,
+    name,
+    value,
+  ) => dispatch(replaceControlProperty(projectId, controlId, name, value)),
+  onSwapControlOrder: (
+    controlId,
+    otherControlId,
+  ) => dispatch(swapControlOrder(projectId, controlId, otherControlId)),
+  onDeleteControl: (controlId) => dispatch(deleteControl(projectId, controlId)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Controls);

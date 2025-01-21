@@ -7,9 +7,9 @@ import {
   Icon,
   Popup,
 } from 'semantic-ui-react';
-import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
-import ImageEffectButton from './ImageEffectButton';
-import RangePreview from './RangePreview';
+import ConfirmDeleteButton from '#Components/ConfirmDeleteButton.jsx';
+import ImageEffectButton from './ImageEffectButton.jsx';
+import RangePreview from './RangePreview.jsx';
 
 const getNextItem = (item, items) => {
   const index = items.indexOf(item);
@@ -31,7 +31,7 @@ const getPreviousItem = (item, items) => {
   return items[index - 1];
 };
 
-const ImageItemRow = ({
+function ImageItemRow({
   items,
   item,
   images,
@@ -41,7 +41,7 @@ const ImageItemRow = ({
   onReplaceEffect,
   sequenceDuration,
   onDelete,
-}) => {
+}) {
   const {
     itemId,
     imageId,
@@ -229,7 +229,7 @@ const ImageItemRow = ({
       </Table.Cell>
     </Table.Row>
   );
-};
+}
 
 ImageItemRow.propTypes = {
   items: PropTypes.arrayOf(PropTypes.shape({})).isRequired,

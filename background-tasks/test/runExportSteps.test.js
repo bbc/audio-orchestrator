@@ -1,4 +1,6 @@
-import runExportSteps from '../src/runExportSteps';
+import { jest } from '@jest/globals';
+
+const { default: runExportSteps } = await import('../src/runExportSteps.js');
 
 describe('runExportSteps', () => {
   it('returns a promise', () => {

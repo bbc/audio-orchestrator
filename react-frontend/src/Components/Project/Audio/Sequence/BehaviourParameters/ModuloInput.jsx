@@ -89,7 +89,7 @@ const ModulusInput = React.memo(({
       <Dropdown button inline scrolling options={offsetOptions} value={offset || modulus} name="offset" onChange={handleChange} />
       {modulus !== undefined && (
         <span>
-          {` (${[0, 1, 2, 3].map(d => modulus * d + (offset || 0)).join(', ')}, `}
+          {` (${[0, 1, 2, 3].map((d) => modulus * d + (offset || 0)).join(', ')}, `}
           &hellip;)
         </span>
       )}

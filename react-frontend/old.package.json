@@ -1,0 +1,15 @@
+{
+  "name": "@bbc/bbcat-orchestration-builder-react-frontend",
+  "version": "0.22.2",
+  "description": "Graphical user interface for generating orchestrated audio applications.",
+  "repository": "https://github.com/bbc/bbcat-orchestration-builder",
+  "author": "Kristian Hentschel <Kristian.Hentschel@bbc.co.uk>",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack-dev-server --hot --host 0.0.0.0 --mode development",
+    "test": "echo no tests defined.",
+    "lint": "eslint src --ext .js,.jsx"
+  }
+}

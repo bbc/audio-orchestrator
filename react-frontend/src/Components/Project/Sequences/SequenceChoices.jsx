@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import uuidv4 from 'uuid/v4';
+import { v4 as uuidv4 } from 'uuid';
 
 import {
   Container,
@@ -9,9 +9,9 @@ import {
   Dropdown,
   Table,
 } from 'semantic-ui-react';
-import ConfirmDeleteButton from '../../ConfirmDeleteButton';
-import RequiredTextInput from '../../RequiredTextInput';
-import { setSequenceSetting } from '../../../actions/project';
+import { setSequenceSetting } from '#Actions/project.js';
+import ConfirmDeleteButton from '../../ConfirmDeleteButton.jsx';
+import RequiredTextInput from '../../RequiredTextInput.jsx';
 
 class SequenceChoices extends React.Component {
   constructor(props) {
@@ -68,7 +68,7 @@ class SequenceChoices extends React.Component {
   handleDeleteChoice(choiceId) {
     const { next } = this.props;
 
-    this.handleChange(next.filter(choice => choice.choiceId !== choiceId));
+    this.handleChange(next.filter((choice) => choice.choiceId !== choiceId));
   }
 
   handleAddChoice() {
@@ -78,6 +78,24 @@ class SequenceChoices extends React.Component {
       ...next,
       { choiceId: uuidv4() },
     ]);
+  }
+
+  handleKeyPress(e, choiceId) {
+    const { next } = this.props;
+    const { key, target } = e;
+
+    if (key === 'Enter') {
+      target.blur();
+
+      // Move to the next row or create a new choice.
+      const nextChoice = next[next.findIndex((choice) => choice.choiceId === choiceId) + 1];
+      if (!nextChoice) {
+        // this.handleAddChoice();
+        // TODO: enable this again without disregarding the currently edited field's value.
+      } else if (nextChoice.choiceId in this.labelRefs) {
+        this.labelRefs[nextChoice.choiceId].select();
+      }
+    }
   }
 
   ensureChoiceIds() {
@@ -97,31 +115,13 @@ class SequenceChoices extends React.Component {
     }
   }
 
-  handleKeyPress(e, choiceId) {
-    const { next } = this.props;
-    const { key, target } = e;
-
-    if (key === 'Enter') {
-      target.blur();
-
-      // Move to the next row or create a new choice.
-      const nextChoice = next[next.findIndex(choice => choice.choiceId === choiceId) + 1];
-      if (!nextChoice) {
-        // this.handleAddChoice();
-        // TODO: enable this again without disregarding the currently edited field's value.
-      } else if (nextChoice.choiceId in this.labelRefs) {
-        this.labelRefs[nextChoice.choiceId].select();
-      }
-    }
-  }
-
   render() {
     const {
       next,
       sequencesList,
     } = this.props;
 
-    const sequenceOptions = sequencesList.map(sequence => ({
+    const sequenceOptions = sequencesList.map((sequence) => ({
       key: sequence.sequenceId,
       value: sequence.sequenceId,
       text: sequence.name,
@@ -156,8 +156,8 @@ class SequenceChoices extends React.Component {
                   placeholder="e.g. Click to go to..."
                   error={!label}
                   defaultValue={label}
-                  onKeyPress={e => this.handleKeyPress(e, choiceId)}
-                  onBlur={e => this.handleChangeLabel(choiceId, e.target.value)}
+                  onKeyPress={(e) => this.handleKeyPress(e, choiceId)}
+                  onBlur={(e) => this.handleChangeLabel(choiceId, e.target.value)}
                   fluid
                 />
               </Table.Cell>
@@ -218,7 +218,7 @@ const mapStateToProps = (state, { projectId, sequenceId }) => {
 };
 
 const mapDispatchToProps = (dispatch, { projectId, sequenceId }) => ({
-  onChange: value => dispatch(setSequenceSetting(projectId, sequenceId, 'next', value)),
+  onChange: (value) => dispatch(setSequenceSetting(projectId, sequenceId, 'next', value)),
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(SequenceChoices);

@@ -10,23 +10,23 @@ import {
   Checkbox,
   Label,
 } from 'semantic-ui-react';
-import { setOSCFormat, setOSCPortNumber, turnOSCMsgsOnOff } from 'Actions/monitoring';
+import { setOSCFormat, setOSCPortNumber, turnOSCMsgsOnOff } from '#Actions/monitoring.js';
 import {
   REAPER,
   MIEM_MATRIX_L_R,
-} from 'Lib/OSC';
+} from '#Lib/OSC.js';
 import {
   useOSCFormat,
   useOSCPortNumber,
   useCurrentSetup,
   useConnectedToDAW,
-} from './helpers';
+} from './helpers.js';
 
-const DAWSettingsModal = ({
+function DAWSettingsModal({
   onClose,
   objects,
   projectId,
-}) => {
+}) {
   const dispatch = useDispatch();
   const currentSetup = useCurrentSetup(projectId);
   const OSCFormat = useOSCFormat();
@@ -120,7 +120,7 @@ const DAWSettingsModal = ({
       </Modal.Actions>
     </Modal>
   );
-};
+}
 
 DAWSettingsModal.propTypes = {
   onClose: PropTypes.func.isRequired,

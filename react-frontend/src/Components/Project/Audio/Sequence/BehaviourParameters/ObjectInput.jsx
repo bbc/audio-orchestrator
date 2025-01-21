@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import EnumInput from './EnumInput';
+import EnumInput from './EnumInput.jsx';
 
 const ObjectInput = React.memo(({
   objectsList,

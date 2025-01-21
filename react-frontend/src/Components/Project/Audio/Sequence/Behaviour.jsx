@@ -4,15 +4,15 @@ import {
   Button,
   Popup,
 } from 'semantic-ui-react';
-import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
-import Behaviours from 'Lib/Behaviours';
+import ConfirmDeleteButton from '#Components/ConfirmDeleteButton.jsx';
+import Behaviours from '#Lib/Behaviours.js';
 
-const Behaviour = ({
+function Behaviour({
   behaviourType,
   controls,
   onEdit,
   onDelete,
-}) => {
+}) {
   const {
     displayName,
     description,
@@ -59,7 +59,7 @@ const Behaviour = ({
       />
     </Button.Group>
   );
-};
+}
 
 Behaviour.propTypes = {
   behaviourType: PropTypes.string.isRequired,

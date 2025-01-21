@@ -5,12 +5,12 @@ import {
 } from 'semantic-ui-react';
 
 // helper to validate that the input string is a valid number
-const stringIsNumber = value => !Number.isNaN(parseFloat(value));
+const stringIsNumber = (value) => !Number.isNaN(parseFloat(value));
 
-const RangeInput = ({
+function RangeInput({
   value,
   onChange,
-}) => {
+}) {
   const handleChange = (e, data) => {
     const { value: inputValue, name } = data;
 
@@ -49,7 +49,7 @@ const RangeInput = ({
       />
     </div>
   );
-};
+}
 
 RangeInput.propTypes = {
   value: PropTypes.arrayOf(PropTypes.oneOfType([

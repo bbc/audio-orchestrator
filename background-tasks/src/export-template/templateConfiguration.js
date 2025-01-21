@@ -1,4 +1,15 @@
-// TODO was adding a prefix; which breaks control behaviours that reference a sequenceId; but I
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/// TODO was adding a prefix; which breaks control behaviours that reference a sequenceId; but I
 // don't think the prefix is really needed anyway because we already are within a unique session.
 // const formatContentId = sequenceId => `bbcat-orchestration:${sequenceId}`;
 const formatContentId = sequenceId => sequenceId;

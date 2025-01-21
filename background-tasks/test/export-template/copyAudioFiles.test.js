@@ -1,11 +1,17 @@
-import fse from 'fs-extra';
-import copyAudioFiles from '../../src/export-template/copyAudioFiles';
+import { createRequire } from 'node:module';
+import { jest } from '@jest/globals';
+
+const require = createRequire(import.meta.url);
 
 jest.mock('fs-extra', () => ({
   readdir: jest.fn(() => Promise.resolve([])),
   remove: jest.fn(() => Promise.resolve()),
   copy: jest.fn(() => Promise.resolve()),
 }));
+
+const fse = require('fs-extra');
+
+const { default: copyAudioFiles } = await import('../../src/export-template/copyAudioFiles.js');
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -38,7 +44,6 @@ describe('copyAudioFiles', () => {
       'calibration',
       'something-else',
     ]);
-
 
     return copyAudioFiles(args)
       .then(() => {

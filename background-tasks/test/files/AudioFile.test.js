@@ -1,13 +1,15 @@
-import checkFileExists from '../../src/files/checkFileExists';
-import probeFile from '../../src/files/probeFile';
-import detectItems from '../../src/files/detectItems';
-import encodeItems from '../../src/files/encodeItems';
-import AudioFile from '../../src/files/AudioFile';
+import { jest } from '@jest/globals';
 
-jest.mock('../../src/files/checkFileExists', () => jest.fn(() => Promise.resolve(true)));
-jest.mock('../../src/files/probeFile', () => jest.fn(() => Promise.resolve({ probe: {} })));
-jest.mock('../../src/files/detectItems', () => jest.fn(() => Promise.resolve({ items: [] })));
-jest.mock('../../src/files/encodeItems', () => jest.fn(() => Promise.resolve({ encodedItems: [], encodedItemsBasePath: '' })));
+jest.unstable_mockModule('../../src/files/checkFileExists', () => ({ default: jest.fn(() => Promise.resolve(true)) }));
+jest.unstable_mockModule('../../src/files/probeFile', () => ({ default: jest.fn(() => Promise.resolve({ probe: {} })) }));
+jest.unstable_mockModule('../../src/files/detectItems', () => ({ default: jest.fn(() => Promise.resolve({ items: [] })) }));
+jest.unstable_mockModule('../../src/files/encodeItems', () => ({ default: jest.fn(() => Promise.resolve({ encodedItems: [], encodedItemsBasePath: '' })) }));
+
+const { default: checkFileExists } = await import('../../src/files/checkFileExists.js');
+const { default: probeFile } = await import('../../src/files/probeFile.js');
+const { default: detectItems } = await import('../../src/files/detectItems.js');
+const { default: encodeItems } = await import('../../src/files/encodeItems.js');
+const { default: AudioFile } = await import('../../src/files/AudioFile.js');
 
 beforeEach(() => {
   jest.clearAllMocks();

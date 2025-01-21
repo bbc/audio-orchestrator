@@ -1,3 +1,16 @@
+/**
+Copyright (C) 2025, BBC R&D
+
+This file is part of Audio Orchestrator. Audio Orchestrator is free software: you can
+redistribute it and/or modify it under the terms of the GNU General Public License as
+published by the Free Software Foundation, either version 3 of the License, or (at
+your option) any later version. Audio Orchestrator is distributed in the hope that it
+will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
+for more details. You should have received a copy of the GNU General Public License
+along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
+*/
+
 const DEVICE_PROPERTY = 'device.deviceIsMain';
 const CONTENT_ID_PROPERTY = 'session.currentContentId';
 
@@ -33,7 +46,7 @@ const conditionValueByProperty = (behaviour = {}, property) => (
 );
 
 // Find the first allowedIf behaviour
-const getAllowedIfBehaviour = behaviours => behaviours
+const getAllowedIfBehaviour = (behaviours) => behaviours
   .find(({ behaviourType }) => behaviourType === 'allowedIf');
 
 // Create a new behaviour list; replacing the allowedIf behaviour with one that has an updated list

@@ -6,15 +6,15 @@ import {
   Modal,
   Table,
 } from 'semantic-ui-react';
-import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
-import { setSavedMonitoringSetups } from 'Actions/project';
-import { useSavedSetups, deleteSavedSetup } from './helpers';
-import { presetMonitoringSetups } from './presetDeviceSetups';
+import ConfirmDeleteButton from '#Components/ConfirmDeleteButton.jsx';
+import { setSavedMonitoringSetups } from '#Actions/project.js';
+import { useSavedSetups, deleteSavedSetup } from './helpers.js';
+import { presetMonitoringSetups } from './presetDeviceSetups.js';
 
-const ManageSetupsModal = ({
+function ManageSetupsModal({
   onClose,
   projectId,
-}) => {
+}) {
   const savedSetups = useSavedSetups(projectId);
   const dispatch = useDispatch();
 
@@ -41,7 +41,7 @@ const ManageSetupsModal = ({
                 </Table.Cell>
               </Table.Row>
             )}
-            {savedSetups.map(setup => (
+            {savedSetups.map((setup) => (
               <Table.Row key={setup.id}>
                 <Table.Cell content={setup.name} />
                 <Table.Cell collapsing>
@@ -65,7 +65,7 @@ const ManageSetupsModal = ({
             <Table.Row key="presets">
               <Table.HeaderCell colSpan="2" content="Preset setups" />
             </Table.Row>
-            {presetMonitoringSetups.map(setup => (
+            {presetMonitoringSetups.map((setup) => (
               <Table.Row key={setup.id}>
                 <Table.Cell content={setup.name} />
                 <Table.Cell collapsing />
@@ -82,7 +82,7 @@ const ManageSetupsModal = ({
       </Modal.Actions>
     </Modal>
   );
-};
+}
 
 ManageSetupsModal.propTypes = {
   onClose: PropTypes.func.isRequired,

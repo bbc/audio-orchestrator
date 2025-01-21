@@ -1,4 +1,4 @@
-import templateConfiguration from '../../src/export-template/templateConfiguration';
+const { default: templateConfiguration } = await import('../../src/export-template/templateConfiguration.js');
 
 describe('templateConfiguration', () => {
   const controls = [];

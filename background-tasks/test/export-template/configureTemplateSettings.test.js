@@ -1,13 +1,21 @@
-import fse from 'fs-extra';
-import configureTemplateSettings from '../../src/export-template/configureTemplateSettings';
-import templateConfiguration from '../../src/export-template/templateConfiguration';
+import { createRequire } from 'node:module';
+import { jest } from '@jest/globals';
 
-jest.mock('../../src/export-template/templateConfiguration', () => jest.fn(() => '{}'));
+const require = createRequire(import.meta.url);
+
+jest.unstable_mockModule('../../src/export-template/templateConfiguration.js', () => ({
+  default: jest.fn(),
+}));
 
 jest.mock('fs-extra', () => ({
   readFile: jest.fn(() => Promise.resolve('')),
   writeFile: jest.fn(() => Promise.resolve()),
 }));
+
+const fse = require('fs-extra');
+
+const { default: configureTemplateSettings } = await import('../../src/export-template/configureTemplateSettings.js');
+const { default: templateConfiguration } = await import('../../src/export-template/templateConfiguration.js');
 
 beforeEach(() => {
   jest.clearAllMocks();
@@ -50,9 +58,8 @@ describe('configureTemplateSettings', () => {
       outputDir, sequences, controls, settings, imageUrls,
     })
       .then(() => {
-        expect(templateConfiguration).toHaveBeenCalledWith(
-          sequences, controls, settings, imageUrls,
-        );
+        expect(templateConfiguration)
+          .toHaveBeenCalledWith(sequences, controls, settings, imageUrls);
 
         // TODO change back to 2 when including template sources again
         expect(fse.readFile).toHaveBeenCalledTimes(1);

@@ -13,16 +13,16 @@ import {
 
 import {
   requestReplaceAllAudioFiles,
-} from 'Actions/project';
+} from '#Actions/project.js';
 import {
   openMonitoringPage,
-} from 'Actions/ui';
-import { useObjects } from 'Components/Project/Monitoring/helpers';
-import ConnectToDAWButton from 'Components/Project/Monitoring/ConnectToDAWButton';
-import PlayPauseButtons from 'Components/Project/Monitoring/PlayPauseButtons';
-import RunAlgorithmButton from 'Components/Project/Monitoring/RunAlgorithmButton';
+} from '#Actions/ui.js';
+import { useObjects } from '#Components/Project/Monitoring/helpers.js';
+import ConnectToDAWButton from '#Components/Project/Monitoring/ConnectToDAWButton.jsx';
+import PlayPauseButtons from '#Components/Project/Monitoring/PlayPauseButtons.jsx';
+import RunAlgorithmButton from '#Components/Project/Monitoring/RunAlgorithmButton.jsx';
 
-const SequenceHeader = ({
+function SequenceHeader({
   haveFiles,
   onReplaceAudioFiles,
   onOpenMonitoring,
@@ -30,7 +30,7 @@ const SequenceHeader = ({
   sequenceAudioConfirmation,
   projectId,
   sequenceId,
-}) => {
+}) {
   // To pass as a prop to connect to DAW button
   const objects = useObjects(projectId, sequenceId);
   if (!haveFiles) {
@@ -78,8 +78,7 @@ const SequenceHeader = ({
               icon={sequenceAudioError ? 'exclamation' : 'checkmark'}
             />
           )
-          : null
-        }
+          : null}
       </Menu.Item>
       <Menu.Menu position="right">
         <Menu.Item>
@@ -111,7 +110,7 @@ const SequenceHeader = ({
       </Menu.Menu>
     </Menu>
   );
-};
+}
 
 SequenceHeader.propTypes = {
   haveFiles: PropTypes.bool.isRequired,

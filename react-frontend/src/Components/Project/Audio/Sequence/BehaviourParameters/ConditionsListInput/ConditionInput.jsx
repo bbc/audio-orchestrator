@@ -10,15 +10,15 @@ import {
   Input,
   Button,
 } from 'semantic-ui-react';
-import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
-import { deviceTypes } from 'Lib/behaviourTypes';
-import operators from './operators';
-import deviceProperties from './deviceProperties';
-import sessionProperties from './sessionProperties';
-import EnumInput from '../EnumInput';
-import ListOfEnumInput from '../ListOfEnumInput';
-import ListOfEnumWithAdditionInput from '../ListOfEnumWithAdditionInput';
-import ModuloInput from '../ModuloInput';
+import ConfirmDeleteButton from '#Components/ConfirmDeleteButton.jsx';
+import { deviceTypes } from '#Lib/behaviourTypes.js';
+import operators from './operators.jsx';
+import deviceProperties from './deviceProperties.js';
+import sessionProperties from './sessionProperties.js';
+import EnumInput from '../EnumInput.jsx';
+import ListOfEnumInput from '../ListOfEnumInput.jsx';
+import ListOfEnumWithAdditionInput from '../ListOfEnumWithAdditionInput.jsx';
+import ModuloInput from '../ModuloInput.jsx';
 
 const operatorOptions = operators.map(({ name, displayName }) => ({
   key: name,
@@ -62,7 +62,7 @@ const sessionPropertyOptions = sessionProperties.map(({
   name, displayName,
 }) => makePropertyOption('session', name, displayName));
 
-const getPropertyOptions = controls => [
+const getPropertyOptions = (controls) => [
   ...controls.map(({
     controlId, controlName,
   }) => makePropertyOption('deviceControls', controlId, controlName)),
@@ -86,7 +86,7 @@ const getPropertyTypeAndOperators = (property, {
     type,
     controlType,
     controlParameters,
-  } = propertyLists[group].find(p => p.name === name || p.controlId === name) || {};
+  } = propertyLists[group].find((p) => p.name === name || p.controlId === name) || {};
   // TODO adding the || {} avoids a crash if the required control does not exist, but still
   // displays bogus empty data.
 
@@ -103,7 +103,7 @@ const getPropertyTypeAndOperators = (property, {
       case 'checkbox':
         result = {
           type: 'enum',
-          allowedValues: controlParameters.options.map(o => ({
+          allowedValues: controlParameters.options.map((o) => ({
             value: o.value,
             displayName: o.label,
           })),
@@ -156,8 +156,8 @@ const getPropertyTypeAndOperators = (property, {
 
   // Set allowedOperators based on the allowed types defined in operators.js
   result.allowedOperators = operators
-    .filter(o => o.allowedTypes.includes(result.type))
-    .map(o => o.name);
+    .filter((o) => o.allowedTypes.includes(result.type))
+    .map((o) => o.name);
 
   return result;
 };
@@ -254,7 +254,7 @@ class ConditionInput extends React.PureComponent {
       valueType = type;
       valueAllowedValues = allowedValues;
 
-      filteredOperatorOptions = operatorOptions.filter(o => allowedOperators.includes(o.value));
+      filteredOperatorOptions = operatorOptions.filter((o) => allowedOperators.includes(o.value));
       operatorInputEnabled = true;
     }
 
@@ -270,7 +270,7 @@ class ConditionInput extends React.PureComponent {
 
     if (property && operator) {
       valueInputProps.disabled = false;
-      const { valueIsArray } = operators.find(o => o.name === operator) || {};
+      const { valueIsArray } = operators.find((o) => o.name === operator) || {};
 
       if (valueIsArray) {
         valueInputProps.value = conditionValue !== undefined ? conditionValue : [];

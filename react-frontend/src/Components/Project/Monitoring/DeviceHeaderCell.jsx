@@ -6,10 +6,10 @@ import {
 } from 'semantic-ui-react';
 import {
   muteSoloDevice,
-} from 'Actions/monitoring';
-import { deviceTypes } from 'Lib/behaviourTypes';
-import InlineHelpPopup from 'Components/InlineHelpPopup';
-import ConfirmDeleteButton from 'Components/ConfirmDeleteButton';
+} from '#Actions/monitoring.js';
+import { deviceTypes } from '#Lib/behaviourTypes.js';
+import InlineHelpPopup from '#Components/InlineHelpPopup.jsx';
+import ConfirmDeleteButton from '#Components/ConfirmDeleteButton.jsx';
 import {
   getDeviceCurrentNumber,
   deleteOneDevice,
@@ -17,16 +17,16 @@ import {
   toggleDeviceOnOff,
   resetControls,
   useConnectedToDAW,
-} from './helpers';
+} from './helpers.js';
 
-const DeviceHeaderCell = ({
+function DeviceHeaderCell({
   device,
   muteDevices,
   soloDevices,
   objects,
   currentSetup,
   onChangeSetup,
-}) => {
+}) {
   const dispatch = useDispatch();
   const connectedToDAW = useConnectedToDAW();
   const {
@@ -80,13 +80,12 @@ const DeviceHeaderCell = ({
               <Header.Subheader>
                 {joiningNumber === 1
                   ? '  Main'
-                  : '  Aux'
-                }
+                  : '  Aux'}
               </Header.Subheader>
             </Header.Content>
           </Header>
         )}
-        options={deviceTypes.map(option => ({
+        options={deviceTypes.map((option) => ({
           key: option.value,
           icon: option.icon,
           content: option.displayName,
@@ -143,7 +142,7 @@ const DeviceHeaderCell = ({
             onClick={() => {
               dispatch(muteSoloDevice(
                 deviceId,
-                isMuted ? muteDevices.filter(id => id !== deviceId) : [...muteDevices, deviceId],
+                isMuted ? muteDevices.filter((id) => id !== deviceId) : [...muteDevices, deviceId],
                 soloDevices,
                 objects,
                 currentSetup,
@@ -166,7 +165,7 @@ const DeviceHeaderCell = ({
               dispatch(muteSoloDevice(
                 deviceId,
                 muteDevices,
-                isSoloed ? soloDevices.filter(id => id !== deviceId) : [...soloDevices, deviceId],
+                isSoloed ? soloDevices.filter((id) => id !== deviceId) : [...soloDevices, deviceId],
                 objects,
                 currentSetup,
               ));
@@ -176,7 +175,7 @@ const DeviceHeaderCell = ({
       </Button.Group>
     </Table.HeaderCell>
   );
-};
+}
 
 DeviceHeaderCell.propTypes = {
   device: PropTypes.shape({

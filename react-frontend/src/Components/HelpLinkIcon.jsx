@@ -5,11 +5,11 @@ import {
   Icon,
   Button,
 } from 'semantic-ui-react';
-import helpLinks from './helpLinks';
+import helpLinks from './helpLinks.js';
 
-const HelpLinkIcon = ({
+function HelpLinkIcon({
   helpId,
-}) => {
+}) {
   const [open, setOpen] = useState(false);
 
   // If there's no entry for helpId in helpText.js, don't render
@@ -21,7 +21,6 @@ const HelpLinkIcon = ({
   const {
     links = null,
   } = helpLinks[helpId];
-
 
   if (links) {
     return (
@@ -67,7 +66,7 @@ const HelpLinkIcon = ({
   }
 
   return null;
-};
+}
 
 HelpLinkIcon.propTypes = {
   helpId: PropTypes.string.isRequired,

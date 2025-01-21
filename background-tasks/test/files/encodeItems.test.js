@@ -1,14 +1,14 @@
-import { mkdtemp } from 'fs-extra';
-import encodeItems from '../../src/files/encodeItems';
+import { jest } from '@jest/globals';
 
 // mockExecFile as a jest mock function to easily change resolved values for
 const mockExecFile = jest.fn(() => Promise.resolve({ stdout: '', stderr: '' }));
 
-jest.mock('../../src/which', () => jest.fn(name => Promise.resolve(name)));
+jest.unstable_mockModule('../../src/which.js', () => ({ default: jest.fn(name => Promise.resolve(name)) }));
 
 // child_process.execFile as a CPS function wrapping the promise based mockExecFile.
-jest.mock('child_process', () => ({
-  execFile: (file, args, options, cb) => { // TODO - different from definition used in detectItems tests!
+jest.unstable_mockModule('child_process', () => ({
+  // TODO - different from definition used in detectItems tests!
+  execFile: (file, args, options, cb) => {
     mockExecFile(file, args)
       .then((result) => { cb(null, result); })
       .catch((err) => { cb(err, null); });
@@ -25,11 +25,17 @@ jest.mock('async/mapSeries', () => (args, fn) => Promise.all(args.map(arg => new
   });
 }))));
 
-jest.mock('fs-extra', () => ({
+jest.unstable_mockModule('node:fs/promises', () => ({
   mkdir: jest.fn(() => Promise.resolve()),
   mkdtemp: jest.fn(() => Promise.resolve('')),
+}));
+
+jest.unstable_mockModule('node:fs', () => ({
   mkdtempSync: jest.fn(() => ''),
 }));
+
+const { mkdtemp } = await import('node:fs/promises');
+const { default: encodeItems } = await import('../../src/files/encodeItems.js');
 
 beforeEach(() => {
   jest.clearAllMocks();

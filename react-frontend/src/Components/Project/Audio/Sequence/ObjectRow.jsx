@@ -6,12 +6,12 @@ import {
   Checkbox,
 } from 'semantic-ui-react';
 
-import Behaviours from 'Lib/Behaviours';
-import InlineHelpPopup from 'Components/InlineHelpPopup';
-import PanningControl from './PanningControl';
-import Behaviour from './Behaviour';
-import AddBehaviourButton from './AddBehaviourButton';
-import FixedBehaviour from './FixedBehaviour';
+import Behaviours from '#Lib/Behaviours.js';
+import InlineHelpPopup from '#Components/InlineHelpPopup.jsx';
+import PanningControl from './PanningControl.jsx';
+import Behaviour from './Behaviour.jsx';
+import AddBehaviourButton from './AddBehaviourButton.jsx';
+import FixedBehaviour from './FixedBehaviour.jsx';
 
 class ObjectRow extends React.PureComponent {
   render() {
@@ -52,8 +52,7 @@ class ObjectRow extends React.PureComponent {
                     <Icon name="exclamation" />
                     {file.name}
                   </InlineHelpPopup>
-                )
-              }
+                )}
             </Table.Cell>
           )
           : (
@@ -63,8 +62,7 @@ class ObjectRow extends React.PureComponent {
                 <i>No audio file.</i>
               </InlineHelpPopup>
             </Table.Cell>
-          )
-        }
+          )}
 
         <Table.Cell singleLine collapsing>
           <PanningControl
@@ -88,7 +86,7 @@ class ObjectRow extends React.PureComponent {
                   key={behaviourId}
                   behaviourType={behaviourType}
                   behaviourParameters={behaviourParameters}
-                  onChange={newBehaviourParameters => onReplaceObjectBehaviourParameters(
+                  onChange={(newBehaviourParameters) => onReplaceObjectBehaviourParameters(
                     objectNumber,
                     behaviourId,
                     newBehaviourParameters,

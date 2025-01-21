@@ -4,11 +4,11 @@ import PropTypes from 'prop-types';
 import {
   Button, Checkbox, Input, Label,
 } from 'semantic-ui-react';
-import { setCurrentMonitoringSetup } from 'Actions/project';
+import { setCurrentMonitoringSetup } from '#Actions/project.js';
 import {
   getDefaultOrCurrentControlValues,
   replaceDeviceControlValues,
-} from './helpers';
+} from './helpers.js';
 
 const nowrapStyle = { whiteSpace: 'nowrap' };
 
@@ -23,7 +23,7 @@ const updateRadioValues = (values, optionId, checked) => {
 
 // Checkbox: add or remove to the list of values
 const updateCheckboxValues = (values, optionId, checked) => {
-  const result = values.filter(v => v !== optionId);
+  const result = values.filter((v) => v !== optionId);
   if (!checked) {
     return result;
   }
@@ -34,14 +34,14 @@ const updateCheckboxValues = (values, optionId, checked) => {
 // Button: add step to the current value
 const updateButtonValues = (values, step) => [`${Number(values[0]) + step}`];
 
-const ControlsCell = ({
+function ControlsCell({
   control,
   device,
   controls,
   disabled,
   projectId,
   currentSetup,
-}) => {
+}) {
   const dispatch = useDispatch();
 
   const {
@@ -127,7 +127,9 @@ const ControlsCell = ({
                 projectId,
                 replaceDeviceControlValues(
                   updateButtonValues(values, step),
-                  controlId, device, currentSetup,
+                  controlId,
+                  device,
+                  currentSetup,
                 ),
               ),
             )}
@@ -138,7 +140,7 @@ const ControlsCell = ({
     default:
       return null;
   }
-};
+}
 
 ControlsCell.propTypes = {
   control: PropTypes.shape({
