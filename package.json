@@ -23,7 +23,7 @@
     "postinstall": "electron-builder install-app-deps",
     "test": "npm run test:background-tasks",
     "test:background-tasks": "(cd background-tasks && node --experimental-vm-modules ../node_modules/jest/bin/jest --watchAll)",
-    "add-notices": " ESLINT_USE_FLAT_CONFIG=true eslint --config .eslintrc.notice.mjs . --fix"
+    "add-notices": "ESLINT_USE_FLAT_CONFIG=true eslint --config .eslintrc.notice.mjs . --fix"
   },
   "type": "module",
   "main": "electron-app/src/main/main.js",
@@ -86,49 +86,11 @@
     "jest": "30.0.0-alpha.6",
     "lefthook": "1.9.2",
     "license-checker-rseidelsohn": "^4.4.2",
-    "license-to-fail": "^4.0.0",
     "mini-css-extract-plugin": "^2.9.2",
     "string-replace-loader": "^3.1.0",
     "style-loader": "^4.0.0",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
-  },
-  "license-to-fail": {
-    "allowedLicenses": [
-      "MIT",
-      "ISC",
-      "BSD",
-      "Apache",
-      "zlib",
-      "WTFPL"
-    ],
-    "ignoreDevDependencies": true,
-    "allowedPackages": [
-      {
-        "name": "@bbc/audio-orchestration-bbcat-js",
-        "reason": "BBC Software, previously published at bbc/bbcat-js"
-      },
-      {
-        "name": "@bbc/audio-orchestration-cloud-sync-client",
-        "reason": "BBC Software, previously published at 2IMMERSE/cloud-sync"
-      },
-      {
-        "name": "@bbc/audio-orchestration-template",
-        "reason": "BBC Software"
-      },
-      {
-        "name": "@bbc/audio-orchestration-core",
-        "reason": "BBC Software"
-      },
-      {
-        "name": "cycle",
-        "reason": "Souce code comment states that code is in public-domain"
-      },
-      {
-        "name": "weak-map",
-        "reason": "package.json and Readme state it is released under Apache 2.0"
-      }
-    ]
   }
 }

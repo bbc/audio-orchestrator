@@ -4,7 +4,10 @@ This changelog summarises changes for minor and major version bumps that end use
 
 ---
 # `0.23.0`
-  * Reorganise the repository and build scripts in preparation for open source release
+  _2025-01-17_
+  * Re-organise the repository and build scripts for open source release
+  * Update to use ES Modules and remove babel build step for main process code, update various build dependencies
+  * Fix bug where new audio files could not be selected due to Electron API change
   
 # `0.22.2`
   _2024-12-12_
