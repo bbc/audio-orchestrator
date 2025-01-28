@@ -18,9 +18,6 @@
     "**/node_modules/@bbc/audio-orchestration-template/dist/**/*"
   ],
   "removePackageScripts": true,
-  "extraResources": [
-    "./electron-app/build/**/*"
-  ],
   "extraFiles": [
     {
       "from": "./COPYING",
@@ -31,7 +28,7 @@
       "to": "LICENSE-Audio-Orchestrator.txt"
     },
     {
-      "from": "./electron-app/credits.html",
+      "from": "./electron-app/credits2.html",
       "to": "Credits-Audio-Orchestrator.html"
     }
   ],

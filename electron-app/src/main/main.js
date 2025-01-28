@@ -54,8 +54,7 @@ let creditsWin;
 // production. This avoids someone overriding the setting in a packaged app.
 const devMode = process.env.NODE_ENV === 'development' && !app.isPackaged;
 
-// Override the name of the application to use in menu entries (cannot use special characters so not
-// including 'BBC R&D' prefix here).
+// Override the name of the application to use in menu entries
 app.setName('Audio Orchestrator');
 
 // Define default security settings to use for any newly created BrowserWindows.

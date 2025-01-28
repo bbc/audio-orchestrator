@@ -3,6 +3,9 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.23.1`
+  * Change location of support and log files to `~/Library/Application Support/Audio Orchestrator` / `%APPDATA%/Audio Orchestrator`
+
 # `0.23.0`
   _2025-01-17_
   * Re-organise the repository and build scripts for open source release

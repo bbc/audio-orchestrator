@@ -11,7 +11,7 @@ for more details. You should have received a copy of the GNU General Public Lice
 along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
 */// TODO was adding a prefix; which breaks control behaviours that reference a sequenceId; but I
 // don't think the prefix is really needed anyway because we already are within a unique session.
-// const formatContentId = sequenceId => `bbcat-orchestration:${sequenceId}`;
+// const formatContentId = sequenceId => `audio-orchestrator:${sequenceId}`;
 const formatContentId = sequenceId => sequenceId;
 
 const templateConfiguration = (sequences, controls, settings, imageUrls) => {

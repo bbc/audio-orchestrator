@@ -10,7 +10,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public 
 for more details. You should have received a copy of the GNU General Public License
 along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
 *//* eslint-disable max-len */
-// As specified in bbcat-orchestration/schemas/device.json
+// As specified in audio-orchestration-core/schemas/device.json
 const deviceProperties = [
   {
     name: 'deviceIsMain',

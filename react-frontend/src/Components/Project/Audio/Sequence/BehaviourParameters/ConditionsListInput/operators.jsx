@@ -1,6 +1,6 @@
 import React from 'react';
 
-// Based on bbcat-orchestration/src/allocation-algorithm/behaviours/conditionals.js
+// Based on audio-orchestration-core/src/allocation-algorithm/behaviours/conditionals.js
 const operators = [
   {
     name: 'equals',

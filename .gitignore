@@ -94,3 +94,4 @@ typings/
 builds/
 audio-orchestrator.log
 .fake-dep-root
+electron-app/credits2.html

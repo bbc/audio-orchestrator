@@ -1,10 +1,12 @@
 import path from 'node:path';
 import fs from 'node:fs';
 import { fileURLToPath } from 'node:url';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import * as licenseChecker from 'license-checker-rseidelsohn';
 
 const sanitize = s => s.replace('<', '&lt;').replace('>', '&gt;');
 
+// eslint-disable-next-line no-underscore-dangle
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Get information for all production dependencies, starting at electron-app because it imports
@@ -19,7 +21,9 @@ const getCreditInfo = () => new Promise((resolve, reject) => {
   });
 });
 
-const formatCredits = ({ name, repository, licenses, publisher, licenseText }) => {
+const formatCredits = ({
+  name, repository, licenses, publisher, licenseText,
+}) => {
   const frags = [
     '<li tabindex="1">',
     `<h2>${sanitize(name)}</h2>`,
@@ -48,7 +52,9 @@ const writeCreditsFile = (info) => {
   ];
   const credits = Object.entries(info)
     .filter(([name]) => !hiddenDepPrefixes.some(s => name.startsWith(s)))
-    .map(([name, { repository, licenses, publisher, licenseFile }]) => {
+    .map(([name, {
+      repository, licenses, publisher, licenseFile,
+    }]) => {
       let licenseText;
       if (licenseFile && !/readme/i.test(licenseFile) && fs.existsSync(licenseFile)) {
         licenseText = fs.readFileSync(licenseFile, 'utf8').toString();
@@ -81,9 +87,8 @@ const writeCreditsFile = (info) => {
     <h1>About Audio Orchestrator</h1>
     <p><b>Version ${version}</b></p>
     <p><b>Copyright BBC R&amp;D, 2025</b></p>
-    <p>https://www.bbc.co.uk/opensource/projects/project/audio-orchestrator</p>
     <p>https://github.com/bbc/audio-orchestrator</p>
-    <h2>Licence information</h2>
+    <h2>License</h2>
     <p>This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.</p>
     <p>This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.</p>
     <p>You should have received a copy of the GNU General Public License along with this program. If not, see: https://www.gnu.org/licenses/.</p>

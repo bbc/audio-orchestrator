@@ -25,7 +25,7 @@ const realpath = promisify(realpathCB);
 // TODO macOS/Linux specific
 const searchPath = [
   path.join(os.homedir(), 'audio-orchestrator-ffmpeg', 'bin'),
-  path.join(os.homedir(), 'bbcat-orchestration-builder-ffmpeg', 'bin'),
+  path.join(os.homedir(), 'bbcat-orchestration-builder-ffmpeg', 'bin'), // fallback for previous versions
   '/usr/local/bin',
   '/usr/bin',
   '/opt/homebrew/bin',

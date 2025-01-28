@@ -30,7 +30,7 @@ const withOutputDir = (payload, args = {}) => {
           .then(() => args);
       }
 
-      return fse.mkdtemp(path.join(os.tmpdir(), 'bbcat-orchestration-'))
+      return fse.mkdtemp(path.join(os.tmpdir(), 'audio-orchestrator-'))
         .then((d) => {
           outputDir = d;
           return { ...args, outputDir };

@@ -1270,6 +1270,7 @@ export const swapControlOrder = (projectId, controlId, otherControlId) => (dispa
 };
 
 const selectImageFiles = (projectId, multiple = false) => {
+  const { exportFunctions } = window;
   const project = projects[projectId];
   const { images } = project;
   const maxIndex = Object.values(images).reduce((acc, { imageIndex }) => {
@@ -1312,7 +1313,7 @@ const selectImageFiles = (projectId, multiple = false) => {
       const file = fileList[i];
       files.push({
         name: file.name,
-        path: file.path,
+        path: exportFunctions.getPathForFile(file),
       });
     }
 

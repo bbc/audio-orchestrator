@@ -10,7 +10,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public 
 for more details. You should have received a copy of the GNU General Public License
 along with Audio Orchestrator. If not, see <https://www.gnu.org/licenses/>.
 */// sessionProperties don't yet have a schema; implementation is here:
-// bbcat-orchestration/blob/master/src/mdo-allocation/mdo-allocator.js
+// audio-orchestration-core/src/mdo-allocation/mdo-allocator.js
 const sessionProperties = [
   {
     name: 'numDevices',

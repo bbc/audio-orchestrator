@@ -27,7 +27,8 @@ class SequenceChoices extends React.Component {
     if (prevProps.next && next && next.length === prevProps.next.length + 1) {
       const lastChoiceId = next[next.length - 1].choiceId;
       if (lastChoiceId in this.labelRefs) {
-        this.labelRefs[lastChoiceId].select();
+        // this.labelRefs[lastChoiceId].current?.select();
+        // TODO select() not found on adding a choice
       }
     }
   }
@@ -93,7 +94,8 @@ class SequenceChoices extends React.Component {
         // this.handleAddChoice();
         // TODO: enable this again without disregarding the currently edited field's value.
       } else if (nextChoice.choiceId in this.labelRefs) {
-        this.labelRefs[nextChoice.choiceId].select();
+        // this.labelRefs[nextChoice.choiceId].select();
+        // TODO one of these select() calls crashes
       }
     }
   }
