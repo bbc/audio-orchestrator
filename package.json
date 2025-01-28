@@ -8,7 +8,7 @@
   "license": "GPL-3.0-or-later",
   "private": true,
   "engines": {
-    "node": ">=20.0.0"
+    "node": ">=22.0.0"
   },
   "scripts": {
     "build:react-frontend": "(cd react-frontend && webpack --mode production)",
