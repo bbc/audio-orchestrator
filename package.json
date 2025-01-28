@@ -36,8 +36,8 @@
     "#Actions/*": "./react-frontend/src/actions/*"
   },
   "dependencies": {
-    "@bbc/audio-orchestration-core": "^0.1.0",
-    "@bbc/audio-orchestration-template": "^0.1.0",
+    "@bbc/audio-orchestration-core": "^0.1.1",
+    "@bbc/audio-orchestration-template": "^0.1.1",
     "@reduxjs/toolkit": "^1.5.0",
     "async": "^3.0.1",
     "classnames": "^2.2.6",
