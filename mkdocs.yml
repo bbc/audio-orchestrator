@@ -1,0 +1,47 @@
+site_name: Audio Orchestrator documentation
+site_url: https://bbc.github.io/audio-orchestrator/
+copyright: Copyright &copy; 2025 BBC
+theme:
+  name: 'material'
+  font: false
+  palette:
+    primary: 'indigo'
+    accent: 'indigo'
+  favicon: 'images/icon.png'
+nav:
+  - Getting started: index.md
+  - Orchestrated productions: productions.md
+  - Installation instructions:
+    - Overview: installation.md
+    - macOS: installation-mac.md
+    - macOS (manual ffmpeg installation): installation-mac-manual.md
+    - Windows: installation-windows.md
+  - The prototype application: prototype.md
+  - Creating and loading projects: projects.md
+  - Preparing audio assets: preparing-audio.md
+  - Sequences page: sequences.md
+  - Controls page: controls.md
+  - Audio page: audio.md
+  - Behaviour types:
+    - Fixed behaviours: fixed-behaviours.md
+    - Control-linked behaviours: control-linked-behaviours.md
+    - Custom behaviours: custom-behaviours.md
+    - Images and effects behaviour: image-behaviour.md
+  - Monitoring page: monitoring.md
+  - Appearance page: appearance.md
+  - Export page: export.md
+  - Example project: example.md
+  - FAQ: faq.md
+  - Advanced:
+    - The allocation algorithm: allocation-algorithm.md
+    - Customising the prototype application: customise-prototype.md
+    - Using a custom template: custom-template.md
+    - Version change log: change-log.md
+markdown_extensions:
+    - pymdownx.superfences
+    - pymdownx.tabbed
+    - admonition
+    - attr_list
+    - footnotes
+extra_css:
+    - css/extra.css
