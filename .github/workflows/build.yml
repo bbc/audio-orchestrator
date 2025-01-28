@@ -1,0 +1,18 @@
+name: App build
+
+on:
+  push:
+    branches:
+      - add-build-workflow
+jobs:
+  build:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+      - run: npm ci
+      - run: npm run dist
