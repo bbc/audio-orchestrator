@@ -15,7 +15,7 @@ const helpLinks = {
   sequences: {
     links: [
       {
-        link: 'https://bbc.github.io/bbcat-orchestration-docs/sequences/',
+        link: 'https://bbc.github.io/audio-orchestrator/sequences/',
         description: 'Defining sequences',
       },
     ],
@@ -23,7 +23,7 @@ const helpLinks = {
   controls: {
     links: [
       {
-        link: 'https://bbc.github.io/bbcat-orchestration-docs/controls/',
+        link: 'https://bbc.github.io/audio-orchestrator/controls/',
         description: 'Adding controls',
       },
     ],
@@ -31,23 +31,23 @@ const helpLinks = {
   objects: {
     links: [
       {
-        link: 'https://bbc.github.io/bbcat-orchestration-docs/audio/',
+        link: 'https://bbc.github.io/audio-orchestrator/audio/',
         description: 'Handling audio objects',
       },
       {
-        link: 'https://bbc.github.io/bbcat-orchestration-docs/fixed-behaviours/',
+        link: 'https://bbc.github.io/audio-orchestrator/fixed-behaviours/',
         description: 'Fixed behaviours',
       },
       {
-        link: 'https://bbc.github.io/bbcat-orchestration-docs/control-linked-behaviours/',
+        link: 'https://bbc.github.io/audio-orchestrator/control-linked-behaviours/',
         description: 'Control-linked behaviours',
       },
       {
-        link: 'https://bbc.github.io/bbcat-orchestration-docs/custom-behaviours/',
+        link: 'https://bbc.github.io/audio-orchestrator/custom-behaviours/',
         description: 'Custom behaviours',
       },
       {
-        link: 'https://bbc.github.io/bbcat-orchestration-docs/image-behaviour/',
+        link: 'https://bbc.github.io/audio-orchestrator/image-behaviour/',
         description: 'Images and effects behaviour',
       },
     ],
@@ -55,7 +55,7 @@ const helpLinks = {
   monitoring: {
     links: [
       {
-        link: 'https://bbc.github.io/bbcat-orchestration-docs/monitoring/',
+        link: 'https://bbc.github.io/audio-orchestrator/monitoring/',
         description: 'Monitoring your experience',
       },
     ],
@@ -63,7 +63,7 @@ const helpLinks = {
   presentation: {
     links: [
       {
-        link: 'https://bbc.github.io/bbcat-orchestration-docs/appearance/',
+        link: 'https://bbc.github.io/audio-orchestrator/appearance/',
         description: 'Setting the appearance',
       },
     ],
@@ -71,7 +71,7 @@ const helpLinks = {
   export: {
     links: [
       {
-        link: 'https://bbc.github.io/bbcat-orchestration-docs/export/',
+        link: 'https://bbc.github.io/audio-orchestrator/export/',
         description: 'Exporting projects',
       },
     ],

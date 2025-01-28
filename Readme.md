@@ -5,10 +5,10 @@ _Audio Orchestrator_ is a desktop application for prototyping orchestrated audio
 Create a project, import audio files, and author metadata for audio objects, sequence destinations, and user controls to define the experience; then start a preview with real devices on your local network or export a web application bundle to host it on a server.
 
  * [**Download** the latest release](https://github.com/bbc/audio-orchestrator/releases).
- * [**Read** the user guide](https://bbc.github.io/bbcat-orchestration-docs).
+ * [**Read** the user guide](https://bbc.github.io/audio-orchestrator).
  * [**Build** on the template application and client libraries](https://github.com/bbc/audio-orchestration).
 
-_Audio Orchestrator_ requires `ffmpeg` and `ffprobe` to be available in the system path or a specific location in your home directory. For a manual installation, place the binaries in `~/audio-orchestrator-ffmpeg/bin` on macOS and `%HOME%\audio-orchestrator-ffmpeg\bin` on Windows. See the [installation instructions](https://bbc.github.io/bbcat-orchestration-docs/installation/) for more details.
+_Audio Orchestrator_ requires `ffmpeg` and `ffprobe` to be available in the system path or a specific location in your home directory. For a manual installation, place the binaries in `~/audio-orchestrator-ffmpeg/bin` on macOS and `%HOME%\audio-orchestrator-ffmpeg\bin` on Windows. See the [installation instructions](https://bbc.github.io/audio-orchestrator/installation/) for more details.
 
 **NB** _Audio Orchestrator_ by default uses a synchronisation service currently hosted by the BBC, which may go away without warning in the future. We recommend replacing this with your own server. There are [some notes on running a self-hosted cloud-sync server](https://github.com/bbc/audio-orchestration/issues/64).
 
