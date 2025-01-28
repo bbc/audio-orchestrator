@@ -71,14 +71,10 @@ All dependencies and scripts are listed in the single `package.json` at the top 
 
 ## Releases and versions
 
-The [Changelog](./Changelog.md) and [GitHub Releases](https://github.com/bbc/audio-orchestrator/releases) are updated manually, usually on minor version increments (e.g. `0.17.0` to `0.18.0`). We create a Github release linked to a git tag for that version.
+A [GitHub action](.github/workflows/build.yml) automatically attaches built installers to a draft release when a PR is merged into the main branch, and a draft release with the tag name `v${version}` matching the package.json version exists.
 
-To create a release build run the `npm run dist` task. Attach these files to the release on GitHub:
-
-- `dist/Audio Orchestrator-<version>.dmg`
-- `dist/Audio Orchestrator-<version>-arm64.dmg`
-- `dist/Audio Orchestrator Setup <version>.exe`
+NB apps built this way are not signed or notarized by Apple/Microsoft and may require additional authorization to run. This is the same as with the MakerBox installers distributed previously.
 
 ## History
 
-_Audio Orchestrator_ was originally developed in the [BBC R&D](https://www.bbc.co.uk/rd/) Audio Team by Kristian Hentschel with contributions from Jon Francombe, Emma Young, Danial Haddadi, and Sonal Tandon between 2019 and 2022. It was distributed through the BBC _Connected Studio MakerBox_, and to several public pilots on [BBC Taster](https://www.bbc.co.uk/taster/). The software is now available to interested members of the community through this Audio Orchestrator open source repository, but will not see significant further development from the BBC.
+_Audio Orchestrator_ was originally developed in the [BBC R&D](https://www.bbc.co.uk/rd/) Audio Team by Kristian Hentschel with contributions from Jon Francombe, Emma Young, Danial Haddadi, and Sonal Tandon between 2019 and 2022. It was distributed through the BBC _Connected Studio MakerBox_ site, and used in several public pilots on [BBC Taster](https://www.bbc.co.uk/taster/). The software is now available to interested members of the community through this Audio Orchestrator open source repository, but will not see significant further development from the BBC.
