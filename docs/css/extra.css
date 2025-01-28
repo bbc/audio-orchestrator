@@ -1,0 +1,19 @@
+img + em {
+  display: block;
+  text-align: center;
+  font-weight: bold;
+  font-style: italic;
+}
+
+.ao-image-tall {
+	max-height: 400px;
+	width: auto;
+	margin: 0 auto;
+	display: block;
+}
+
+.ao-image-centre {
+	width: auto;
+	margin: 0 auto;
+	display: block;
+}
