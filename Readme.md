@@ -71,9 +71,9 @@ All dependencies and scripts are listed in the single `package.json` at the top 
 
 ## Releases and versions
 
-A [GitHub action](.github/workflows/build.yml) automatically attaches built installers to a draft release when a PR is merged into the main branch, and a draft release with the tag name `v${version}` matching the package.json version exists.
+Pull requests should update the main `package.json` version and run `npm install && npm run credits` before they are merged to ensure the new version is used throughout. Changelog.md should also be manually updated.
 
-NB apps built this way are not signed or notarized by Apple/Microsoft and may require additional authorization to run. This is the same as with the MakerBox installers distributed previously.
+Currently, releases are locally built (`npm run dist`) and manually uploaded to GitHub (macOS, macOS-arm64, Windows).
 
 ## History
 
