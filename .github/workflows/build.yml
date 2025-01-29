@@ -26,10 +26,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: dist
-          path:
-            - dist/Audio Orchestrator-*.dmg.dmg
-            - dist/Audio Orchestrator-Setup *.exe
-            - dist/latest.yml
-            - dist/builder-effective-config.yaml
+          path: |
+            dist/Audio Orchestrator-*.dmg.dmg
+            dist/Audio Orchestrator-Setup *.exe
+            dist/latest.yml
+            dist/builder-effective-config.yaml
         
 
