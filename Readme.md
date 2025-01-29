@@ -71,11 +71,9 @@ All dependencies and scripts are listed in the single `package.json` at the top 
 
 ## Releases and versions
 
-Pull requests should update the main package.json version and run `npm install && npm run credits` to ensure this is used throughout. Changelog.md should also be manually updated.
+Pull requests should update the main `package.json` version and run `npm install && npm run credits` before they are merged to ensure the new version is used throughout. Changelog.md should also be manually updated.
 
-A [GitHub action](.github/workflows/build.yml) automatically builds mac and windows installers on pushes to the main branch. These must then be manually checked and attached to a GitHub release.
-
-NB apps built this way are not signed or notarized by Apple/Microsoft and may require additional authorization to run.
+Currently, releases are locally built (`npm run dist`) and manually uploaded to GitHub (macOS, macOS-arm64, Windows).
 
 ## History
 

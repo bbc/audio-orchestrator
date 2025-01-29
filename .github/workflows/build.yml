@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - upload-artifact-action
 jobs:
   build:
     runs-on: macos-14
@@ -33,6 +32,3 @@ jobs:
             dist/*.exe.blockmap
             dist/*.yaml
             dist/*.yml
-        
-
-# dist/Audio Orchestrator Setup 0.23.1.exe
