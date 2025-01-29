@@ -15,7 +15,7 @@
     "credits": "node scripts/credits.mjs",
     "dev": "concurrently \"npm run dev:react-frontend\" \"NODE_ENV=development electron --inspect=9229 .\"",
     "dev:react-frontend": "(cd react-frontend && webpack-dev-server --hot --host 0.0.0.0 --mode development)",
-    "dist": "((rm -r ./dist || echo '') && npm run credits && cp electron-app/credits.html electron-app/credits2.html && npm run build:react-frontend && electron-builder --config electron-builder.json --mac --win)",
+    "dist": "((rm -r ./dist || echo '') && npm run credits && cp electron-app/credits.html electron-app/credits2.html && npm run build:react-frontend && electron-builder --config electron-builder.json --mac --win --publish never)",
     "lint": "npm run lint:background-tasks && npm run lint:react-frontend && npm run lint:electron-app && npm run lint:logging",
     "lint:background-tasks": "cd background-tasks && eslint src test",
     "lint:electron-app": "cd electron-app && eslint src",

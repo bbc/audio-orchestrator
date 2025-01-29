@@ -71,9 +71,11 @@ All dependencies and scripts are listed in the single `package.json` at the top 
 
 ## Releases and versions
 
-A [GitHub action](.github/workflows/build.yml) automatically attaches built installers to a draft release when a PR is merged into the main branch, and a draft release with the tag name `v${version}` matching the package.json version exists.
+Pull requests should update the main package.json version and run `npm install && npm run credits` to ensure this is used throughout. Changelog.md should also be manually updated.
 
-NB apps built this way are not signed or notarized by Apple/Microsoft and may require additional authorization to run. This is the same as with the MakerBox installers distributed previously.
+A [GitHub action](.github/workflows/build.yml) automatically builds mac and windows installers on pushes to the main branch. These must then be manually checked and attached to a GitHub release.
+
+NB apps built this way are not signed or notarized by Apple/Microsoft and may require additional authorization to run.
 
 ## History
 

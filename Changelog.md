@@ -3,8 +3,10 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
-# `0.23.1`
+# `0.23.1` (public release)
+  _2025-01-29_
   * Change location of support and log files to `~/Library/Application Support/Audio Orchestrator` / `%APPDATA%/Audio Orchestrator`
+  * Change name of default export folder to begin with `audio-orchestrator`.
 
 # `0.23.0`
   _2025-01-17_

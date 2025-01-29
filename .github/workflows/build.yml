@@ -4,10 +4,8 @@ on:
   push:
     branches:
       - main
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
 jobs:
-  build_and_release:
+  build:
     runs-on: macos-14
 
     env:
@@ -23,3 +21,14 @@ jobs:
         run: npm set "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}"
       - run: npm ci
       - run: npm run dist
+      - name: Upload installers to action runs
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path:
+            - dist/Audio Orchestrator-*.dmg.dmg
+            - dist/Audio Orchestrator-Setup *.exe
+            - dist/latest.yml
+            - dist/builder-effective-config.yaml
+        
+
