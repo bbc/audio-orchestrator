@@ -27,9 +27,12 @@ jobs:
         with:
           name: dist
           path: |
-            dist/Audio Orchestrator-*.dmg.dmg
-            dist/Audio Orchestrator-Setup *.exe
-            dist/latest.yml
-            dist/builder-effective-config.yaml
+            dist/*.dmg
+            dist/*.dmg.blockmap
+            dist/*.exe
+            dist/*.exe.blockmap
+            dist/*.yaml
+            dist/*.yml
         
 
+# dist/Audio Orchestrator Setup 0.23.1.exe
