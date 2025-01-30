@@ -1,6 +1,7 @@
 site_name: Audio Orchestrator documentation
 site_url: https://bbc.github.io/audio-orchestrator/
-copyright: Copyright &copy; 2025 BBC
+repo_url: https://github.com/bbc/audio-orchestrator
+copyright: Copyright &copy; BBC
 theme:
   name: 'material'
   font: false
