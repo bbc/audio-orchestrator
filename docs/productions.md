@@ -53,7 +53,7 @@ We've released a number of pilot productions on [BBC Taster](https://www.bbc.co.
 <a name="vostok-k"></a>
 ### The Vostok-K Incident (2018)
 
-** [Find out more](https://www.bbc.co.uk/rd/blog/2018-10-multi-speaker-immersive-audio-metadata){: target=_blank }
+** **[Listen to The Vostok-K Incident](https://vostok.audio.bbctest01.uk/){: target=_blank }** | [Find out more](https://www.bbc.co.uk/rd/blog/2018-10-multi-speaker-immersive-audio-metadata){: target=_blank }
 
 *The Vostok-K Incident* is a short science fiction audio drama produced by [Naked Productions](http://nakedproductions.co.uk/){: target=_blank } as part of the [S3A Project](https://www.s3a-spatialaudio.org/){: target=_blank }. It was our first experimental orchestrated audio production, made before we built *Audio Orchestrator* but using the same underlying framework.
 
