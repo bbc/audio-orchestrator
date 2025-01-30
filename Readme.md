@@ -74,6 +74,14 @@ Pull requests should update the main `package.json` version and run `npm install
 
 Released binaries are currently not signed, so we recommend building Audio Orchestrator yourself from the source code using the instructions above.
 
+## Documentation
+
+The user guide hosted on GitHub pages is built automatically by a GitHub action on changes to the docs/ directory on the main branch; a local preview can be run using the `material-mkdocs` docker image:
+
+```
+docker run --rm -it -p 8000:8000 -v ${PWD}:/docs squidfunk/mkdocs-material
+```
+
 ## History
 
 _Audio Orchestrator_ was originally developed in the [BBC R&D](https://www.bbc.co.uk/rd/) Audio Team by Kristian Hentschel with contributions from Jon Francombe, Emma Young, Danial Haddadi, and Sonal Tandon between 2019 and 2022. It was distributed through the BBC _Connected Studio MakerBox_ site, and used in several public pilots on BBC Taster. The software is now available to interested members of the community through this Audio Orchestrator open source repository, but will not see significant further development from the BBC.
