@@ -3,7 +3,7 @@
   "productName": "Audio Orchestrator",
   "description": "Audio Orchestrator is an production tool for prototyping multi-device audio experiences.",
   "repository": "https://github.com/bbc/audio-orchestrator",
-  "version": "0.23.1",
+  "version": "0.23.2",
   "author": "BBC R&D",
   "license": "GPL-3.0-or-later",
   "private": true,
@@ -36,8 +36,8 @@
     "#Actions/*": "./react-frontend/src/actions/*"
   },
   "dependencies": {
-    "@bbc/audio-orchestration-core": "^0.1.1",
-    "@bbc/audio-orchestration-template": "^0.1.1",
+    "@bbc/audio-orchestration-core": "^0.1.2",
+    "@bbc/audio-orchestration-template": "^0.1.2",
     "@reduxjs/toolkit": "^1.5.0",
     "async": "^3.0.1",
     "classnames": "^2.2.6",
