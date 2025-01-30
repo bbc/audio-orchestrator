@@ -1,9 +1,8 @@
 # Installation instructions
 
-**[Download *Audio Orchestrator* from our GitHub repository](https://github.com/bbc/bbcat-orchestration-builder/releases)**
-
 To install *Audio Orchestrator*, follow the step-by-step instructions to:
 
+* **[download and build *Audio Orchestrator* from our GitHub repository](https://github.com/bbc/audio-orchestrator)**
 * [install *Audio Orchestrator* on **macOS**](installation-mac.md), or
 * [install *Audio Orchestrator* on **Windows**](installation-windows.md).
 
