@@ -4,13 +4,12 @@ _Audio Orchestrator_ is a desktop application for prototyping orchestrated audio
 
 Create a project, import audio files, and author metadata for audio objects, sequence destinations, and user controls to define the experience; then start a preview with real devices on your local network or export a web application bundle to host it on a server.
 
- * [**Download** the latest release](https://github.com/bbc/audio-orchestrator/releases).
  * [**Read** the user guide](https://bbc.github.io/audio-orchestrator).
- * [**Build** on the template application and client libraries](https://github.com/bbc/audio-orchestration).
+ * [**Extend** the template application and client libraries](https://github.com/bbc/audio-orchestration).
 
 _Audio Orchestrator_ requires `ffmpeg` and `ffprobe` to be available in the system path or a specific location in your home directory. For a manual installation, place the binaries in `~/audio-orchestrator-ffmpeg/bin` on macOS and `%HOME%\audio-orchestrator-ffmpeg\bin` on Windows. See the [installation instructions](https://bbc.github.io/audio-orchestrator/installation/) for more details.
 
-**NB** _Audio Orchestrator_ by default uses a synchronisation service currently hosted by the BBC, which may go away without warning in the future. We recommend replacing this with your own server. There are [some notes on running a self-hosted cloud-sync server](https://github.com/bbc/audio-orchestration/issues/64).
+**NB** _Audio Orchestrator_ by default uses a synchronisation server [cloud-sync](https://github.com/2-IMMERSE/cloud-sync) hosted by the BBC, which may go away without warning in the future. We recommend replacing this with your own server by setting its URL in the advanced export settings. There are [some notes on running a self-hosted cloud-sync server](https://github.com/bbc/audio-orchestration/issues/64).
 
 # Architecture overview
 
@@ -73,8 +72,8 @@ All dependencies and scripts are listed in the single `package.json` at the top 
 
 Pull requests should update the main `package.json` version and run `npm install && npm run credits` before they are merged to ensure the new version is used throughout. Changelog.md should also be manually updated.
 
-Currently, releases are locally built (`npm run dist`) and manually uploaded to GitHub (macOS, macOS-arm64, Windows).
+Released binaries are currently not signed, so we recommend building Audio Orchestrator yourself from the source code using the instructions above.
 
 ## History
 
-_Audio Orchestrator_ was originally developed in the [BBC R&D](https://www.bbc.co.uk/rd/) Audio Team by Kristian Hentschel with contributions from Jon Francombe, Emma Young, Danial Haddadi, and Sonal Tandon between 2019 and 2022. It was distributed through the BBC _Connected Studio MakerBox_ site, and used in several public pilots on [BBC Taster](https://www.bbc.co.uk/taster/). The software is now available to interested members of the community through this Audio Orchestrator open source repository, but will not see significant further development from the BBC.
+_Audio Orchestrator_ was originally developed in the [BBC R&D](https://www.bbc.co.uk/rd/) Audio Team by Kristian Hentschel with contributions from Jon Francombe, Emma Young, Danial Haddadi, and Sonal Tandon between 2019 and 2022. It was distributed through the BBC _Connected Studio MakerBox_ site, and used in several public pilots on BBC Taster. The software is now available to interested members of the community through this Audio Orchestrator open source repository, but will not see significant further development from the BBC.
