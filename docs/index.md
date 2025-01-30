@@ -9,7 +9,7 @@
 
 This documentation contains detailed guidance on how to use all of the features of *Audio Orchestrator*. If you just want to get started, it's probably best to read the [tool summary](#what-is-orchestrator) first. There's also an [example project](example.md) that's great for learning about the technology and the tool.
 
-If you run into problems, try this documentation, especially the [FAQ](faq.md) or see if a similar issue was discussed in the [GitHub issues](https://github.com/bbc/bbcat-orchestration-builder/issues).
+If you run into problems, try this documentation, especially the [FAQ](faq.md) or see if a similar issue was discussed in the [GitHub issues](https://github.com/bbc/audio-orchestrator/issues).
 
 <a name="what-is-orchestration"></a>
 ## What is audio device orchestration?
