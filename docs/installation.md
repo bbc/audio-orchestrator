@@ -22,7 +22,3 @@ Once *Audio Orchestrator* is installed, you're ready to go.
 
 !!! Info
     The instructions will also explain how to install the required additional `ffmpeg` and `ffprobe` components.
-
-    Please note the *Audio Orchestrator* terms of use, particularly Clause 7.3.
-
-    *7.3.	You will need to download and install ffmpeg audio encoding software on Your computer for Audio Orchestrator to function. The BBC is not responsible for the provision or this software, or its use by You, and is not responsible or liable for any loss of data or damage to any hardware or software caused. You are wholly responsible for accepting and abiding by any terms and conditions required by any third party to download, install and use ffmpeg.*
