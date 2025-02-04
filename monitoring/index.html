@@ -1,0 +1,1359 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://bbc.github.io/audio-orchestrator/monitoring/">
+      
+      
+        <link rel="prev" href="../image-behaviour/">
+      
+      
+        <link rel="next" href="../appearance/">
+      
+      
+      <link rel="icon" href="../images/icon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.2">
+    
+    
+      
+        <title>Monitoring page - Audio Orchestrator documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.d7758b05.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#monitoring-page" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Audio Orchestrator documentation" class="md-header__button md-logo" aria-label="Audio Orchestrator documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Audio Orchestrator documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Monitoring page
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bbc/audio-orchestrator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Audio Orchestrator documentation" class="md-nav__button md-logo" aria-label="Audio Orchestrator documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Audio Orchestrator documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bbc/audio-orchestrator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting started
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../productions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Orchestrated productions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Installation instructions
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Installation instructions
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation-mac/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    macOS
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation-mac-manual/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    macOS (manual ffmpeg installation)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation-windows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Windows
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prototype/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The prototype application
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projects/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Creating and loading projects
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../preparing-audio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Preparing audio assets
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sequences/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sequences page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controls/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controls page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../audio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Audio page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Behaviour types
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Behaviour types
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fixed-behaviours/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fixed behaviours
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../control-linked-behaviours/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Control-linked behaviours
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom-behaviours/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Custom behaviours
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../image-behaviour/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Images and effects behaviour
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Monitoring page
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Monitoring page
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-system-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring system options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#virtual-devices-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Virtual devices table
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Virtual devices table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#device-metadata-and-buttons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Device metadata and buttons
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      Control values
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#allocated-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Allocated objects
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connecting-to-a-digital-audio-workstation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connecting to a digital audio workstation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connecting to a digital audio workstation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#laying-out-your-daw-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      Laying out your DAW session
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connecting-directly-to-reaper" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connecting directly to REAPER
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connecting-using-the-miem-matrix-router" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connecting using the MIEM Matrix Router
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appearance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Appearance page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../export/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Export page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../example/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Example project
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            Advanced
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../allocation-algorithm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The allocation algorithm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customise-prototype/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Customising the prototype application
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom-template/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using a custom template
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../change-log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version change log
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring-system-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      Monitoring system options
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#virtual-devices-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      Virtual devices table
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Virtual devices table">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#device-metadata-and-buttons" class="md-nav__link">
+    <span class="md-ellipsis">
+      Device metadata and buttons
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      Control values
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#allocated-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      Allocated objects
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connecting-to-a-digital-audio-workstation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connecting to a digital audio workstation
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connecting to a digital audio workstation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#laying-out-your-daw-session" class="md-nav__link">
+    <span class="md-ellipsis">
+      Laying out your DAW session
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connecting-directly-to-reaper" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connecting directly to REAPER
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#connecting-using-the-miem-matrix-router" class="md-nav__link">
+    <span class="md-ellipsis">
+      Connecting using the MIEM Matrix Router
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="monitoring-page">Monitoring page</h1>
+<p>When you're designing an experience, it's really useful to be able to check what the audience will see and hear. With <em>Audio Orchestrator</em>, you can do this by generating a preview of the experience (on the <a href="../export/">Export page</a>). But that can be quite a slow process—for example, you'll have to reconnect devices every time you make a change.</p>
+<p>Monitoring your experience is particularly necessary for orchestrated productions because in many cases you won't know exactly what the end reproduction system will be, and your experience needs to be able to adapt to different combinations of devices.</p>
+<p>The Monitoring page in <em>Audio Orchestrator</em> can be used to test out your behaviours by visually inspecting them and/or listening to the effect that they have on a virtual device setup.</p>
+<ul>
+<li>You can add any number of virtual devices with different properties (such as <a href="../controls/">control values</a> or any <a href="../custom-behaviours/#device-metadata">device metadata</a> that can be used by behaviours) and see how your objects are allocated.</li>
+<li>You can switch between preset device setups, or create and store your own custom setups.</li>
+<li>You can connect <em>Audio Orchestrator</em> to your digital audio workstation (DAW) so that you can control playback and listen to the effect of your behaviours on the mix.</li>
+</ul>
+<h2 id="monitoring-system-options">Monitoring system options</h2>
+<p>At the top of the Monitoring page, there are tabs to move between the sequences of your experience.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>When you change sequences in either of the Monitoring or Audio pages, that change will also be reflected on the other page so you can move freely between the two pages.</p>
+</div>
+<p>There are also various buttons that control elements of the monitoring system.</p>
+<ul>
+<li>The <strong>Connect to DAW</strong> button will connect <em>Audio Orchestrator</em> to your digital audio workstation (DAW). The first time this option is used, a settings dialogue box will be shown. The settings can be opened again by clicking the cog icon next to the "Connect to DAW" button. See the <a href="#daw-connect">Connecting to a digital audio workstation</a> documentation for more details on connecting to a DAW.</li>
+<li>The <strong>Play/pause</strong> button will control audio playback when <em>Audio Orchestrator</em> is connected to the REAPER DAW.</li>
+<li>The <strong>Rerun allocation algorithm</strong> button causes the <a href="../allocation-algorithm/">allocation algorithm</a> to be rerun without needing any of the changes that would normally cause that to happen (a device being added or dropping out, or a control value changing). This can be useful for testing different possible random allocations.</li>
+</ul>
+<p>The next three buttons are about the virtual device setup.</p>
+<ul>
+<li>The <strong>Load device setup</strong> button brings up a list of existing device setups (either presets or setups that you've added to the project) that you can load. Click on a setup label to load that setup. The current setup (i.e. the collection of devices currently displayed in the table) will be overwritten.</li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>When you load a new virtual device setup, the current setup will be overwritten without warning. So make sure you've saved any changes to the current setup that you'd like to keep.</p>
+</div>
+<ul>
+<li>The <strong>Save this device setup</strong> button saves the current setup (that is, the group of virtual devices shown in the table and any control settings). You'll see icons for the devices in the current setup. Type the name you'd like to use to refer to the setup, then click Save.</li>
+</ul>
+<p><img alt="Screenshot of the save current device setup dialogue box, showing icons for the devices in the current setup, a text box for naming the setup, and cancel and save buttons" src="../images/monitoring/save.png" />
+<em>Save current device setup dialogue</em></p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Saved device setups are stored in the <code>.orc</code> project file, and are only available in the project from which they were saved.</p>
+</div>
+<ul>
+<li>The <strong>Manage device setups</strong> button opens a dialogue where you can manage the device setups saved into the current project. You'll see a list of any custom setups that you've saved into the project, followed by the three preset setups. You can delete all custom setups (using the red delete button at the top of the list) or individual setups (using the grey delete button next to each setup). You cannot delete preset setups.</li>
+</ul>
+<p><img alt="Screenshot of the manage device setups dialogue box, showing the custom and preset device setups, with a delete button for the custom setups" src="../images/monitoring/manage.png" />
+<em>Manage device setups dialogue</em></p>
+<p>The final two buttons relate to the virtual devices in the current setup.</p>
+<ul>
+<li>
+<p>The <strong>Delete all devices</strong> button deletes all devices from the current setup (with the exception of the main device, which can't be deleted). You'll be asked to confirm this action.</p>
+</li>
+<li>
+<p>The <strong>Add device</strong> button can be used to add a new virtual device into the table. You can choose whether the new device is a desktop/laptop, mobile, or tablet (though this can also be changed in the virtual devices table).</p>
+</li>
+</ul>
+<p><a name="virtual-devices-table"></a></p>
+<h2 id="virtual-devices-table">Virtual devices table</h2>
+<p>The main element of the <em>Audio Orchestrator</em> Monitoring page is a table of <em>virtual devices</em>, simulating devices that are connected into your experience. Each device appears as a column of the virtual devices table.</p>
+<p><img alt="Screenshot of the virtual devices table as described in the documentation" src="../images/monitoring/virtual-devices-table.png" />
+<em>The virtual devices table with three devices. Different objects are allocated to the two aux devices because of their control values.</em></p>
+<h3 id="device-metadata-and-buttons">Device metadata and buttons</h3>
+<p>In the top row of the table, you can see and modify some information about the <a href="../custom-behaviours/#metadata"><em>device metadata</em></a> for each device.</p>
+<ul>
+<li>An icon shows the device type (desktop/laptop, mobile, or tablet). Click the icon or dropdown arrow to change the device type.</li>
+<li>There are two numbers shown for each device.<ul>
+<li>The first is the <strong>joining number</strong>. This number specifies the order in which aux devices join the session. The main device has joining number 1.</li>
+<li>The second is the <strong>current number</strong>. This is the joining number after it is corrected for any devices that have dropped out of the session.</li>
+</ul>
+</li>
+<li>The is also an indication of device role (main or aux).</li>
+</ul>
+<p>The joining number, current number, and device role cannot be changed manually. The first device is always the main device.</p>
+<p>Below the device metadata there is a collection of buttons.</p>
+<ul>
+<li>The <strong>On/off</strong> button switches the device on or off. Switch a device off to temporarily remove it from the setup.</li>
+<li>The <strong>Delete</strong> button permenantly removes a device from the setup.</li>
+<li>The <strong>Reset</strong> button resets all controls on the device to their default values.</li>
+<li>The <strong>Mute</strong> button mutes audio objects that are only allocated to the device (when connected to a DAW).</li>
+<li>The <strong>Solo</strong> button solos the audio objects that are allocated to the device (when connected to a DAW).</li>
+</ul>
+<p><img alt="Screenshot of the device metadata and buttons for two virtual devices" src="../images/monitoring/device-metadata.png" />
+<em>Device metadata and buttons for a main device and an aux device</em></p>
+<h3 id="control-values">Control values</h3>
+<p>Below the device metadata and buttons, the table contains a row for each of the controls (i.e. those that you've set up on the <a href="../controls/">Controls page</a>). The control name appears in the leftmost column. In the table cells for each virtual device, you can interact with the control just like you could on connected devices in your previewed or exported <a href="../prototype/">prototype application</a>. Interacting with any control will cause the <a href="../allocation-algorithm/">allocation algorithm</a> to be rerun, therefore reallocating the audio objects.</p>
+<p>The control rows can be minimised or maximised by clicking the controls header row (which shows a downward- or sideways-facing arrow).</p>
+<p>Controls may not be visible in all sequences of an experience, or on all device roles (i.e. main or aux devices), depending on the settings on the <a href="../controls/">Controls page</a>. When a control is not visible on a device, it still maintains its current value (or the default value if a value has not been set by the listener). In sequences where a control is not visible, it will still be shown in the monitoring system virtual devices table. However, that control will be greyed out and you will be unable to interact with it. Hovering the mouse over the greyed-out control will show the sequences in which that control is enabled.</p>
+<h3 id="allocated-objects">Allocated objects</h3>
+<p>For each device, the final row of the table shows a label for each audio object that is currently allocated. The allocation will update every time a change causes the <a href="../allocation-algorithm/">allocation algorithm</a> to be rerun (for example, a device being added or dropping out; a control value changing; or a <a href="../audio/#behaviours">behaviour</a> or <a href="../controls/">control</a> being added, removed, or edited in Audio Orchestrator).</p>
+<p>If any behaviours cause a gain adjustment (for example, the <a href="../custom-behaviours/#gain-adjustment"><em>Gain adjustment if</em></a> or <a href="../custom-behaviours/#mute-if"><em>Mute if</em></a> behaviours), this will be shown in the object label. (Gain changes are not currently reflected in the audio monitoring when <em>Audio Orchestrator</em> is connected to a DAW.)</p>
+<p><a name="daw-connect"></a></p>
+<h2 id="connecting-to-a-digital-audio-workstation">Connecting to a digital audio workstation</h2>
+<p><em>Audio Orchestrator</em> can connect to your DAW so that you can play and pause the audio playback and listen to the effect that any behaviours you've authored will have on your mix (for the current device setup in the monitoring system).</p>
+<p>There are two ways of making the connection: you can connect directly to the REAPER DAW, or you can use a third party plugin. Connection instructions for each version are given below.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p><em>Audio Orchestrator</em> uses <a href="http://opensoundcontrol.org/">Open Sound Control</a> (OSC) messages to communicate with the DAW. Messages are sent over a <a href="https://en.wikipedia.org/wiki/User_Datagram_Protocol">UDP port</a>.</p>
+</div>
+<h3 id="laying-out-your-daw-session">Laying out your DAW session</h3>
+<p>With either connection method, it is very important that there is one track for each of your audio objects, and that the <a href="../preparing-audio/#requirements">number at the beginning of the object filename</a> matches the track number in your DAW.</p>
+<p>Note that when you switch between <a href="../sequences/">sequences</a> in your <em>Audio Orchestrator</em> project, you might need to navigate to a different part of your DAW project (or even open a different session).</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>If you're working in an existing DAW project, it is recommended to backup your original file and/or to work on a copy of the file.</p>
+</div>
+<h3 id="connecting-directly-to-reaper">Connecting directly to REAPER</h3>
+<p>Follow the steps below to connect <em>Audio Orchestrator</em> directly to REAPER. You'll be able to control playback (play/pause) from <em>Audio Orchestrator</em>, and objects will be muted when they are not allocated to one or more of the virtual devices that you've set up in the monitoring system.</p>
+<p>In REAPER:</p>
+<ol>
+<li>Open <code>Preferences</code>, go to <code>Control/OSC/web</code> and click "Add".</li>
+<li>In the dialogue box that opens, select <code>OSC (Open Sound Control)</code> in the Control surface mode dropdown menu. Some further options will appear.<ol>
+<li>If you like, add a device name (for example, "Audio Orchestrator").</li>
+<li>Select <code>Local port (receive only)</code> in the Mode dropdown menu.</li>
+<li>Set the Local listen port to a port number between 1 and 65535 (or just use the default value of 8000).</li>
+</ol>
+</li>
+<li>Click "OK" to close the <em>Control Surface Settings</em> dialogue, then "OK" again to close the REAPER preferences.</li>
+</ol>
+<p>In <em>Audio Orchestrator</em>:</p>
+<ol>
+<li>Open the Connection settings diagloue box by clicking the cog icon next to the "Connect to DAW" button (this will open automatically the first time you click "Connect to DAW").</li>
+<li>Select <em>Direct control of REAPER DAW</em>.</li>
+<li>Set the OSC port number to the same port number that you used in REAPER.</li>
+<li>Click "Connect" to make the connection.</li>
+</ol>
+<p>You can stop the connection by clicking "Disconnect from DAW".</p>
+<h3 id="connecting-using-the-miem-matrix-router">Connecting using the MIEM Matrix Router</h3>
+<p>If you are not using REAPER, then you can connect <em>Audio Orchestrator</em> to your DAW using a third party plugin, the MIEM Matrix Router. Follow the steps below to make the connection. As with the direct REAPER connection, objects will be muted when they are not allocated to one or more of the virtual devices that you've set up in the monitoring system. But with this connection method, you won't be able to control playback using the play/pause button.</p>
+<ol>
+<li>Install the <a href="https://miem.laras.be/downloads/">MIEM Matrix Router VST plugin</a> (follow the link and scroll down to MIEM Matrix Router: VST/AU plug-in). Plug-in installation methods will vary depending on your operating system and DAW.</li>
+<li>Set up the track routing in your DAW project.<ol>
+<li>Create a new track and name it "Audio Orchestrator monitoring" or similar.</li>
+<li>Add the 64 channel MIEM Matrix Router VST plug-in to this track.</li>
+<li>In the Matrix Router window, set <em>Listen to OSC on UDP port</em> to a number between 1 and 65535, then click Connect.</li>
+<li>Route each of your mono object tracks to the corresponding input to your monitoring track (the one with the MIEM Matrix Router plug-in). Make sure that each object track is <strong>not</strong> also routed to the main output—it should only output through the Matrix Router. The method of doing this will vary depending on the DAW you're using.</li>
+</ol>
+</li>
+</ol>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The Matrix Router input should be the same as the numerical prefix for your object in Audio Orchestrator. If the file <code>1_example.wav</code> is on track 1 of your DAW project, then track 1 should be routed to input 1 of the Matrix Router.</p>
+</div>
+<ol>
+<li>Set up the connection in <em>Audio Orchestrator</em>.<ol>
+<li>Open the Connection settings dialogue box by clicking the cog icon next to the "Connect to DAW" button (this will open automatically the first time you click "Connect to DAW").</li>
+<li>Select <em>Use MIEM Matrix Router VST plug-in</em>.</li>
+<li>Set the OSC port number to the same port number that you used in the Matrix Router plug-in.</li>
+<li>Click "Connect" to make the connection.</li>
+</ol>
+</li>
+</ol>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; BBC
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f13b1293.min.js"></script>
+      
+    
+  </body>
+</html>

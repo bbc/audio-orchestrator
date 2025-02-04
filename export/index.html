@@ -1,0 +1,1241 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://bbc.github.io/audio-orchestrator/export/">
+      
+      
+        <link rel="prev" href="../appearance/">
+      
+      
+        <link rel="next" href="../example/">
+      
+      
+      <link rel="icon" href="../images/icon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.2">
+    
+    
+      
+        <title>Export page - Audio Orchestrator documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.d7758b05.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#export-page" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Audio Orchestrator documentation" class="md-header__button md-logo" aria-label="Audio Orchestrator documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Audio Orchestrator documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Export page
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bbc/audio-orchestrator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Audio Orchestrator documentation" class="md-nav__button md-logo" aria-label="Audio Orchestrator documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Audio Orchestrator documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bbc/audio-orchestrator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting started
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../productions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Orchestrated productions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Installation instructions
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Installation instructions
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation-mac/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    macOS
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation-mac-manual/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    macOS (manual ffmpeg installation)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation-windows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Windows
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prototype/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The prototype application
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projects/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Creating and loading projects
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../preparing-audio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Preparing audio assets
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sequences/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sequences page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controls/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controls page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../audio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Audio page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Behaviour types
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Behaviour types
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fixed-behaviours/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fixed behaviours
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../control-linked-behaviours/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Control-linked behaviours
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom-behaviours/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Custom behaviours
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../image-behaviour/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Images and effects behaviour
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Monitoring page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appearance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Appearance page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Export page
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Export page
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Export settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export" class="md-nav__link">
+    <span class="md-ellipsis">
+      Export
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Export">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#previewing-your-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Previewing your project
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exporting-your-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exporting your project
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../example/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Example project
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            Advanced
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../allocation-algorithm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The allocation algorithm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customise-prototype/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Customising the prototype application
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom-template/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using a custom template
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../change-log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version change log
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#validation" class="md-nav__link">
+    <span class="md-ellipsis">
+      Validation
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      Export settings
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#export" class="md-nav__link">
+    <span class="md-ellipsis">
+      Export
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Export">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#previewing-your-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Previewing your project
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exporting-your-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Exporting your project
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="export-page">Export page</h1>
+<p>The output from using <em>Audio Orchestrator</em> is a <a href="../prototype/">prototype web application</a> for the orchestrated audio experience that you've built. From the Export page, the application can either be <a href="#export-preview">previewed</a> or <a href="#export-export">exported</a>.</p>
+<ul>
+<li>
+<p>If you preview the application, all you need to do is point your browser at the right URL (which will be shown in <em>Audio Orchestrator</em>)—but you'll have to have <em>Audio Orchestrator</em> running and can only connect devices on the same network.</p>
+</li>
+<li>
+<p>If you export, you'll need to set up a server to host the application somewhere. It can then be accessed by anyone with the link, and devices can even connect to the same session from different networks.</p>
+</li>
+</ul>
+<p>The Export page has a <a href="./#export-validation">validation section</a>, where you can see if there are any problems that will stop the preview or export from working. It has some <a href="./#export-settings">advanced settings</a>—in the majority of cases, these can be safely left at their defaults. And finally, it has <a href="./#export-buttons">buttons</a> for starting a preview or exporting the application.</p>
+<p><a name="export-validation"></a></p>
+<h2 id="validation">Validation</h2>
+<p>The <strong>validation</strong> section shows whether or not valid settings have been made throughout the project.</p>
+<ul>
+<li>
+<p>Boxes with a tick and a green background show that the settings are fine.</p>
+</li>
+<li>
+<p>Boxes with an exclamation mark and a yellow background indicate a warning. You'll still be able to preview or export the application, but might want to consider making adjustments.</p>
+</li>
+<li>
+<p>Boxes with a cross and a red background indicate an error. You won't be able to preview or export without fixing these.  </p>
+</li>
+</ul>
+<p>If you see a warning or error, there'll be a button on the right hand side of the box that will take you to the page in <em>Audio Orchestrator</em> where you can fix the problem.</p>
+<p>There are two columns of status boxes.</p>
+<ul>
+<li>
+<p>The left hand column shows the status of various <strong>settings</strong>.</p>
+<ul>
+<li>
+<p><strong>Appearance settings</strong> shows whether the settings on the <a href="../appearance/">Appearance page</a> are complete and valid.</p>
+</li>
+<li>
+<p><strong>Advanced settings</strong> shows whether the <a href="#export-settings">advanced settings</a> on the Export page are complete and valid.</p>
+</li>
+<li>
+<p><strong>Image file</strong> shows whether the <a href="../appearance/#cover-image">image</a> added on the Appearance page is valid.</p>
+</li>
+</ul>
+</li>
+<li>
+<p>The right hand column shows the status of each <a href="../sequences/">sequence</a>.</p>
+</li>
+</ul>
+<p><a name="export-settings"></a></p>
+<h2 id="export-settings">Export settings</h2>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The export settings section includes various advanced settings related to the <a href="../prototype/">prototype application</a>. These are hidden by default, and in most situations you will not need to change them.</p>
+</div>
+<p>To edit the <strong>advanced settings</strong>, click on the arrow or "Advanced settings" label.</p>
+<ul>
+<li>
+<p><strong>Short joining link</strong>. On the instructions page of the <a href="../prototype/">prototype application</a>, there is a link to the connect page for adding an aux device. It's possible to shorten this link using a URL-shortening service. You can change the link that's displayed to the listener here.</p>
+</li>
+<li>
+<p><strong>Synchronisation Service</strong>. Synchronisation between devices can either utilise a synchronisation server (Cloud-Sync) or be performed in the browser (PeerJS). See below for more information on these.</p>
+</li>
+<li>
+<p><strong>Custom Cloud-Sync service hostname</strong> and <strong>Port number</strong>. By default, a server hosted by BBC R&amp;D is used. If you are running your own <a href="https://github.com/2-IMMERSE/cloud-sync">Cloud-Sync server</a>, you can point to its hostname here. The port number is only required for servers not using an SSL certificate and should be left empty to use a default secure WebSocket (<code>wss://</code>) connection.</p>
+</li>
+<li>
+<p><strong>Audio base URL</strong>. If the audio files are served from a separate content delivery network, the URL can be set in this field.</p>
+</li>
+<li>
+<p><strong>Custom template path</strong>. You can point to a template directory on your computer to use instead of the built-in prototype application template, if you wish to make additional changes to its functionality or appearance in the source code. See <a href="../custom-template/">Using a custom template</a> for more information on this feature.</p>
+</li>
+</ul>
+<div class="admonition info cloud-sync">
+<p class="admonition-title">Info</p>
+<p><a href="https://github.com/2-IMMERSE/cloud-sync">Cloud-Sync</a> is a collection of programs running on a server and facilitates synchronisation, messaging, and sharing of content timelines between devices in all sessions. The BBC is running a public server for Audio Orchestrator users to evaluate it, but it is recommended to set up your own server for larger-scale production use. It was developed by the BBC and others as part of the 2-IMMERSE project.</p>
+</div>
+<div class="admonition info peerjs">
+<p class="admonition-title">Info</p>
+<p><a href="https://peerjs.com/">PeerJS</a> is a library for making peer-to-peer connections directly between devices. The authors run a public server to facilitate the initial connection, but all information about the content and synchronisation is then exchanged directly between devices. In effect, some key parts of the Cloud-Sync software are running within the web browser on the main device for each session, instead of a central server.</p>
+<p>Support for PeerJS in the prototype application is experimental and may not be as reliable or achieve as accurate synchronisation as Cloud-Sync.</p>
+</div>
+<p><a name="export-buttons"></a></p>
+<h2 id="export">Export</h2>
+<p>The <strong>export</strong> section has two options: "Start preview" and "Export".</p>
+<p>If there are any errors in the <a href="#export-validation">validation settings</a>, you won't be able to preview or export. Fix the errors then return to the Export page.</p>
+<p><a name="export-preview"></a></p>
+<h3 id="previewing-your-project">Previewing your project</h3>
+<p>Clicking "Start preview" will run the prototype application locally. All you'll need to do is point your browser at the right URL (which will be shown in <em>Audio Orchestrator</em>)—but you'll have to have <em>Audio Orchestrator</em> running and can only connect devices on the same network.</p>
+<p>When you click "Start preview", the "Export as preview" dialogue will open. You'll see a progress bar whilst <em>Audio Orchestrator</em> prepares your application. This may take a bit of time, particularly for projects with many audio files. When this process has finished, you'll see a web link that lets you try out your experience on any device that's connected to the same network as the device on which you're running <em>Audio Orchestrator</em>. There are a few ways to open the link.</p>
+<ul>
+<li>Type the link into your browser (or copy and paste it).</li>
+<li>Scan the QR code.</li>
+<li>Click the "Open in browser" button.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The link to your application might look slightly different to the type of link you're used to—it will be made up of numbers separated by fullstops and colons. This is an IP address and will work just like a normal web link in your browser.</p>
+</div>
+<p>Clicking "Stop preview" will stop the preview so you can make changes to the experience.</p>
+<p><a name="export-export"></a></p>
+<h3 id="exporting-your-project">Exporting your project</h3>
+<p>Clicking "Export" will allow you to save the code and audio files that make up your experience. This means that you can host the experience wherever you like, and that devices connecting to a session will not need to be on the same network.</p>
+<p>When you click "Export", you'll see a progress bar whilst <em>Audio Orchestrator</em> prepares your application. This may take a bit of time, particularly for projects with many audio files. When this process has finished, you'll see a save dialogue. Choose where you'd like to save your application then click "Save". Then click "Close" to return to <em>Audio Orchestrator</em>, or "Show in folder" to reveal your exported files.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>To try out your exported application locally, you won't just be able to open the <code>index.html</code> file; you'll need to serve the application. A simple way of doing this is using the <em>Python 3</em> <code>http.server</code>.</p>
+<ul>
+<li>Open <em>Terminal</em>.</li>
+<li>Navigate to the <code>dist</code> folder of your exported application.</li>
+<li>Run <code>python -m http.server 8000</code>.</li>
+<li>In the browser, navigate to <code>localhost:8000</code>.</li>
+</ul>
+<p>Note that these commands assume that you're using <em>Python 3</em>. You can check which version you're using by typing <code>python -V</code> into <em>Terminal</em>.</p>
+<p>With a local server, you'll only be able to connect devices that are connected to the same network as the hosting device.</p>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; BBC
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f13b1293.min.js"></script>
+      
+    
+  </body>
+</html>

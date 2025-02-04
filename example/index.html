@@ -1,0 +1,1276 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://bbc.github.io/audio-orchestrator/example/">
+      
+      
+        <link rel="prev" href="../export/">
+      
+      
+        <link rel="next" href="../faq/">
+      
+      
+      <link rel="icon" href="../images/icon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.2">
+    
+    
+      
+        <title>Example project - Audio Orchestrator documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.d7758b05.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+    
+    
+      <link rel="stylesheet" href="../css/extra.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#example-project-getting-started-with-orchestration" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Audio Orchestrator documentation" class="md-header__button md-logo" aria-label="Audio Orchestrator documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Audio Orchestrator documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Example project
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/bbc/audio-orchestrator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Audio Orchestrator documentation" class="md-nav__button md-logo" aria-label="Audio Orchestrator documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Audio Orchestrator documentation
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/bbc/audio-orchestrator" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M439.55 236.05 244 40.45a28.87 28.87 0 0 0-40.81 0l-40.66 40.63 51.52 51.52c27.06-9.14 52.68 16.77 43.39 43.68l49.66 49.66c34.23-11.8 61.18 31 35.47 56.69-26.49 26.49-70.21-2.87-56-37.34L240.22 199v121.85c25.3 12.54 22.26 41.85 9.08 55a34.34 34.34 0 0 1-48.55 0c-17.57-17.6-11.07-46.91 11.25-56v-123c-20.8-8.51-24.6-30.74-18.64-45L142.57 101 8.45 235.14a28.86 28.86 0 0 0 0 40.81l195.61 195.6a28.86 28.86 0 0 0 40.8 0l194.69-194.69a28.86 28.86 0 0 0 0-40.81"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Getting started
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../productions/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Orchestrated productions
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Installation instructions
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Installation instructions
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation-mac/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    macOS
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation-mac-manual/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    macOS (manual ffmpeg installation)
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation-windows/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Windows
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../prototype/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The prototype application
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../projects/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Creating and loading projects
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../preparing-audio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Preparing audio assets
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sequences/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Sequences page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../controls/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Controls page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../audio/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Audio page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_10" id="__nav_10_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Behaviour types
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            Behaviour types
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../fixed-behaviours/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Fixed behaviours
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../control-linked-behaviours/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Control-linked behaviours
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom-behaviours/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Custom behaviours
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../image-behaviour/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Images and effects behaviour
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../monitoring/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Monitoring page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../appearance/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Appearance page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../export/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Export page
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  <span class="md-ellipsis">
+    Example project
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  <span class="md-ellipsis">
+    Example project
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#project-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Project overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opening-the-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Opening the project
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-sequences-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Sequences page
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-controls-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Controls page
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-audio-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Audio page
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Audio page">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intro-sequence-panning-and-fixed-behaviours" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Intro" sequence: panning and fixed behaviours
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#radio-buttons-sequence-using-control-linked-behaviours" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Radio Buttons" sequence: using control-linked behaviours
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-monitoring-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Monitoring page
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-appearance-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Appearance page
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-export-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Export page
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <label class="md-nav__link" for="__nav_16" id="__nav_16_label" tabindex="0">
+            
+  
+  <span class="md-ellipsis">
+    Advanced
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            Advanced
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../allocation-algorithm/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    The allocation algorithm
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../customise-prototype/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Customising the prototype application
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../custom-template/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Using a custom template
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../change-log/" class="md-nav__link">
+        
+  
+  <span class="md-ellipsis">
+    Version change log
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#project-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      Project overview
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#opening-the-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      Opening the project
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-sequences-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Sequences page
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-controls-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Controls page
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-audio-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Audio page
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Audio page">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#intro-sequence-panning-and-fixed-behaviours" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Intro" sequence: panning and fixed behaviours
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#radio-buttons-sequence-using-control-linked-behaviours" class="md-nav__link">
+    <span class="md-ellipsis">
+      "Radio Buttons" sequence: using control-linked behaviours
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-monitoring-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Monitoring page
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-appearance-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Appearance page
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-export-page" class="md-nav__link">
+    <span class="md-ellipsis">
+      The Export page
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="example-project-getting-started-with-orchestration">Example project: "Getting started with orchestration"</h1>
+<p>We have produced an example <em>Audio Orchestrator</em> project called "Getting started with orchestration" that shows off some of the features of the technology and the production tool. You can use this as a starting point for learning about how to use the tool.</p>
+<h2 id="project-overview">Project overview</h2>
+<p>This example demonstrates some straightforward behaviours and the use of radio buttons as a <a href="../controls/">user control</a>. If you <a href="../export/#export-preview">preview</a> the demo in your browser, the audio will guide you through the steps required to connect an aux device and help you check that sound can be heard on the connected device. You’ll also see a set of radio button controls in action and you’ll be able to use them to switch different audio objects on and off.</p>
+<p>In the sections below, we'll talk you through the <em>Audio Orchestrator</em> project for the "Getting started with orchestration" example.</p>
+<h2 id="opening-the-project">Opening the project</h2>
+<p>Once you've opened <em>Audio Orchestrator</em>, click "Open" and navigate to the example project file <code>Getting_started_with_orchestration.orc</code>.</p>
+<h2 id="the-sequences-page">The Sequences page</h2>
+<p>You’ll land on the <a href="../sequences/">Sequences page</a> and see that the demo is made up of six sequences. These independent sections of content have either one or two <a href="../sequences/#sequence-destinations"><em>sequence destinations</em></a> assigned (shown in brackets next to the "Sequence destinations" sections of the sequence cards). Click on the sequence destination dropdowns to view these assignments to get a feel for the user journey through the experience. You’ll see the button text associated with each sequence and the sequence destination assigned to each button.</p>
+<p>In the <a href="../sequences/#sequence-settings"><em>sequence settings</em></a> dropdowns, you’ll see that some sequences are set to loop until the listener makes a choice with the button(s) displayed on the main device throughout, while others are set to display the button(s) only at the end of a sequence, when the audio has finished playing out. In the sequence named "Connection Successful", you’ll see that the settings are set to neither loop nor wait for the listener. In this case the sequence will play a section of content then automatically move on to its destination sequence without any input from the listener.</p>
+<p><img alt="Screenshot of the Audio Orchestrator sequences page, showing cards for the first four sequences in the &quot;Getting started with orchestration&quot; example project" src="../images/example/example-sequences.png" />
+<em>The Sequences page</em></p>
+<h2 id="the-controls-page">The Controls page</h2>
+<p>If you move to the <a href="../controls/">Controls page</a>, you’ll see there is a radio buttons control named "Select to switch instrument tracks". This text is displayed to the listener along with the options you set up—in this case there are four labelled options, with the default option set to "Drums and bass". Note that this control is set to display on aux devices only, and will only be displayed to the listener while the sequence named "Radio Buttons" is playing out.</p>
+<p><img alt="Screenshot of a controls card, showing labels for the options that the listener can select, as well as various other settings" class="ao-image-tall" src="../images/example/example-controls.png" />
+<em>Setting up a control for switching instrument tracks</em></p>
+<h2 id="the-audio-page">The Audio page</h2>
+<p>Moving to the <a href="../audio/">Audio page</a>, you’ll see the collection of audio files that have been imported into the project as audio objects for the sequence named "Intro". You’ll also see that there are tabs for each of the sequences that were specified on the Sequences page.</p>
+<p>If you click through each tab, you’ll see that each sequence contains a number of audio objects and that each audio object has a panning option and the two fixed behaviours. These fixed behaviours determine:</p>
+<ul>
+<li>where each audio object is allocated based on device role i.e. whether the audio is sent to the main device, an aux device or to any device; and</li>
+<li>the number of devices the audio object can be allocated to.</li>
+</ul>
+<h3 id="intro-sequence-panning-and-fixed-behaviours">"Intro" sequence: panning and fixed behaviours</h3>
+<p>Looking again at the "Intro" sequence, you’ll see that there is a stereo audio file named <code>01_Intro_Main.wav</code> and that its <a href="../fixed-behaviours/">fixed behaviours</a> are set to "Main device only" and "One device only", meaning that it will only ever play from the main device. In contrast, the second object <code>02_Intro_Aux_M.wav</code> is a mono audio file with a panning setting you can adjust. In this case, it is panned centrally, and the fixed behaviours are set such that it will only be played from aux devices, but played from all of the aux devices that are connected.</p>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>The example project was updated with the <a href="../change-log/#v18">v0.18.0 release</a> of <em>Audio Orchestrator</em> to use stereo files rather than split mono files. Older versions of the example project may have mono files panned left and right rather than stereo files.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Tip</p>
+<p>Note the naming convention that has been used when creating these audio files: the suffix "_M" has been used so that <em>Audio Orchestrator</em> can <a href="../preparing-audio/#prepare-panning">automatically determine</a> that the audio object should be panned centrally. You can also use the suffixes "_L" and "_R" to specify whether an audio object should be panned fully left or fully right respectively. You can also set these manually and adjust the degree of left and right panning (click on the panning value to access the adjustment slider). See the <a href="../audio/#panning">Audio page</a> for more information.</p>
+</div>
+<p><img alt="Screenshot of the Audio page, showing panning and fixed behaviours with various settings" src="../images/example/example-fixed-behaviours.png" />
+<em>Panning and fixed behaviour settings in the "Intro" sequence</em></p>
+<h3 id="radio-buttons-sequence-using-control-linked-behaviours">"Radio Buttons" sequence: using control-linked behaviours</h3>
+<p>If you click on the "Radio Buttons" tab, you’ll see that in addition to the fixed behaviours, <a href="../control-linked-behaviours/">control-linked behaviours</a> have been authored for four of the audio objects. These behaviours determine whether an audio object plays out or not based on the actions of the listener, and have been applied to the audio files that the listener will be able to switch on and off using the radio buttons control you saw on the Controls page. If you click on one of the orange control-linked behaviours, you’ll see that each object has been set as <em>Allowed</em> or <em>Prohibited</em> according to its associated control option. For example, the audio file <code>9_Radio_Buttons_Aux_1.wav</code> is a shaker instrument track; the control-linked behaviour has been set so that the audio object is <em>allowed</em> when the user selects the option "Shakers", and <em>prohibited</em> for the other three control options.</p>
+<p><img alt="Screenshot of the settings for a control-linked behaviour, showing allowed and prohibited options for all of the linked control values" src="../images/example/example-control-linked-behaviour.png" />
+<em>Control linked behaviour applied to an object in the "Radio Buttons" sequence</em></p>
+<h2 id="the-monitoring-page">The Monitoring page</h2>
+<p>On the <a href="../monitoring/">Monitoring page</a>, you'll see a table with some virtual devices. You can use these to check that the behaviours that were set up on the Audio page have the desired effects. Switching to the <em>Radio Buttons</em> sequence will enable the "Select to switch instrument tracks" control. You should find that selecting one of the control values results in the appropriate object being shown in the <em>Allocated objects</em> row at the bottom of the table.</p>
+<p>You can use the "Load device setup" button to switch to a different preset device setup—for example, to check what will happen to the allocations if there are five devices rather than three. And you can create custom device setups with the "Add device" button.</p>
+<p><img alt="Screenshot of the Monitoring page, showing a table with three virtual devices, a radio buttons control, and one object allocated to each device" src="../images/example/example-monitoring.png" />
+<em>The Monitoring page showing a setup with three virtual devices. The two aux devices each have a different value set for the "Select to switch instrument tracks" control, and therefore different objects are allocated.</em></p>
+<h2 id="the-appearance-page">The Appearance page</h2>
+<p>On the <a href="../appearance/">Appearance page</a> you’ll see the title, subtitle, and introduction text that will be displayed to the user, along with the start and join button labels (in this case we are using the default button labels). You’ll also see the selected accent colour and the cover image that will appear on all devices (again, we're using the default image in this case).</p>
+<p><img alt="Screenshot of the Appearance page, showing the various text boxes. accent colour selection, and the cover image" src="../images/example/example-appearance.png" />
+<em>The Appearance page</em></p>
+<h2 id="the-export-page">The Export page</h2>
+<p>The <a href="../export/">Export page</a> shows the validation status for all of the settings and sequences—you should see that all of these are green. At the bottom of the page, you’ll see the options to either preview the experience or to export the project.</p>
+<p><img alt="Screenshot of the Export page, showing valid settings and sequences, and buttons to start a preview or export the experience" src="../images/example/example-export.png" />
+<em>The Export page</em></p>
+<p>Click "Start preview". <em>Audio Orchestrator</em> will take a short moment to prepare the project, and will then allow you to open the preview in your Internet browser to see the demo in action.</p>
+<p><img alt="Screenshot of the Export as preview modal dialog, showing a completed progress bar, a QR code, and buttons for stopping the preview or opening it in the browser" src="../images/example/example-export-modal.png" />
+<em>Export as preview modal dialogue</em></p>
+<p>Click "Start new session" to begin, and listen to the instructions to follow along with the demo.</p>
+<p><img alt="Three screenshots of the prototype application. The leftmost image shows the cover image, start button, and join button. The centre image shows the cover image, transport controls, and sequence destinations. The rightmost image shows the joining link, QR code, and connected devices." src="../images/example/example-app.jpg" />
+<em>The previewed "Getting started with orchestration" application. Left: start a new session or join an existing one. Centre: the playing page. Right: connection instructions, also showing how many devices are connected.</em></p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      Copyright &copy; BBC
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    <script id="__config" type="application/json">{"base": "..", "features": [], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.f13b1293.min.js"></script>
+      
+    
+  </body>
+</html>
