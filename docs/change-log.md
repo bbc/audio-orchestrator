@@ -1,8 +1,16 @@
 # Version change log
 
+<a name="v23.1"></a>
+## Version 0.23.1
+
+**Released:** 29th January 2025.
+
+* Open-source release -- Audio Orchestrator can now be built from our public [GitHub repository](https://github.com/bbc/audio-orchestrator).
+* The application name has been changed to "Audio Orchestrator", default exports are now prefixed with `audio-orchestrator`, and the log files are now in an "Audio Orchestrator" folder.
+* If multiple network interfaces are present, the preview server preferably picks one with an IPv4 address beginning with `192.` -- this may help in some corporate environments or when VPNs are used.
 
 <a name="v22.0"></a>
-## Version 0.22.0 (current version)
+## Version 0.22.0
 
 **Released:** 21st April 2022.
 
