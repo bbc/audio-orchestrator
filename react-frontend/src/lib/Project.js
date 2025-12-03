@@ -34,8 +34,8 @@ const DEFAULT_SETTINGS = {
   accentColour: '#006def',
   enableDebugUI: true,
   enableCalibration: false,
-  syncEndpointType: 'cloud-sync',
-  cloudSyncHostname: 'cloudsync.virt.ch.bbc.co.uk',
+  syncEndpointType: 'peerjs',
+  cloudSyncHostname: '', // Previously cloudsync.virt.ch.bbc.co.uk, but this is no longer available
   customTemplatePath: undefined,
 };
 

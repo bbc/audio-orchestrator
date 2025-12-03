@@ -3,6 +3,10 @@
 This changelog summarises changes for minor and major version bumps that end users might need to be aware of. The commit log should provide a more detailed list of changes for developers; most changes to internal systems are not discussed here.
 
 ---
+# `0.23.3` (public release)
+  _2025-12-03_
+  * Remove the default reference to the decomissioned BBC cloud-sync server, and default to PeerJS sync. Minor updates to readme.
+
 # `0.23.2` (public release)
   _2025-01-29_
   * Update application template, removes BBC logo from footer and updates the "made with Audio Orchestrator" link.
