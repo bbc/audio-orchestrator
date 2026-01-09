@@ -619,9 +619,10 @@ class Project {
     const {
       joiningLink,
       cloudSyncHostname,
+      syncEndpointType,
     } = settings;
     const joiningLinkValid = !joiningLink || isUrl(joiningLink);
-    const cloudSyncHostnameValid = isHostname(cloudSyncHostname);
+    const cloudSyncHostnameValid = isHostname(cloudSyncHostname) || syncEndpointType !== 'cloud-sync';
     const valid = joiningLinkValid && cloudSyncHostnameValid;
 
     let message = null;
