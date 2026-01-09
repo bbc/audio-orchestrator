@@ -4,7 +4,7 @@ This changelog summarises changes for minor and major version bumps that end use
 
 ---
 # `0.23.3` (public release)
-  _2025-12-03_
+  _2026-01-09_
   * Remove the default reference to the decomissioned BBC cloud-sync server, and default to PeerJS sync. Minor updates to readme.
 
 # `0.23.2` (public release)
