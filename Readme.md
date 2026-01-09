@@ -9,7 +9,7 @@ Create a project, import audio files, and author metadata for audio objects, seq
 
 _Audio Orchestrator_ requires `ffmpeg` and `ffprobe` to be available in the system path or a specific location in your home directory. For a manual installation, place the binaries in `~/audio-orchestrator-ffmpeg/bin` on macOS and `%HOME%\audio-orchestrator-ffmpeg\bin` on Windows. See the [installation instructions](https://bbc.github.io/audio-orchestrator/installation/) for more details.
 
-**NB** _Audio Orchestrator_ by default uses a synchronisation server [cloud-sync](https://github.com/2-IMMERSE/cloud-sync) hosted by the BBC, which may go away without warning in the future. We recommend replacing this with your own server by setting its URL in the advanced export settings. There are [some notes on running a self-hosted cloud-sync server](https://github.com/bbc/audio-orchestration/issues/64).
+**NB** _Audio Orchestrator_ needs to use a synchronisation server, for example, an instance of [cloud-sync](https://github.com/2-IMMERSE/cloud-sync). A cloud-sync instance was previously hosted by the BBC but has been decomissioned and is no longer active as of December 2025. This should be replaced with your own server by setting its URL in the advanced export settings. There are [some notes on running a self-hosted cloud-sync server](https://github.com/bbc/audio-orchestration/issues/64). You could also explore the experimental and unsupported PeerJS synchronisation service, again in the advanced export settings.
 
 # Architecture overview
 
@@ -23,13 +23,13 @@ Development requires a macOS (or possibly Linux) environment. The instructions h
 
 ## Getting started
 
-1. Ensure you have [Node.js](https://nodejs.org/en/) version 20.x+ installed.
+1. Ensure you have [Node.js](https://nodejs.org/en/) version 22.x+ installed.
 
 ```
-node -v # e.g., v20.9.0
+node -v # e.g., v22.21.1
 ```
 
-2. Log in to the GitHub packages NPM registry. Create a [personal access token (classic)](https://github.com/settings/tokens) with only the `read:packages` permission, then log in using your GitHub username and the token as the password:
+2. Log in to the GitHub packages NPM registry. To do this, first create a [personal access token (classic)](https://github.com/settings/tokens) with only the `read:packages` permission. Then, log in using your GitHub username and the token as the password:
 
 ```
 npm login --registry https://npm.pkg.github.com --scope @bbc

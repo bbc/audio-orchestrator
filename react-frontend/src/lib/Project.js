@@ -34,8 +34,8 @@ const DEFAULT_SETTINGS = {
   accentColour: '#006def',
   enableDebugUI: true,
   enableCalibration: false,
-  syncEndpointType: 'cloud-sync',
-  cloudSyncHostname: 'cloudsync.virt.ch.bbc.co.uk',
+  syncEndpointType: 'peerjs',
+  cloudSyncHostname: '', // Previously cloudsync.virt.ch.bbc.co.uk, but this is no longer available
   customTemplatePath: undefined,
 };
 
@@ -619,9 +619,10 @@ class Project {
     const {
       joiningLink,
       cloudSyncHostname,
+      syncEndpointType,
     } = settings;
     const joiningLinkValid = !joiningLink || isUrl(joiningLink);
-    const cloudSyncHostnameValid = isHostname(cloudSyncHostname);
+    const cloudSyncHostnameValid = isHostname(cloudSyncHostname) || syncEndpointType !== 'cloud-sync';
     const valid = joiningLinkValid && cloudSyncHostnameValid;
 
     let message = null;

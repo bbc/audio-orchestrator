@@ -1,9 +1,9 @@
 {
   "name": "@bbc/audio-orchestrator",
   "productName": "Audio Orchestrator",
-  "description": "Audio Orchestrator is an production tool for prototyping multi-device audio experiences.",
+  "description": "Audio Orchestrator is a production tool for prototyping multi-device audio experiences.",
   "repository": "https://github.com/bbc/audio-orchestrator",
-  "version": "0.23.2",
+  "version": "0.23.3",
   "author": "BBC R&D",
   "license": "GPL-3.0-or-later",
   "private": true,
